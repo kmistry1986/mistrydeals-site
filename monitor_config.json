@@ -1,0 +1,13 @@
+{
+  "tickers": [
+    "SPY"
+  ],
+  "poll_interval": 10,
+  "bias_entry": 2,
+  "bias_exit": -1,
+  "max_spend": 500,
+  "pushover_token": "",
+  "pushover_user": "",
+  "supabase_url": "https://qolksrytidvxarrlygyy.supabase.co",
+  "supabase_key": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFvbGtzcnl0aWR2eGFycmx5Z3l5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjI3MzAyNDcsImV4cCI6MjA3ODMwNjI0N30.126SOE0Mi6tB2ywtDzOYPUzqZ5cUl6Sk5QXgUGjMR0g"
+}
