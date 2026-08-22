@@ -14,6 +14,19 @@
     body { margin: 0; }
     a { color: var(--color-accent-700); }
     a:hover { color: var(--color-accent-600); }
+
+    @media (max-width: 820px) {
+      .m-stack { grid-template-columns: minmax(0,1fr) !important; gap: 22px !important; }
+      .m-2col { grid-template-columns: repeat(2, minmax(0,1fr)) !important; }
+      .m-wrap { flex-wrap: wrap !important; }
+      .seg { flex-wrap: wrap !important; max-width: 100%; }
+      .m-static { position: static !important; top: auto !important; }
+      .m-fs-xl { font-size: clamp(34px, 9vw, 52px) !important; }
+      .m-fs-lg { font-size: clamp(28px, 7.5vw, 40px) !important; }
+      .m-fs-md { font-size: clamp(22px, 6vw, 30px) !important; }
+      .nav { flex-wrap: wrap !important; row-gap: 8px !important; }
+      img, video { max-width: 100%; }
+    }
   </style>
 </helmet>
 
@@ -23,7 +36,7 @@
 
 <sc-if value="{{ verifying }}" hint-placeholder-val="{{ true }}">
   <div style="background:var(--color-bg);min-height:100vh;display:grid;place-items:center;padding:24px;color:var(--color-text)">
-    <div style="display:flex;align-items:center;gap:9px;font-family:var(--font-heading);font-weight:800;font-size:13px;letter-spacing:.12em;text-transform:uppercase;color:var(--color-neutral-700)">
+    <div class="m-wrap" style="display:flex;align-items:center;gap:9px;font-family:var(--font-heading);font-weight:800;font-size:13px;letter-spacing:.12em;text-transform:uppercase;color:var(--color-neutral-700)">
       <span style="width:13px;height:13px;background:var(--color-accent);display:block"></span>Mistrydeals
     </div>
   </div>
@@ -32,10 +45,10 @@
 <sc-if value="{{ signedOut }}" hint-placeholder-val="{{ false }}">
   <div style="background:var(--color-bg);min-height:100vh;display:grid;place-items:center;padding:24px;color:var(--color-text)">
     <div style="width:100%;max-width:380px">
-      <div style="display:flex;align-items:center;gap:9px;font-family:var(--font-heading);font-weight:800;font-size:13px;letter-spacing:.12em;text-transform:uppercase;margin-bottom:28px">
+      <div class="m-wrap" style="display:flex;align-items:center;gap:9px;font-family:var(--font-heading);font-weight:800;font-size:13px;letter-spacing:.12em;text-transform:uppercase;margin-bottom:28px">
         <span style="width:13px;height:13px;background:var(--color-accent);display:block"></span>Mistrydeals
       </div>
-      <h1 style="margin:0 0 8px;font-size:34px;line-height:1.05;letter-spacing:-.02em">Deal queue</h1>
+      <h1 class="m-fs-md" style="margin:0 0 8px;font-size:34px;line-height:1.05;letter-spacing:-.02em">Deal queue</h1>
       <p style="margin:0 0 24px;font-size:14px;color:var(--color-neutral-700)">Review incoming deals before they reach the site.</p>
       <form onSubmit="{{ onSignIn }}">
         <div class="field" style="margin-bottom:14px">
@@ -52,7 +65,65 @@
         <button type="submit" class="btn btn-primary btn-block" style="justify-content:space-between">{{ signInLabel }} <span>&#8594;</span></button>
       </form>
     </div>
-    <sc-if value="{{ confirmOpen }}" hint-placeholder-val="{{ false }}">
+    <sc-if value="{{ histOpen }}" hint-placeholder-val="{{ false }}">
+    <div onClick="{{ histClose }}" style="position:fixed;inset:0;background:color-mix(in srgb, var(--color-neutral-900) 55%, transparent);display:grid;place-items:center;padding:24px;z-index:85">
+      <div onClick="{{ histStop }}" style="background:var(--color-bg);border:2px solid var(--color-text);max-width:720px;width:100%;max-height:86vh;overflow:auto;padding:24px">
+        <div class="m-wrap" style="display:flex;align-items:flex-start;gap:16px;border-bottom:2px solid var(--color-divider);padding-bottom:14px">
+          <div style="min-width:0">
+            <div style="font-family:var(--font-heading);font-weight:700;font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--color-neutral-700)">Price history</div>
+            <h2 style="margin:6px 0 0;font-size:20px;line-height:1.2;letter-spacing:-.01em">{{ histTitle }}</h2>
+            <div style="font-size:11px;letter-spacing:.04em;color:var(--color-neutral-600);margin-top:4px">{{ histAsin }}</div>
+          </div>
+          <button onClick="{{ histClose }}" class="btn btn-ghost" style="margin-left:auto;font-size:12px;padding:6px 10px;flex:none">Close</button>
+        </div>
+
+        <sc-if value="{{ histErr }}" hint-placeholder-val="{{ false }}">
+          <div style="font-size:13px;line-height:1.5;color:var(--color-accent-700);padding:18px 0">{{ histErr }}</div>
+        </sc-if>
+        <sc-if value="{{ histLoading }}" hint-placeholder-val="{{ true }}">
+          <div style="font-size:13px;color:var(--color-neutral-700);padding:18px 0">Reading price history…</div>
+        </sc-if>
+
+        <sc-if value="{{ histReady }}" hint-placeholder-val="{{ false }}">
+          <div style="padding:16px 0 0">
+            <div style="{{ histSummary.verdictStyle }}">{{ histSummary.verdict }}</div>
+            <div style="display:flex;flex-wrap:wrap;margin:14px 0 0">
+              <sc-for list="{{ histSummary.cells }}" as="c" hint-placeholder-count="5">
+                <div style="flex:1 1 0;min-width:76px;padding-right:16px;border-right:1px solid var(--color-divider)">
+                  <div style="font-family:var(--font-heading);font-weight:700;font-size:9.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--color-neutral-700)">{{ c.k }}</div>
+                  <div style="font-family:var(--font-heading);font-weight:800;font-size:17px;line-height:1.2;margin-top:3px">{{ c.v }}</div>
+                </div>
+              </sc-for>
+            </div>
+
+            <sc-if value="{{ histHasChart }}" hint-placeholder-val="{{ false }}">
+              <div class="m-wrap" style="display:flex;align-items:flex-end;gap:3px;height:84px;margin:22px 0 0;border-bottom:2px solid var(--color-divider)">
+                <sc-for list="{{ histBars }}" as="b" hint-placeholder-count="12">
+                  <div title="{{ b.tip }}" style="{{ b.barStyle }}"></div>
+                </sc-for>
+              </div>
+              <div style="font-size:11px;color:var(--color-neutral-600);margin-top:7px">Earlier prices, oldest to newest — this deal is not plotted. Black bars are recorded price checks, red bars are scrapes.</div>
+            </sc-if>
+
+            <div style="font-size:12.5px;line-height:1.5;color:var(--color-neutral-700);margin-top:18px;padding-top:14px;border-top:1px solid var(--color-divider)">{{ histLive }}</div>
+
+            <div style="font-family:var(--font-heading);font-weight:700;font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--color-neutral-700);margin:22px 0 8px">Every time it was scraped</div>
+            <div style="display:grid;gap:0">
+              <sc-for list="{{ histRows }}" as="h" hint-placeholder-count="4">
+                <div class="m-stack" style="display:grid;grid-template-columns:minmax(0,1.2fr) minmax(0,1fr) minmax(0,1fr) minmax(0,1fr);gap:12px;padding:9px 0;border-bottom:1px solid var(--color-divider);font-size:12.5px;align-items:baseline">
+                  <div title="{{ h.exact }}">{{ h.when }}</div>
+                  <div style="font-family:var(--font-heading);font-weight:700">{{ h.price }}</div>
+                  <div style="color:var(--color-neutral-600);font-size:11.5px">{{ h.was }}</div>
+                  <div><span style="{{ h.statusStyle }}">{{ h.status }}</span> <span style="color:var(--color-neutral-600);font-size:11px">{{ h.source }}</span></div>
+                </div>
+              </sc-for>
+            </div>
+          </div>
+        </sc-if>
+      </div>
+    </div>
+  </sc-if>
+  <sc-if value="{{ confirmOpen }}" hint-placeholder-val="{{ false }}">
     <div style="position:fixed;inset:0;background:color-mix(in srgb, var(--color-neutral-900) 55%, transparent);display:grid;place-items:center;padding:24px;z-index:80">
       <div style="background:var(--color-bg);border:2px solid var(--color-text);max-width:460px;width:100%;padding:24px">
         <h2 style="margin:0 0 10px;font-size:22px;line-height:1.15;letter-spacing:-.01em">{{ confirmTitle }}</h2>
@@ -76,15 +147,15 @@
     <div style="max-width:1560px;margin:0 auto;padding:18px 16px;display:flex;align-items:flex-end;gap:24px;flex-wrap:wrap">
       <div>
         <div style="font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--color-accent-700);margin-bottom:8px">MistryDeals &#183; internal</div>
-        <h1 style="margin:0;font-size:38px;line-height:1;letter-spacing:-.02em">Deal queue</h1>
+        <h1 class="m-fs-md" style="margin:0;font-size:38px;line-height:1;letter-spacing:-.02em">Deal queue</h1>
       </div>
-      <div style="display:flex;align-items:center;gap:0;margin-left:8px">
+      <div class="m-wrap" style="display:flex;align-items:center;gap:0;margin-left:8px">
         <a href="{{ hCatalogue }}" style="font:inherit;font-family:var(--font-heading);font-weight:700;font-size:11px;letter-spacing:.1em;text-transform:uppercase;text-decoration:none;padding:8px 12px;border:1px solid var(--color-divider);color:var(--color-text)">Catalogue</a>
         <button onClick="{{ goQueue }}" style="{{ queueTabStyle }}">Deal queue</button>
         <button onClick="{{ goBrands }}" style="{{ brandTabStyle }}">Brand rules</button>
         <button onClick="{{ goScrapes }}" style="{{ scrapeTabStyle }}">Scrape log</button>
       </div>
-      <div style="margin-left:auto;display:flex;align-items:center;gap:10px">
+      <div class="m-wrap" style="margin-left:auto;display:flex;align-items:center;gap:10px">
         <span style="font-size:12px;color:var(--color-neutral-700)">{{ savedNote }}</span>
         <span style="font-size:12px;color:var(--color-neutral-700)">{{ userEmail }}</span>
         <button onClick="{{ refresh }}" class="btn btn-secondary" style="font-size:12px;padding:8px 12px">Refresh</button>
@@ -95,7 +166,7 @@
 
   <div style="max-width:1560px;margin:0 auto;padding:0 16px">
     <sc-if value="{{ onQueue }}" hint-placeholder-val="{{ true }}">
-    <div style="display:grid;grid-template-columns:repeat(6,minmax(0,1fr));border-bottom:2px solid var(--color-divider);margin-left:-20px">
+    <div class="m-2col" style="display:grid;grid-template-columns:repeat(6,minmax(0,1fr));border-bottom:2px solid var(--color-divider);margin-left:-20px">
       <sc-for list="{{ stats }}" as="s" hint-placeholder-count="4">
         <div onClick="{{ s.click }}" title="{{ s.tip }}" style="{{ s.cellStyle }}">
           <div style="font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--color-neutral-700);margin-bottom:6px">{{ s.label }}</div>
@@ -104,9 +175,9 @@
             <div style="font-size:12px;color:var(--color-neutral-700);margin-top:6px">{{ s.sub }}</div>
           </sc-if>
           <sc-if value="{{ s.scrapers }}" hint-placeholder-val="{{ false }}">
-            <div style="display:flex;flex-direction:column;gap:9px">
-              <sc-for list="{{ s.scrapers }}" as="k" hint-placeholder-count="2">
-                <div>
+            <div style="display:flex;flex-wrap:nowrap;margin-right:-20px">
+              <sc-for list="{{ s.scrapers }}" as="k" hint-placeholder-count="3">
+                <div style="{{ k.itemStyle }}">
                   <div style="{{ k.headStyle }}">{{ k.head }}</div>
                   <div style="font-size:11.5px;color:var(--color-neutral-700);line-height:1.35;margin-top:2px">{{ k.counts }}</div>
                   <div style="{{ k.nextStyle }}">{{ k.next }}</div>
@@ -173,6 +244,7 @@
               <sc-if value="{{ r.coupon }}" hint-placeholder-val="{{ false }}">
                 <div style="font-size:10.5px;font-family:var(--font-heading);font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--color-accent-700);margin-top:3px">{{ r.coupon }}</div>
               </sc-if>
+              <button onClick="{{ r.history }}" title="Every price we have on record for this ASIN" style="font:inherit;font-family:var(--font-heading);font-weight:700;font-size:9.5px;letter-spacing:.08em;text-transform:uppercase;background:none;border:0;border-bottom:1px solid var(--color-divider);padding:0 0 1px;margin-top:6px;cursor:pointer;color:var(--color-neutral-700)" style-hover="color:var(--color-accent);border-bottom-color:var(--color-accent)">History</button>
             </div>
             <div>
               <div style="font-size:13px;line-height:1.35">{{ r.rating }}</div>
@@ -199,7 +271,7 @@
                   <button onClick="{{ r.approve }}" style="{{ r.approveStyle }}">{{ r.approveLabel }}</button>
                   <button onClick="{{ r.reject }}" style="{{ r.rejectStyle }}">Reject</button>
                 </div>
-                <div style="display:flex;align-items:center;gap:5px;margin-top:7px">
+                <div class="m-wrap" style="display:flex;align-items:center;gap:5px;margin-top:7px">
                   <span style="font-family:var(--font-heading);font-weight:700;font-size:9.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--color-neutral-600)">{{ r.postVerb }}</span>
                   <sc-for list="{{ r.targets }}" as="pt" hint-placeholder-count="3">
                     <button onClick="{{ pt.go }}" title="{{ pt.title }}" style="{{ pt.style }}">{{ pt.mark }}</button>
@@ -254,7 +326,7 @@
 
       <div style="border:2px solid var(--color-text);padding:16px;margin:22px 0 28px">
         <div style="font-family:var(--font-heading);font-weight:700;font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--color-neutral-700);margin-bottom:12px">Add a rule</div>
-        <div style="display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr) 160px auto;gap:12px;align-items:end">
+        <div class="m-stack" style="display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr) 160px auto;gap:12px;align-items:end">
           <div class="field" style="margin:0">
             <label>Brand name</label>
             <input class="input" style="padding:7px 10px;font-size:13px" placeholder="Anker" value="{{ newName }}" onChange="{{ onNewName }}" />
@@ -340,7 +412,7 @@
           <h2 style="margin:0 0 6px;font-size:26px;line-height:1.1;letter-spacing:-.015em">Scrape log</h2>
           <p style="margin:0;font-size:13px;color:var(--color-neutral-700);max-width:64ch;text-wrap:pretty">Every run each scraper has recorded in <code style="font-size:12px">scraper_heartbeat</code>, newest first. A run that found nothing still writes a row, so silence here means the function never fired.</p>
         </div>
-        <div style="margin-left:auto;display:flex;align-items:center;gap:8px">
+        <div class="m-wrap" style="margin-left:auto;display:flex;align-items:center;gap:8px">
           <sc-for list="{{ runFilters }}" as="f" hint-placeholder-count="3">
             <button onClick="{{ f.pick }}" style="{{ f.style }}">{{ f.label }}</button>
           </sc-for>
@@ -404,6 +476,64 @@
     </div>
     </sc-if>
   </div>
+  <sc-if value="{{ histOpen }}" hint-placeholder-val="{{ false }}">
+    <div onClick="{{ histClose }}" style="position:fixed;inset:0;background:color-mix(in srgb, var(--color-neutral-900) 55%, transparent);display:grid;place-items:center;padding:24px;z-index:85">
+      <div onClick="{{ histStop }}" style="background:var(--color-bg);border:2px solid var(--color-text);max-width:720px;width:100%;max-height:86vh;overflow:auto;padding:24px">
+        <div class="m-wrap" style="display:flex;align-items:flex-start;gap:16px;border-bottom:2px solid var(--color-divider);padding-bottom:14px">
+          <div style="min-width:0">
+            <div style="font-family:var(--font-heading);font-weight:700;font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--color-neutral-700)">Price history</div>
+            <h2 style="margin:6px 0 0;font-size:20px;line-height:1.2;letter-spacing:-.01em">{{ histTitle }}</h2>
+            <div style="font-size:11px;letter-spacing:.04em;color:var(--color-neutral-600);margin-top:4px">{{ histAsin }}</div>
+          </div>
+          <button onClick="{{ histClose }}" class="btn btn-ghost" style="margin-left:auto;font-size:12px;padding:6px 10px;flex:none">Close</button>
+        </div>
+
+        <sc-if value="{{ histErr }}" hint-placeholder-val="{{ false }}">
+          <div style="font-size:13px;line-height:1.5;color:var(--color-accent-700);padding:18px 0">{{ histErr }}</div>
+        </sc-if>
+        <sc-if value="{{ histLoading }}" hint-placeholder-val="{{ true }}">
+          <div style="font-size:13px;color:var(--color-neutral-700);padding:18px 0">Reading price history…</div>
+        </sc-if>
+
+        <sc-if value="{{ histReady }}" hint-placeholder-val="{{ false }}">
+          <div style="padding:16px 0 0">
+            <div style="{{ histSummary.verdictStyle }}">{{ histSummary.verdict }}</div>
+            <div style="display:flex;flex-wrap:wrap;margin:14px 0 0">
+              <sc-for list="{{ histSummary.cells }}" as="c" hint-placeholder-count="5">
+                <div style="flex:1 1 0;min-width:76px;padding-right:16px;border-right:1px solid var(--color-divider)">
+                  <div style="font-family:var(--font-heading);font-weight:700;font-size:9.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--color-neutral-700)">{{ c.k }}</div>
+                  <div style="font-family:var(--font-heading);font-weight:800;font-size:17px;line-height:1.2;margin-top:3px">{{ c.v }}</div>
+                </div>
+              </sc-for>
+            </div>
+
+            <sc-if value="{{ histHasChart }}" hint-placeholder-val="{{ false }}">
+              <div class="m-wrap" style="display:flex;align-items:flex-end;gap:3px;height:84px;margin:22px 0 0;border-bottom:2px solid var(--color-divider)">
+                <sc-for list="{{ histBars }}" as="b" hint-placeholder-count="12">
+                  <div title="{{ b.tip }}" style="{{ b.barStyle }}"></div>
+                </sc-for>
+              </div>
+              <div style="font-size:11px;color:var(--color-neutral-600);margin-top:7px">Earlier prices, oldest to newest — this deal is not plotted. Black bars are recorded price checks, red bars are scrapes.</div>
+            </sc-if>
+
+            <div style="font-size:12.5px;line-height:1.5;color:var(--color-neutral-700);margin-top:18px;padding-top:14px;border-top:1px solid var(--color-divider)">{{ histLive }}</div>
+
+            <div style="font-family:var(--font-heading);font-weight:700;font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--color-neutral-700);margin:22px 0 8px">Every time it was scraped</div>
+            <div style="display:grid;gap:0">
+              <sc-for list="{{ histRows }}" as="h" hint-placeholder-count="4">
+                <div class="m-stack" style="display:grid;grid-template-columns:minmax(0,1.2fr) minmax(0,1fr) minmax(0,1fr) minmax(0,1fr);gap:12px;padding:9px 0;border-bottom:1px solid var(--color-divider);font-size:12.5px;align-items:baseline">
+                  <div title="{{ h.exact }}">{{ h.when }}</div>
+                  <div style="font-family:var(--font-heading);font-weight:700">{{ h.price }}</div>
+                  <div style="color:var(--color-neutral-600);font-size:11.5px">{{ h.was }}</div>
+                  <div><span style="{{ h.statusStyle }}">{{ h.status }}</span> <span style="color:var(--color-neutral-600);font-size:11px">{{ h.source }}</span></div>
+                </div>
+              </sc-for>
+            </div>
+          </div>
+        </sc-if>
+      </div>
+    </div>
+  </sc-if>
   <sc-if value="{{ confirmOpen }}" hint-placeholder-val="{{ false }}">
     <div style="position:fixed;inset:0;background:color-mix(in srgb, var(--color-neutral-900) 55%, transparent);display:grid;place-items:center;padding:24px;z-index:80">
       <div style="background:var(--color-bg);border:2px solid var(--color-text);max-width:460px;width:100%;padding:24px">
@@ -439,7 +569,8 @@ class Component extends DCLogic {
     counts: {}, statusList: ["pending", "approved", "rejected"], statusCounts: {}, sources: [], busyId: null, saved: "", error: "", picks: {}, confirmBox: null, byAsin: {}, verifying: true,
     newestByAsin: {}, matched: false, matchErr: "", tab: "queue", brands: null, brandTitles: null, brandErr: "", brandBusy: "",
     heartbeat: null, runs: null, runsErr: "", runsLimit: 100, runsFilter: "scrapers", openRun: null,
-    nb: { name: "", kw: "", rule: "auto_approve" }, editId: null, ed: {}
+    nb: { name: "", kw: "", rule: "auto_approve" }, editId: null, ed: {},
+    histBox: null, hist: null, histRuns: null, histErr: ""
   };
 
   componentDidMount() {
@@ -673,6 +804,7 @@ class Component extends DCLogic {
 
   statusLabel(s) {
     if (s === "capture") return "Sent to capture";
+    if (s === "approved") return "Approved, awaiting sync";
     return String(s || "").replace(/_/g, " ").replace(/^./, c => c.toUpperCase());
   }
 
@@ -961,6 +1093,59 @@ class Component extends DCLogic {
       this.setState({ sources: Object.keys(seen).sort() });
     } catch (e) {}
   }
+
+  // Two independent records back the verdict: price_history is what the sync
+  // job recorded against the catalogue row, product_pipeline is every time a
+  // scraper saw the ASIN (so it also answers "when was this last on the site").
+  openHistory(row) {
+    const asin = String(row.asin || "").trim().toUpperCase();
+    const prod = this.product(row);
+    this.setState({
+      histBox: { asin: asin, rowId: row.id, title: this.decode(row.title || "") || asin, price: row.price, orig: row.original_price, productId: prod ? prod.id : null, live: prod ? !!prod.is_active : null },
+      hist: null, histRuns: null, histErr: ""
+    }, () => this.loadHistory());
+  }
+
+  closeHistory() { this.setState({ histBox: null, hist: null, histRuns: null, histErr: "" }); }
+
+  async loadHistory() {
+    const box = this.state.histBox;
+    if (!box) return;
+    try {
+      const runs = await this.req(BASE + "/rest/v1/product_pipeline?select=id,price,original_price,status,source,created_at,updated_at&asin=eq." +
+        encodeURIComponent(box.asin) + "&order=created_at.desc&limit=60", { headers: this.headers() });
+      if (!runs.ok) throw new Error("Could not read the queue history (HTTP " + runs.status + ")");
+      const histRuns = await runs.json();
+      let hist = [];
+      if (box.productId) {
+        const h = await this.req(BASE + "/rest/v1/price_history?select=price,recorded_at&product_id=eq." +
+          encodeURIComponent(box.productId) + "&order=recorded_at.asc&limit=200", { headers: this.headers() });
+        if (h.ok) hist = await h.json();
+      }
+      this.setState({ hist: hist, histRuns: histRuns });
+    } catch (e) { this.setState({ histErr: String(e.message || e) }); }
+  }
+
+  // every price point we have for the ASIN, from both records, oldest first
+  histPoints() {
+    const box = this.state.histBox || {};
+    const out = [];
+    (this.state.hist || []).forEach(h => {
+      const v = Number(h.price);
+      if (v > 0) out.push({ price: v, at: h.recorded_at, kind: "sync" });
+    });
+    (this.state.histRuns || []).forEach(r => {
+      if (r.id === box.rowId) return;
+      const v = Number(r.price);
+      if (v > 0) out.push({ price: v, at: r.created_at, kind: "scrape", status: r.status });
+    });
+    out.sort((a, b) => Date.parse(a.at) - Date.parse(b.at));
+    // a price check written the same minute as a scrape is one observation
+    return out.filter((p, i) => i === 0 || !(p.price === out[i - 1].price &&
+      Math.abs(Date.parse(p.at) - Date.parse(out[i - 1].at)) < 120000));
+  }
+
+  money(v) { return v == null || v === "" || isNaN(Number(v)) ? "\u2014" : "$" + Number(v).toFixed(2); }
 
   since(iso) {
     if (!iso) return "\u2014";
@@ -1644,7 +1829,8 @@ class Component extends DCLogic {
   onAdmin() { return location.pathname.indexOf("/admin/") !== -1; }
 
   adminHref(page) {
-    if (this.onAdmin()) return "/admin/" + page;
+    // the catalogue is the admin index
+    if (this.onAdmin()) return page === "catalogue" ? "/admin/index.html" : "/admin/" + page;
     const local = {
       catalogue: "MistryDeals Admin v2.dc.html",
       dealqueue: "MistryDeals Deal Queue.dc.html",
@@ -1749,6 +1935,93 @@ class Component extends DCLogic {
       savedNote: this.state.saved || "",
       refresh: () => this.loadAll(),
 
+      histOpen: !!this.state.histBox,
+      histTitle: (this.state.histBox || {}).title || "",
+      histAsin: (this.state.histBox || {}).asin || "",
+      histErr: this.state.histErr,
+      histClose: () => this.closeHistory(),
+      histStop: e => e.stopPropagation(),
+      histLoading: !!this.state.histBox && !this.state.histErr && this.state.histRuns === null,
+      histReady: !!this.state.histBox && !this.state.histErr && this.state.histRuns !== null,
+      histSummary: (() => {
+        const box = this.state.histBox;
+        if (!box || this.state.histRuns === null) return null;
+        const pts = this.histPoints();
+        const cur = Number(box.price) > 0 ? Number(box.price) : null;
+        // prior = observations other than the one being judged
+        const prior = pts.map(p => p.price);
+        const quiet = "font-size:13.5px;line-height:1.45;color:var(--color-neutral-700)";
+        if (cur == null && !prior.length) return { verdict: "No price on record for this ASIN yet.", verdictStyle: quiet, cells: [] };
+        if (!prior.length) return {
+          verdict: "No earlier price on record \u2014 " + this.money(cur) + " is the first we have seen for this ASIN, so there is nothing to judge it against.",
+          verdictStyle: quiet,
+          cells: [{ k: "This deal", v: this.money(cur) }, { k: "Prior points", v: "0" }]
+        };
+        const low = Math.min.apply(null, prior), high = Math.max.apply(null, prior);
+        const avg = prior.reduce((a, b) => a + b, 0) / prior.length;
+        let verdict, good = false;
+        if (cur == null) verdict = "This queue row carries no price, so it cannot be judged.";
+        else if (cur < low) { verdict = "Beats every price on record \u2014 previous best " + this.money(low) + "."; good = true; }
+        else if (cur === low) { verdict = "Matches the lowest price on record."; good = true; }
+        else {
+          const pct = Math.round(((cur - low) / low) * 100);
+          verdict = pct <= 5 ? "Within " + pct + "% of the lowest on record (" + this.money(low) + ")."
+            : pct + "% above the lowest on record (" + this.money(low) + ").";
+          good = pct <= 5;
+        }
+        return {
+          verdict: verdict,
+          verdictStyle: "font-family:var(--font-heading);font-weight:800;font-size:15px;line-height:1.3;color:var(--color-" + (good ? "accent" : "text") + ")",
+          cells: prior.length === 1
+            ? [{ k: "This deal", v: this.money(cur) }, { k: "Prior price", v: this.money(low) }, { k: "Prior points", v: "1" }]
+            : [
+              { k: "This deal", v: this.money(cur) },
+              { k: "Prior low", v: this.money(low) },
+              { k: "Prior avg", v: this.money(avg) },
+              { k: "Prior high", v: this.money(high) },
+              { k: "Prior points", v: String(prior.length) }
+            ]
+        };
+      })(),
+      histBars: (() => {
+        if (!this.state.histBox || this.state.histRuns === null) return null;
+        const pts = this.histPoints();
+        if (pts.length < 2) return [];
+        const vals = pts.map(p => p.price);
+        const low = Math.min.apply(null, vals), high = Math.max.apply(null, vals);
+        const span = high - low || 1;
+        return pts.slice(-40).map(p => ({
+          h: Math.round(18 + ((p.price - low) / span) * 62) + "px",
+          barStyle: "width:100%;background:var(--color-" + (p.kind === "sync" ? "text" : "accent") + ");height:" +
+            (Math.round(18 + ((p.price - low) / span) * 62)) + "px",
+          tip: this.money(p.price) + " \u00b7 " + (p.kind === "sync" ? "price check" : "scraped") + " \u00b7 " + this.since(p.at)
+        }));
+      })(),
+      histHasChart: !!this.state.histBox && this.state.histRuns !== null && this.histPoints().length >= 2,
+      histRows: (() => {
+        const runs = this.state.histRuns;
+        if (!runs) return null;
+        return runs.map(r => ({
+          when: this.since(r.created_at),
+          exact: this.exactAge(r.created_at),
+          price: this.money(r.price),
+          was: r.original_price ? "was " + this.money(r.original_price) : "",
+          status: this.statusLabel(r.status),
+          statusStyle: "font-family:var(--font-heading);font-weight:700;font-size:9.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--color-" +
+            (r.status === "rejected" ? "accent-700" : "neutral-700") + ")",
+          source: this.family(r.source) ? this.famLabel(this.family(r.source)) : "\u2014"
+        }));
+      })(),
+      histLive: (() => {
+        const box = this.state.histBox;
+        if (!box) return "";
+        if (box.productId == null) return "Never published \u2014 no catalogue row for this ASIN.";
+        const runs = this.state.histRuns || [];
+        const shown = runs.filter(r => r.status === "approved" || r.status === "synced")[0];
+        const when = shown ? "last cleared to the site " + this.since(shown.created_at) : "in the catalogue, no approval on record";
+        return (box.live ? "Live on the site now \u2014 " : "Hidden from the site \u2014 ") + when + ".";
+      })(),
+
       confirmOpen: !!this.state.confirmBox,
       confirmTitle: (this.state.confirmBox || {}).title || "",
       confirmBody: (this.state.confirmBox || {}).body || "",
@@ -1763,9 +2036,7 @@ class Component extends DCLogic {
         const plain = (o) => Object.assign({ plain: true, scrapers: null, click: null, tip: "", cellStyle: cell }, o);
         return [
           plain({ label: "Pending", value: n(c.pending), sub: "waiting on you", numStyle: num(c.pending ? "var(--color-accent)" : "var(--color-text)") }),
-          plain({ label: "Approved", value: n(c.approved), sub: "cleared to the site", numStyle: num("var(--color-text)") }),
-          plain({ label: "Awaiting sync", value: n(c.awaiting), sub: "no price check in 24h", numStyle: num(c.awaiting ? "var(--color-accent)" : "var(--color-text)") }),
-          plain({ label: "Not in catalogue", value: n(c.missing), sub: "approved, no product row", numStyle: num(c.missing ? "var(--color-accent)" : "var(--color-text)") }),
+          plain({ label: "Approved, awaiting sync", value: n(c.approved), sub: "cleared to the site", numStyle: num("var(--color-text)") }),
           plain({ label: "Rejected", value: n(c.rejected), sub: "all time", numStyle: num("var(--color-text)") }),
           (() => {
             const list = this.scrapers();
@@ -1777,17 +2048,19 @@ class Component extends DCLogic {
               value: "", sub: "", numStyle: "",
               tip: "Open the full scrape log",
               click: () => this.goTab("scrapes"),
-              cellStyle: cell + ";cursor:pointer",
-              scrapers: list.slice(0, 3).map(s => ({
-                head: s.label + " \u00b7 " + this.since(s.last.run_at),
-                headStyle: "font-family:var(--font-heading);font-weight:800;font-size:14.5px;line-height:1.25;color:var(--color-" +
+              cellStyle: cell + ";cursor:pointer;grid-column:span 3",
+              scrapers: list.map((s, i, arr) => ({
+                itemStyle: "min-width:0;flex:1 1 0;padding-right:20px" +
+                  (i === arr.length - 1 ? "" : ";border-right:1px solid var(--color-divider)"),
+                head: s.label,
+                headStyle: "font-family:var(--font-heading);font-weight:800;font-size:14.5px;line-height:1.25;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:var(--color-" +
                   (s.failed || s.stale ? "accent" : "text") + ")",
-                counts: s.failed ? "run failed"
-                  : Number(s.found || 0) + " found \u00b7 " + Number(s.skipped || 0) + " skipped",
+                counts: this.since(s.last.run_at) + (s.failed ? " \u00b7 run failed"
+                  : " \u00b7 " + Number(s.found || 0) + " found, " + Number(s.skipped || 0) + " skipped"),
                 next: s.cadence == null ? "cadence unknown"
                   : s.overdue ? "overdue by " + this.inMin(-s.dueMin)
                   : "next in " + this.inMin(Math.max(0, s.dueMin)),
-                nextStyle: "font-size:11px;line-height:1.35;margin-top:2px;color:var(--color-" +
+                nextStyle: "font-size:11px;line-height:1.35;margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:var(--color-" +
                   (s.overdue ? "accent-700" : "neutral-600") + ")"
               }))
             };
@@ -1801,8 +2074,6 @@ class Component extends DCLogic {
           const k = s === "pending" ? c.pending : sc[s];
           return pill(this.statusLabel(s) + (k ? " (" + n(k) + ")" : ""), this.state.status === s, () => this.setFilter({ status: s }));
         });
-        out.push(pill("Awaiting sync" + (c.awaiting ? " (" + n(c.awaiting) + ")" : ""), this.state.status === "awaiting", () => this.setFilter({ status: "awaiting" })));
-        out.push(pill("Not in catalogue" + (c.missing ? " (" + n(c.missing) + ")" : ""), this.state.status === "missing", () => this.setFilter({ status: "missing" })));
         out.push(pill("All", this.state.status === "all", () => this.setFilter({ status: "all" })));
         return out;
       })(),
@@ -1821,14 +2092,14 @@ class Component extends DCLogic {
       error: this.state.error || "",
       empty: !!(rows && !this.state.error && rows.filter(r => this.viewFilter(r)).length === 0),
       emptyNote: this.state.status === "pending" ? "Queue is clear \u2014 nothing waiting on you."
-        : this.state.status === "awaiting" ? "Every approved deal has been price-checked in the last 24 hours."
+        : this.state.status === "awaiting" ? "Every approved deal has been price-checked since its last scrape."
         : this.state.status === "missing" ? "Every approved deal has a matching product."
         : "Nothing matches these filters.",
       showing: (() => {
         if (!rows) return "";
         const st = this.state.status;
         if (st === "awaiting" || st === "missing") {
-          return rows.filter(r => this.viewFilter(r)).length + (st === "awaiting" ? " awaiting sync" : " with no product row");
+          return rows.filter(r => this.viewFilter(r)).length + (st === "awaiting" ? " due a price check" : " awaiting import");
         }
         return rows.length + " shown of " + (this.state.total != null ? Number(this.state.total).toLocaleString() : rows.length);
       })(),
@@ -2057,19 +2328,20 @@ class Component extends DCLogic {
             const prod = this.product(r);
             if (!prod && this.state.matchErr) return "catalogue check failed \u2014 reload";
             if (!prod && !this.state.matched) return "checking catalogue\u2026";
-            if (!prod) return "not in catalogue \u2014 nothing to sync";
+            if (!prod) return "awaiting import \u2014 not in catalogue yet";
             if (!prod.last_price_sync) return "never synced";
             const scraped = this.scrapedAt(r);
             if (this.syncFresh(prod)) {
               return "synced " + this.since(prod.last_price_sync) + " \u2014 current";
             }
             if (scraped && Date.parse(prod.last_price_sync) < scraped) {
-              return "synced " + this.since(prod.last_price_sync) + " \u2014 rescraped " + this.since(new Date(scraped).toISOString());
+              return "synced " + this.since(prod.last_price_sync);
             }
             return "synced " + this.since(prod.last_price_sync);
           })(),
           // only offered when a product row exists to be synced
-          syncStale: !pending && this.isAwaitingSync(r),
+          syncStale: !pending && !!this.product(r) && !this.product(r).last_price_sync,
+          history: () => this.openHistory(r),
           needsRow: !pending && this.isMissingProduct(r),
           addRow: () => this.addToCatalogue(r),
           addRowLabel: busy ? "Adding\u2026" : "Add to catalogue",
@@ -2090,7 +2362,7 @@ class Component extends DCLogic {
           statusStyle: "display:inline-block;font-family:var(--font-heading);font-weight:700;font-size:9.5px;letter-spacing:.08em;text-transform:uppercase;padding:3px 6px;" +
             (st === "approved" ? "background:var(--color-neutral-900);color:var(--color-bg)" : "border:1px solid var(--color-divider);color:var(--color-neutral-700)"),
           syncNoteStyle: "font-size:11px;margin-top:5px;line-height:1.3;color:var(--color-" +
-            (st === "approved" && (this.isAwaitingSync(r) || this.isMissingProduct(r)) ? "accent-700" : "neutral-600") + ")",
+            (st === "approved" && this.isMissingProduct(r) ? "accent-700" : "neutral-600") + ")",
           canUndo: !pending,
           undo: () => this.undo(r)
         };

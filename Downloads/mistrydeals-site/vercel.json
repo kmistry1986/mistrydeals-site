@@ -19,6 +19,10 @@
   ],
   "rewrites": [
     {
+      "source": "/admin/index.html",
+      "destination": "/catalogue.html"
+    },
+    {
       "source": "/admin/catalogue",
       "destination": "/catalogue.html"
     },
