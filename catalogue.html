@@ -1,0 +1,1748 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="/support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <link rel="stylesheet" href="/_ds/modernist-424462e2-4060-4771-92af-91bbc246b8fd/styles.css">
+  <style>
+    body { margin: 0; }
+    a { color: var(--color-accent-700); }
+    a:hover { color: var(--color-accent-600); }
+
+    @media (max-width: 820px) {
+      .m-stack { grid-template-columns: minmax(0,1fr) !important; gap: 22px !important; }
+      .m-2col { grid-template-columns: repeat(2, minmax(0,1fr)) !important; }
+      .m-wrap { flex-wrap: wrap !important; }
+      .seg { flex-wrap: wrap !important; max-width: 100%; }
+      .m-scroll { min-width: 0 !important; }
+      .m-hide { display: none !important; }
+      .m-row { grid-template-columns: 3px 64px minmax(0,1fr) !important; gap: 6px 10px !important; padding: 12px 0 !important; }
+      .m-row > :nth-child(n+4) { grid-column: 2 / -1 !important; }
+      .m-static { position: static !important; top: auto !important; }
+      .m-fs-xl { font-size: clamp(34px, 9vw, 52px) !important; }
+      .m-fs-lg { font-size: clamp(28px, 7.5vw, 40px) !important; }
+      .m-fs-md { font-size: clamp(22px, 6vw, 30px) !important; }
+      .nav { flex-wrap: wrap !important; row-gap: 8px !important; }
+      img, video { max-width: 100%; }
+    }
+    input[type="checkbox"] { accent-color: var(--color-accent); }
+  </style>
+</helmet>
+
+<template id="__bundler_thumbnail">
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400"><rect width="400" height="400" fill="#f3f2f2"></rect><rect x="110" y="130" width="180" height="26" fill="#201e1d"></rect><rect x="110" y="176" width="180" height="26" fill="#201e1d"></rect><rect x="110" y="222" width="120" height="26" fill="#ec3013"></rect></svg>
+</template>
+
+<sc-if value="{{ verifying }}" hint-placeholder-val="{{ true }}">
+  <div style="background:var(--color-bg);min-height:100vh;display:grid;place-items:center;padding:24px;color:var(--color-text)">
+    <div class="m-wrap" style="display:flex;align-items:center;gap:9px;font-family:var(--font-heading);font-weight:800;font-size:13px;letter-spacing:.12em;text-transform:uppercase;color:var(--color-neutral-700)">
+      <span style="width:13px;height:13px;background:var(--color-accent);display:block"></span>Mistrydeals
+    </div>
+  </div>
+</sc-if>
+
+<sc-if value="{{ signedOut }}" hint-placeholder-val="{{ false }}">
+  <div style="background:var(--color-bg);min-height:100vh;display:grid;place-items:center;padding:24px;color:var(--color-text)">
+    <div style="width:100%;max-width:380px">
+      <div class="m-wrap" style="display:flex;align-items:center;gap:9px;font-family:var(--font-heading);font-weight:800;font-size:13px;letter-spacing:.12em;text-transform:uppercase;margin-bottom:28px">
+        <span style="width:13px;height:13px;background:var(--color-accent);display:block"></span>Mistrydeals
+      </div>
+      <h1 class="m-fs-md" style="margin:0 0 8px;font-size:34px;line-height:1.05;letter-spacing:-.02em">Admin sign in</h1>
+      <p style="margin:0 0 24px;font-size:14px;color:var(--color-neutral-700)">This area manages live deals and social posting.</p>
+      <form onSubmit="{{ onSignIn }}">
+        <div class="field" style="margin-bottom:14px">
+          <label>Email</label>
+          <input class="input" type="email" autocomplete="username" value="{{ email }}" onChange="{{ onEmail }}" />
+        </div>
+        <div class="field" style="margin-bottom:18px">
+          <label>Password</label>
+          <input class="input" type="password" autocomplete="current-password" value="{{ password }}" onChange="{{ onPassword }}" />
+        </div>
+        <sc-if value="{{ authError }}" hint-placeholder-val="{{ false }}">
+          <div style="border-left:3px solid var(--color-accent);padding:8px 12px;margin-bottom:16px;font-size:13px;color:var(--color-accent-700)">{{ authError }}</div>
+        </sc-if>
+        <button type="submit" class="btn btn-primary btn-block" style="justify-content:space-between">{{ signInLabel }} <span>&#8594;</span></button>
+      </form>
+    </div>
+    <sc-if value="{{ confirmOpen }}" hint-placeholder-val="{{ false }}">
+    <div style="position:fixed;inset:0;background:color-mix(in srgb, var(--color-neutral-900) 55%, transparent);display:grid;place-items:center;padding:24px;z-index:80">
+      <div style="background:var(--color-bg);border:2px solid var(--color-text);max-width:460px;width:100%;padding:24px">
+        <h2 style="margin:0 0 10px;font-size:22px;line-height:1.15;letter-spacing:-.01em">{{ confirmTitle }}</h2>
+        <sc-if value="{{ confirmBody }}" hint-placeholder-val="{{ false }}">
+          <div style="font-size:14px;font-weight:600;line-height:1.4;margin-bottom:8px">{{ confirmBody }}</div>
+        </sc-if>
+        <p style="margin:0 0 20px;font-size:13px;line-height:1.5;color:var(--color-neutral-700);text-wrap:pretty">{{ confirmDetail }}</p>
+        <div style="display:flex;gap:10px">
+          <button onClick="{{ confirmYes }}" style="{{ confirmStyle }}">{{ confirmLabel }}</button>
+          <button onClick="{{ confirmNo }}" class="btn btn-ghost" style="font-size:13px;padding:9px 14px">Cancel</button>
+        </div>
+      </div>
+    </div>
+  </sc-if>
+</div>
+</sc-if>
+
+<sc-if value="{{ signedIn }}" hint-placeholder-val="{{ false }}">
+<div style="background:var(--color-bg);min-height:100vh;color:var(--color-text)">
+  <div style="border-bottom:2px solid var(--color-divider)">
+    <div style="max-width:1720px;margin:0 auto;padding:18px 16px;display:flex;align-items:flex-end;gap:24px;flex-wrap:wrap">
+      <div>
+        <div style="font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--color-accent-700);margin-bottom:8px">MistryDeals &#183; internal</div>
+        <h1 class="m-fs-md" style="margin:0;font-size:38px;line-height:1;letter-spacing:-.02em">Admin</h1>
+      </div>
+      <div class="m-wrap" style="display:flex;align-items:center;gap:0;margin-left:8px">
+        <span style="font:inherit;font-family:var(--font-heading);font-weight:700;font-size:11px;letter-spacing:.1em;text-transform:uppercase;padding:8px 12px;border:1px solid var(--color-text);background:var(--color-text);color:var(--color-bg)">Catalogue</span>
+        <a href="{{ hQueue }}" style="font:inherit;font-family:var(--font-heading);font-weight:700;font-size:11px;letter-spacing:.1em;text-transform:uppercase;text-decoration:none;padding:8px 12px;border:1px solid var(--color-divider);color:var(--color-text);border-left:0">Deal queue</a>
+        <a href="{{ hBrands }}" style="font:inherit;font-family:var(--font-heading);font-weight:700;font-size:11px;letter-spacing:.1em;text-transform:uppercase;text-decoration:none;padding:8px 12px;border:1px solid var(--color-divider);color:var(--color-text);border-left:0">Brand rules</a>
+        <a href="{{ hScrapes }}" style="font:inherit;font-family:var(--font-heading);font-weight:700;font-size:11px;letter-spacing:.1em;text-transform:uppercase;text-decoration:none;padding:8px 12px;border:1px solid var(--color-divider);color:var(--color-text);border-left:0">Scrape log</a>
+      </div>
+      <div class="m-wrap" style="margin-left:auto;display:flex;align-items:center;gap:10px">
+        <span style="font-size:12px;color:var(--color-neutral-700)">{{ savedNote }}</span>
+        <span style="font-size:12px;color:var(--color-neutral-700)">{{ userEmail }}</span>
+        <button onClick="{{ refresh }}" class="btn btn-secondary" style="font-size:12px;padding:8px 12px">Refresh</button>
+        <button onClick="{{ signOut }}" class="btn btn-ghost" style="font-size:12px;padding:8px 12px">Sign out</button>
+        <button onClick="{{ toggleDark }}" title="{{ darkTitle }}" style="{{ tDark }}">{{ darkGlyph }}</button>
+      </div>
+    </div>
+  </div>
+
+  <div style="max-width:1720px;margin:0 auto;padding:0 16px">
+    <div class="m-2col" style="display:grid;grid-template-columns:repeat(6,minmax(0,1fr));border-bottom:2px solid var(--color-divider);margin-left:-20px">
+      <sc-for list="{{ cStats }}" as="s" hint-placeholder-count="6">
+        <div style="padding:18px 20px;border-right:1px solid var(--color-divider)">
+          <div style="font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--color-neutral-700);margin-bottom:6px">{{ s.label }}</div>
+          <div style="{{ s.numStyle }}">{{ s.value }}</div>
+          <div style="font-size:12px;color:var(--color-neutral-700);margin-top:6px">{{ s.sub }}</div>
+        </div>
+      </sc-for>
+    </div>
+
+    <div style="padding:16px 0 12px;border-bottom:2px solid var(--color-divider)">
+      <div class="m-wrap" style="display:flex;align-items:baseline;gap:16px;margin-bottom:12px">
+        <span style="font-family:var(--font-heading);font-weight:700;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--color-neutral-700)">Today&#8217;s posting</span>
+        <span style="font-size:12px;color:var(--color-neutral-700)">{{ dayNote }}</span>
+        <span class="m-wrap" style="margin-left:auto;display:flex;align-items:center;gap:14px;font-size:11px;color:var(--color-neutral-700)">
+          <sc-for list="{{ dayLegend }}" as="l" hint-placeholder-count="3">
+            <span style="display:inline-flex;align-items:center;gap:5px"><span style="{{ l.style }}"></span>{{ l.label }}</span>
+          </sc-for>
+          <span style="color:var(--color-neutral-600)">one lane per platform</span>
+        </span>
+      </div>
+      <div style="display:grid;grid-template-columns:34px minmax(0,1fr);align-items:stretch">
+      <div style="position:relative;height:78px">
+        <sc-for list="{{ dayLanes }}" as="l" hint-placeholder-count="3">
+          <span style="{{ l.labelStyle }}" title="{{ l.name }}">{{ l.label }}</span>
+        </sc-for>
+      </div>
+      <div style="position:relative;height:78px;border-bottom:2px solid var(--color-divider);border-left:1px solid var(--color-divider)">
+        <sc-for list="{{ dayLanes }}" as="l" hint-placeholder-count="3">
+          <span style="{{ l.ruleStyle }}"></span>
+        </sc-for>
+        <sc-for list="{{ dayTicks }}" as="k" hint-placeholder-count="12">
+          <span style="{{ k.style }}"></span>
+        </sc-for>
+        <sc-for list="{{ dayMarks }}" as="m" hint-placeholder-count="8">
+          <span title="{{ m.title }}" style="{{ m.style }}"></span>
+        </sc-for>
+        <sc-for list="{{ dayMarks }}" as="m" hint-placeholder-count="8">
+          <span onMouseEnter="{{ m.enter }}" onMouseLeave="{{ m.leave }}" style="{{ m.hitStyle }}"></span>
+        </sc-for>
+        <sc-for list="{{ dayMarks }}" as="m" hint-placeholder-count="8">
+          <sc-if value="{{ m.showCount }}" hint-placeholder-val="{{ false }}">
+            <span style="{{ m.countStyle }}">{{ m.count }}</span>
+          </sc-if>
+        </sc-for>
+        <span style="{{ nowStyle }}"></span>
+        <span style="{{ nowLabelStyle }}">now</span>
+        <sc-if value="{{ hoverOpen }}" hint-placeholder-val="{{ false }}">
+          <div style="{{ hoverBoxStyle }}">
+            <div style="font-family:var(--font-heading);font-weight:800;font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--color-neutral-700);margin-bottom:8px">{{ hoverLabel }}</div>
+            <div style="display:flex;flex-direction:column;gap:7px">
+              <sc-for list="{{ hoverItems }}" as="h" hint-placeholder-count="2">
+                <div class="m-wrap" style="display:flex;gap:8px;align-items:stretch">
+                  <span style="{{ h.markStyle }}"></span>
+                  <div style="min-width:0">
+                    <div style="{{ h.metaStyle }}">{{ h.time }} {{ h.plat }} {{ h.status }}</div>
+                    <div style="font-size:12.5px;line-height:1.35;overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical">{{ h.name }}</div>
+                  </div>
+                </div>
+              </sc-for>
+            </div>
+          </div>
+        </sc-if>
+      </div>
+      <span></span>
+      <div style="position:relative;height:16px">
+        <sc-for list="{{ dayTicks }}" as="k" hint-placeholder-count="12">
+          <span style="{{ k.labelStyle }}">{{ k.label }}</span>
+        </sc-for>
+      </div>
+      </div>
+    </div>
+
+    <div style="{{ shellStyle }}">
+    <div style="{{ mainStyle }}">
+      <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;padding:16px 0;border-bottom:1px solid var(--color-divider)">
+        <input class="input" placeholder="Search title or ASIN" style="flex:1 1 220px;min-width:200px;max-width:300px;padding:7px 10px;font-size:13px" value="{{ pQuery }}" onChange="{{ onPQuery }}" />
+        <sc-for list="{{ pFilters }}" as="f" hint-placeholder-count="5">
+          <button onClick="{{ f.pick }}" style="{{ f.style }}">{{ f.label }}</button>
+        </sc-for>
+        <select class="input" style="max-width:190px;padding:7px 10px;font-size:13px" value="{{ pCat }}" onChange="{{ onPCat }}">
+          <sc-for list="{{ pCatOptions }}" as="o" hint-placeholder-count="6">
+            <option value="{{ o }}">{{ o }}</option>
+          </sc-for>
+        </select>
+        <select class="input" style="max-width:180px;padding:7px 10px;font-size:13px" value="{{ pSort }}" onChange="{{ onPSort }}">
+          <sc-for list="{{ pSortOptions }}" as="o" hint-placeholder-count="4">
+            <option value="{{ o.value }}">{{ o.label }}</option>
+          </sc-for>
+        </select>
+        <div class="m-wrap" style="margin-left:auto;display:flex;align-items:center;gap:10px">
+          <sc-if value="{{ reviewNote }}" hint-placeholder-val="{{ false }}">
+            <button onClick="{{ showReview }}" title="Products whose product_pipeline row is still pending review" style="font:inherit;font-size:12px;background:none;border:0;padding:0;cursor:pointer;color:var(--color-accent-700);text-decoration:underline;text-underline-offset:2px">{{ reviewNote }}</button>
+          </sc-if>
+          <span style="font-size:12px;color:var(--color-neutral-700)">{{ pShowing }}</span>
+          <div style="display:flex;gap:2px">
+            <button onClick="{{ setRoomy }}" style="{{ dRoomy }}">Roomy</button>
+            <button onClick="{{ setDense }}" style="{{ dDense }}">Dense</button>
+          </div>
+        </div>
+      </div>
+
+      <div style="overflow-x:auto;padding-bottom:48px">
+        <div class="m-scroll" style="min-width:960px">
+          <div class="m-hide" style="display:grid;grid-template-columns:3px 64px minmax(180px,1fr) 92px 56px 78px 96px 120px 68px 148px;gap:10px;padding:10px 0;border-bottom:2px solid var(--color-divider);font-family:var(--font-heading);font-weight:700;font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--color-neutral-700)">
+            <span></span><span></span><span>Product</span><span>Price</span><span>% off</span><span>Cashback</span><span>Synced</span><span>Flags</span><span>Live</span><span>Queue</span>
+          </div>
+          <sc-if value="{{ pLoading }}" hint-placeholder-val="{{ true }}">
+            <div style="padding:40px;text-align:center;color:var(--color-neutral-700);font-size:13px">Loading products&#8230;</div>
+          </sc-if>
+          <sc-if value="{{ pError }}" hint-placeholder-val="{{ false }}">
+            <div style="border-left:3px solid var(--color-accent);padding:14px 16px;margin:20px 0;font-size:13px;line-height:1.5;color:var(--color-accent-700)">{{ pError }}</div>
+          </sc-if>
+          <sc-if value="{{ pEmpty }}" hint-placeholder-val="{{ false }}">
+            <div style="padding:40px;text-align:center;color:var(--color-neutral-700);font-size:13px">No products match these filters.</div>
+          </sc-if>
+          <sc-for list="{{ pRows }}" as="r" hint-placeholder-count="12">
+            <div class="m-row" style="{{ r.rowStyle }}">
+              <span style="{{ r.statusBar }}"></span>
+              <div style="{{ thumbStyle }}">
+                <dc-import name="ProductImage" src="{{ r.img }}" alt="" pad="3px" hint-size="100%,100%"></dc-import>
+              </div>
+              <div style="min-width:0">
+                <div style="font-weight:600;font-size:13px;line-height:1.35;overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical">{{ r.title }}</div>
+                <div style="font-size:11px;color:var(--color-neutral-600);letter-spacing:.04em;margin-top:3px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ r.asin }} &#183; {{ r.ratingLine }}</div>
+                <div style="font-size:11px;color:var(--color-neutral-600);margin-top:2px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ r.catLine }}</div>
+                <div class="m-wrap" style="display:flex;align-items:baseline;gap:5px;margin-top:3px;font-family:var(--font-heading);font-weight:700;font-size:9.5px;letter-spacing:.09em;text-transform:uppercase;overflow:hidden;white-space:nowrap">
+                  <span style="color:var(--color-neutral-600)">Via</span>
+                  <sc-if value="{{ r.originLinked }}" hint-placeholder-val="{{ false }}">
+                    <a href="{{ r.originUrl }}" target="_blank" rel="noopener" title="The queue row this product came from">{{ r.origin }}</a>
+                  </sc-if>
+                  <sc-if value="{{ r.originPlain }}" hint-placeholder-val="{{ true }}">
+                    <span style="color:var(--color-neutral-700)">{{ r.origin }}</span>
+                  </sc-if>
+                </div>
+              </div>
+              <div>
+                <sc-if value="{{ r.hasCouponPrice }}" hint-placeholder-val="{{ false }}">
+                  <div style="font-family:var(--font-heading);font-weight:800;font-size:14px;color:var(--color-accent-700)">{{ r.coupon }}</div>
+                </sc-if>
+                <sc-if value="{{ r.hasCode }}" hint-placeholder-val="{{ false }}">
+                  <div style="{{ r.couponCodeStyle }}">{{ r.couponCode }}</div>
+                </sc-if>
+                <div style="{{ r.priceStyle }}">{{ r.price }}</div>
+                <div style="font-size:11px;color:var(--color-neutral-600);text-decoration:line-through">{{ r.was }}</div>
+                <sc-if value="{{ r.couponUnknown }}" hint-placeholder-val="{{ false }}">
+                  <div style="font-size:10px;line-height:1.3;margin-top:2px;color:var(--color-neutral-600)">{{ r.couponUnknown }}</div>
+                </sc-if>
+              </div>
+              <div style="{{ r.offStyle }}">{{ r.off }}</div>
+              <div>
+                <div style="{{ r.cashStyle }}">{{ r.cash }}</div>
+                <sc-if value="{{ r.cashPct }}" hint-placeholder-val="{{ false }}">
+                  <div style="font-size:10.5px;color:var(--color-neutral-600);line-height:1.3;margin-top:1px">{{ r.cashPct }}</div>
+                </sc-if>
+              </div>
+              <div>
+                <div style="font-size:12px;color:var(--color-neutral-700);line-height:1.35">{{ r.synced }}</div>
+                <div style="font-size:11px;color:var(--color-neutral-600);line-height:1.35">{{ r.syncedAt }}</div>
+              </div>
+              <div style="display:flex;gap:4px;flex-wrap:wrap">
+                <sc-for list="{{ r.flags }}" as="f" hint-placeholder-count="4">
+                  <button onClick="{{ f.toggle }}" title="{{ f.title }}" style="{{ f.style }}">{{ f.label }}</button>
+                </sc-for>
+              </div>
+              <div><button onClick="{{ r.toggleLive }}" style="{{ r.liveStyle }}">{{ r.liveLabel }}</button></div>
+              <div style="min-width:0">
+                <sc-if value="{{ r.queueLabel }}" hint-placeholder-val="{{ false }}">
+                  <div style="{{ r.queueStyle }}">{{ r.queueLabel }}</div>
+                </sc-if>
+                <div class="m-wrap" style="display:flex;align-items:center;gap:5px;margin-top:6px">
+                  <span style="font-family:var(--font-heading);font-weight:700;font-size:9.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--color-neutral-600)">{{ r.postVerb }}</span>
+                  <sc-for list="{{ r.postTargets }}" as="pt" hint-placeholder-count="3">
+                    <button onClick="{{ pt.queue }}" title="{{ pt.title }}" style="{{ pt.style }}">{{ pt.mark }}</button>
+                  </sc-for>
+                </div>
+                <div style="display:flex;flex-wrap:wrap;gap:10px;margin-top:6px;font-family:var(--font-heading);font-weight:700;font-size:10px;letter-spacing:.08em;text-transform:uppercase">
+                  <a href="{{ r.url }}" target="_blank" rel="noopener" title="Plain Amazon link — no affiliate tag, so admin clicks stay out of your metrics">View</a>
+                  <button onClick="{{ r.sync }}" title="Re-check this product's price now" style="font:inherit;font-family:var(--font-heading);font-weight:700;font-size:10px;letter-spacing:.08em;text-transform:uppercase;background:none;border:0;padding:0;cursor:pointer;color:var(--color-accent-700)">{{ r.syncLabel }}</button>
+                  <button onClick="{{ r.edit }}" title="Edit title, category and prices" style="font:inherit;font-family:var(--font-heading);font-weight:700;font-size:10px;letter-spacing:.08em;text-transform:uppercase;background:none;border:0;padding:0;cursor:pointer;color:var(--color-accent-700)">Edit</button>
+                  <button onClick="{{ r.remove }}" title="Delete this product permanently" style="font:inherit;font-family:var(--font-heading);font-weight:700;font-size:10px;letter-spacing:.08em;text-transform:uppercase;background:none;border:0;padding:0;cursor:pointer;color:var(--color-neutral-700)">Delete</button>
+                </div>
+              </div>
+            </div>
+            <sc-if value="{{ r.editing }}" hint-placeholder-val="{{ false }}">
+              <div style="border-bottom:1px solid var(--color-divider);border-left:3px solid var(--color-accent);padding:16px 18px;margin-bottom:2px;background:color-mix(in srgb, var(--color-accent) 4%, transparent)">
+                <div class="m-wrap" style="display:flex;align-items:baseline;gap:12px;margin-bottom:14px">
+                  <span style="font-family:var(--font-heading);font-weight:700;font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--color-neutral-700)">Editing</span>
+                  <span style="font-size:12px;color:var(--color-neutral-700)">{{ r.asin }}</span>
+                </div>
+                <div class="m-stack" style="display:grid;grid-template-columns:minmax(220px,2fr) minmax(140px,1fr) minmax(140px,1fr) 110px 110px;gap:12px;align-items:end">
+                  <div class="field" style="margin:0">
+                    <label style="font-size:11px">Display title</label>
+                    <input class="input" style="padding:7px 10px;font-size:13px" value="{{ eTitle }}" onChange="{{ onETitle }}" />
+                  </div>
+                  <div class="field" style="margin:0">
+                    <label style="font-size:11px">Category</label>
+                    <select class="input" style="padding:7px 10px;font-size:13px" value="{{ eCat }}" onChange="{{ onECat }}">
+                      <sc-for list="{{ eCatOptions }}" as="o" hint-placeholder-count="8">
+                        <option value="{{ o.value }}">{{ o.label }}</option>
+                      </sc-for>
+                    </select>
+                  </div>
+                  <div class="field" style="margin:0">
+                    <label style="font-size:11px">Price</label>
+                    <input class="input" inputmode="decimal" style="padding:7px 10px;font-size:13px" value="{{ ePrice }}" onChange="{{ onEPrice }}" />
+                  </div>
+                  <div class="field" style="margin:0">
+                    <label style="font-size:11px">Was</label>
+                    <input class="input" inputmode="decimal" style="padding:7px 10px;font-size:13px" value="{{ eWas }}" onChange="{{ onEWas }}" />
+                  </div>
+                </div>
+                <div style="display:flex;align-items:center;gap:12px;margin-top:14px;flex-wrap:wrap">
+                  <button onClick="{{ r.save }}" class="btn btn-primary" style="font-size:12px;padding:8px 14px">{{ eSaveLabel }}</button>
+                  <button onClick="{{ cancelEdit }}" class="btn btn-ghost" style="font-size:12px;padding:8px 12px">Cancel</button>
+                  <span style="font-size:12px;color:var(--color-neutral-700)">{{ eOffNote }}</span>
+                  <sc-if value="{{ eError }}" hint-placeholder-val="{{ false }}">
+                    <span style="font-size:12px;color:var(--color-accent-700)">{{ eError }}</span>
+                  </sc-if>
+                </div>
+              </div>
+            </sc-if>
+          </sc-for>
+          <div style="display:flex;justify-content:space-between;align-items:center;padding:20px 0">
+            <span style="font-size:13px;color:var(--color-neutral-700)">{{ pShowing }}</span>
+            <button onClick="{{ pMore }}" class="btn btn-secondary" style="font-size:12px;padding:8px 12px">Load 50 more</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <aside style="{{ railStyle }}">
+      <div class="m-wrap" style="display:flex;align-items:baseline;justify-content:space-between;gap:12px;padding-bottom:12px;border-bottom:2px solid var(--color-divider)">
+        <span style="font-family:var(--font-heading);font-weight:800;font-size:13px;letter-spacing:.1em;text-transform:uppercase">Posting queue</span>
+        <span style="font-size:11px;color:var(--color-neutral-700)">{{ sShowing }}</span>
+      </div>
+      <div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap;padding:12px 0;border-bottom:1px solid var(--color-divider)">
+        <sc-for list="{{ sFilters }}" as="f" hint-placeholder-count="5">
+          <button onClick="{{ f.pick }}" style="{{ f.style }}">{{ f.label }}</button>
+        </sc-for>
+      </div>
+      <sc-if value="{{ sLoading }}" hint-placeholder-val="{{ true }}">
+        <div style="padding:32px 0;text-align:center;color:var(--color-neutral-700);font-size:13px">Loading posts&#8230;</div>
+      </sc-if>
+      <sc-if value="{{ sError }}" hint-placeholder-val="{{ false }}">
+        <div style="border-left:3px solid var(--color-accent);padding:12px 14px;margin:16px 0;font-size:12.5px;line-height:1.5;color:var(--color-accent-700)">{{ sError }}</div>
+      </sc-if>
+      <sc-if value="{{ sEmpty }}" hint-placeholder-val="{{ false }}">
+        <div style="padding:32px 0;color:var(--color-neutral-700);font-size:13px;line-height:1.5">Nothing queued. Use <span style="font-family:var(--font-heading);font-weight:700;color:var(--color-accent-700)">Post</span> on any product to add it.</div>
+      </sc-if>
+      <sc-for list="{{ sRows }}" as="p" hint-placeholder-count="8">
+        <div style="display:grid;grid-template-columns:3px 32px minmax(0,1fr);gap:10px;align-items:start;padding:12px 0;border-bottom:1px solid var(--color-divider)">
+          <span style="{{ p.bar }}"></span>
+          <div style="width:32px;height:32px;border:1px solid var(--color-divider);background:#ffffff;position:relative;overflow:hidden">
+            <dc-import name="ProductImage" src="{{ p.img }}" alt="" pad="2px" hint-size="100%,100%"></dc-import>
+          </div>
+          <div style="min-width:0">
+            <div style="font-size:12.5px;font-weight:600;line-height:1.35;overflow:hidden;text-overflow:ellipsis;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical">{{ p.title }}</div>
+            <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-top:6px">
+              <span title="{{ p.platformName }}" style="{{ p.platformStyle }}">{{ p.platformMark }}</span>
+              <sc-if value="{{ p.showStatus }}" hint-placeholder-val="{{ false }}">
+                <span style="{{ p.statusStyle }}">{{ p.status }}</span>
+              </sc-if>
+              <span style="font-size:11px;color:var(--color-neutral-600)">{{ p.when }}</span>
+              <sc-if value="{{ p.dupNote }}" hint-placeholder-val="{{ false }}">
+                <span title="Queued and published rows for the same post" style="font-size:10.5px;color:var(--color-neutral-600);border:1px solid var(--color-divider);padding:1px 4px">{{ p.dupNote }}</span>
+              </sc-if>
+            </div>
+            <sc-if value="{{ p.error }}" hint-placeholder-val="{{ false }}">
+              <div style="font-size:11px;color:var(--color-accent-700);margin-top:5px;line-height:1.4">{{ p.error }}</div>
+            </sc-if>
+            <div style="display:flex;gap:12px;margin-top:6px">
+              <sc-if value="{{ p.canRetry }}" hint-placeholder-val="{{ false }}">
+                <button onClick="{{ p.retry }}" style="font:inherit;font-family:var(--font-heading);font-weight:700;font-size:10px;letter-spacing:.08em;text-transform:uppercase;background:none;border:0;padding:0;cursor:pointer;color:var(--color-accent-700)">Retry &#8594;</button>
+              </sc-if>
+              <sc-if value="{{ p.canRemove }}" hint-placeholder-val="{{ false }}">
+                <button onClick="{{ p.remove }}" style="font:inherit;font-family:var(--font-heading);font-weight:700;font-size:10px;letter-spacing:.08em;text-transform:uppercase;background:none;border:0;padding:0;cursor:pointer;color:var(--color-neutral-700)">Remove</button>
+              </sc-if>
+            </div>
+          </div>
+        </div>
+      </sc-for>
+      <div style="padding:16px 0">
+        <button onClick="{{ sMore }}" class="btn btn-secondary btn-block" style="font-size:12px;padding:8px 12px">Load 50 more</button>
+      </div>
+    </aside>
+    </div>
+  </div>
+  <sc-if value="{{ confirmOpen }}" hint-placeholder-val="{{ false }}">
+    <div style="position:fixed;inset:0;background:color-mix(in srgb, var(--color-neutral-900) 55%, transparent);display:grid;place-items:center;padding:24px;z-index:80">
+      <div style="background:var(--color-bg);border:2px solid var(--color-text);max-width:460px;width:100%;padding:24px">
+        <h2 style="margin:0 0 10px;font-size:22px;line-height:1.15;letter-spacing:-.01em">{{ confirmTitle }}</h2>
+        <sc-if value="{{ confirmBody }}" hint-placeholder-val="{{ false }}">
+          <div style="font-size:14px;font-weight:600;line-height:1.4;margin-bottom:8px">{{ confirmBody }}</div>
+        </sc-if>
+        <p style="margin:0 0 20px;font-size:13px;line-height:1.5;color:var(--color-neutral-700);text-wrap:pretty">{{ confirmDetail }}</p>
+        <div style="display:flex;gap:10px">
+          <button onClick="{{ confirmYes }}" style="{{ confirmStyle }}">{{ confirmLabel }}</button>
+          <button onClick="{{ confirmNo }}" class="btn btn-ghost" style="font-size:13px;padding:9px 14px">Cancel</button>
+        </div>
+      </div>
+    </div>
+  </sc-if>
+</div>
+</sc-if>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;dark&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:false,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Theme&quot;},&quot;syncFunction&quot;:{&quot;editor&quot;:&quot;text&quot;,&quot;default&quot;:&quot;amazon-data-sync&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Data&quot;}}">
+const BASE = "https://qolksrytidvxarrlygyy.supabase.co";
+const KEY = "sb_publishable_UX38KeF1XAKtzvS01yfx7w_8s5NkOH3";
+
+class Component extends DCLogic {
+  state = {
+    token: null, user: null, refresh: null, email: "", password: "", authError: "", signingIn: false,
+    dens: "roomy", dark: false, darkTouched: false, wide: true, syncing: false, syncingId: null, hoverSlot: null, editId: null, draft: {}, savingEdit: false, editError: "", editLoading: false, confirmBox: null,
+    products: null, pQuery: "", pFlag: "all", pCat: "All categories", pLimit: 50, pTotal: null, pSort: "synced", pError: "", sError: "", pendingIds: null,
+    posts: null, sFilter: "all", sLimit: 50, sTotal: null, postState: null, today: null,
+    saved: "", verifying: true
+  };
+
+  componentWillUnmount() { window.removeEventListener("resize", this.onResize); }
+
+  componentDidMount() {
+    this.paint();
+    window.addEventListener("resize", this.onResize);
+    this.onResize();
+    let stored = null;
+    try { stored = JSON.parse(localStorage.getItem("md-admin-session") || "null"); } catch (e) {}
+    // a stored value is not proof of a session: the anon key is not a login,
+    // and tokens expire — ask the auth server before trusting it
+    if (!stored || !stored.token || stored.token === KEY) { this.signOutNow(); return; }
+    this.validateSession(stored);
+  }
+
+  async validateSession(stored) {
+    try {
+      const res = await fetch(BASE + "/auth/v1/user", {
+        headers: { apikey: KEY, Authorization: "Bearer " + stored.token }
+      });
+      if (!res.ok) {
+        // the access token expired while the tab was closed; the stored refresh
+        // token can still stand it back up without a re-login
+        const fresh = await this.refreshSession(stored.refresh);
+        if (!fresh) { this.sessionExpired(); return; }
+        this.setState({ token: fresh, refresh: this.state.refresh || stored.refresh, user: stored.user, verifying: false }, () => this.loadAll());
+        return;
+      }
+      const user = await res.json();
+      this.setState({ token: stored.token, refresh: stored.refresh || null, user: (user && user.email) || stored.user, verifying: false }, () => this.loadAll());
+    } catch (e) { this.signOutNow(); }
+  }
+  componentDidUpdate() { this.paint(); }
+
+  // the rail only earns its own column when the table still fits beside it
+  onResize = () => {
+    const wide = window.innerWidth >= 1500;
+    if (wide !== this.state.wide) this.setState({ wide });
+  };
+
+  isDark() {
+    // the header button and the Tweaks prop are both valid switches; whichever
+    // moved last wins
+    return this.state.darkTouched ? this.state.dark : (this.props.dark ?? this.state.dark);
+  }
+  paint() {
+    const r = document.documentElement.style;
+    const dark = this.isDark();
+    const NEUT = ["#f8f4f4", "#eae7e7", "#d7d3d3", "#bab6b6", "#9b9797", "#7d7979", "#605d5d", "#444141", "#2d2b2b"];
+    r.setProperty("--color-bg", dark ? "#141312" : "#f3f2f2");
+    r.setProperty("--color-surface", dark ? "#1e1c1b" : "#eae9e9");
+    r.setProperty("--color-text", dark ? "#f1efee" : "#201e1d");
+    r.setProperty("--color-divider", dark ? "color-mix(in srgb, #f1efee 26%, transparent)" : "color-mix(in srgb, #201e1d 40%, transparent)");
+    NEUT.forEach((hex, i) => r.setProperty("--color-neutral-" + ((i + 1) * 100), dark ? NEUT[8 - i] : hex));
+    const base = "#ec3013";
+    const mix = (w, p) => "color-mix(in oklch, " + base + ", " + w + " " + p + "%)";
+    const toward = dark ? "#141312" : "white";
+    const away = dark ? "#f1efee" : "black";
+    r.setProperty("--color-accent", base);
+    r.setProperty("--color-accent-100", mix(toward, 88));
+    r.setProperty("--color-accent-200", mix(toward, 74));
+    r.setProperty("--color-accent-300", mix(toward, 56));
+    r.setProperty("--color-accent-400", mix(toward, 28));
+    r.setProperty("--color-accent-500", base);
+    r.setProperty("--color-accent-600", mix(away, 16));
+    r.setProperty("--color-accent-700", mix(away, 30));
+    document.body.style.background = "var(--color-bg)";
+    document.body.style.color = "var(--color-text)";
+  }
+
+  // a token that expired mid-session should renew silently, not strand the
+  // admin in a fully-chromed page that can never load data
+  // tokenOverride matters on first load: state.refresh is not populated yet,
+  // so the stored refresh token has to be passed in explicitly
+  async refreshSession(tokenOverride) {
+    const rt = tokenOverride || this.state.refresh;
+    if (!rt) return null;
+    if (!this._refreshing) {
+      this._refreshing = (async () => {
+        try {
+          const res = await fetch(BASE + "/auth/v1/token?grant_type=refresh_token", {
+            method: "POST",
+            headers: { apikey: KEY, "Content-Type": "application/json" },
+            body: JSON.stringify({ refresh_token: rt })
+          });
+          if (!res.ok) return null;
+          const data = await res.json();
+          if (!data.access_token) return null;
+          const session = { token: data.access_token, refresh: data.refresh_token || rt, user: this.state.user };
+          try { localStorage.setItem("md-admin-session", JSON.stringify(session)); } catch (e) {}
+          this.setState({ token: session.token, refresh: session.refresh });
+          return session.token;
+        } catch (e) { return null; }
+        finally { setTimeout(() => { this._refreshing = null; }, 0); }
+      })();
+    }
+    return this._refreshing;
+  }
+
+  sessionExpired() {
+    this.signOutNow();
+    this.setState({ authError: "Session expired \u2014 sign in again.", pError: "", sError: "" });
+  }
+
+  async req(url, init) {
+    const opts = init || {};
+    let res = await fetch(url, opts);
+    if (res.status === 401 || res.status === 403) {
+      const fresh = await this.refreshSession();
+      if (fresh) {
+        const retry = Object.assign({}, opts);
+        retry.headers = Object.assign({}, opts.headers || {}, { apikey: KEY, Authorization: "Bearer " + fresh });
+        res = await fetch(url, retry);
+      }
+      if (res.status === 401 || res.status === 403) this.sessionExpired();
+    }
+    return res;
+  }
+
+  headers(extra) {
+    const h = { apikey: KEY, Authorization: "Bearer " + (this.state.token || KEY), "Content-Type": "application/json" };
+    return Object.assign(h, extra || {});
+  }
+
+  async signIn(e) {
+    if (e && e.preventDefault) e.preventDefault();
+    this.setState({ signingIn: true, authError: "" });
+    try {
+      const res = await fetch(BASE + "/auth/v1/token?grant_type=password", {
+        method: "POST",
+        headers: { apikey: KEY, "Content-Type": "application/json" },
+        body: JSON.stringify({ email: this.state.email, password: this.state.password })
+      });
+      const data = await res.json();
+      if (!res.ok || !data.access_token) {
+        this.setState({ signingIn: false, authError: data.error_description || data.msg || "Sign in failed." });
+        return;
+      }
+      const session = { token: data.access_token, refresh: data.refresh_token || null, user: (data.user && data.user.email) || this.state.email };
+      try { localStorage.setItem("md-admin-session", JSON.stringify(session)); } catch (err) {}
+      this.setState({ token: session.token, refresh: session.refresh, user: session.user, password: "", signingIn: false }, () => this.loadAll());
+    } catch (err) {
+      this.setState({ signingIn: false, authError: "Network error. Try again." });
+    }
+  }
+
+  signOutNow() {
+    try { localStorage.removeItem("md-admin-session"); } catch (e) {}
+    this.setState({ token: null, user: null, refresh: null, products: null, posts: null, today: null, postState: null, password: "", verifying: false });
+  }
+
+  loadAll() { this.loadPendingIds(); this.loadProducts(); this.loadPosts(); this.loadToday(); this.loadCounts(); this.loadCategories(); }
+
+  async loadPendingIds() {
+    try {
+      // product_pipeline.product_id is NULL throughout this database, so the pending
+      // set is resolved through ASIN instead of the unused foreign key
+      const res = await this.req(BASE + "/rest/v1/product_pipeline?select=asin&status=eq.pending&asin=not.is.null&limit=400", { headers: this.headers() });
+      if (!res.ok) return;
+      const rows = await res.json();
+      const asins = [];
+      rows.forEach(r => { if (r.asin && asins.indexOf(r.asin) === -1) asins.push(r.asin); });
+      let ids = [];
+      if (asins.length) {
+        const q = "in.(" + asins.map(a => '"' + String(a).replace(/"/g, "") + '"').join(",") + ")";
+        const pr = await this.req(BASE + "/rest/v1/products?select=id&asin=" + encodeURIComponent(q), { headers: this.headers() });
+        if (pr.ok) ids = (await pr.json()).map(p => p.id).filter(Boolean);
+      }
+      this.setState({ pendingIds: ids }, () => {
+        // the default view must not show them, so it reloads once the list lands
+        if ((this.state.pFlag || "all") !== "pending") this.loadProducts();
+        this.loadCounts();
+      });
+    } catch (e) {}
+  }
+
+  // categories_v2 is the canonical list (it carries sort_order and the Amazon
+  // node ids); the old `categories` table is stale and no longer read
+  async loadCategories() {
+    try {
+      const res = await this.req(BASE + "/rest/v1/categories_v2?select=id,name,sort_order&is_active=eq.true&order=sort_order.asc,name.asc", { headers: this.headers() });
+      if (!res.ok) return;
+      const rows = await res.json();
+      const list = rows.filter(r => r.name);
+      this.setState({
+        catList: list,
+        catNames: list.map(r => r.name),
+        catIdByName: list.reduce((m, r) => (m[r.name] = r.id, m), {}),
+        catNameById: list.reduce((m, r) => (m[r.id] = r.name, m), {})
+      }, () => this.loadStoredCategories());
+    } catch (e) {}
+  }
+
+  // category_id_v2 is the real link to categories_v2; the free-text `category`
+  // column is legacy and only kept in step so older readers keep working.
+  // A row with no category_id_v2 is off-list however its text column reads.
+  async loadStoredCategories() {
+    try {
+      const res = await this.req(BASE + "/rest/v1/products?select=category&category_id_v2=is.null&category=not.is.null&limit=5000", { headers: this.headers() });
+      if (!res.ok) return;
+      const rows = await res.json();
+      const seen = {};
+      rows.forEach(r => { const c = this.decode(r.category || "").trim(); if (c) seen[c] = 1; });
+      this.setState({ offListCats: Object.keys(seen).sort() });
+    } catch (e) {}
+  }
+
+  // exact, whole-table counts — a page of 50 rows cannot answer "how many failed"
+  async count(table, qs) {
+    try {
+      const res = await this.req(BASE + "/rest/v1/" + table + "?select=id" + (qs ? "&" + qs : ""), {
+        headers: this.headers({ Prefer: "count=exact", Range: "0-0" })
+      });
+      const range = res.headers.get("content-range");
+      return range && range.indexOf("/") > -1 ? parseInt(range.split("/")[1], 10) : null;
+    } catch (e) { return null; }
+  }
+
+  excludeQueue() {
+    const ids = this.state.pendingIds || [];
+    return ids.length ? "id=not.in.(" + ids.join(",") + ")" : "";
+  }
+
+  async loadCounts() {
+    const ex = this.excludeQueue();
+    const and = qs => [ex, qs].filter(Boolean).join("&");
+    const [products, hidden, noImage, noCat, topDeals, posts, failed, pending, published] = await Promise.all([
+      this.count("products", ex),
+      this.count("products", and("is_active=eq.false")),
+      this.count("products", and("image_url=is.null")),
+      this.count("products", and("category_id_v2=is.null&category=is.null")),
+      this.count("products", and("is_top_deal=eq.true")),
+      this.count("scheduled_posts"),
+      this.count("scheduled_posts", "status=eq.failed"),
+      this.count("scheduled_posts", "status=eq.pending"),
+      this.count("scheduled_posts", "status=eq.published")
+    ]);
+    this.setState({ counts: { products, hidden, noImage, noCat, topDeals, posts, failed, pending, published } });
+  }
+
+  productQuery() {
+    const parts = [];
+    const flag = this.state.pFlag || "all";
+    const q = (this.state.pQuery || "").trim();
+    // "pending review" means product_pipeline.status = pending for this product,
+    // joined on the real foreign key. Those products stay out of every other
+    // view, filtered by the id list loadPendingIds() keeps.
+    if (flag === "pending") {
+      const ids = this.state.pendingIds || [];
+      parts.push(ids.length ? "id=in.(" + ids.join(",") + ")" : "id=eq.00000000-0000-0000-0000-000000000000");
+    } else {
+      const ids = this.state.pendingIds || [];
+      if (ids.length) parts.push("id=not.in.(" + ids.join(",") + ")");
+    }
+    if (q) {
+      const safe = encodeURIComponent("*" + q.replace(/[(),*]/g, " ").trim() + "*");
+      parts.push("or=(title.ilike." + safe + ",display_title.ilike." + safe + ",asin.ilike." + safe + ")");
+    }
+    if (flag === "live") parts.push("is_active=eq.true");
+    if (flag === "hidden") parts.push("is_active=eq.false");
+    if (flag === "top") parts.push("is_top_deal=eq.true");
+    if (flag === "noimage") parts.push("image_url=is.null");
+    if (flag === "nocat") parts.push("category_id_v2=is.null", "category=is.null");
+    if (flag === "offcat") parts.push("category_id_v2=is.null", "category=not.is.null");
+    if (flag === "coupon") parts.push("coupon_code=not.is.null", "coupon_code=neq.");
+    const cat = this.state.pCat || "All categories";
+    if (cat !== "All categories") {
+      const id = (this.state.catIdByName || {})[cat];
+      parts.push(id ? "category_id_v2=eq." + id : "category=eq." + encodeURIComponent(cat));
+    }
+    return parts.join("&");
+  }
+
+  // which loaded products already sit in the queue, so a row can say so and a
+  // second Post is a deliberate choice rather than an accident
+  // products carries no origin column, so a catalogue row's provenance is
+  // recovered from the queue row that created it — matched on ASIN, newest first
+  async loadOrigins(products) {
+    const asins = Array.from(new Set((products || [])
+      .map(p => (p.asin || p.asin || "").toString().trim().toUpperCase())
+      .filter(Boolean)));
+    if (!asins.length) { this.setState({ originByAsin: {} }); return; }
+    try {
+      const q = "in.(" + asins.map(a => '"' + a.replace(/"/g, "") + '"') .join(",") + ")";
+      const res = await this.req(BASE + "/rest/v1/product_pipeline?select=asin,source,source_url,created_at&order=created_at.desc&limit=1000&asin=" + encodeURIComponent(q), { headers: this.headers() });
+      if (!res.ok) return;
+      const rows = await res.json();
+      const map = {};
+      rows.forEach(r => {
+        const k = (r.asin || "").toString().trim().toUpperCase();
+        if (!k || map[k]) return;
+        map[k] = { source: r.source || "", url: r.source_url || "" };
+      });
+      this.setState({ originByAsin: map });
+    } catch (e) {}
+  }
+
+  async loadPostState(products) {
+    const ids = (products || []).map(p => p.id).filter(Boolean);
+    if (!ids.length) { this.setState({ postState: {} }); return; }
+    try {
+      const res = await this.req(BASE + "/rest/v1/scheduled_posts?select=product_id,platform,status,scheduled_at&order=scheduled_at.desc&product_id=in.(" + ids.join(",") + ")", {
+        headers: this.headers()
+      });
+      if (!res.ok) return;
+      const rows = await res.json();
+      // one entry per product per platform: the catalogue row shows each
+      // platform's own state, so FB going out does not mask IG failing
+      const map = {};
+      rows.forEach(r => {
+        const plat = this.platformKey(r.platform);
+        if (!map[r.product_id]) map[r.product_id] = {};
+        const cur = map[r.product_id][plat];
+        const t = Date.parse(r.scheduled_at || "") || 0;
+        if (!cur || (r.status === "failed" && cur.status !== "failed") || (cur.status !== "failed" && t >= (cur.t || 0))) {
+          map[r.product_id][plat] = { status: r.status, when: r.scheduled_at, t: t };
+        }
+      });
+      this.setState({ postState: map });
+    } catch (e) {}
+  }
+
+  async removePost(id, title) {
+    const ok = await this.ask({
+      title: "Remove this queued post?",
+      body: title || "",
+      detail: "It has not gone out, so nothing is deleted from Facebook — only the queued row.",
+      label: "Remove from queue",
+      danger: true
+    });
+    if (!ok) return;
+    this.setState({ saved: "Removing\u2026" });
+    try {
+      const res = await this.req(BASE + "/rest/v1/scheduled_posts?id=eq." + id, {
+        method: "DELETE", headers: this.headers({ Prefer: "return=minimal" })
+      });
+      this.setState({ saved: res.ok ? "Removed from queue" : "Remove failed" });
+      if (res.ok) { this.loadPosts(); this.loadToday(); this.loadCounts(); this.loadPostState(this.state.products); }
+    } catch (e) { this.setState({ saved: "Remove failed" }); }
+    setTimeout(() => this.setState({ saved: "" }), 2400);
+  }
+
+  decode(s) {
+    const str = String(s == null ? "" : s);
+    if (str.indexOf("&") === -1) return str;
+    if (!this._dec) this._dec = document.createElement("textarea");
+    this._dec.innerHTML = str;
+    const once = this._dec.value;
+    // ingestion double-escapes in places (&amp;#039;), so decode twice
+    if (once.indexOf("&") === -1) return once;
+    this._dec.innerHTML = once;
+    return this._dec.value;
+  }
+
+  platformKey(v) {
+    const s = String(v || "").toLowerCase();
+    if (s.indexOf("story") > -1) return "instagram_story";
+    if (s.indexOf("insta") > -1) return "instagram";
+    if (s.indexOf("face") > -1) return "facebook";
+    return s || "unknown";
+  }
+
+  platformName(v) {
+    const s = String(v || "").toLowerCase();
+    if (s.indexOf("story") > -1) return "Instagram Story";
+    if (s.indexOf("insta") > -1) return "Instagram";
+    if (s.indexOf("face") > -1) return "Facebook";
+    return String(v || "unknown");
+  }
+
+  syncFn() { return (this.props.syncFunction || "amazon-data-sync").replace(/^\/+|\/+$/g, ""); }
+
+  // hits the price-sync Edge Function; product omitted means "everything"
+  // deliberately one product at a time \u2014 bulk re-checks risk Amazon throttling.
+  // The function may work asynchronously, so success is not the HTTP response:
+  // it is last_price_sync actually moving. Poll for it rather than claiming
+  // "Synced" the moment the request returns.
+  async syncNow(product) {
+    if (!product) return;
+    const fn = this.syncFn();
+    const before = product.last_price_sync || null;
+    this.setState({ syncing: true, syncingId: product.id, saved: "Syncing \u2014 asked " + fn + "\u2026" });
+    let body = "";
+    try {
+      const res = await this.req(BASE + "/functions/v1/" + fn, {
+        method: "POST",
+        headers: this.headers(),
+        // the function reads camelCase (its error names "productId"); snake_case
+        // keys are sent too so either contract is satisfied
+        body: JSON.stringify({
+          productId: product.id,
+          product_id: product.id,
+          asin: product.asin || product.asin || null,
+          asin: product.asin || product.asin || null
+        })
+      });
+      try { body = (await res.text()).slice(0, 140); } catch (e) {}
+      if (res.status === 404) {
+        this.setState({ syncing: false, syncingId: null, saved: "No function named \u201c" + fn + "\u201d \u2014 set the right name in Tweaks" });
+        setTimeout(() => this.setState({ saved: "" }), 6000);
+        return;
+      }
+      if (!res.ok) {
+        this.setState({ syncing: false, syncingId: null, saved: "Sync failed (" + res.status + ") " + body });
+        setTimeout(() => this.setState({ saved: "" }), 8000);
+        return;
+      }
+    } catch (e) {
+      this.setState({ syncing: false, syncingId: null, saved: "Sync failed \u2014 network error" });
+      setTimeout(() => this.setState({ saved: "" }), 5000);
+      return;
+    }
+    this.watchSync(product, before, body);
+  }
+
+  // up to 40s, checking whether the row's sync stamp moved
+  async watchSync(product, before, body) {
+    const deadline = Date.now() + 40000;
+    const tick = async () => {
+      let row = null;
+      try {
+        const res = await this.req(BASE + "/rest/v1/products?select=id,price,original_price,last_price_sync&id=eq." + product.id, { headers: this.headers() });
+        if (res.ok) { const rows = await res.json(); row = rows && rows[0]; }
+      } catch (e) {}
+      const moved = row && String(row.last_price_sync || "") !== String(before || "");
+      if (moved) {
+        const products = (this.state.products || []).map(p => p.id === product.id ? Object.assign({}, p, row) : p);
+        this.setState({ products, syncing: false, syncingId: null, saved: "Synced \u2014 price re-checked just now" });
+        if (this.state.pSort === "synced" || this.state.pSort === "stale") this.loadProducts();
+        setTimeout(() => this.setState({ saved: "" }), 5000);
+        return;
+      }
+      if (Date.now() < deadline) {
+        const left = Math.round((deadline - Date.now()) / 1000);
+        this.setState({ saved: "Waiting for " + this.syncFn() + "\u2026 " + left + "s" });
+        setTimeout(tick, 3000);
+        return;
+      }
+      this.setState({
+        syncing: false, syncingId: null,
+        saved: "Function answered but last_price_sync never moved" + (body ? " \u2014 it said: " + body : "") + ". Check the payload it expects."
+      });
+      setTimeout(() => this.setState({ saved: "" }), 12000);
+    };
+    setTimeout(tick, 2500);
+  }
+
+  async startEdit(p) {
+    // seed from a fresh read: a background sync may have moved price since the
+    // page loaded, and a stale draft would write the old numbers back
+    this.setState({ editId: p.id, draft: {}, editError: "", editLoading: true });
+    let row = p;
+    try {
+      const res = await this.req(BASE + "/rest/v1/products?select=*&id=eq." + p.id, { headers: this.headers() });
+      if (res.ok) {
+        const rows = await res.json();
+        if (rows && rows[0]) {
+          row = rows[0];
+          this.setState({ products: (this.state.products || []).map(x => x.id === p.id ? Object.assign({}, x, row) : x) });
+        }
+      }
+    } catch (e) {}
+    if (this.state.editId !== p.id) return;
+    this.setState({
+      editLoading: false,
+      draft: {
+        display_title: this.decode(row.display_title || row.title || ""),
+        category: (this.state.catNameById || {})[row.category_id_v2] || (row.category == null ? "" : String(row.category)),
+        price: row.price == null ? "" : String(row.price),
+        original_price: row.original_price == null ? "" : String(row.original_price)
+      }
+    });
+  }
+
+  cancelEdit() { this.setState({ editId: null, draft: {}, editError: "" }); }
+
+  setDraft(key, value) {
+    const next = Object.assign({}, this.state.draft || {});
+    next[key] = value;
+    this.setState({ draft: next });
+  }
+
+  async saveEdit(p) {
+    const d = this.state.draft || {};
+    const numOrNull = v => {
+      const s = String(v == null ? "" : v).replace(/[$,\s]/g, "");
+      if (s === "") return null;
+      const n = parseFloat(s);
+      return isNaN(n) ? undefined : n;
+    };
+    const price = numOrNull(d.price);
+    const orig = numOrNull(d.original_price);
+    if (price === undefined || orig === undefined) {
+      this.setState({ editError: "Price and original price must be numbers." });
+      return;
+    }
+    if (price != null && orig != null && orig < price) {
+      this.setState({ editError: "Original price is below the current price \u2014 the discount would be negative." });
+      return;
+    }
+    const catName = String(d.category || "").trim();
+    const patch = {
+      display_title: String(d.display_title || "").trim() || null,
+      category: catName || null,
+      category_id_v2: (this.state.catIdByName || {})[catName] || null,
+      price: price,
+      original_price: orig
+    };
+
+    this.setState({ savingEdit: true, editError: "", saved: "Saving\u2026" });
+    try {
+      const res = await this.req(BASE + "/rest/v1/products?id=eq." + p.id, {
+        method: "PATCH", headers: this.headers({ Prefer: "return=representation" }),
+        body: JSON.stringify(patch)
+      });
+      if (!res.ok) {
+        let why = "";
+        try { const j = await res.json(); why = j.message || j.hint || ""; } catch (e) {}
+        // PostgREST names the offending column: "Could not find the 'x' column"
+        const miss = /could not find the '([a-z_]+)' column/i.exec(why);
+        if (miss && patch.hasOwnProperty(miss[1])) {
+          delete patch[miss[1]];
+          const retry = await this.req(BASE + "/rest/v1/products?id=eq." + p.id, {
+            method: "PATCH", headers: this.headers({ Prefer: "return=representation" }),
+            body: JSON.stringify(patch)
+          });
+          if (retry.ok) {
+            let r2 = null;
+            try { const rows = await retry.json(); r2 = rows && rows[0]; } catch (e) {}
+            this.setState({
+              products: (this.state.products || []).map(x => x.id === p.id ? Object.assign({}, x, r2 || patch) : x),
+              editId: null, draft: {}, savingEdit: false, saved: "Saved"
+            });
+            this.loadCounts();
+            setTimeout(() => this.setState({ saved: "" }), 2500);
+            return;
+          }
+        }
+        this.setState({ savingEdit: false, editError: "Save failed (" + res.status + ")" + (why ? " \u2014 " + why : "") });
+        return;
+      }
+      let row = null;
+      try { const rows = await res.json(); row = rows && rows[0]; } catch (e) {}
+      this.setState({
+        products: (this.state.products || []).map(x => x.id === p.id ? Object.assign({}, x, row || patch) : x),
+        editId: null, draft: {}, savingEdit: false, saved: "Saved"
+      });
+      this.loadCounts();
+    } catch (e) {
+      this.setState({ savingEdit: false, editError: "Save failed \u2014 network error" });
+    }
+    setTimeout(() => this.setState({ saved: "" }), 2500);
+  }
+
+  ask(opts) {
+    return new Promise(resolve => {
+      this.setState({ confirmBox: Object.assign({}, opts, { resolve: resolve }) });
+    });
+  }
+
+  answer(ok) {
+    const box = this.state.confirmBox;
+    this.setState({ confirmBox: null });
+    if (box && box.resolve) box.resolve(ok);
+  }
+
+  async deleteProduct(p) {
+    const name = this.decode(p.display_title || p.title) || "this product";
+    const ok = await this.ask({
+      title: "Delete this product?",
+      body: name,
+      detail: "This removes the product row itself, not just its visibility, along with any posts queued for it. Use the Live toggle instead if you only want it off the site.",
+      label: "Delete permanently",
+      danger: true
+    });
+    if (!ok) return;
+    this.setState({ saved: "Deleting\u2026" });
+    try {
+      await this.req(BASE + "/rest/v1/scheduled_posts?product_id=eq." + p.id, {
+        method: "DELETE", headers: this.headers({ Prefer: "return=minimal" })
+      });
+      const res = await this.req(BASE + "/rest/v1/products?id=eq." + p.id, {
+        method: "DELETE", headers: this.headers({ Prefer: "return=minimal" })
+      });
+      if (res.ok) {
+        this.setState({
+          products: (this.state.products || []).filter(x => x.id !== p.id),
+          saved: "Deleted"
+        });
+        this.loadCounts(); this.loadPosts();
+      } else {
+        this.setState({ saved: "Delete failed \u2014 may be referenced elsewhere" });
+      }
+    } catch (e) { this.setState({ saved: "Delete failed" }); }
+    setTimeout(() => this.setState({ saved: "" }), 3000);
+  }
+
+  async retryPost(id) {
+    this.setState({ saved: "Requeueing\u2026" });
+    try {
+      const res = await this.req(BASE + "/rest/v1/scheduled_posts?id=eq." + id, {
+        method: "PATCH", headers: this.headers({ Prefer: "return=minimal" }),
+        body: JSON.stringify({ status: "pending", error_message: null, scheduled_at: new Date().toISOString() })
+      });
+      this.setState({ saved: res.ok ? "Requeued" : "Requeue failed" });
+      if (res.ok) { this.loadPosts(); this.loadToday(); this.loadCounts(); }
+    } catch (e) { this.setState({ saved: "Requeue failed" }); }
+    setTimeout(() => this.setState({ saved: "" }), 2400);
+  }
+
+  sortParam() {
+    const s = this.state.pSort || "added";
+    if (s === "synced") return "last_price_sync.desc.nullslast";
+    if (s === "stale") return "last_price_sync.asc.nullsfirst";
+    return "created_at.desc";
+  }
+
+  async loadProducts() {
+    const qs = this.productQuery();
+    this.setState({ pError: "" });
+    try {
+      const sel = "*";
+      const res = await this.req(BASE + "/rest/v1/products?select=" + sel + "&order=" + this.sortParam() + "&limit=" + (this.state.pLimit || 50) + (qs ? "&" + qs : ""), {
+        headers: this.headers({ Prefer: "count=exact" })
+      });
+      if (!res.ok) {
+        let why = "";
+        try { const j = await res.json(); why = j.message || j.hint || ""; } catch (e) {}
+        if (res.status !== 401 && res.status !== 403) this.setState({ products: [], pError: "Could not load products (" + res.status + ")" + (why ? " \u2014 " + why : "") });
+        return;
+      }
+      const range = res.headers.get("content-range");
+      const total = range && range.indexOf("/") > -1 ? parseInt(range.split("/")[1], 10) : null;
+      const rows = await res.json();
+      this.setState({ products: rows, pTotal: total });
+      this.loadPostState(rows);
+      this.loadOrigins(rows);
+    } catch (e) {
+      this.setState({ products: [], pError: "Could not load products \u2014 network error" });
+    }
+  }
+
+  postQuery() {
+    const f = this.state.sFilter || "all";
+    if (f === "all") return "";
+    if (f === "failed" || f === "pending") return "status=eq." + f;
+    return "platform=like." + encodeURIComponent(f + "*");
+  }
+
+  // the publisher inserts a second row when a post goes out, so collapse
+  // product+platform pairs before anything counts or draws them
+  todayDeduped() {
+    const rows = this.state.today;
+    if (!rows) return null;
+    const seen = {};
+    const out = [];
+    rows.forEach(r => {
+      const t = Date.parse(r.scheduled_at || "") || 0;
+      if (!t) return;
+      const key = String(r.product_id || r.id) + "|" + String(r.platform || "");
+      const st = String(r.status || "");
+      const prod = r.products || {};
+      if (seen[key] != null) {
+        const prev = out[seen[key]];
+        if (st === "failed" || (prev.status !== "failed" && t >= prev.t)) {
+          prev.status = st; prev.t = t;
+        }
+        return;
+      }
+      seen[key] = out.length;
+      out.push({ status: st, t: t, platform: r.platform, name: this.decode(prod.display_title || prod.title) || "(product removed)" });
+    });
+    return out;
+  }
+
+  async loadToday() {
+    const start = new Date(); start.setHours(0, 0, 0, 0);
+    const end = new Date(start.getTime() + 86400000);
+    try {
+      const res = await this.req(BASE + "/rest/v1/scheduled_posts?select=id,platform,status,scheduled_at,product_id,products(title,display_title)" +
+        "&scheduled_at=gte." + start.toISOString() + "&scheduled_at=lt." + end.toISOString() +
+        "&order=scheduled_at.asc&limit=300", { headers: this.headers() });
+      if (!res.ok) return;
+      this.setState({ today: await res.json() });
+    } catch (e) {}
+  }
+
+  async loadPosts() {
+    const qs = this.postQuery();
+    this.setState({ sError: "" });
+    try {
+      const res = await this.req(BASE + "/rest/v1/scheduled_posts?select=*,products(title,display_title,image_url)&order=scheduled_at.desc&limit=" + (this.state.sLimit || 50) + (qs ? "&" + qs : ""), {
+        headers: this.headers({ Prefer: "count=exact" })
+      });
+      if (!res.ok) {
+        let why = "";
+        try { const j = await res.json(); why = j.message || ""; } catch (e) {}
+        if (res.status !== 401 && res.status !== 403) this.setState({ posts: [], sError: "Could not load the queue (" + res.status + ")" + (why ? " \u2014 " + why : "") });
+        return;
+      }
+      const range = res.headers.get("content-range");
+      const total = range && range.indexOf("/") > -1 ? parseInt(range.split("/")[1], 10) : null;
+      this.setState({ posts: await res.json(), sTotal: total });
+    } catch (e) {
+      this.setState({ posts: [], sError: "Could not load the queue \u2014 network error" });
+    }
+  }
+
+  async patchProduct(id, patch) {
+    const products = (this.state.products || []).map(p => p.id === id ? Object.assign({}, p, patch) : p);
+    this.setState({ products, saved: "Saving\u2026" });
+    try {
+      const res = await this.req(BASE + "/rest/v1/products?id=eq." + id, {
+        method: "PATCH", headers: this.headers({ Prefer: "return=minimal" }), body: JSON.stringify(patch)
+      });
+      this.setState({ saved: res.ok ? "Saved" : "Save failed" });
+      if (res.ok) this.loadCounts(); else this.loadProducts();
+    } catch (e) {
+      this.setState({ saved: "Save failed" });
+      this.loadProducts();
+    }
+    setTimeout(() => this.setState({ saved: "" }), 2200);
+  }
+
+  async schedulePost(product, platform) {
+    const plat = platform || "facebook";
+    this.setState({ saved: "Queueing\u2026" });
+    try {
+      const res = await this.req(BASE + "/rest/v1/scheduled_posts", {
+        method: "POST", headers: this.headers({ Prefer: "return=minimal" }),
+        body: JSON.stringify({
+          product_id: product.id, platform: plat, status: "pending",
+          scheduled_at: new Date().toISOString(), post_source: "admin", image_url: product.image_url || null
+        })
+      });
+      if (res.ok) {
+        // promotion to the homepage rail is part of scheduling, not a separate step
+        await this.req(BASE + "/rest/v1/products?id=eq." + product.id, {
+          method: "PATCH", headers: this.headers({ Prefer: "return=minimal" }),
+          body: JSON.stringify({ is_top_deal: true })
+        });
+        this.setState({
+          products: (this.state.products || []).map(x => x.id === product.id ? Object.assign({}, x, { is_top_deal: true }) : x)
+        });
+      }
+      this.setState({ saved: res.ok ? "Queued for " + this.platformName(plat) + " \u00b7 promoted" : "Queue failed" });
+      if (res.ok) { this.loadPosts(); this.loadToday(); this.loadCounts(); this.loadPostState(this.state.products); }
+    } catch (e) { this.setState({ saved: "Queue failed" }); }
+    setTimeout(() => this.setState({ saved: "" }), 2600);
+  }
+
+  since(iso) {
+    if (!iso) return "\u2014";
+    const t = Date.parse(iso);
+    if (!t) return "\u2014";
+    const mins = Math.round((Date.now() - t) / 60000);
+    if (mins < 0) return "in " + Math.abs(mins) + "m";
+    if (mins < 60) return mins + "m ago";
+    const hrs = Math.floor(mins / 60);
+    if (hrs < 24) return hrs + "h ago";
+    const days = Math.floor(hrs / 24);
+    if (days === 1) return "yesterday";
+    if (days < 8) return days + "d ago";
+    return new Date(t).toLocaleDateString("en-US", { day: "numeric", month: "short" });
+  }
+
+  // filtering happens on the server now; these are just the loaded rows
+  visibleProducts() { return this.state.products; }
+
+  // the publisher inserts a second row when a post goes out rather than
+  // updating the queued one, so the same post arrives twice. Collapse rows for
+  // the same product+platform within a day of each other, keeping the row that
+  // says the most: published or failed beats pending, newest beats older.
+  visiblePosts() {
+    const rows = this.state.posts;
+    if (!rows) return rows;
+    const DAY = 86400000;
+    const rank = s => s === "failed" ? 3 : s === "published" ? 2 : 1;
+    const out = [];
+    rows.forEach(r => {
+      const key = String(r.product_id || r.id) + "|" + String(r.platform || "");
+      const t = Date.parse(r.scheduled_at || "") || 0;
+      const near = out.find(o => o.key === key && Math.abs((Date.parse(o.row.scheduled_at || "") || 0) - t) < DAY);
+      if (!near) { out.push({ key, row: r, merged: 1 }); return; }
+      near.merged += 1;
+      const a = rank(String(near.row.status || "")), b = rank(String(r.status || ""));
+      if (b > a || (b === a && t > (Date.parse(near.row.scheduled_at || "") || 0))) {
+        near.row = Object.assign({}, r, { error_message: r.error_message || near.row.error_message });
+      }
+    });
+    return out.map(o => Object.assign({}, o.row, { _merged: o.merged }));
+  }
+
+  setProductFilter(patch) {
+    this.loadPendingIds();
+    // counts are refreshed alongside the list: a pill that advertises a stale
+    // number is worse than no number
+    this.setState(Object.assign({ pLimit: 50, products: null }, patch), () => {
+      this.loadProducts();
+      this.loadCounts();
+    });
+  }
+  setPostFilter(f) {
+    this.setState({ sFilter: f, sLimit: 50, posts: null }, () => this.loadPosts());
+  }
+
+  // deployed, the admin sections are real paths (/admin/dealqueue, /admin/brands,
+  // /admin/scrapes); opened as a local file they are the sibling DC + a hash
+  adminHref(page) {
+    if (location.pathname.indexOf("/admin/") !== -1) return "/admin/" + page;
+    const local = {
+      dealqueue: "MistryDeals Deal Queue.dc.html",
+      brands: "MistryDeals Deal Queue.dc.html#brands",
+      scrapes: "MistryDeals Deal Queue.dc.html#scrapes"
+    };
+    return local[page] || "./";
+  }
+
+  renderVals() {
+    const dense = this.state.dens === "dense";
+    const num = c => "font-family:var(--font-heading);font-weight:800;font-size:30px;line-height:1;letter-spacing:-.02em;color:" + c;
+    const pill = (label, active, onPick) => ({
+      label, pick: onPick,
+      style: "font:inherit;font-size:12px;padding:7px 10px;cursor:pointer;white-space:nowrap;border:1px solid " +
+        (active ? "var(--color-accent);background:var(--color-accent);color:#f3f2f2" : "var(--color-divider);background:transparent;color:var(--color-text)")
+    });
+    const chip = (label, on, title, onToggle) => ({
+      label, title, toggle: onToggle,
+      style: "font:inherit;font-family:var(--font-heading);font-weight:700;font-size:10px;line-height:1;padding:4px 5px;cursor:pointer;border:1px solid " +
+        (on ? "var(--color-accent);background:var(--color-accent);color:#f3f2f2" : "var(--color-divider);background:transparent;color:var(--color-neutral-600)")
+    });
+
+    const rowBase = "display:grid;grid-template-columns:3px " + (dense ? "36px" : "64px") +
+      " minmax(180px,1fr) 92px 56px 78px 96px 120px 68px 148px;gap:10px;align-items:start;padding:" +
+      (dense ? "6px 0" : "10px 0") + ";border-bottom:1px solid var(--color-divider)";
+    const vis = this.visibleProducts();
+    const posts = this.visiblePosts();
+    const all = this.state.products || [];
+    const c = this.state.counts || {};
+    const n = v => v == null ? "\u2014" : Number(v).toLocaleString();
+
+    const cats = {};
+    all.forEach(p => { if (p.category) cats[p.category] = 1; });
+
+    return {
+      signedIn: !!this.state.token,
+      signedOut: !this.state.token && !this.state.verifying,
+      verifying: !this.state.token && this.state.verifying,
+      email: this.state.email,
+      password: this.state.password,
+      authError: this.state.authError,
+      signInLabel: this.state.signingIn ? "Signing in\u2026" : "Sign in",
+      onEmail: e => this.setState({ email: e.target.value }),
+      onPassword: e => this.setState({ password: e.target.value }),
+      onSignIn: e => this.signIn(e),
+      signOut: () => this.signOutNow(),
+      userEmail: this.state.user || "",
+      savedNote: this.state.saved || "",
+      hQueue: this.adminHref("dealqueue"),
+      hBrands: this.adminHref("brands"),
+      hScrapes: this.adminHref("scrapes"),
+      refresh: () => this.loadAll(),
+      toggleDark: () => this.setState({ dark: !this.isDark(), darkTouched: true }),
+      darkGlyph: this.isDark() ? "\u2600" : "\u263D",
+      darkTitle: this.isDark() ? "Switch to light" : "Switch to dark",
+      tDark: "font:inherit;font-size:15px;line-height:1;flex:none;width:36px;height:36px;display:flex;align-items:center;justify-content:center;cursor:pointer;background:transparent;color:var(--color-text);border:2px solid var(--color-divider)",
+
+
+      dayMarks: (() => {
+        const rows = this.todayDeduped() || [];
+        const mid = new Date(); mid.setHours(0, 0, 0, 0);
+        const SLOT = 15 * 60000;
+        const slots = {};
+        rows.forEach(m => {
+          const k = Math.floor((m.t - mid.getTime()) / SLOT);
+          if (!slots[k]) slots[k] = { k: k, items: [], failed: 0, pending: 0, sent: 0 };
+          const s = slots[k];
+          s.items.push(m);
+          if (m.status === "failed") s.failed++;
+          else if (m.status === "published") s.sent++;
+          else s.pending++;
+        });
+        // one mark PER PLATFORM per slot, side by side. Colour stays the status
+        // encoding (ink sent / grey pending / red failed) and the platform is
+        // the monogram above the bar — the same language the rows use, rather
+        // than a second colour scale fighting the first.
+        const order = ["facebook", "instagram", "instagram_story"];
+        const LANE_H = 26;
+        const marks = [];
+        Object.keys(slots).map(k => slots[k]).sort((a, b) => a.k - b.k).forEach(s => {
+          const slotLabel = new Date(mid.getTime() + s.k * SLOT).toLocaleTimeString("en-US", { hour: "numeric", minute: "2-digit" });
+          const slotLeft = Math.max(0, Math.min(99.4, (s.k * SLOT / 86400000) * 100));
+          const byPlat = {};
+          s.items.forEach(m => {
+            const key = this.platformKey(m.platform);
+            if (!byPlat[key]) byPlat[key] = [];
+            byPlat[key].push(m);
+          });
+          Object.keys(byPlat).forEach(key => {
+            const lane = Math.max(0, order.indexOf(key));
+            const group = byPlat[key];
+            const n = group.length;
+            const failed = group.some(m => m.status === "failed");
+            const pending = !failed && group.some(m => m.status !== "published");
+            const colour = failed ? "var(--color-accent)" : pending ? "var(--color-neutral-500)" : "var(--color-text)";
+            const height = Math.min(LANE_H - 6, (failed ? 20 : pending ? 12 : 16) + (n - 1) * 4);
+            const laneTop = lane * LANE_H;
+            marks.push({
+              count: n > 1 ? String(n) : "",
+              showCount: n > 1,
+              title: this.platformName(key) + " \u00b7 " + slotLabel + " \u00b7 " + n + (n === 1 ? " post" : " posts"),
+              style: "position:absolute;top:" + (laneTop + (LANE_H - 3 - height)) + "px;width:" + (n > 1 ? 6 : 4) + "px;height:" + height +
+                "px;left:" + slotLeft + "%;background:" + colour + ";cursor:default",
+              countStyle: "position:absolute;top:" + (laneTop + 1) + "px;left:" + slotLeft +
+                "%;margin-left:8px;font-family:var(--font-heading);font-weight:800;font-size:9px;line-height:1;color:" + colour,
+              hitStyle: "position:absolute;top:" + laneTop + "px;height:" + LANE_H + "px;width:13px;left:" + slotLeft + "%;margin-left:-4px;background:transparent;cursor:default",
+              enter: () => this.setState({ hoverSlot: { label: slotLabel, items: s.items.slice(), left: slotLeft } }),
+              leave: () => this.setState({ hoverSlot: null })
+            });
+          });
+        });
+        return marks;
+      })(),
+      dayLanes: [
+        { label: "FB", name: "Facebook" },
+        { label: "IG", name: "Instagram" },
+        { label: "ST", name: "Instagram Story" }
+      ].map((l, i) => Object.assign(l, {
+        labelStyle: "position:absolute;top:" + (i * 26 + 7) + "px;right:8px;font-family:var(--font-heading);font-weight:800;font-size:9.5px;line-height:1;letter-spacing:.06em;color:var(--color-neutral-700)",
+        ruleStyle: "position:absolute;left:0;right:0;top:" + ((i + 1) * 26) + "px;height:1px;background:" +
+          (i < 2 ? "color-mix(in srgb, var(--color-divider) 45%, transparent)" : "transparent")
+      })),
+      dayLegend: [
+        { label: "Sent", style: "display:inline-block;width:10px;height:10px;background:var(--color-text)" },
+        { label: "Pending", style: "display:inline-block;width:10px;height:10px;background:var(--color-neutral-500)" },
+        { label: "Failed", style: "display:inline-block;width:10px;height:10px;background:var(--color-accent)" }
+      ],
+      hoverOpen: !!this.state.hoverSlot,
+      hoverLabel: (() => {
+        const h = this.state.hoverSlot;
+        if (!h) return "";
+        return h.label + (h.items.length > 1 ? "  \u00b7  " + h.items.length + " posts" : "");
+      })(),
+      // a box above the mark, clamped so it cannot run off either edge
+      hoverBoxStyle: (() => {
+        const h = this.state.hoverSlot;
+        if (!h) return "display:none";
+        const left = Math.max(0, Math.min(100, h.left));
+        const anchor = left < 18 ? "left:0;transform:none"
+          : left > 82 ? "right:0;transform:none"
+          : "left:" + left + "%;transform:translateX(-50%)";
+        return "position:absolute;bottom:100%;margin-bottom:8px;" + anchor +
+          ";z-index:30;pointer-events:none;min-width:240px;max-width:420px;background:var(--color-bg);" +
+          "border:2px solid var(--color-text);box-shadow:var(--shadow-md);padding:10px 12px";
+      })(),
+      hoverItems: (() => {
+        const h = this.state.hoverSlot;
+        if (!h) return [];
+        const shown = h.items.slice(0, 8);
+        const rows = shown.map(m => ({
+          time: new Date(m.t).toLocaleTimeString("en-US", { hour: "numeric", minute: "2-digit" }),
+          plat: this.platformName(m.platform),
+          name: m.name,
+          markStyle: "flex:0 0 auto;width:6px;align-self:stretch;background:" +
+            (m.status === "failed" ? "var(--color-accent)" : m.status === "published" ? "var(--color-text)" : "var(--color-neutral-500)"),
+          metaStyle: "font-size:10.5px;letter-spacing:.04em;text-transform:uppercase;font-family:var(--font-heading);font-weight:700;color:" +
+            (m.status === "failed" ? "var(--color-accent-700)" : "var(--color-neutral-700)"),
+          status: m.status
+        }));
+        if (h.items.length > shown.length) {
+          rows.push({ time: "", plat: "", status: "", name: "+" + (h.items.length - shown.length) + " more in this slot",
+            markStyle: "flex:0 0 auto;width:6px;align-self:stretch;background:transparent",
+            metaStyle: "font-size:10.5px;color:var(--color-neutral-600)" });
+        }
+        return rows;
+      })(),
+      dayTicks: [0, 2, 4, 6, 8, 10, 12, 14, 16, 18, 20, 22].map(h => {
+        const major = h % 6 === 0;
+        return {
+          label: h === 0 ? "12a" : h === 12 ? "12p" : h > 12 ? (h - 12) + "p" : h + "a",
+          style: "position:absolute;bottom:0;width:1px;left:" + ((h / 24) * 100) + "%;top:" + (major ? "0" : "42%") +
+            ";background:" + (major ? "var(--color-divider)" : "color-mix(in srgb, var(--color-divider) 55%, transparent)"),
+          labelStyle: "position:absolute;top:0;left:" + ((h / 24) * 100) + "%;padding-left:4px;font-size:10px;letter-spacing:.06em;color:var(--color-neutral-" + (major ? "700" : "600") + ")"
+        };
+      }),
+      nowStyle: (() => {
+        const d = new Date(); const mid = new Date(d); mid.setHours(0, 0, 0, 0);
+        const pct = ((d.getTime() - mid.getTime()) / 86400000) * 100;
+        return "position:absolute;top:0;bottom:0;width:2px;left:" + pct + "%;background:var(--color-accent)";
+      })(),
+      nowLabelStyle: (() => {
+        const d = new Date(); const mid = new Date(d); mid.setHours(0, 0, 0, 0);
+        const pct = ((d.getTime() - mid.getTime()) / 86400000) * 100;
+        // the line was unlabelled and read as an unexplained marker
+        const flip = pct > 88;
+        return "position:absolute;top:2px;" + (flip ? "right:" + (100 - pct) + "%;padding-right:5px" : "left:" + pct + "%;padding-left:5px") +
+          ";font-family:var(--font-heading);font-weight:700;font-size:9.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--color-accent)";
+      })(),
+      dayNote: (() => {
+        const rows = this.todayDeduped();
+        if (!rows) return "loading\u2026";
+        if (!rows.length) return "nothing scheduled today";
+        const sent = rows.filter(r => r.status === "published").length;
+        const failed = rows.filter(r => r.status === "failed").length;
+        const pending = rows.length - sent - failed;
+        return [sent + " sent", pending + " pending", failed ? failed + " failed" : null].filter(Boolean).join(" \u00b7 ");
+      })(),
+      eTitle: (this.state.draft || {}).display_title || "",
+      eCat: (this.state.draft || {}).category || "",
+      ePrice: (this.state.draft || {}).price || "",
+      eWas: (this.state.draft || {}).original_price || "",
+      onETitle: e => this.setDraft("display_title", e.target.value),
+      onECat: e => this.setDraft("category", e.target.value),
+      onEPrice: e => this.setDraft("price", e.target.value),
+      onEWas: e => this.setDraft("original_price", e.target.value),
+      eSaveLabel: this.state.editLoading ? "Loading\u2026" : this.state.savingEdit ? "Saving\u2026" : "Save",
+      eError: this.state.editError || "",
+      cancelEdit: () => this.cancelEdit(),
+      // the discount is derived, so show what these two numbers will produce
+      eOffNote: (() => {
+        const d = this.state.draft || {};
+        const num = v => { const s = String(v || "").replace(/[$,\s]/g, ""); const n = parseFloat(s); return isNaN(n) ? null : n; };
+        const p = num(d.price), w = num(d.original_price);
+        if (p == null || w == null || w <= p) return "";
+        return "\u2212" + Math.round((1 - p / w) * 100) + "% off once saved";
+      })(),
+      // categories_v2 is the only source of category values; an off-list value
+      // on the row shows as an unsaveable prompt so it has to be re-picked
+      eCatOptions: (() => {
+        const cur = (this.state.draft || {}).category || "";
+        const list = (this.state.catNames || []).filter(Boolean).slice();
+        const opts = [{ value: "", label: "\u2014 none \u2014" }];
+        if (cur && list.indexOf(cur) === -1) opts.push({ value: cur, label: cur + " \u2014 retired, pick a category" });
+        return opts.concat(list.map(c => ({ value: c, label: c })));
+      })(),
+      confirmOpen: !!this.state.confirmBox,
+      confirmTitle: (this.state.confirmBox || {}).title || "",
+      confirmBody: (this.state.confirmBox || {}).body || "",
+      confirmDetail: (this.state.confirmBox || {}).detail || "",
+      confirmLabel: (this.state.confirmBox || {}).label || "Confirm",
+      confirmStyle: "font-size:13px;padding:9px 14px;cursor:pointer;border:1px solid " +
+        ((this.state.confirmBox || {}).danger ? "var(--color-accent);background:var(--color-accent);color:#f3f2f2" : "var(--color-text);background:var(--color-text);color:var(--color-bg)"),
+      confirmYes: () => this.answer(true),
+      confirmNo: () => this.answer(false),
+      shellStyle: this.state.wide
+        ? "display:grid;grid-template-columns:minmax(0,1fr) 400px;gap:0;align-items:start"
+        : "display:block",
+      mainStyle: this.state.wide ? "min-width:0;padding-right:32px" : "min-width:0",
+      railStyle: this.state.wide
+        ? "position:sticky;top:0;align-self:start;max-height:100vh;overflow-y:auto;border-left:2px solid var(--color-divider);padding:16px 0 40px 24px;min-width:0"
+        : "display:block;border-top:2px solid var(--color-divider);margin-top:8px;padding:16px 0 40px;min-width:0",
+      setRoomy: () => this.setState({ dens: "roomy" }),
+      setDense: () => this.setState({ dens: "dense" }),
+      dRoomy: this.densBtn("roomy"),
+      dDense: this.densBtn("dense"),
+      rowStyle: rowBase,
+      thumbStyle: "width:" + (dense ? "32px" : "60px") + ";height:" + (dense ? "32px" : "60px") + ";border:1px solid var(--color-divider);background:#ffffff;position:relative;overflow:hidden",
+
+      cStats: [
+        { label: "Products", value: n(c.products), sub: "in the catalogue", numStyle: num("var(--color-text)") },
+        { label: "Hidden", value: n(c.hidden), sub: "not shown on the site", numStyle: num(c.hidden ? "var(--color-accent)" : "var(--color-text)") },
+        { label: "No image", value: n(c.noImage), sub: "will render blank", numStyle: num(c.noImage ? "var(--color-accent)" : "var(--color-text)") },
+        { label: "Top deals", value: n(c.topDeals), sub: "flagged for the hero", numStyle: num("var(--color-text)") },
+        { label: "Pending posts", value: n(c.pending), sub: "waiting to go out", numStyle: num("var(--color-text)") },
+        { label: "Failed posts", value: n(c.failed), sub: c.failed ? "need attention" : "none failing", numStyle: num(c.failed ? "var(--color-accent)" : "var(--color-text)") }
+      ],
+      pQuery: this.state.pQuery,
+      onPQuery: e => {
+        const v = e.target.value;
+        this.setState({ pQuery: v });
+        clearTimeout(this._qt);
+        this._qt = setTimeout(() => this.setProductFilter({ pQuery: v }), 300);
+      },
+      pCat: this.state.pCat,
+      // the group divider is not a category — picking it is a no-op
+      onPCat: e => { const v = e.target.value; if (v.charAt(0) !== "\u2014") this.setProductFilter({ pCat: v }); },
+      pSort: this.state.pSort,
+      onPSort: e => this.setProductFilter({ pSort: e.target.value }),
+      pSortOptions: [
+        { value: "added", label: "Newest added" },
+        { value: "synced", label: "Recently synced" },
+        { value: "stale", label: "Stalest sync" }
+      ],
+      // v2 names first, then anything still stored on products that v2 dropped
+      // categories_v2 only — stranded values are reached by the Off-list pill
+      pCatOptions: ["All categories"].concat(this.state.catNames || Object.keys(cats).sort()),
+      pFilters: [
+        pill("All", (this.state.pFlag || "all") === "all", () => this.setProductFilter({ pFlag: "all" })),
+        pill("Live", this.state.pFlag === "live", () => this.setProductFilter({ pFlag: "live" })),
+        pill("Hidden", this.state.pFlag === "hidden", () => this.setProductFilter({ pFlag: "hidden" })),
+        pill("Top deal", this.state.pFlag === "top", () => this.setProductFilter({ pFlag: "top" })),
+        pill("No image", this.state.pFlag === "noimage", () => this.setProductFilter({ pFlag: "noimage" })),
+        pill("No category", this.state.pFlag === "nocat", () => this.setProductFilter({ pFlag: "nocat" })),
+        pill("Off-list category" + ((this.state.offListCats || []).length ? " (" + (this.state.offListCats || []).length + ")" : ""), this.state.pFlag === "offcat", () => this.setProductFilter({ pFlag: "offcat" })),
+        pill("Coupon", this.state.pFlag === "coupon", () => this.setProductFilter({ pFlag: "coupon" })),
+        pill("Pending review" + ((this.state.pendingIds || []).length ? " (" + n(this.state.pendingIds.length) + ")" : ""), this.state.pFlag === "pending", () => this.setProductFilter({ pFlag: "pending" }))
+      ],
+      reviewNote: (this.state.pFlag !== "pending" && (this.state.pendingIds || []).length)
+        ? n(this.state.pendingIds.length) + " in the deal queue, hidden \u2014 show"
+        : "",
+      showReview: () => this.setProductFilter({ pFlag: "pending" }),
+      pLoading: this.state.token && this.state.products === null && !this.state.pError,
+      pError: this.state.pError || "",
+      sError: this.state.sError || "",
+      pEmpty: !!(vis && vis.length === 0 && !this.state.pError),
+      pShowing: vis ? vis.length + " shown of " + (this.state.pTotal != null ? Number(this.state.pTotal).toLocaleString() : vis.length) : "",
+      pMore: () => this.setState({ pLimit: (this.state.pLimit || 50) + 50 }, () => this.loadProducts()),
+      pRows: (vis || []).map(p => {
+        const price = parseFloat(p.price);
+        const was = parseFloat(p.original_price);
+        // codes arrive with trailing newlines from the extraction
+        const code = p.coupon_code == null ? "" : String(p.coupon_code).replace(/\s+/g, " ").trim();
+        const cpRaw = parseFloat(p.scraped_coupon_price);
+        const coupon = !isNaN(cpRaw) && cpRaw > 0 && (isNaN(price) || cpRaw < price) ? cpRaw : null;
+        const net = coupon != null ? coupon : price;
+        const off = (net && was && was > net) ? "\u2212" + Math.round((1 - net / was) * 100) + "%" : "";
+        const count = p.review_count != null ? p.review_count : p.reviews;
+        const cashPct = parseFloat(p.prime_cashback_percent) || 0;
+        const asin = p.asin || p.asin;
+        const byPlat = (this.state.postState || {})[p.id] || {};
+        const anyState = ["facebook", "instagram", "instagram_story"].map(k => byPlat[k]).filter(Boolean);
+        return {
+          title: this.decode(p.display_title || p.title) || "(untitled \u2014 awaiting review)",
+          asin: asin ? "ASIN " + asin : "no ASIN",
+          coupon: coupon != null ? "$" + coupon.toFixed(2) : "",
+          hasCouponPrice: coupon != null,
+          hasCode: !!code,
+          couponCode: code ? "code " + code : "",
+          couponCodeStyle: "font-size:10px;letter-spacing:.04em;margin-bottom:2px;color:var(--color-" +
+            (coupon != null ? "accent-700" : "neutral-700") + ")",
+          couponUnknown: code && coupon == null ? "coupon price not captured" : "",
+          price: !isNaN(price) && price > 0 ? "$" + price.toFixed(2) : "no price",
+          // demoted to a strike-through when a coupon beats it
+          priceStyle: (!(price > 0)
+            ? "font-family:var(--font-heading);font-weight:700;font-size:12px;color:var(--color-accent-700)"
+            : "font-family:var(--font-heading);font-weight:" + (coupon != null ? "600" : "700") +
+              ";font-size:" + (coupon != null ? "12px" : "14px") + ";color:var(--color-neutral-" +
+              (coupon != null ? "600" : "900") + ")" + (coupon != null ? ";text-decoration:line-through" : "")),
+          was: !isNaN(was) && was > 0 ? "$" + was.toFixed(2) : "",
+          off: off || "\u2014",
+          offStyle: "font-family:var(--font-heading);font-weight:800;font-size:14px;color:" + (off ? "var(--color-accent)" : "var(--color-neutral-600)"),
+          // cashback is earned on what the shopper actually pays, so it follows
+          // the post-coupon price, not the list price
+          cash: cashPct > 0 && net > 0 ? "$" + (net * cashPct / 100).toFixed(2) : "\u2014",
+          cashPct: cashPct > 0 ? cashPct + "% back" : "",
+          cashStyle: "font-family:var(--font-heading);font-weight:" + (cashPct > 0 ? "800" : "700") +
+            ";font-size:" + (cashPct > 0 ? "14px" : "13px") + ";color:var(--color-neutral-" + (cashPct > 0 ? "900" : "600") + ")",
+          origin: (() => {
+            const o = (this.state.originByAsin || {})[(asin || "").toString().trim().toUpperCase()];
+            return o && o.source ? this.decode(o.source) : "added direct";
+          })(),
+          originUrl: (() => {
+            const o = (this.state.originByAsin || {})[(asin || "").toString().trim().toUpperCase()];
+            return o && o.url ? o.url : "";
+          })(),
+          originLinked: (() => {
+            const o = (this.state.originByAsin || {})[(asin || "").toString().trim().toUpperCase()];
+            return !!(o && o.url && o.source);
+          })(),
+          originPlain: (() => {
+            const o = (this.state.originByAsin || {})[(asin || "").toString().trim().toUpperCase()];
+            return !(o && o.url && o.source);
+          })(),
+          ratingLine: p.rating ? p.rating + (count ? " (" + Number(count).toLocaleString() + ")" : "") : "no rating",
+          catLine: (this.state.catNameById || {})[p.category_id_v2] || this.decode(p.category || "Uncategorized"),
+          synced: this.since(p.last_price_sync),
+          syncedAt: p.last_price_sync
+            ? new Date(p.last_price_sync).toLocaleString("en-US", { day: "numeric", month: "short", hour: "numeric", minute: "2-digit" })
+            : "never synced",
+          img: p.image_url || "",
+          // deliberately NOT affiliate_link: clicks from admin should not land
+          // in the affiliate metrics
+          url: asin
+            ? "https://www.amazon.com/dp/" + asin
+            : (p.affiliate_link ? String(p.affiliate_link).split("?")[0] : "#"),
+          statusBar: "display:block;align-self:stretch;background:" + (p.is_active ? "var(--color-neutral-500)" : "var(--color-accent)"),
+          liveLabel: p.is_active ? "Live" : "Hidden",
+          liveStyle: "font:inherit;font-family:var(--font-heading);font-weight:700;font-size:10px;letter-spacing:.08em;text-transform:uppercase;padding:5px 8px;cursor:pointer;border:1px solid " +
+            (p.is_active ? "var(--color-neutral-900);background:var(--color-neutral-900);color:var(--color-bg)" : "var(--color-accent);background:transparent;color:var(--color-accent-700)"),
+          toggleLive: () => this.patchProduct(p.id, { is_active: !p.is_active }),
+          schedule: () => this.schedulePost(p),
+          // shaded = went out somewhere in the last 24h, so the un-shaded rows
+          // are the ones worth posting next
+          rowStyle: rowBase + (anyState.some(s => s.status === "published" && s.t && (Date.now() - s.t) < 86400000)
+            ? ";background:color-mix(in srgb, var(--color-accent) 7%, transparent);padding-left:6px;margin-left:-6px"
+            : ""),
+          queued: anyState.length > 0,
+          queueLabel: (() => {
+            const failed = anyState.filter(s => s.status === "failed").length;
+            const pending = anyState.filter(s => s.status === "pending").length;
+            if (failed) return failed + " failed";
+            if (pending) return pending + " queued";
+            return "";
+          })(),
+          queueWhen: "",
+          queueStyle: "display:inline-block;font-family:var(--font-heading);font-weight:700;font-size:9.5px;letter-spacing:.08em;text-transform:uppercase;padding:3px 6px;" +
+            (anyState.some(s => s.status === "failed")
+              ? "background:var(--color-accent);color:#f3f2f2"
+              : "border:1px solid var(--color-divider);color:var(--color-neutral-700)"),
+          postVerb: "Post to",
+          // same control shows state and queues: solid = went out in the last
+          // 24h, muted outline = posted before that, red = failed
+          postTargets: [["facebook", "FB"], ["instagram", "IG"], ["instagram_story", "ST"]].map(pair => {
+            const st = byPlat[pair[0]];
+            const status = st ? String(st.status || "") : "";
+            const fresh = status === "published" && st.t && (Date.now() - st.t) < 86400000;
+            const base = "font:inherit;font-family:var(--font-heading);font-weight:800;font-size:9.5px;line-height:1;letter-spacing:.06em;padding:4px 5px;cursor:pointer;border:1px solid ";
+            const style = fresh
+              ? base + "var(--color-text);background:var(--color-text);color:var(--color-bg)"
+              : status === "published"
+              ? base + "var(--color-neutral-500);background:transparent;color:var(--color-neutral-700)"
+              : status === "failed"
+              ? base + "var(--color-accent);background:transparent;color:var(--color-accent-700)"
+              : status === "pending"
+              ? base + "var(--color-neutral-700);background:transparent;color:var(--color-text)"
+              : base + "var(--color-divider);background:transparent;color:var(--color-accent-700)";
+            const note = fresh ? "posted in the last 24h"
+              : status === "published" ? "posted " + this.since(st.when)
+              : status === "failed" ? "failed " + this.since(st.when)
+              : status === "pending" ? "queued " + this.since(st.when)
+              : "not posted yet";
+            return {
+              mark: pair[1],
+              title: this.platformName(pair[0]) + " \u2014 " + note + ". Click to queue" + (status ? " again" : "") + ".",
+              queue: () => this.schedulePost(p, pair[0]),
+              style: style
+            };
+          }),
+          remove: () => this.deleteProduct(p),
+          sync: () => this.syncNow(p),
+          edit: () => this.startEdit(p),
+          editing: this.state.editId === p.id,
+          save: () => this.saveEdit(p),
+          syncLabel: this.state.syncingId === p.id ? "Syncing\u2026" : "Sync",
+          flags: [
+            chip("T", !!p.is_top_deal, "Top deal \u2014 pinned to the homepage rail", () => this.patchProduct(p.id, { is_top_deal: !p.is_top_deal })),
+            chip("P", !!p.is_prime_bonus, "Prime bonus", () => this.patchProduct(p.id, { is_prime_bonus: !p.is_prime_bonus })),
+            chip("V", !!p.is_viral, "Viral", () => this.patchProduct(p.id, { is_viral: !p.is_viral }))
+          ]
+        };
+      }),
+
+      sFilters: [
+        pill("All queued", (this.state.sFilter || "all") === "all", () => this.setPostFilter("all")),
+        pill("Facebook", this.state.sFilter === "facebook", () => this.setPostFilter("facebook")),
+        pill("Instagram", this.state.sFilter === "instagram", () => this.setPostFilter("instagram")),
+        pill("Failed", this.state.sFilter === "failed", () => this.setPostFilter("failed")),
+        pill("Pending", this.state.sFilter === "pending", () => this.setPostFilter("pending"))
+      ],
+      sLoading: this.state.token && this.state.posts === null && !this.state.sError,
+      sEmpty: !!(posts && posts.length === 0 && !this.state.sError),
+      sShowing: posts ? posts.length + " shown of " + (this.state.sTotal != null ? Number(this.state.sTotal).toLocaleString() : posts.length) + (this.state.posts && this.state.posts.length > posts.length ? " \u00b7 " + (this.state.posts.length - posts.length) + " duplicate" + (this.state.posts.length - posts.length === 1 ? "" : "s") + " collapsed" : "") : "",
+      sMore: () => this.setState({ sLimit: (this.state.sLimit || 50) + 50 }, () => this.loadPosts()),
+      sRows: (posts || []).map(p => {
+        const prod = p.products || {};
+        const st = String(p.status || "");
+        return {
+          title: this.decode(prod.display_title || prod.title) || "(product removed)",
+          img: prod.image_url || "",
+          platform: String(p.platform || "").replace("_", " "),
+          platformName: (() => {
+            const sentAt = Date.parse(p.scheduled_at || "") || 0;
+            const fresh = String(p.status || "") === "published" && sentAt && (Date.now() - sentAt) < 86400000;
+            const suffix = fresh ? " \u2014 posted in the last 24h" : "";
+            const v = String(p.platform || "").toLowerCase();
+            if (v.indexOf("story") > -1) return "Instagram Story" + suffix;
+            if (v.indexOf("insta") > -1) return "Instagram" + suffix;
+            if (v.indexOf("face") > -1) return "Facebook" + suffix;
+            return String(p.platform || "unknown") + suffix;
+          })(),
+          platformMark: (() => {
+            const v = String(p.platform || "").toLowerCase();
+            if (v.indexOf("story") > -1) return "ST";
+            if (v.indexOf("insta") > -1) return "IG";
+            if (v.indexOf("face") > -1) return "FB";
+            return "\u2014";
+          })(),
+          showStatus: st !== "published",
+          // a solid mark means "went out on this platform in the last 24h"
+          platformStyle: (() => {
+            const sentAt = Date.parse(p.scheduled_at || "") || 0;
+            const fresh = st === "published" && sentAt && (Date.now() - sentAt) < 86400000;
+            const base = "display:inline-block;font-family:var(--font-heading);font-weight:800;font-size:9.5px;line-height:1;letter-spacing:.06em;padding:4px 5px;border:1px solid ";
+            if (fresh) return base + "var(--color-text);background:var(--color-text);color:var(--color-bg)";
+            if (st === "published") return base + "var(--color-neutral-500);color:var(--color-neutral-700)";
+            return base + "var(--color-divider);color:var(--color-neutral-700)";
+          })(),
+          when: p.scheduled_at ? new Date(p.scheduled_at).toLocaleString("en-US", { day: "numeric", month: "short", hour: "numeric", minute: "2-digit" }) : "\u2014",
+          source: p.post_source || "\u2014",
+          status: st || "unknown",
+          error: p.error_message || "",
+          dupNote: p._merged > 1 ? p._merged + " records" : "",
+          canRetry: st === "failed",
+          retry: () => this.retryPost(p.id),
+          canRemove: st === "pending" || st === "failed",
+          remove: () => this.removePost(p.id, prod.display_title || prod.title || ""),
+          bar: "display:block;align-self:stretch;background:" + (st === "failed" ? "var(--color-accent)" : st === "published" ? "var(--color-neutral-500)" : "transparent"),
+          statusStyle: "display:inline-block;font-family:var(--font-heading);font-weight:700;font-size:9.5px;letter-spacing:.08em;text-transform:uppercase;padding:3px 6px;" +
+            (st === "published" ? "background:var(--color-neutral-900);color:var(--color-bg)"
+              : st === "failed" ? "background:var(--color-accent);color:#f3f2f2"
+              : "border:1px solid var(--color-divider);color:var(--color-neutral-700)")
+        };
+      })
+    };
+  }
+
+  densBtn(v) {
+    const base = "font:inherit;font-family:var(--font-heading);font-weight:600;font-size:11px;letter-spacing:.08em;text-transform:uppercase;padding:6px 11px;border:0;cursor:pointer;";
+    return (this.state.dens || "roomy") === v
+      ? base + "background:var(--color-neutral-900);color:var(--color-bg)"
+      : base + "background:transparent;color:var(--color-neutral-700)";
+  }
+}
+</script>
+</body>
+</html>
