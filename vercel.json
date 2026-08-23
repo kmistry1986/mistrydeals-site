@@ -1,1 +1,50 @@
-{"buildCommand":"","outputDirectory":".","rewrites":[{"source":"/admin/catalogue","destination":"/admin/catalogue/index.html"},{"source":"/admin/dealqueue","destination":"/admin/dealqueue/index.html"},{"source":"/admin/brands","destination":"/admin/brands/index.html"},{"source":"/admin/scrapes","destination":"/admin/scrapes/index.html"},{"source":"/admin","destination":"/admin/catalogue/index.html"},{"source":"/d/:slug","destination":"https://qolksrytidvxarrlygyy.supabase.co/functions/v1/deal-meta?slug=:slug"}]}
+{
+  "buildCommand": "",
+  "outputDirectory": ".",
+  "cleanUrls": true,
+  "trailingSlash": false,
+  "redirects": [
+    {
+      "source": "/admin",
+      "destination": "/admin/catalogue"
+    },
+    {
+      "source": "/admin/queue",
+      "destination": "/admin/dealqueue"
+    },
+    {
+      "source": "/admin/queue/:path*",
+      "destination": "/admin/dealqueue"
+    }
+  ],
+  "rewrites": [
+    {
+      "source": "/admin/index.html",
+      "destination": "/catalogue.html"
+    },
+    {
+      "source": "/admin/catalogue",
+      "destination": "/catalogue.html"
+    },
+    {
+      "source": "/admin/dealqueue",
+      "destination": "/dealqueue.html"
+    },
+    {
+      "source": "/admin/brands",
+      "destination": "/dealqueue.html"
+    },
+    {
+      "source": "/admin/scrapes",
+      "destination": "/dealqueue.html"
+    },
+    {
+      "source": "/admin/:name.dc.html",
+      "destination": "/:name.dc.html"
+    },
+    {
+      "source": "/d/:slug",
+      "destination": "https://qolksrytidvxarrlygyy.supabase.co/functions/v1/deal-meta?slug=:slug"
+    }
+  ]
+}
