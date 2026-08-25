@@ -6,41 +6,45 @@
   "redirects": [
     {
       "source": "/admin",
-      "destination": "/admin/catalogue"
+      "destination": "/catalogue"
+    },
+    {
+      "source": "/admin/catalogue",
+      "destination": "/catalogue"
+    },
+    {
+      "source": "/admin/dealqueue",
+      "destination": "/dealqueue"
     },
     {
       "source": "/admin/queue",
-      "destination": "/admin/dealqueue"
+      "destination": "/dealqueue"
     },
     {
-      "source": "/admin/queue/:path*",
-      "destination": "/admin/dealqueue"
+      "source": "/admin/brands",
+      "destination": "/brandrules"
+    },
+    {
+      "source": "/admin/scrapes",
+      "destination": "/scrapelog"
     }
   ],
   "rewrites": [
     {
-      "source": "/admin/index.html",
+      "source": "/catalogue",
       "destination": "/catalogue.html"
     },
     {
-      "source": "/admin/catalogue",
-      "destination": "/catalogue.html"
-    },
-    {
-      "source": "/admin/dealqueue",
+      "source": "/dealqueue",
       "destination": "/dealqueue.html"
     },
     {
-      "source": "/admin/brands",
+      "source": "/brandrules",
       "destination": "/dealqueue.html"
     },
     {
-      "source": "/admin/scrapes",
+      "source": "/scrapelog",
       "destination": "/dealqueue.html"
-    },
-    {
-      "source": "/admin/:name.dc.html",
-      "destination": "/:name.dc.html"
     },
     {
       "source": "/d/:slug",

@@ -468,30 +468,63 @@
         <dc-import name="ProductImage" src="{{ guideHero }}" alt="" pad="24px" hint-size="100%,100%"></dc-import>
       </div>
     </sc-if>
-    <div class="m-stack" style="display:grid;grid-template-columns:220px 1fr;gap:56px">
-      <div class="m-static" style="position:sticky;top:56px;align-self:start;display:flex;flex-direction:column;gap:8px">
-        <div style="font-size:11px;letter-spacing:.1em;text-transform:uppercase;padding-bottom:8px;border-bottom:2px solid var(--color-divider);margin-bottom:4px">All guides</div>
-        <sc-for list="{{ guideNav }}" as="n" hint-placeholder-count="4">
-          <a href="{{ n.href }}" onClick="{{ n.open }}" style="{{ n.style }}">{{ n.title }}</a>
-        </sc-for>
-      </div>
-      <div style="max-width:70ch">
+    <div>
+      <div style="max-width:100%">
         <sc-for list="{{ guide.intro }}" as="p" hint-placeholder-count="2">
-          <p style="font-size:19px;line-height:1.5">{{ p }}</p>
+          <p style="font-size:19px;line-height:1.5;max-width:78ch">{{ p }}</p>
         </sc-for>
         <hr class="hr" />
-        <div style="font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--color-neutral-700);margin-bottom:16px">The picks</div>
-        <div class="m-stack" style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:20px;margin:0 0 28px">
-          <sc-for list="{{ guide.picks }}" as="d" hint-placeholder-count="4">
+        <div style="font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--color-neutral-700);margin-bottom:16px">At a glance</div>
+        <div class="m-stack" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:16px;margin:0 0 36px">
+          <sc-for list="{{ guide.picks }}" as="d" hint-placeholder-count="5">
             <dc-import name="DealCard" deal="{{ d }}" hint-size="100%,430px"></dc-import>
           </sc-for>
         </div>
+        <div style="font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--color-neutral-700);margin-bottom:16px">The picks in detail</div>
+        <div style="margin:0 0 28px">
+          <sc-for list="{{ guide.picks }}" as="d" hint-placeholder-count="4">
+            <div id="{{ d.anchor }}" class="m-stack" style="display:grid;grid-template-columns:150px 1fr;gap:24px;border-top:2px solid var(--color-divider);padding:22px 0">
+              <div style="border:1px solid var(--color-divider);background:#ffffff;height:150px;position:relative;overflow:hidden">
+                <dc-import name="ProductImage" src="{{ d.img }}" alt="" pad="12px" hint-size="100%,100%"></dc-import>
+              </div>
+              <div style="display:flex;flex-direction:column;gap:10px;align-items:flex-start">
+                <div style="font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--color-accent-700)">{{ d.n }} / {{ d.cat }}</div>
+                <h3 style="margin:0;font-size:22px;line-height:1.2">{{ d.title }}</h3>
+                <div style="display:flex;flex-wrap:wrap;align-items:baseline;gap:10px">
+                  <span style="font-size:24px;font-weight:600">{{ d.price }}</span>
+                  <span style="font-size:15px;color:var(--color-neutral-700);text-decoration:line-through">{{ d.was }}</span>
+                  <span style="font-size:13px;color:var(--color-accent-700);font-weight:600">{{ d.off }}</span>
+                  <span style="font-size:13px;color:var(--color-neutral-700)">{{ d.stars }}</span>
+                </div>
+                <p style="margin:0;font-size:16px;line-height:1.55;max-width:78ch">{{ d.description }}</p>
+                <sc-if value="{{ d.hasNote }}" hint-placeholder-val="{{ false }}">
+                  <div style="background:var(--color-surface);border-left:2px solid var(--color-accent);padding:10px 14px;font-size:14px;line-height:1.5">
+                    <span style="font-weight:600">Price check. </span>{{ d.note }}
+                  </div>
+                </sc-if>
+                <a class="btn btn-primary" href="{{ d.url }}" target="_blank" rel="nofollow sponsored noopener" style="margin-top:2px">View on Amazon</a>
+              </div>
+            </div>
+          </sc-for>
+        </div>
+        <sc-if value="{{ guide.hasHowto }}" hint-placeholder-val="{{ false }}">
+          <div>
+            <hr class="hr" />
+            <div style="font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--color-neutral-700);margin-bottom:16px">How to buy well</div>
+            <sc-for list="{{ guide.howto }}" as="h" hint-placeholder-count="3">
+              <div style="display:grid;grid-template-columns:36px 1fr;gap:14px;border-top:1px solid var(--color-divider);padding:14px 0">
+                <span style="font-size:13px;color:var(--color-accent-700);font-weight:600">{{ h.n }}</span>
+                <p style="margin:0;font-size:16px;line-height:1.55;max-width:78ch">{{ h.text }}</p>
+              </div>
+            </sc-for>
+          </div>
+        </sc-if>
         <sc-for list="{{ guide.sections }}" as="sec" hint-placeholder-count="2">
           <div>
             <hr class="hr" />
             <div style="font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--color-neutral-700);margin-bottom:8px">{{ sec.n }}</div>
             <h3 style="margin:0 0 10px">{{ sec.title }}</h3>
-            <p>{{ sec.content }}</p>
+            <p style="max-width:78ch">{{ sec.content }}</p>
           </div>
         </sc-for>
         <sc-if value="{{ guide.hasFaq }}" hint-placeholder-val="{{ false }}">
@@ -501,7 +534,7 @@
             <sc-for list="{{ guide.faq }}" as="f" hint-placeholder-count="3">
               <div style="border-top:1px solid var(--color-divider);padding:14px 0">
                 <h4 style="margin:0 0 6px;font-size:16px">{{ f.question }}</h4>
-                <p style="margin:0;font-size:15px;color:var(--color-neutral-700)">{{ f.answer }}</p>
+                <p style="margin:0;font-size:15px;color:var(--color-neutral-700);max-width:78ch">{{ f.answer }}</p>
               </div>
             </sc-for>
           </div>
@@ -1156,10 +1189,20 @@ class Component extends DCLogic {
       url: amzUrl(r.affiliate_link, asin)
     };
   }
-  guideProduct(p) {
+  guideProduct(p, i) {
     const n = v => (v === null || v === undefined || v === "") ? null : parseFloat(v);
     const price = n(p.price), was = n(p.original_price);
+    const stars = [p.rating ? p.rating + "\u2605" : "", p.reviews ? Number(p.reviews).toLocaleString() + " reviews" : ""].filter(Boolean).join(" \u00b7 ");
     return {
+      n: String((i || 0) + 1).padStart(2, "0"),
+      anchor: "guide-pick-" + ((i || 0) + 1),
+      short: (p.title || "Product").length > 62 ? (p.title || "").slice(0, 62).replace(/[\s,\-]+$/, "") + "\u2026" : (p.title || "Product"),
+      hash: "#guide-pick-" + ((i || 0) + 1),
+      jump: (e) => {
+        if (e && e.preventDefault) e.preventDefault();
+        const el = document.getElementById("guide-pick-" + ((i || 0) + 1));
+        if (el) window.scrollTo({ top: el.getBoundingClientRect().top + window.pageYOffset - 70, behavior: "smooth" });
+      },
       title: p.title || "Product",
       cat: p.category || "Pick",
       sub: p.category || "",
@@ -1168,13 +1211,17 @@ class Component extends DCLogic {
       off: (price && was && was > price) ? "\u2212" + Math.round((1 - price / was) * 100) + "%" : "",
       rating: p.rating || "",
       reviews: p.reviews ? "(" + Number(p.reviews).toLocaleString() + ")" : "",
-      updated: p.pricing_note || "", code: "",
+      stars,
+      description: p.description || "",
+      note: p.pricing_note || "",
+      hasNote: !!p.pricing_note,
+      updated: "", code: "",
       img: p.image_url || "", noImg: !p.image_url,
       url: amzUrl(null, p.amazon_asin)
     };
   }
   buildGuide(g) {
-    if (!g) return { kicker: "Buying guide", title: "", caption: "", date: "", count: "", intro: [], sections: [], faq: [], hasFaq: false, picks: [] };
+    if (!g) return { kicker: "Buying guide", title: "", caption: "", date: "", count: "", intro: [], sections: [], faq: [], hasFaq: false, howto: [], hasHowto: false, picks: [] };
     const c = g.content || {};
     const active = this.state.activeAsins;
     const products = (c.products || []).filter(p => !active || !p.amazon_asin || active.indexOf(p.amazon_asin) > -1);
@@ -1189,7 +1236,9 @@ class Component extends DCLogic {
       sections: (c.sections || []).map((sec, i) => ({ n: String(i + 1).padStart(2, "0"), title: sec.title || "", content: sec.content || "" })),
       faq: c.faq || [],
       hasFaq: !!(c.faq && c.faq.length),
-      picks: products.map(p => this.guideProduct(p))
+      howto: (c.howto || []).map((t, i) => ({ n: String(i + 1).padStart(2, "0"), text: t })),
+      hasHowto: !!(c.howto && c.howto.length),
+      picks: products.map((p, i) => this.guideProduct(p, i))
     };
   }
   results = React.createRef();

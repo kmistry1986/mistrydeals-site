@@ -155,9 +155,9 @@
       </div>
       <div class="m-wrap" style="display:flex;align-items:center;gap:0;margin-left:8px">
         <a href="{{ hCatalogue }}" style="font:inherit;font-family:var(--font-heading);font-weight:700;font-size:11px;letter-spacing:.1em;text-transform:uppercase;text-decoration:none;padding:8px 12px;border:1px solid var(--color-divider);color:var(--color-text)">Catalogue</a>
-        <button onClick="{{ goQueue }}" style="{{ queueTabStyle }}">Deal queue</button>
-        <button onClick="{{ goBrands }}" style="{{ brandTabStyle }}">Brand rules</button>
-        <button onClick="{{ goScrapes }}" style="{{ scrapeTabStyle }}">Scrape log</button>
+        <a href="{{ hQueue }}" onClick="{{ goQueue }}" style="{{ queueTabStyle }}">Deal queue</a>
+        <a href="{{ hBrands }}" onClick="{{ goBrands }}" style="{{ brandTabStyle }}">Brand rules</a>
+        <a href="{{ hScrapes }}" onClick="{{ goScrapes }}" style="{{ scrapeTabStyle }}">Scrape log</a>
       </div>
       <div class="m-wrap" style="margin-left:auto;display:flex;align-items:center;gap:10px">
         <span style="font-size:12px;color:var(--color-neutral-700)">{{ savedNote }}</span>
@@ -211,9 +211,9 @@
     </div>
 
     <div style="overflow-x:auto;padding-bottom:48px">
-      <div class="m-scroll" style="min-width:1080px">
-        <div class="m-hide" style="display:grid;grid-template-columns:3px 64px minmax(220px,1fr) 104px 84px 120px 96px 236px;gap:10px;padding:10px 0;border-bottom:2px solid var(--color-divider);font-family:var(--font-heading);font-weight:700;font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--color-neutral-700)">
-          <span></span><span></span><span>Deal</span><span>Price</span><span>Rating</span><span>Source</span><span>Added</span><span>Review</span>
+      <div class="m-scroll" style="min-width:1190px">
+        <div class="m-hide" style="display:grid;grid-template-columns:3px 64px minmax(220px,1fr) 104px 84px 120px 108px 96px 236px;gap:10px;padding:10px 0;border-bottom:2px solid var(--color-divider);font-family:var(--font-heading);font-weight:700;font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--color-neutral-700)">
+          <span></span><span></span><span>Deal</span><span>Price</span><span>Rating</span><span>Source</span><span>Forum</span><span>Added</span><span>Review</span>
         </div>
 
         <sc-if value="{{ loading }}" hint-placeholder-val="{{ true }}">
@@ -262,6 +262,14 @@
                 <span style="color:var(--color-neutral-700)">{{ r.source }}</span>
               </sc-if>
               <div style="margin-top:4px"><a href="{{ r.amazonUrl }}" target="_blank" rel="noopener" style="font-family:var(--font-heading);font-weight:700;font-size:10px;letter-spacing:.08em;text-transform:uppercase">Amazon</a></div>
+            </div>
+            <div style="min-width:0;font-size:12px;line-height:1.35">
+              <sc-if value="{{ r.forumLink }}" hint-placeholder-val="{{ false }}">
+                <a href="{{ r.forumLink }}" target="_blank" rel="noopener" title="{{ r.forumLink }}" style="font-family:var(--font-heading);font-weight:700;font-size:10px;letter-spacing:.08em;text-transform:uppercase">Forum post</a>
+              </sc-if>
+              <sc-if value="{{ r.noForumLink }}" hint-placeholder-val="{{ true }}">
+                <span style="color:var(--color-neutral-600)">&#8212;</span>
+              </sc-if>
             </div>
             <div style="font-size:12px;color:var(--color-neutral-700);line-height:1.35">
               {{ r.added }}
@@ -1259,18 +1267,14 @@ class Component extends DCLogic {
       }
 
       if (picks.length && pid) {
-        // one row per selected platform, inserted together
-        const q = await this.req(BASE + "/rest/v1/scheduled_posts", {
-          method: "POST", headers: this.headers({ Prefer: "return=minimal" }),
-          body: JSON.stringify(picks.map(plat => ({
-            product_id: pid, platform: plat, status: "pending",
-            scheduled_at: stamp, post_source: "deal-queue", image_url: row.image_url || null
-          })))
-        });
-        const names = picks.map(p => this.platformName(p)).join(", ");
-        this.setState({ saved: !q.ok ? "Approved \u2014 queueing failed"
-          : synced ? "Approved, live, queued for " + names
-          : "Queued for " + names + " \u2014 hidden until the sync lands" });
+        const outcomes = [];
+        for (const plat of picks) outcomes.push(await this.schedulePlatform(pid, plat));
+        const done = outcomes.filter(o => o.at);
+        const parts = [];
+        if (done.length) parts.push(done.map(o => this.platformName(o.plat) + " " + o.when).join(", "));
+        const bad = outcomes.filter(o => !o.at);
+        for (const o of bad) parts.push(this.platformName(o.plat) + " \u2014 " + o.note);
+        this.setState({ saved: (synced || !done.length ? "" : "Hidden until sync \u00b7 ") + parts.join(" \u00b7 ") });
       } else if (!pid) {
         this.setState({ saved: "Approved, but the catalogue row could not be created" });
       } else {
@@ -1286,6 +1290,37 @@ class Component extends DCLogic {
       this.setState({ busyId: null, saved: "Approve failed" });
     }
     this.clearNote();
+  }
+
+  // Posting goes through auto-schedule-facebook-post, never a direct insert:
+  // that function owns the 8am-10pm ET window, the per-platform cadence
+  // (FB/Story ~2h, IG ~4-5h) and the already-queued check. If today's window is
+  // full it declines, and we ask again for tomorrow rather than dropping it.
+  async schedulePlatform(pid, plat, nextDay) {
+    const call = async (nd) => {
+      const res = await this.req(BASE + "/functions/v1/auto-schedule-facebook-post", {
+        method: "POST", headers: this.headers({ "Content-Type": "application/json" }),
+        body: JSON.stringify({ productId: pid, platform: plat, nextDay: !!nd, source: "deal-queue" })
+      });
+      if (!res.ok) return null;
+      try { return await res.json(); } catch (e) { return null; }
+    };
+    let r = await call(nextDay);
+    if (r && !r.scheduled && r.reason === "window_full" && !nextDay) r = await call(true);
+    if (!r) return { plat, at: "", note: "scheduler unreachable" };
+    if (r.scheduled) return { plat, at: r.scheduledAt, when: this.slotLabel(r.scheduledAt) };
+    if (r.reason === "already_queued") return { plat, at: "", note: "already queued " + this.slotLabel(r.scheduledAt) };
+    if (r.reason === "window_full") return { plat, at: "", note: "no slot left today or tomorrow" };
+    return { plat, at: "", note: r.reason || "declined" };
+  }
+
+  slotLabel(iso) {
+    if (!iso) return "";
+    const d = new Date(iso);
+    if (isNaN(d)) return "";
+    const today = new Date().toDateString() === d.toDateString();
+    const t = d.toLocaleTimeString("en-US", { hour: "numeric", minute: "2-digit", timeZone: "America/New_York" });
+    return (today ? "" : d.toLocaleDateString("en-US", { month: "short", day: "numeric", timeZone: "America/New_York" }) + " ") + t + " ET";
   }
 
   // builds the catalogue row from the scraped deal. Amazon's own title, rating,
@@ -1330,6 +1365,9 @@ class Component extends DCLogic {
       is_active: false,
       last_price_sync: null
     };
+    // only sent once the column exists upstream, so an un-migrated DB can't break approvals
+    const forum = this.forumOf(row);
+    if (forum) body.forum_link = forum;
     try {
       const res = await this.req(BASE + "/rest/v1/products", {
         method: "POST", headers: this.headers({ Prefer: "return=representation" }), body: JSON.stringify([body])
@@ -1830,11 +1868,35 @@ class Component extends DCLogic {
   // Deployed, each tab is its own path under /admin/ (dealqueue, brands,
   // scrapes). Opened as a local file there is no such path, so the same tabs
   // fall back to #brands / #scrapes.
-  onAdmin() { return location.pathname.indexOf("/admin/") !== -1; }
+  onAdmin() { return /^\/(catalogue|dealqueue|brandrules|scrapelog)/.test(location.pathname) || location.pathname.indexOf("/admin/") !== -1; }
+
+  // The forum URL isn't always its own column: some scrapers (slickdeals) stash it
+  // inside a JSON blob of source urls, as source_forum. Check the column first,
+  // then any object / JSON-string field on the row for a forum-ish key.
+  forumOf(row) {
+    if (!row) return "";
+    if (row.forum_link) return String(row.forum_link);
+    const pick = (o) => {
+      if (!o || typeof o !== "object") return "";
+      for (const k of Object.keys(o)) {
+        const v = o[k];
+        if (typeof v === "string" && /^https?:\/\//.test(v) && /forum|thread|post/i.test(k)) return v;
+      }
+      return "";
+    };
+    for (const k of Object.keys(row)) {
+      const v = row[k];
+      if (v && typeof v === "object") { const hit = pick(v); if (hit) return hit; }
+      else if (typeof v === "string" && v.indexOf("source_forum") !== -1) {
+        try { const hit = pick(JSON.parse(v)); if (hit) return hit; } catch (e) {}
+      }
+    }
+    return "";
+  }
 
   adminHref(page) {
-    // the catalogue is the admin index
-    if (this.onAdmin()) return page === "catalogue" ? "/admin/index.html" : "/admin/" + page;
+    const deployed = { catalogue: "/catalogue", dealqueue: "/dealqueue", brands: "/brandrules", scrapes: "/scrapelog" };
+    if (this.onAdmin()) return deployed[page] || "/catalogue";
     const local = {
       catalogue: "MistryDeals Admin v2.dc.html",
       dealqueue: "MistryDeals Deal Queue.dc.html",
@@ -1846,9 +1908,9 @@ class Component extends DCLogic {
 
   tabFromUrl() {
     if (this.onAdmin()) {
-      const m = location.pathname.match(/\/admin\/([a-z]+)/);
-      const seg = m ? m[1] : "";
-      if (seg === "brands" || seg === "scrapes") return seg;
+      const p = location.pathname;
+      if (/brandrules|\/admin\/brands/.test(p)) return "brands";
+      if (/scrapelog|\/admin\/scrapes/.test(p)) return "scrapes";
       return "queue";
     }
     const h = (location.hash || "").replace("#", "");
@@ -1863,7 +1925,7 @@ class Component extends DCLogic {
   goTab(tab, fromUrl) {
     if (!fromUrl) {
       if (this.onAdmin()) {
-        const path = "/admin/" + (tab === "queue" ? "dealqueue" : tab);
+        const path = this.adminHref(tab === "queue" ? "dealqueue" : tab);
         if (location.pathname !== path) history.pushState(null, "", path);
       } else if (tab === "brands" || tab === "scrapes") {
         if (location.hash !== "#" + tab) location.hash = tab;
@@ -1904,7 +1966,7 @@ class Component extends DCLogic {
     const rows = this.state.rows;
     const brands = this.state.brands;
     const brandGrid = "3px minmax(150px,1fr) minmax(150px,1fr) 148px 96px 96px 208px";
-    const tabChrome = "font:inherit;font-family:var(--font-heading);font-weight:700;font-size:11px;letter-spacing:.1em;text-transform:uppercase;padding:8px 12px;cursor:pointer;border-left:0;";
+    const tabChrome = "font:inherit;font-family:var(--font-heading);font-weight:700;font-size:11px;letter-spacing:.1em;text-transform:uppercase;padding:8px 12px;cursor:pointer;border-left:0;text-decoration:none;";
     const tabOn = tabChrome + "border:1px solid var(--color-text);border-left:0;background:var(--color-text);color:var(--color-bg)";
     const tabOff = tabChrome + "border:1px solid var(--color-divider);border-left:0;background:transparent;color:var(--color-text)";
     const inView = (rows || []).filter(r => this.viewFilter(r)).slice(0, this.state.limit || 50);
@@ -1921,7 +1983,7 @@ class Component extends DCLogic {
     // one-line titles, tight rows — more deals per screen, same actions.
     const d = this.density();
     const sig = this.props.signal || "Edge bars";
-    const rowBase = "display:grid;grid-template-columns:3px 64px minmax(220px,1fr) 104px 84px 120px 96px 236px;gap:10px;align-items:start;padding:" + d.pad + "px 0;border-bottom:1px solid var(--color-divider)";
+    const rowBase = "display:grid;grid-template-columns:3px 64px minmax(220px,1fr) 104px 84px 120px 108px 96px 236px;gap:10px;align-items:start;padding:" + d.pad + "px 0;border-bottom:1px solid var(--color-divider)";
 
     return {
       signedIn: !!this.state.token,
@@ -2115,13 +2177,16 @@ class Component extends DCLogic {
 
       onQueue: this.state.tab === "queue",
       onBrands: this.state.tab === "brands",
-      goQueue: () => this.goTab("queue"),
-      goBrands: () => this.goTab("brands"),
+      goQueue: (e) => { if (e) e.preventDefault(); this.goTab("queue"); },
+      goBrands: (e) => { if (e) e.preventDefault(); this.goTab("brands"); },
+      hQueue: this.adminHref("dealqueue"),
+      hBrands: this.adminHref("brands"),
+      hScrapes: this.adminHref("scrapes"),
       queueTabStyle: this.state.tab === "queue" ? tabOn : tabOff,
       brandTabStyle: this.state.tab === "brands" ? tabOn : tabOff,
       hCatalogue: this.adminHref("catalogue"),
       onScrapes: this.state.tab === "scrapes",
-      goScrapes: () => this.goTab("scrapes"),
+      goScrapes: (e) => { if (e) e.preventDefault(); this.goTab("scrapes"); },
       scrapeTabStyle: this.state.tab === "scrapes" ? tabOn : tabOff,
 
       scraperCards: (this.scrapers() || []).map((s, i, arr) => ({
@@ -2287,6 +2352,8 @@ class Component extends DCLogic {
           source: this.decode(r.source || "unknown"),
           sourceUrl: r.source_url || "",
           noSourceUrl: !r.source_url,
+          forumLink: this.forumOf(r),
+          noForumLink: !this.forumOf(r),
           skipReason: this.decode(r.skip_reason || ""),
           amazonUrl: r.amazon_url || (r.asin ? "https://www.amazon.com/dp/" + r.asin : "#"),
           priorNote: (() => {
@@ -2354,8 +2421,8 @@ class Component extends DCLogic {
           isPending: pending,
           isDone: !pending,
           approve: () => (capture ? this.captureInAmazon(r) : this.approve(r)),
-          approveLabel: busy ? "Working\u2026" : capture ? "Approve on Amazon \u2197" : (picked.length ? "Approve & post" : "Approve"),
-          postVerb: picked.length ? "Posting to" : "Post to",
+          approveLabel: busy ? "Working\u2026" : capture ? "Approve on Amazon \u2197" : (picked.length ? "Approve & schedule" : "Approve"),
+          postVerb: picked.length ? "Scheduling for" : "Post to",
           approveStyle: "font:inherit;font-family:var(--font-heading);font-weight:700;font-size:10px;letter-spacing:.08em;text-transform:uppercase;padding:6px 10px;cursor:pointer;border:1px solid var(--color-text);background:var(--color-text);color:var(--color-bg)" + (busy ? ";opacity:.45" : ""),
           reject: () => this.reject(r),
           rejectStyle: "font:inherit;font-family:var(--font-heading);font-weight:700;font-size:10px;letter-spacing:.08em;text-transform:uppercase;padding:6px 10px;cursor:pointer;border:1px solid var(--color-accent);background:transparent;color:var(--color-accent-700)" + (busy ? ";opacity:.45" : ""),

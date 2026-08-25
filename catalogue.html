@@ -1239,7 +1239,8 @@ class Component extends DCLogic {
   // deployed, the admin sections are real paths (/admin/dealqueue, /admin/brands,
   // /admin/scrapes); opened as a local file they are the sibling DC + a hash
   adminHref(page) {
-    if (location.pathname.indexOf("/admin/") !== -1) return "/admin/" + page;
+    const deployed = { catalogue: "/catalogue", dealqueue: "/dealqueue", brands: "/brandrules", scrapes: "/scrapelog" };
+    if (/^\/(catalogue|dealqueue|brandrules|scrapelog)/.test(location.pathname) || location.pathname.indexOf("/admin/") !== -1) return deployed[page] || "/catalogue";
     const local = {
       dealqueue: "MistryDeals Deal Queue.dc.html",
       brands: "MistryDeals Deal Queue.dc.html#brands",
@@ -1460,7 +1461,8 @@ class Component extends DCLogic {
       // on the row shows as an unsaveable prompt so it has to be re-picked
       eCatOptions: (() => {
         const cur = (this.state.draft || {}).category || "";
-        const list = (this.state.catNames || []).filter(Boolean).slice();
+        const list = (this.state.catNames || []).filter(Boolean).slice()
+          .sort((x, y) => x.localeCompare(y, "en", { sensitivity: "base" }));
         const opts = [{ value: "", label: "\u2014 none \u2014" }];
         if (cur && list.indexOf(cur) === -1) opts.push({ value: cur, label: cur + " \u2014 retired, pick a category" });
         return opts.concat(list.map(c => ({ value: c, label: c })));
