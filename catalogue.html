@@ -1199,6 +1199,25 @@ class Component extends DCLogic {
     } catch (e) { this.setState({ saved: "Queue failed" }); }
     setTimeout(() => this.setState({ saved: "" }), 2600);
   }
+        body: JSON.stringify({
+          product_id: product.id, platform: plat, status: "pending",
+          scheduled_at: new Date().toISOString(), post_source: "admin", image_url: product.image_url || null
+        })
+      });
+      if (res.ok) {
+        await this.req(BASE + "/rest/v1/products?id=eq." + product.id, {
+          method: "PATCH", headers: this.headers({ Prefer: "return=minimal" }),
+          body: JSON.stringify({ is_top_deal: true })
+        });
+        this.setState({
+          products: (this.state.products || []).map(x => x.id === product.id ? Object.assign({}, x, { is_top_deal: true }) : x)
+        });
+      }
+      this.setState({ saved: res.ok ? "Queued for " + this.platformName(plat) + " · promoted" : "Queue failed" });
+      if (res.ok) { this.loadPosts(); this.loadToday(); this.loadCounts(); this.loadPostState(this.state.products); }
+    } catch (e) { this.setState({ saved: "Queue failed" }); }
+    setTimeout(() => this.setState({ saved: "" }), 2600);
+  }
 
   since(iso) {
     if (!iso) return "\u2014";
