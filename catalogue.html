@@ -1156,8 +1156,28 @@ class Component extends DCLogic {
 
   async schedulePost(product, platform) {
     const plat = platform || "facebook";
-    this.setState({ saved: "Queueing\u2026" });
+    this.setState({ saved: "Checking limits…" });
     try {
+      // Rate limit check: FB=9, IG=4, IG-Story=9
+      const limits = { facebook: 9, instagram: 4, instagram_story: 9 };
+      const limit = limits[plat] || 9;
+      
+      const now = new Date().toISOString();
+      const tomorrow = new Date(Date.now() + 24*60*60*1000).toISOString();
+      const q = `select=id&platform=eq.${plat}&scheduled_at=gte.${now}&scheduled_at=lte.${tomorrow}&status=in.(pending,published,processing)`;
+      const countRes = await this.req(BASE + "/rest/v1/scheduled_posts?" + q, {
+        method: "GET", headers: this.headers()
+      });
+      
+      const existing = countRes.ok ? await countRes.json() : [];
+      if (existing.length >= limit) {
+        const platName = this.platformName(plat);
+        this.setState({ saved: "Max daily posts reached for " + platName });
+        setTimeout(() => this.setState({ saved: "" }), 3000);
+        return;
+      }
+      
+      this.setState({ saved: "Queueing…" });
       const res = await this.req(BASE + "/rest/v1/scheduled_posts", {
         method: "POST", headers: this.headers({ Prefer: "return=minimal" }),
         body: JSON.stringify({
@@ -1166,7 +1186,6 @@ class Component extends DCLogic {
         })
       });
       if (res.ok) {
-        // promotion to the homepage rail is part of scheduling, not a separate step
         await this.req(BASE + "/rest/v1/products?id=eq." + product.id, {
           method: "PATCH", headers: this.headers({ Prefer: "return=minimal" }),
           body: JSON.stringify({ is_top_deal: true })
@@ -1175,7 +1194,7 @@ class Component extends DCLogic {
           products: (this.state.products || []).map(x => x.id === product.id ? Object.assign({}, x, { is_top_deal: true }) : x)
         });
       }
-      this.setState({ saved: res.ok ? "Queued for " + this.platformName(plat) + " \u00b7 promoted" : "Queue failed" });
+      this.setState({ saved: res.ok ? "Queued for " + this.platformName(plat) + " · promoted" : "Queue failed" });
       if (res.ok) { this.loadPosts(); this.loadToday(); this.loadCounts(); this.loadPostState(this.state.products); }
     } catch (e) { this.setState({ saved: "Queue failed" }); }
     setTimeout(() => this.setState({ saved: "" }), 2600);
