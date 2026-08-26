@@ -384,11 +384,17 @@
               <div style="font-size:11px;color:var(--color-accent-700);margin-top:5px;line-height:1.4">{{ p.error }}</div>
             </sc-if>
             <div style="display:flex;gap:12px;margin-top:6px">
+              <sc-if value="{{ p.canNow }}" hint-placeholder-val="{{ false }}">
+                <button onClick="{{ p.postNow }}" title="Send on the publisher's next run instead of the scheduled slot" style="font:inherit;font-family:var(--font-heading);font-weight:700;font-size:10px;letter-spacing:.08em;text-transform:uppercase;background:none;border:0;padding:0;cursor:pointer;color:var(--color-accent-700)" style-hover="color:var(--color-accent)">Post now &#8594;</button>
+              </sc-if>
               <sc-if value="{{ p.canRetry }}" hint-placeholder-val="{{ false }}">
                 <button onClick="{{ p.retry }}" style="font:inherit;font-family:var(--font-heading);font-weight:700;font-size:10px;letter-spacing:.08em;text-transform:uppercase;background:none;border:0;padding:0;cursor:pointer;color:var(--color-accent-700)">Retry &#8594;</button>
               </sc-if>
               <sc-if value="{{ p.canRemove }}" hint-placeholder-val="{{ false }}">
                 <button onClick="{{ p.remove }}" style="font:inherit;font-family:var(--font-heading);font-weight:700;font-size:10px;letter-spacing:.08em;text-transform:uppercase;background:none;border:0;padding:0;cursor:pointer;color:var(--color-neutral-700)">Remove</button>
+              </sc-if>
+              <sc-if value="{{ p.canUnpublish }}" hint-placeholder-val="{{ false }}">
+                <button onClick="{{ p.unpublish }}" title="Delete the live post on the platform" style="font:inherit;font-family:var(--font-heading);font-weight:700;font-size:10px;letter-spacing:.08em;text-transform:uppercase;background:none;border:0;padding:0;cursor:pointer;color:var(--color-neutral-700)" style-hover="color:var(--color-accent)">Delete live post</button>
               </sc-if>
             </div>
           </div>
@@ -752,6 +758,42 @@ class Component extends DCLogic {
     } catch (e) {}
   }
 
+  // Deletes a post that already went out, on the platform. Stories are excluded
+  // upstream (the Graph API cannot delete them; they expire after 24h), and rows
+  // whose remote post id was never stored come back as no_remote_id.
+  async unpublishPost(id, title, plat) {
+    const ok = await this.ask({
+      title: "Delete this from " + (plat || "the platform") + "?",
+      body: title || "",
+      detail: "This deletes the live post itself, not just the record here. It cannot be undone \u2014 reposting creates a new post with a new URL and no likes or comments.",
+      label: "Delete live post",
+      danger: true
+    });
+    if (!ok) return;
+    this.setState({ saved: "Deleting on " + (plat || "platform") + "\u2026" });
+    try {
+      const res = await this.req(BASE + "/functions/v1/unpublish-social", {
+        method: "POST", headers: this.headers({ "Content-Type": "application/json" }),
+        body: JSON.stringify({ rowId: id })
+      });
+      let r = null;
+      try { r = await res.json(); } catch (e) {}
+      if (r) console.log("unpublish-social", res.status, r);
+      const msg = r && r.success ? "Deleted from " + (plat || "platform")
+        : res.status === 404 ? "unpublish-social isn't deployed yet (404)"
+        : res.status === 401 || res.status === 403 ? "Not allowed to call unpublish-social (" + res.status + ")"
+        : res.status >= 500 ? "The delete function errored (" + res.status + ") \u2014 check its logs"
+        : !r ? "Could not reach the delete function"
+        : r.reason === "story_not_deletable" ? "Stories can't be deleted \u2014 it expires on its own within 24h"
+        : r.reason === "no_remote_id" ? "No post id was saved for this one \u2014 delete it in the app"
+        : r.reason === "no_token" ? "Missing the platform token"
+        : "Delete failed \u2014 " + (r.reason || "unknown");
+      this.setState({ saved: msg });
+      if (r && r.success) { this.loadPosts(); this.loadToday(); this.loadCounts(); this.loadPostState(this.state.products); }
+    } catch (e) { this.setState({ saved: "Delete failed" }); }
+    setTimeout(() => this.setState({ saved: "" }), 4200);
+  }
+
   async removePost(id, title) {
     const ok = await this.ask({
       title: "Remove this queued post?",
@@ -1027,6 +1069,31 @@ class Component extends DCLogic {
     setTimeout(() => this.setState({ saved: "" }), 3000);
   }
 
+  // Pulls a future-dated pending post to the front of the queue. Moving
+  // scheduled_at to now is all the publisher needs — but it also spends the
+  // platform's slot early, so the next backfill sweep will see the window
+  // covered and skip. That is a deliberate override, hence the confirm.
+  async postNow(id, title, plat) {
+    const ok = await this.ask({
+      title: "Post this now?",
+      body: title || "",
+      detail: "It goes out on the publisher's next run instead of its scheduled slot. This spends " +
+        (plat || "the platform") + "'s slot early, so the automatic spacing shifts to match.",
+      label: "Post now"
+    });
+    if (!ok) return;
+    this.setState({ saved: "Moving to the front\u2026" });
+    try {
+      const res = await this.req(BASE + "/rest/v1/scheduled_posts?id=eq." + id, {
+        method: "PATCH", headers: this.headers({ Prefer: "return=minimal" }),
+        body: JSON.stringify({ status: "pending", error_message: null, scheduled_at: new Date().toISOString() })
+      });
+      this.setState({ saved: res.ok ? "Queued to go out on the next run" : "Could not move it" });
+      if (res.ok) { this.loadPosts(); this.loadToday(); this.loadCounts(); }
+    } catch (e) { this.setState({ saved: "Could not move it" }); }
+    setTimeout(() => this.setState({ saved: "" }), 2800);
+  }
+
   async retryPost(id) {
     this.setState({ saved: "Requeueing\u2026" });
     try {
@@ -1154,17 +1221,38 @@ class Component extends DCLogic {
     setTimeout(() => this.setState({ saved: "" }), 2200);
   }
 
+  slotLabel(iso) {
+    if (!iso) return "";
+    const d = new Date(iso);
+    if (isNaN(d.getTime())) return "";
+    const t = d.toLocaleTimeString("en-US", { hour: "numeric", minute: "2-digit", timeZone: "America/New_York" });
+    const sameDay = new Date().toDateString() === d.toDateString();
+    return (sameDay ? "" : d.toLocaleDateString("en-US", { month: "short", day: "numeric", timeZone: "America/New_York" }) + " ") + t + " ET";
+  }
+
   async schedulePost(product, platform) {
     const plat = platform || "facebook";
     this.setState({ saved: "Queueing\u2026" });
     try {
-      const res = await this.req(BASE + "/rest/v1/scheduled_posts", {
-        method: "POST", headers: this.headers({ Prefer: "return=minimal" }),
-        body: JSON.stringify({
-          product_id: product.id, platform: plat, status: "pending",
-          scheduled_at: new Date().toISOString(), post_source: "admin", image_url: product.image_url || null
-        })
-      });
+      // Goes through auto-schedule-facebook-post, not a direct insert: that
+      // function owns the 8am-10pm ET window and the per-platform cadence
+      // (FB/Story ~2h, IG ~4-5h). If today is full we ask for tomorrow.
+      const call = async (nd) => {
+        const r = await this.req(BASE + "/functions/v1/auto-schedule-facebook-post", {
+          method: "POST", headers: this.headers({ "Content-Type": "application/json" }),
+          body: JSON.stringify({ productId: product.id, platform: plat, nextDay: !!nd, source: "admin" })
+        });
+        if (!r.ok) return null;
+        try { return await r.json(); } catch (e) { return null; }
+      };
+      let out = await call(false);
+      if (out && !out.scheduled && out.reason === "window_full") out = await call(true);
+      const res = { ok: !!(out && out.scheduled) };
+      const slot = out && out.scheduledAt ? " \u00b7 " + this.slotLabel(out.scheduledAt) : "";
+      const why = !out ? "scheduler unreachable"
+        : out.reason === "already_queued" ? "already queued" + slot
+        : out.reason === "window_full" ? "no slot left today or tomorrow"
+        : (out.reason || "declined");
       if (res.ok) {
         // promotion to the homepage rail is part of scheduling, not a separate step
         await this.req(BASE + "/rest/v1/products?id=eq." + product.id, {
@@ -1175,7 +1263,7 @@ class Component extends DCLogic {
           products: (this.state.products || []).map(x => x.id === product.id ? Object.assign({}, x, { is_top_deal: true }) : x)
         });
       }
-      this.setState({ saved: res.ok ? "Queued for " + this.platformName(plat) + " \u00b7 promoted" : "Queue failed" });
+      this.setState({ saved: res.ok ? this.platformName(plat) + slot + " \u00b7 promoted" : this.platformName(plat) + " \u2014 " + why });
       if (res.ok) { this.loadPosts(); this.loadToday(); this.loadCounts(); this.loadPostState(this.state.products); }
     } catch (e) { this.setState({ saved: "Queue failed" }); }
     setTimeout(() => this.setState({ saved: "" }), 2600);
@@ -1209,10 +1297,16 @@ class Component extends DCLogic {
     const DAY = 86400000;
     const rank = s => s === "failed" ? 3 : s === "published" ? 2 : 1;
     const out = [];
+    const now = Date.now();
     rows.forEach(r => {
       const key = String(r.product_id || r.id) + "|" + String(r.platform || "");
       const t = Date.parse(r.scheduled_at || "") || 0;
-      const near = out.find(o => o.key === key && Math.abs((Date.parse(o.row.scheduled_at || "") || 0) - t) < DAY);
+      // An upcoming pending row is a real future slot, not the publisher's
+      // duplicate-on-send artifact — that duplicate is always in the past. It
+      // must stay its own row or it gets outranked by an earlier published one
+      // and loses its Post now / Remove controls.
+      if (String(r.status || "") === "pending" && t > now) { out.push({ key, row: r, merged: 1, solo: true }); return; }
+      const near = out.find(o => !o.solo && o.key === key && Math.abs((Date.parse(o.row.scheduled_at || "") || 0) - t) < DAY);
       if (!near) { out.push({ key, row: r, merged: 1 }); return; }
       near.merged += 1;
       const a = rank(String(near.row.status || "")), b = rank(String(r.status || ""));
@@ -1236,8 +1330,8 @@ class Component extends DCLogic {
     this.setState({ sFilter: f, sLimit: 50, posts: null }, () => this.loadPosts());
   }
 
-  // deployed, the admin sections are real paths (/admin/dealqueue, /admin/brands,
-  // /admin/scrapes); opened as a local file they are the sibling DC + a hash
+  // deployed, the admin sections are real paths (/dealqueue, /brandrules,
+  // /scrapelog); opened as a local file they are the sibling DC + a hash
   adminHref(page) {
     const deployed = { catalogue: "/catalogue", dealqueue: "/dealqueue", brands: "/brandrules", scrapes: "/scrapelog" };
     if (/^\/(catalogue|dealqueue|brandrules|scrapelog)/.test(location.pathname) || location.pathname.indexOf("/admin/") !== -1) return deployed[page] || "/catalogue";
@@ -1726,6 +1820,13 @@ class Component extends DCLogic {
           dupNote: p._merged > 1 ? p._merged + " records" : "",
           canRetry: st === "failed",
           retry: () => this.retryPost(p.id),
+          canNow: st === "pending" && (Date.parse(p.scheduled_at || "") || 0) > Date.now() + 60000,
+          postNow: () => this.postNow(p.id, this.decode(prod.display_title || prod.title) || "",
+            (() => { const v = String(p.platform || "").toLowerCase();
+              return v.indexOf("story") > -1 ? "Instagram Story" : v.indexOf("insta") > -1 ? "Instagram" : v.indexOf("face") > -1 ? "Facebook" : "this platform"; })()),
+          canUnpublish: st === "published" && String(p.platform || "").toLowerCase().indexOf("story") === -1,
+          unpublish: () => this.unpublishPost(p.id, this.decode(prod.display_title || prod.title) || "",
+            String(p.platform || "").toLowerCase().indexOf("insta") > -1 ? "Instagram" : "Facebook"),
           canRemove: st === "pending" || st === "failed",
           remove: () => this.removePost(p.id, prod.display_title || prod.title || ""),
           bar: "display:block;align-self:stretch;background:" + (st === "failed" ? "var(--color-accent)" : st === "published" ? "var(--color-neutral-500)" : "transparent"),
