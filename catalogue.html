@@ -95,12 +95,16 @@
         <div style="font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--color-accent-700);margin-bottom:8px">MistryDeals &#183; internal</div>
         <h1 class="m-fs-md" style="margin:0;font-size:38px;line-height:1;letter-spacing:-.02em">Admin</h1>
       </div>
+      <sc-if value="{{ isWide }}" hint-placeholder-val="{{ true }}">
       <div class="m-wrap" style="display:flex;align-items:center;gap:0;margin-left:8px">
         <span style="font:inherit;font-family:var(--font-heading);font-weight:700;font-size:11px;letter-spacing:.1em;text-transform:uppercase;padding:8px 12px;border:1px solid var(--color-text);background:var(--color-text);color:var(--color-bg)">Catalogue</span>
         <a href="{{ hQueue }}" style="font:inherit;font-family:var(--font-heading);font-weight:700;font-size:11px;letter-spacing:.1em;text-transform:uppercase;text-decoration:none;padding:8px 12px;border:1px solid var(--color-divider);color:var(--color-text);border-left:0">Deal queue</a>
+        <a href="{{ hCarousel }}" style="font:inherit;font-family:var(--font-heading);font-weight:700;font-size:11px;letter-spacing:.1em;text-transform:uppercase;text-decoration:none;padding:8px 12px;border:1px solid var(--color-divider);color:var(--color-text);border-left:0">Carousel</a>
         <a href="{{ hBrands }}" style="font:inherit;font-family:var(--font-heading);font-weight:700;font-size:11px;letter-spacing:.1em;text-transform:uppercase;text-decoration:none;padding:8px 12px;border:1px solid var(--color-divider);color:var(--color-text);border-left:0">Brand rules</a>
         <a href="{{ hScrapes }}" style="font:inherit;font-family:var(--font-heading);font-weight:700;font-size:11px;letter-spacing:.1em;text-transform:uppercase;text-decoration:none;padding:8px 12px;border:1px solid var(--color-divider);color:var(--color-text);border-left:0">Scrape log</a>
       </div>
+      </sc-if>
+      <sc-if value="{{ isWide }}" hint-placeholder-val="{{ true }}">
       <div class="m-wrap" style="margin-left:auto;display:flex;align-items:center;gap:10px">
         <span style="font-size:12px;color:var(--color-neutral-700)">{{ savedNote }}</span>
         <span style="font-size:12px;color:var(--color-neutral-700)">{{ userEmail }}</span>
@@ -108,16 +112,63 @@
         <button onClick="{{ signOut }}" class="btn btn-ghost" style="font-size:12px;padding:8px 12px">Sign out</button>
         <button onClick="{{ toggleDark }}" title="{{ darkTitle }}" style="{{ tDark }}">{{ darkGlyph }}</button>
       </div>
+      </sc-if>
+      <sc-if value="{{ isNarrow }}" hint-placeholder-val="{{ false }}">
+      <div style="margin-left:auto;display:flex;align-items:center;gap:10px;flex:none">
+        <span style="font-size:12px;color:var(--color-neutral-700);text-align:right">{{ savedNote }}</span>
+        <button onClick="{{ openMenu }}" title="Menu" style="font:inherit;flex:none;width:42px;height:42px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;background:transparent;border:1px solid var(--color-divider);cursor:pointer;padding:0">
+          <span style="display:block;width:18px;height:2px;background:var(--color-text)"></span>
+          <span style="display:block;width:18px;height:2px;background:var(--color-text)"></span>
+          <span style="display:block;width:18px;height:2px;background:var(--color-text)"></span>
+        </button>
+      </div>
+      </sc-if>
     </div>
   </div>
+
+  <sc-if value="{{ menuOpen }}" hint-placeholder-val="{{ false }}">
+    <div onClick="{{ closeMenu }}" style="position:fixed;inset:0;background:color-mix(in srgb, var(--color-neutral-900) 55%, transparent);z-index:90;display:flex;justify-content:flex-end">
+      <div onClick="{{ stop }}" style="background:var(--color-bg);width:min(310px,86vw);height:100%;display:flex;flex-direction:column;border-left:2px solid var(--color-text)">
+        <div style="padding:16px;border-bottom:2px solid var(--color-divider);display:flex;align-items:flex-start;gap:12px">
+          <div style="min-width:0">
+            <div style="font-family:var(--font-heading);font-weight:700;font-size:9.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--color-neutral-700)">Signed in</div>
+            <div style="font-size:13px;line-height:1.35;margin-top:4px;overflow-wrap:anywhere">{{ userEmail }}</div>
+          </div>
+          <button onClick="{{ closeMenu }}" class="btn btn-ghost" style="margin-left:auto;font-size:12px;min-height:44px;padding:0 14px;flex:none">Close</button>
+        </div>
+
+        <div style="display:flex;flex-direction:column;padding:8px 0;border-bottom:1px solid var(--color-divider)">
+          <sc-for list="{{ menuNav }}" as="m" hint-placeholder-count="5">
+            <a href="{{ m.href }}" style="{{ m.style }}">{{ m.label }}</a>
+          </sc-for>
+        </div>
+
+        <div style="display:flex;align-items:center;gap:10px;padding:14px 16px;border-bottom:1px solid var(--color-divider)">
+          <button onClick="{{ toggleDark }}" title="{{ darkTitle }}" style="{{ tDark }}">{{ darkGlyph }}</button>
+        </div>
+
+        <button onClick="{{ refresh }}" class="btn btn-secondary" style="margin:14px 16px 0;font-size:12px;padding:9px 12px;justify-content:flex-start">Refresh data</button>
+
+        <button onClick="{{ signOut }}" class="btn btn-ghost" style="margin:auto 16px 20px;font-size:12px;padding:10px 12px;justify-content:flex-start">Sign out</button>
+      </div>
+    </div>
+  </sc-if>
 
   <div style="max-width:1720px;margin:0 auto;padding:0 16px">
     <div class="m-2col" style="display:grid;grid-template-columns:repeat(6,minmax(0,1fr));border-bottom:2px solid var(--color-divider);margin-left:-20px">
       <sc-for list="{{ cStats }}" as="s" hint-placeholder-count="6">
-        <div style="padding:18px 20px;border-right:1px solid var(--color-divider)">
-          <div style="font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--color-neutral-700);margin-bottom:6px">{{ s.label }}</div>
-          <div style="{{ s.numStyle }}">{{ s.value }}</div>
-          <div style="font-size:12px;color:var(--color-neutral-700);margin-top:6px">{{ s.sub }}</div>
+        <div style="{{ s.cellStyle }}">
+          <sc-if value="{{ s.inline }}" hint-placeholder-val="{{ false }}">
+            <div style="display:flex;align-items:baseline;gap:6px;flex-wrap:wrap">
+              <span style="{{ s.labelStyle }}">{{ s.label }}</span>
+              <span style="{{ s.numStyle }}">{{ s.value }}</span>
+            </div>
+          </sc-if>
+          <sc-if value="{{ s.stacked }}" hint-placeholder-val="{{ true }}">
+            <div style="{{ s.labelStyle }}">{{ s.label }}</div>
+            <div style="{{ s.numStyle }}">{{ s.value }}</div>
+            <div style="font-size:12px;color:var(--color-neutral-700);margin-top:6px">{{ s.sub }}</div>
+          </sc-if>
         </div>
       </sc-for>
     </div>
@@ -188,6 +239,32 @@
     <div style="{{ shellStyle }}">
     <div style="{{ mainStyle }}">
       <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;padding:16px 0;border-bottom:1px solid var(--color-divider)">
+        <sc-if value="{{ isNarrow }}" hint-placeholder-val="{{ false }}">
+        <div style="display:flex;flex-direction:column;gap:10px;width:100%">
+          <div style="display:flex;align-items:center;gap:8px">
+            <input class="input" placeholder="Title or ASIN" style="flex:1 1 auto;min-width:0;padding:0 10px;min-height:44px;font-size:13px" value="{{ pQuery }}" onChange="{{ onPQuery }}" />
+            <button onClick="{{ openPFilter }}" title="Choose which products to show" style="font:inherit;font-family:var(--font-heading);font-weight:700;font-size:11px;letter-spacing:.08em;text-transform:uppercase;flex:none;min-height:44px;padding:0 13px;cursor:pointer;border:1px solid var(--color-text);background:transparent;color:var(--color-text)">{{ pFilterLabel }}</button>
+          </div>
+          <div style="display:flex;align-items:center;gap:8px">
+            <select class="input" style="flex:1 1 0;min-width:0;padding:0 10px;min-height:44px;font-size:13px" value="{{ pCat }}" onChange="{{ onPCat }}">
+              <sc-for list="{{ pCatOptions }}" as="o" hint-placeholder-count="6">
+                <option value="{{ o }}">{{ o }}</option>
+              </sc-for>
+            </select>
+            <select class="input" style="flex:1 1 0;min-width:0;padding:0 10px;min-height:44px;font-size:13px" value="{{ pSort }}" onChange="{{ onPSort }}">
+              <sc-for list="{{ pSortOptions }}" as="o" hint-placeholder-count="4">
+                <option value="{{ o.value }}">{{ o.label }}</option>
+              </sc-for>
+            </select>
+          </div>
+          <div style="font-size:12px;color:var(--color-neutral-700)">{{ pShowing }}</div>
+          <sc-if value="{{ reviewNote }}" hint-placeholder-val="{{ false }}">
+            <button onClick="{{ showReview }}" style="font:inherit;font-size:12px;background:none;border:0;padding:0;text-align:left;cursor:pointer;color:var(--color-accent-700);text-decoration:underline;text-underline-offset:2px">{{ reviewNote }}</button>
+          </sc-if>
+        </div>
+        </sc-if>
+
+        <sc-if value="{{ isWide }}" hint-placeholder-val="{{ true }}">
         <input class="input" placeholder="Search title or ASIN" style="flex:1 1 220px;min-width:200px;max-width:300px;padding:7px 10px;font-size:13px" value="{{ pQuery }}" onChange="{{ onPQuery }}" />
         <sc-for list="{{ pFilters }}" as="f" hint-placeholder-count="5">
           <button onClick="{{ f.pick }}" style="{{ f.style }}">{{ f.label }}</button>
@@ -212,12 +289,41 @@
             <button onClick="{{ setDense }}" style="{{ dDense }}">Dense</button>
           </div>
         </div>
+        </sc-if>
       </div>
 
+      <sc-if value="{{ pFilterOpen }}" hint-placeholder-val="{{ false }}">
+        <div onClick="{{ closePFilter }}" style="position:fixed;inset:0;background:color-mix(in srgb, var(--color-neutral-900) 55%, transparent);display:grid;place-items:end center;z-index:95">
+          <div onClick="{{ stop }}" style="background:var(--color-bg);border-top:2px solid var(--color-text);width:100%;max-height:80vh;overflow:auto;padding:18px 16px 26px">
+            <div style="display:flex;align-items:flex-start;gap:12px;border-bottom:2px solid var(--color-divider);padding-bottom:12px">
+              <div>
+                <div style="font-family:var(--font-heading);font-weight:700;font-size:9.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--color-neutral-700)">Catalogue</div>
+                <h2 style="margin:5px 0 0;font-size:21px;line-height:1.15;letter-spacing:-.01em">Show</h2>
+              </div>
+              <button onClick="{{ closePFilter }}" class="btn btn-ghost" style="margin-left:auto;font-size:12px;min-height:44px;padding:0 14px;flex:none">Close</button>
+            </div>
+            <div style="display:flex;flex-direction:column">
+              <sc-for list="{{ pFilterOptions }}" as="o" hint-placeholder-count="6">
+                <button onClick="{{ o.pick }}" style="{{ o.style }}">
+                  <span>{{ o.label }}</span>
+                  <span style="{{ o.markStyle }}">{{ o.mark }}</span>
+                </button>
+              </sc-for>
+            </div>
+          </div>
+        </div>
+      </sc-if>
+
       <div style="overflow-x:auto;padding-bottom:48px">
-        <div class="m-scroll" style="min-width:960px">
-          <div class="m-hide" style="display:grid;grid-template-columns:3px 64px minmax(180px,1fr) 92px 56px 78px 96px 120px 68px 148px;gap:10px;padding:10px 0;border-bottom:2px solid var(--color-divider);font-family:var(--font-heading);font-weight:700;font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--color-neutral-700)">
-            <span></span><span></span><span>Product</span><span>Price</span><span>% off</span><span>Cashback</span><span>Synced</span><span>Flags</span><span>Live</span><span>Queue</span>
+        <div class="m-scroll" style="min-width:1000px">
+          <div class="m-hide" style="{{ headStyle }}">
+            <sc-for list="{{ headCols }}" as="h" hint-placeholder-count="10">
+              <div style="{{ h.cellStyle }}" title="{{ h.title }}" onClick="{{ h.onSort }}">
+                <span style="{{ h.labelStyle }}">{{ h.label }}</span>
+                <span>{{ h.arrow }}</span>
+                <span onMouseDown="{{ h.startResize }}" onDoubleClick="{{ h.resetCol }}" title="Drag to resize, double-click to reset" style="{{ h.gripStyle }}"></span>
+              </div>
+            </sc-for>
           </div>
           <sc-if value="{{ pLoading }}" hint-placeholder-val="{{ true }}">
             <div style="padding:40px;text-align:center;color:var(--color-neutral-700);font-size:13px">Loading products&#8230;</div>
@@ -231,8 +337,13 @@
           <sc-for list="{{ pRows }}" as="r" hint-placeholder-count="12">
             <div class="m-row" style="{{ r.rowStyle }}">
               <span style="{{ r.statusBar }}"></span>
-              <div style="{{ thumbStyle }}">
-                <dc-import name="ProductImage" src="{{ r.img }}" alt="" pad="3px" hint-size="100%,100%"></dc-import>
+              <div style="{{ thumbColStyle }}">
+                <div style="{{ thumbStyle }}">
+                  <dc-import name="ProductImage" src="{{ r.img }}" alt="" pad="3px" hint-size="100%,100%"></dc-import>
+                </div>
+                <sc-if value="{{ r.isNarrow }}" hint-placeholder-val="{{ false }}">
+                  <button onClick="{{ r.toggleLive }}" style="{{ r.liveStyleSm }}">{{ r.liveLabel }}</button>
+                </sc-if>
               </div>
               <div style="min-width:0">
                 <div style="font-weight:600;font-size:13px;line-height:1.35;overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical">{{ r.title }}</div>
@@ -249,6 +360,31 @@
                 </div>
               </div>
               <div>
+                <sc-if value="{{ r.isNarrow }}" hint-placeholder-val="{{ false }}">
+                  <div style="display:grid;grid-template-columns:minmax(0,.9fr) minmax(0,1fr) minmax(0,.7fr) minmax(0,1fr) minmax(0,1.4fr);gap:8px;align-items:start">
+                    <div style="min-width:0">
+                      <div style="{{ r.labelStyle }}">Was</div>
+                      <div style="font-size:11.5px;color:var(--color-neutral-600);text-decoration:line-through">{{ r.wasFlat }}</div>
+                    </div>
+                    <div style="min-width:0">
+                      <div style="{{ r.labelStyle }}">Price</div>
+                      <div style="{{ r.priceStyle }}">{{ r.price }}</div>
+                    </div>
+                    <div style="min-width:0">
+                      <div style="{{ r.labelStyle }}">Off</div>
+                      <div style="{{ r.offFlatStyle }}">{{ r.off }}</div>
+                    </div>
+                    <div style="min-width:0">
+                      <div style="{{ r.labelStyle }}">Coupon</div>
+                      <div style="font-family:var(--font-heading);font-weight:700;font-size:13px;color:var(--color-accent-700)">{{ r.couponFlat }}</div>
+                    </div>
+                    <div style="min-width:0">
+                      <div style="{{ r.labelStyle }}">Code</div>
+                      <div style="font-family:var(--font-heading);font-weight:700;font-size:10px;letter-spacing:.04em;text-transform:uppercase;overflow-wrap:anywhere;color:var(--color-neutral-700)">{{ r.codeFlat }}</div>
+                    </div>
+                  </div>
+                </sc-if>
+                <sc-if value="{{ r.isWide }}" hint-placeholder-val="{{ true }}">
                 <sc-if value="{{ r.hasCouponPrice }}" hint-placeholder-val="{{ false }}">
                   <div style="font-family:var(--font-heading);font-weight:800;font-size:14px;color:var(--color-accent-700)">{{ r.coupon }}</div>
                 </sc-if>
@@ -260,29 +396,63 @@
                 <sc-if value="{{ r.couponUnknown }}" hint-placeholder-val="{{ false }}">
                   <div style="font-size:10px;line-height:1.3;margin-top:2px;color:var(--color-neutral-600)">{{ r.couponUnknown }}</div>
                 </sc-if>
-              </div>
-              <div style="{{ r.offStyle }}">{{ r.off }}</div>
-              <div>
-                <div style="{{ r.cashStyle }}">{{ r.cash }}</div>
-                <sc-if value="{{ r.cashPct }}" hint-placeholder-val="{{ false }}">
-                  <div style="font-size:10.5px;color:var(--color-neutral-600);line-height:1.3;margin-top:1px">{{ r.cashPct }}</div>
                 </sc-if>
               </div>
+              <div style="{{ r.offCellStyle }}">{{ r.offCell }}</div>
               <div>
-                <div style="font-size:12px;color:var(--color-neutral-700);line-height:1.35">{{ r.synced }}</div>
-                <div style="font-size:11px;color:var(--color-neutral-600);line-height:1.35">{{ r.syncedAt }}</div>
+                <sc-if value="{{ r.isNarrow }}" hint-placeholder-val="{{ false }}">
+                  <div style="display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr) minmax(0,1.2fr);gap:8px;align-items:start">
+                    <div style="min-width:0">
+                      <div style="{{ r.labelStyle }}">Cashback</div>
+                      <div style="{{ r.cashStyle }}">{{ r.cash }}</div>
+                      <sc-if value="{{ r.cashPct }}" hint-placeholder-val="{{ false }}">
+                        <div style="font-size:10.5px;color:var(--color-neutral-600);line-height:1.3;margin-top:1px">{{ r.cashPct }}</div>
+                      </sc-if>
+                    </div>
+                    <div style="min-width:0">
+                      <div style="{{ r.labelStyle }}">Synced</div>
+                      <div style="font-size:12px;color:var(--color-neutral-700);line-height:1.35">{{ r.synced }}</div>
+                    </div>
+                    <div style="min-width:0">
+                      <div style="{{ r.labelStyle }}">Flags</div>
+                      <div style="display:flex;gap:4px;flex-wrap:wrap">
+                        <sc-for list="{{ r.flags }}" as="f" hint-placeholder-count="3">
+                          <button onClick="{{ f.toggle }}" title="{{ f.title }}" style="{{ f.style }}">{{ f.label }}</button>
+                        </sc-for>
+                      </div>
+                    </div>
+                  </div>
+                </sc-if>
+                <sc-if value="{{ r.isWide }}" hint-placeholder-val="{{ true }}">
+                  <div style="{{ r.cashStyle }}">{{ r.cash }}</div>
+                  <sc-if value="{{ r.cashPct }}" hint-placeholder-val="{{ false }}">
+                    <div style="font-size:10.5px;color:var(--color-neutral-600);line-height:1.3;margin-top:1px">{{ r.cashPct }}</div>
+                  </sc-if>
+                </sc-if>
               </div>
-              <div style="display:flex;gap:4px;flex-wrap:wrap">
-                <sc-for list="{{ r.flags }}" as="f" hint-placeholder-count="4">
-                  <button onClick="{{ f.toggle }}" title="{{ f.title }}" style="{{ f.style }}">{{ f.label }}</button>
-                </sc-for>
+              <div style="{{ r.wideOnlyStyle }}">
+                <sc-if value="{{ r.isWide }}" hint-placeholder-val="{{ true }}">
+                  <div style="font-size:12px;color:var(--color-neutral-700);line-height:1.35">{{ r.synced }}</div>
+                  <div style="font-size:11px;color:var(--color-neutral-600);line-height:1.35">{{ r.syncedAt }}</div>
+                </sc-if>
               </div>
-              <div><button onClick="{{ r.toggleLive }}" style="{{ r.liveStyle }}">{{ r.liveLabel }}</button></div>
-              <div style="min-width:0">
+              <div style="{{ r.flagsCellStyle }}">
+                <sc-if value="{{ r.isWide }}" hint-placeholder-val="{{ true }}">
+                  <sc-for list="{{ r.flags }}" as="f" hint-placeholder-count="4">
+                    <button onClick="{{ f.toggle }}" title="{{ f.title }}" style="{{ f.style }}">{{ f.label }}</button>
+                  </sc-for>
+                </sc-if>
+              </div>
+              <div style="{{ r.liveCellStyle }}">
+                <sc-if value="{{ r.isWide }}" hint-placeholder-val="{{ true }}">
+                  <button onClick="{{ r.toggleLive }}" style="{{ r.liveStyle }}">{{ r.liveLabel }}</button>
+                </sc-if>
                 <sc-if value="{{ r.queueLabel }}" hint-placeholder-val="{{ false }}">
                   <div style="{{ r.queueStyle }}">{{ r.queueLabel }}</div>
                 </sc-if>
-                <div class="m-wrap" style="display:flex;align-items:center;gap:5px;margin-top:6px">
+              </div>
+              <div style="min-width:0">
+                <div class="m-wrap" style="display:flex;align-items:center;gap:5px">
                   <span style="font-family:var(--font-heading);font-weight:700;font-size:9.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--color-neutral-600)">{{ r.postVerb }}</span>
                   <sc-for list="{{ r.postTargets }}" as="pt" hint-placeholder-count="3">
                     <button onClick="{{ pt.queue }}" title="{{ pt.title }}" style="{{ pt.style }}">{{ pt.mark }}</button>
@@ -376,10 +546,23 @@
                 <span style="{{ p.statusStyle }}">{{ p.status }}</span>
               </sc-if>
               <span style="font-size:11px;color:var(--color-neutral-600)">{{ p.when }}</span>
+              <sc-if value="{{ p.isCarousel }}" hint-placeholder-val="{{ false }}">
+                <button onClick="{{ p.toggleSlides }}" title="{{ p.slidesTitle }}" style="{{ p.carouselBadge }}">{{ p.carouselLabel }}</button>
+              </sc-if>
               <sc-if value="{{ p.dupNote }}" hint-placeholder-val="{{ false }}">
                 <span title="Queued and published rows for the same post" style="font-size:10.5px;color:var(--color-neutral-600);border:1px solid var(--color-divider);padding:1px 4px">{{ p.dupNote }}</span>
               </sc-if>
             </div>
+            <sc-if value="{{ p.slidesOpen }}" hint-placeholder-val="{{ false }}">
+              <div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:8px;padding:8px;border:1px solid var(--color-divider)">
+                <sc-for list="{{ p.slides }}" as="sl" hint-placeholder-count="5">
+                  <a href="{{ sl.url }}" target="_blank" rel="noopener" title="{{ sl.url }}" style="display:block;position:relative;width:74px;height:52px;border:1px solid var(--color-divider);background:#ffffff;overflow:hidden;flex:none">
+                    <dc-import name="ProductImage" src="{{ sl.url }}" alt="" pad="0px" hint-size="100%,100%"></dc-import>
+                    <span style="position:absolute;left:0;bottom:0;font-family:var(--font-heading);font-weight:800;font-size:9px;line-height:1;padding:2px 3px;background:var(--color-text);color:var(--color-bg)">{{ sl.n }}</span>
+                  </a>
+                </sc-for>
+              </div>
+            </sc-if>
             <sc-if value="{{ p.error }}" hint-placeholder-val="{{ false }}">
               <div style="font-size:11px;color:var(--color-accent-700);margin-top:5px;line-height:1.4">{{ p.error }}</div>
             </sc-if>
@@ -433,14 +616,20 @@ class Component extends DCLogic {
     token: null, user: null, refresh: null, email: "", password: "", authError: "", signingIn: false,
     dens: "roomy", dark: false, darkTouched: false, wide: true, syncing: false, syncingId: null, hoverSlot: null, editId: null, draft: {}, savingEdit: false, editError: "", editLoading: false, confirmBox: null,
     products: null, pQuery: "", pFlag: "all", pCat: "All categories", pLimit: 50, pTotal: null, pSort: "synced", pError: "", sError: "", pendingIds: null,
-    posts: null, sFilter: "all", sLimit: 50, sTotal: null, postState: null, today: null,
+    colw: null, sortCol: null, sortDir: "desc", menuOpen: false, pFilterOpen: false,
+    posts: null, sFilter: "all", sLimit: 50, sTotal: null, postState: null, today: null, slidesOpen: {},
     saved: "", verifying: true
   };
 
   componentWillUnmount() { window.removeEventListener("resize", this.onResize); }
 
   componentDidMount() {
+    try {
+      const w = JSON.parse(localStorage.getItem("md-admin-colw") || "null");
+      if (w && typeof w === "object") this.state.colw = w;
+    } catch (e) {}
     this.paint();
+    this.state.narrow = window.innerWidth <= 820;
     window.addEventListener("resize", this.onResize);
     this.onResize();
     let stored = null;
@@ -473,13 +662,26 @@ class Component extends DCLogic {
   // the rail only earns its own column when the table still fits beside it
   onResize = () => {
     const wide = window.innerWidth >= 1500;
-    if (wide !== this.state.wide) this.setState({ wide });
+    const narrow = window.innerWidth <= 820;
+    const next = {};
+    if (wide !== this.state.wide) next.wide = wide;
+    if (narrow !== this.state.narrow) { next.narrow = narrow; next.menuOpen = false; }
+    if (Object.keys(next).length) this.setState(next);
   };
 
   isDark() {
-    // the header button and the Tweaks prop are both valid switches; whichever
-    // moved last wins
-    return this.state.darkTouched ? this.state.dark : (this.props.dark ?? this.state.dark);
+    // the header button, the Tweaks prop and the last saved choice are all valid
+    // switches; whichever moved last wins, and the saved one survives reloads
+    if (this._storedDark === undefined) {
+      try { this._storedDark = JSON.parse(localStorage.getItem("md-admin-dark") || "null"); }
+      catch (e) { this._storedDark = null; }
+    }
+    if (this.state.darkTouched) return this.state.dark;
+    // a saved choice outranks the prop default, otherwise every page load and
+    // every navigation snaps back to light
+    if (this._storedDark != null) return this._storedDark;
+    if (this.props.dark != null) return this.props.dark;
+    return this.state.dark;
   }
   paint() {
     const r = document.documentElement.style;
@@ -1107,7 +1309,75 @@ class Component extends DCLogic {
     setTimeout(() => this.setState({ saved: "" }), 2400);
   }
 
+  // One source of truth for the product table's tracks: the header and every
+  // row read this, so they cannot drift apart. A dragged width becomes a fixed
+  // px track; everything else keeps its designed base.
+  COLS() {
+    const dense = (this.state.dens || "roomy") === "dense";
+    const w = this.state.colw || {};
+    return [
+      { id: "bar", base: "3px" },
+      { id: "img", base: dense ? "36px" : "64px", min: 28 },
+      { id: "product", base: "minmax(180px,1fr)", label: "Product", sort: "display_title", min: 160 },
+      { id: "price", base: "92px", label: "Price", sort: "price" },
+      { id: "off", base: "56px", label: "% off" },
+      { id: "cash", base: "78px", label: "Cashback", sort: "prime_cashback_percent" },
+      { id: "synced", base: "96px", label: "Synced", sort: "last_price_sync" },
+      { id: "flags", base: "120px", label: "Flags", sort: "is_top_deal" },
+      { id: "live", base: "96px", label: "Live", sort: "is_active" },
+      { id: "queue", base: "152px", label: "Queue", min: 120 }
+    ].map(c => Object.assign({}, c, { track: w[c.id] ? w[c.id] + "px" : c.base }));
+  }
+
+  gridTemplate() { return this.COLS().map(c => c.track).join(" "); }
+
+  saveColw(colw) {
+    try { localStorage.setItem("md-admin-colw", JSON.stringify(colw || {})); } catch (e) {}
+  }
+
+  startResize(col, e) {
+    e.preventDefault();
+    e.stopPropagation();
+    const cell = e.currentTarget.parentNode;
+    const startX = e.clientX;
+    const startW = cell.getBoundingClientRect().width;
+    const min = col.min || 44;
+    const move = ev => {
+      const next = Math.max(min, Math.round(startW + (ev.clientX - startX)));
+      this.setState({ colw: Object.assign({}, this.state.colw || {}, { [col.id]: next }) });
+    };
+    const up = () => {
+      document.removeEventListener("mousemove", move);
+      document.removeEventListener("mouseup", up);
+      this.saveColw(this.state.colw);
+    };
+    document.addEventListener("mousemove", move);
+    document.addEventListener("mouseup", up);
+  }
+
+  // double-click the grip to give one column its designed width back
+  resetCol(col, e) {
+    e.preventDefault();
+    e.stopPropagation();
+    const colw = Object.assign({}, this.state.colw || {});
+    delete colw[col.id];
+    this.setState({ colw });
+    this.saveColw(colw);
+  }
+
+  // Sorting is server-side, so only columns backed by a real product column can
+  // sort — the derived ones (% off, Cashback total, Queue) would only reorder
+  // the loaded page and lie about the rest.
+  sortBy(col) {
+    if (!col.sort) return;
+    const same = this.state.sortCol === col.sort;
+    const dir = same ? (this.state.sortDir === "asc" ? "desc" : "asc")
+      : (col.sort === "display_title" ? "asc" : "desc");
+    this.setState({ sortCol: col.sort, sortDir: dir }, () => this.loadProducts());
+  }
+
   sortParam() {
+    if (this.state.sortCol) return this.state.sortCol + "." + (this.state.sortDir || "desc") + ".nullslast";
     const s = this.state.pSort || "added";
     if (s === "synced") return "last_price_sync.desc.nullslast";
     if (s === "stale") return "last_price_sync.asc.nullsfirst";
@@ -1333,9 +1603,10 @@ class Component extends DCLogic {
   // deployed, the admin sections are real paths (/dealqueue, /brandrules,
   // /scrapelog); opened as a local file they are the sibling DC + a hash
   adminHref(page) {
-    const deployed = { catalogue: "/catalogue", dealqueue: "/dealqueue", brands: "/brandrules", scrapes: "/scrapelog" };
-    if (/^\/(catalogue|dealqueue|brandrules|scrapelog)/.test(location.pathname) || location.pathname.indexOf("/admin/") !== -1) return deployed[page] || "/catalogue";
+    const deployed = { catalogue: "/catalogue", dealqueue: "/dealqueue", carousel: "/carousel", brands: "/brandrules", scrapes: "/scrapelog" };
+    if (/^\/(catalogue|dealqueue|carousel|brandrules|scrapelog)/.test(location.pathname) || location.pathname.indexOf("/admin/") !== -1) return deployed[page] || "/catalogue";
     const local = {
+      carousel: "MistryDeals Carousel.dc.html",
       dealqueue: "MistryDeals Deal Queue.dc.html",
       brands: "MistryDeals Deal Queue.dc.html#brands",
       scrapes: "MistryDeals Deal Queue.dc.html#scrapes"
@@ -1345,7 +1616,8 @@ class Component extends DCLogic {
 
   renderVals() {
     const dense = this.state.dens === "dense";
-    const num = c => "font-family:var(--font-heading);font-weight:800;font-size:30px;line-height:1;letter-spacing:-.02em;color:" + c;
+    const num = c => "font-family:var(--font-heading);font-weight:800;line-height:1;letter-spacing:" +
+      (this.state.narrow ? ".02em;font-size:11px;text-transform:uppercase" : "-.02em;font-size:30px") + ";color:" + c;
     const pill = (label, active, onPick) => ({
       label, pick: onPick,
       style: "font:inherit;font-size:12px;padding:7px 10px;cursor:pointer;white-space:nowrap;border:1px solid " +
@@ -1357,8 +1629,8 @@ class Component extends DCLogic {
         (on ? "var(--color-accent);background:var(--color-accent);color:#f3f2f2" : "var(--color-divider);background:transparent;color:var(--color-neutral-600)")
     });
 
-    const rowBase = "display:grid;grid-template-columns:3px " + (dense ? "36px" : "64px") +
-      " minmax(180px,1fr) 92px 56px 78px 96px 120px 68px 148px;gap:10px;align-items:start;padding:" +
+    const rowBase = "display:grid;grid-template-columns:" + this.gridTemplate() +
+      ";gap:10px;align-items:start;padding:" +
       (dense ? "6px 0" : "10px 0") + ";border-bottom:1px solid var(--color-divider)";
     const vis = this.visibleProducts();
     const posts = this.visiblePosts();
@@ -1383,11 +1655,36 @@ class Component extends DCLogic {
       signOut: () => this.signOutNow(),
       userEmail: this.state.user || "",
       savedNote: this.state.saved || "",
+      isWide: !this.state.narrow,
+      isNarrow: !!this.state.narrow,
+      menuOpen: !!this.state.menuOpen,
+      openMenu: () => this.setState({ menuOpen: true }),
+      closeMenu: () => this.setState({ menuOpen: false }),
+      stop: e => e.stopPropagation(),
+      // the catalogue is its own page, so every entry is a real navigation
+      menuNav: [
+        { label: "Catalogue", href: this.adminHref("catalogue"), here: true },
+        { label: "Deal queue", href: this.adminHref("dealqueue") },
+        { label: "Carousel", href: this.adminHref("carousel") },
+        { label: "Brand rules", href: this.adminHref("brands") },
+        { label: "Scrape log", href: this.adminHref("scrapes") }
+      ].map(m => ({
+        label: m.label,
+        href: m.href,
+        style: "font:inherit;font-family:var(--font-heading);font-weight:700;font-size:12.5px;letter-spacing:.06em;text-transform:uppercase;text-decoration:none;display:flex;align-items:center;min-height:48px;padding:0 16px;color:var(--color-" +
+          (m.here ? "accent-700" : "text") + ")"
+      })),
       hQueue: this.adminHref("dealqueue"),
+      hCarousel: this.adminHref("carousel"),
       hBrands: this.adminHref("brands"),
       hScrapes: this.adminHref("scrapes"),
       refresh: () => this.loadAll(),
-      toggleDark: () => this.setState({ dark: !this.isDark(), darkTouched: true }),
+      toggleDark: () => {
+        const next = !this.isDark();
+        this._storedDark = next;
+        try { localStorage.setItem("md-admin-dark", JSON.stringify(next)); } catch (e) {}
+        this.setState({ dark: next, darkTouched: true });
+      },
       darkGlyph: this.isDark() ? "\u2600" : "\u263D",
       darkTitle: this.isDark() ? "Switch to light" : "Switch to dark",
       tDark: "font:inherit;font-size:15px;line-height:1;flex:none;width:36px;height:36px;display:flex;align-items:center;justify-content:center;cursor:pointer;background:transparent;color:var(--color-text);border:2px solid var(--color-divider)",
@@ -1582,16 +1879,27 @@ class Component extends DCLogic {
       dRoomy: this.densBtn("roomy"),
       dDense: this.densBtn("dense"),
       rowStyle: rowBase,
+      thumbColStyle: "display:flex;flex-direction:column;align-items:stretch;gap:5px;width:" + (dense ? "32px" : "60px"),
       thumbStyle: "width:" + (dense ? "32px" : "60px") + ";height:" + (dense ? "32px" : "60px") + ";border:1px solid var(--color-divider);background:#ffffff;position:relative;overflow:hidden",
 
-      cStats: [
-        { label: "Products", value: n(c.products), sub: "in the catalogue", numStyle: num("var(--color-text)") },
-        { label: "Hidden", value: n(c.hidden), sub: "not shown on the site", numStyle: num(c.hidden ? "var(--color-accent)" : "var(--color-text)") },
-        { label: "No image", value: n(c.noImage), sub: "will render blank", numStyle: num(c.noImage ? "var(--color-accent)" : "var(--color-text)") },
-        { label: "Top deals", value: n(c.topDeals), sub: "flagged for the hero", numStyle: num("var(--color-text)") },
-        { label: "Pending posts", value: n(c.pending), sub: "waiting to go out", numStyle: num("var(--color-text)") },
-        { label: "Failed posts", value: n(c.failed), sub: c.failed ? "need attention" : "none failing", numStyle: num(c.failed ? "var(--color-accent)" : "var(--color-text)") }
-      ],
+      cStats: (() => {
+        const cell = (this.state.narrow ? "padding:10px 12px" : "padding:18px 20px") +
+          ";border-right:1px solid var(--color-divider)";
+        const labelStyle = "font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--color-neutral-700)" +
+          (this.state.narrow ? "" : ";margin-bottom:6px");
+        const cs = o => Object.assign({
+          cellStyle: cell, labelStyle,
+          inline: !!this.state.narrow, stacked: !this.state.narrow
+        }, o);
+        return [
+        cs({ label: "Products", value: n(c.products), sub: "in the catalogue", numStyle: num("var(--color-text)") }),
+        cs({ label: "Hidden", value: n(c.hidden), sub: "not shown on the site", numStyle: num(c.hidden ? "var(--color-accent)" : "var(--color-text)") }),
+        cs({ label: "No image", value: n(c.noImage), sub: "will render blank", numStyle: num(c.noImage ? "var(--color-accent)" : "var(--color-text)") }),
+        cs({ label: "Top deals", value: n(c.topDeals), sub: "flagged for the hero", numStyle: num("var(--color-text)") }),
+        cs({ label: this.state.narrow ? "Pending" : "Pending posts", value: n(c.pending), sub: "waiting to go out", numStyle: num("var(--color-text)") }),
+        cs({ label: this.state.narrow ? "Failed" : "Failed posts", value: n(c.failed), sub: c.failed ? "need attention" : "none failing", numStyle: num(c.failed ? "var(--color-accent)" : "var(--color-text)") })
+        ];
+      })(),
       pQuery: this.state.pQuery,
       onPQuery: e => {
         const v = e.target.value;
@@ -1603,7 +1911,30 @@ class Component extends DCLogic {
       // the group divider is not a category — picking it is a no-op
       onPCat: e => { const v = e.target.value; if (v.charAt(0) !== "\u2014") this.setProductFilter({ pCat: v }); },
       pSort: this.state.pSort,
-      onPSort: e => this.setProductFilter({ pSort: e.target.value }),
+      // the dropdown and the header clicks are the same control by another
+      // route: picking here drops any column sort
+      onPSort: e => { this.setState({ sortCol: null }); this.setProductFilter({ pSort: e.target.value }); },
+
+      headStyle: "display:grid;grid-template-columns:" + this.gridTemplate() +
+        ";gap:10px;padding:10px 0;border-bottom:2px solid var(--color-divider);font-family:var(--font-heading);font-weight:700;font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--color-neutral-700)",
+      headCols: this.COLS().map(c => {
+        const active = c.sort && this.state.sortCol === c.sort;
+        return {
+          label: c.label || "",
+          sortable: !!c.sort,
+          arrow: active ? (this.state.sortDir === "asc" ? "\u2191" : "\u2193") : "",
+          title: c.sort ? (active ? "Sorted \u2014 click to reverse" : "Click to sort by " + c.label)
+            : (c.label ? c.label + " \u2014 derived, so not sortable" : ""),
+          onSort: () => this.sortBy(c),
+          startResize: e => this.startResize(c, e),
+          resetCol: e => this.resetCol(c, e),
+          cellStyle: "position:relative;display:flex;align-items:center;gap:4px;min-width:0;user-select:none" +
+            (c.sort ? ";cursor:pointer" : ""),
+          labelStyle: "overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:" +
+            (active ? "var(--color-text)" : "inherit"),
+          gripStyle: "position:absolute;top:-10px;right:-8px;width:13px;height:calc(100% + 20px);cursor:col-resize;background:transparent"
+        };
+      }),
       pSortOptions: [
         { value: "added", label: "Newest added" },
         { value: "synced", label: "Recently synced" },
@@ -1627,6 +1958,38 @@ class Component extends DCLogic {
         ? n(this.state.pendingIds.length) + " in the deal queue, hidden \u2014 show"
         : "",
       showReview: () => this.setProductFilter({ pFlag: "pending" }),
+
+      // on a phone the pill row becomes one button over a bottom sheet, the way
+      // the deal queue does it
+      pFilterOpen: !!this.state.pFilterOpen,
+      openPFilter: () => this.setState({ pFilterOpen: true }),
+      closePFilter: () => this.setState({ pFilterOpen: false }),
+      pFilterLabel: (() => {
+        const map = { all: "All", live: "Live", hidden: "Hidden", top: "Top deal", noimage: "No image", nocat: "No category", offcat: "Off-list", coupon: "Coupon", pending: "Pending review" };
+        return (map[this.state.pFlag || "all"] || "All") + " \u25be";
+      })(),
+      pFilterOptions: (() => {
+        const offN = (this.state.offListCats || []).length;
+        const penN = (this.state.pendingIds || []).length;
+        const defs = [
+          ["All", "all"], ["Live", "live"], ["Hidden", "hidden"], ["Top deal", "top"],
+          ["No image", "noimage"], ["No category", "nocat"],
+          ["Off-list category" + (offN ? " (" + offN + ")" : ""), "offcat"],
+          ["Coupon", "coupon"],
+          ["Pending review" + (penN ? " (" + n(penN) + ")" : ""), "pending"]
+        ];
+        return defs.map(d => {
+          const active = (this.state.pFlag || "all") === d[1];
+          return {
+            label: d[0],
+            mark: active ? "\u2713" : "",
+            markStyle: "font-family:var(--font-heading);font-weight:800;font-size:14px;color:var(--color-accent)",
+            pick: () => { this.setState({ pFilterOpen: false }); this.setProductFilter({ pFlag: d[1] }); },
+            style: "font:inherit;display:flex;align-items:center;justify-content:space-between;gap:12px;width:100%;text-align:left;min-height:52px;padding:0 2px;background:none;border:0;border-bottom:1px solid var(--color-divider);cursor:pointer;font-size:15px;font-weight:" +
+              (active ? "600" : "400") + ";color:var(--color-text)"
+          };
+        });
+      })(),
       pLoading: this.state.token && this.state.products === null && !this.state.pError,
       pError: this.state.pError || "",
       sError: this.state.sError || "",
@@ -1667,6 +2030,18 @@ class Component extends DCLogic {
           was: !isNaN(was) && was > 0 ? "$" + was.toFixed(2) : "",
           off: off || "\u2014",
           offStyle: "font-family:var(--font-heading);font-weight:800;font-size:14px;color:" + (off ? "var(--color-accent)" : "var(--color-neutral-600)"),
+          isNarrow: !!this.state.narrow,
+          isWide: !this.state.narrow,
+          labelStyle: "font-family:var(--font-heading);font-weight:700;font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:var(--color-neutral-600);margin-bottom:3px",
+          offFlatStyle: "font-family:var(--font-heading);font-weight:800;font-size:13px;color:" + (off ? "var(--color-accent)" : "var(--color-neutral-600)"),
+          offCell: this.state.narrow ? "" : (off || "\u2014"),
+          offCellStyle: this.state.narrow ? "display:none"
+            : "font-family:var(--font-heading);font-weight:800;font-size:14px;color:" + (off ? "var(--color-accent)" : "var(--color-neutral-600)"),
+          wasFlat: !isNaN(was) && was > 0 ? "$" + was.toFixed(2) : "\u2014",
+          wideOnlyStyle: this.state.narrow ? "display:none" : "",
+          flagsCellStyle: this.state.narrow ? "display:none" : "display:flex;gap:4px;flex-wrap:wrap",
+          couponFlat: coupon != null ? "$" + coupon.toFixed(2) : "\u2014",
+          codeFlat: code ? String(code) : "\u2014",
           // cashback is earned on what the shopper actually pays, so it follows
           // the post-coupon price, not the list price
           cash: cashPct > 0 && net > 0 ? "$" + (net * cashPct / 100).toFixed(2) : "\u2014",
@@ -1705,6 +2080,9 @@ class Component extends DCLogic {
           liveLabel: p.is_active ? "Live" : "Hidden",
           liveStyle: "font:inherit;font-family:var(--font-heading);font-weight:700;font-size:10px;letter-spacing:.08em;text-transform:uppercase;padding:5px 8px;cursor:pointer;border:1px solid " +
             (p.is_active ? "var(--color-neutral-900);background:var(--color-neutral-900);color:var(--color-bg)" : "var(--color-accent);background:transparent;color:var(--color-accent-700)"),
+          liveStyleSm: "font:inherit;font-family:var(--font-heading);font-weight:700;font-size:8.5px;letter-spacing:.06em;text-transform:uppercase;text-align:center;padding:3px 2px;width:100%;cursor:pointer;border:1px solid " +
+            (p.is_active ? "var(--color-neutral-900);background:var(--color-neutral-900);color:var(--color-bg)" : "var(--color-accent);background:transparent;color:var(--color-accent-700)"),
+          liveCellStyle: "display:flex;flex-direction:column;align-items:flex-start;gap:6px",
           toggleLive: () => this.patchProduct(p.id, { is_active: !p.is_active }),
           schedule: () => this.schedulePost(p),
           // shaded = went out somewhere in the last 24h, so the un-shaded rows
@@ -1721,7 +2099,7 @@ class Component extends DCLogic {
             return "";
           })(),
           queueWhen: "",
-          queueStyle: "display:inline-block;font-family:var(--font-heading);font-weight:700;font-size:9.5px;letter-spacing:.08em;text-transform:uppercase;padding:3px 6px;" +
+          queueStyle: "display:inline-block;white-space:nowrap;font-family:var(--font-heading);font-weight:700;font-size:9.5px;letter-spacing:.08em;text-transform:uppercase;padding:3px 6px;" +
             (anyState.some(s => s.status === "failed")
               ? "background:var(--color-accent);color:#f3f2f2"
               : "border:1px solid var(--color-divider);color:var(--color-neutral-700)"),
@@ -1782,7 +2160,20 @@ class Component extends DCLogic {
       sRows: (posts || []).map(p => {
         const prod = p.products || {};
         const st = String(p.status || "");
+        const car = Array.isArray(p.carousel_image_urls) ? p.carousel_image_urls.filter(Boolean) : [];
+        const open = (this.state.slidesOpen || {})[p.id];
         return {
+          isCarousel: car.length > 1,
+          carouselLabel: "Carousel \u00b7 " + car.length + (open ? " \u25b4" : " \u25be"),
+          carouselBadge: "font:inherit;font-family:var(--font-heading);font-weight:700;font-size:9.5px;letter-spacing:.08em;text-transform:uppercase;padding:3px 6px;cursor:pointer;border:1px solid var(--color-text);background:transparent;color:var(--color-text)",
+          slidesTitle: "Show the " + car.length + " slides this post will publish",
+          slidesOpen: !!open,
+          toggleSlides: () => {
+            const next = Object.assign({}, this.state.slidesOpen || {});
+            if (next[p.id]) delete next[p.id]; else next[p.id] = true;
+            this.setState({ slidesOpen: next });
+          },
+          slides: car.map((u, i) => ({ url: u, n: i + 1 })),
           title: this.decode(prod.display_title || prod.title) || "(product removed)",
           img: prod.image_url || "",
           platform: String(p.platform || "").replace("_", " "),

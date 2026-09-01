@@ -1,0 +1,1055 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="/support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <link rel="stylesheet" href="/_ds/modernist-424462e2-4060-4771-92af-91bbc246b8fd/styles.css">
+  <style>
+    body { margin: 0; }
+    a { color: var(--color-accent-700); }
+    a:hover { color: var(--color-accent-600); }
+    @media (max-width: 980px) {
+      .c-2col { grid-template-columns: minmax(0,1fr) !important; gap: 0 !important; }
+      .c-right { border-left: 0 !important; padding-left: 0 !important; border-top: 2px solid var(--color-divider) !important; padding-top: 20px !important; margin-top: 20px !important; }
+      .c-static { position: static !important; }
+    }
+    @media (max-width: 820px) {
+      .m-wrap { flex-wrap: wrap !important; }
+      .m-hide { display: none !important; }
+      .m-fs-md { font-size: clamp(22px, 6vw, 30px) !important; }
+      .c-slide { grid-template-columns: 26px minmax(0,1fr) !important; }
+      .c-slide > .c-prev { grid-column: 2 !important; }
+      img, video { max-width: 100%; }
+    }
+    input[type="checkbox"] { accent-color: var(--color-accent); }
+  </style>
+</helmet>
+
+<template id="__bundler_thumbnail">
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400"><rect width="400" height="400" fill="#f3f2f2"></rect><rect x="70" y="150" width="120" height="100" fill="#201e1d"></rect><rect x="205" y="150" width="120" height="100" fill="#ec3013"></rect><rect x="70" y="268" width="255" height="14" fill="#201e1d"></rect></svg>
+</template>
+
+<sc-if value="{{ verifying }}" hint-placeholder-val="{{ true }}">
+  <div style="background:var(--color-bg);min-height:100vh;display:grid;place-items:center;padding:24px;color:var(--color-text)">
+    <div class="m-wrap" style="display:flex;align-items:center;gap:9px;font-family:var(--font-heading);font-weight:800;font-size:13px;letter-spacing:.12em;text-transform:uppercase;color:var(--color-neutral-700)">
+      <span style="width:13px;height:13px;background:var(--color-accent);display:block"></span>Mistrydeals
+    </div>
+  </div>
+</sc-if>
+
+<sc-if value="{{ signedOut }}" hint-placeholder-val="{{ false }}">
+  <div style="background:var(--color-bg);min-height:100vh;display:grid;place-items:center;padding:24px;color:var(--color-text)">
+    <div style="width:100%;max-width:380px">
+      <div class="m-wrap" style="display:flex;align-items:center;gap:9px;font-family:var(--font-heading);font-weight:800;font-size:13px;letter-spacing:.12em;text-transform:uppercase;margin-bottom:28px">
+        <span style="width:13px;height:13px;background:var(--color-accent);display:block"></span>Mistrydeals
+      </div>
+      <h1 class="m-fs-md" style="margin:0 0 8px;font-size:34px;line-height:1.05;letter-spacing:-.02em">Admin sign in</h1>
+      <p style="margin:0 0 24px;font-size:14px;color:var(--color-neutral-700)">This area manages live deals and social posting.</p>
+      <form onSubmit="{{ onSignIn }}">
+        <div class="field" style="margin-bottom:14px">
+          <label>Email</label>
+          <input class="input" type="email" autocomplete="username" value="{{ email }}" onChange="{{ onEmail }}" />
+        </div>
+        <div class="field" style="margin-bottom:18px">
+          <label>Password</label>
+          <input class="input" type="password" autocomplete="current-password" value="{{ password }}" onChange="{{ onPassword }}" />
+        </div>
+        <sc-if value="{{ authError }}" hint-placeholder-val="{{ false }}">
+          <div style="border-left:3px solid var(--color-accent);padding:8px 12px;margin-bottom:16px;font-size:13px;color:var(--color-accent-700)">{{ authError }}</div>
+        </sc-if>
+        <button type="submit" class="btn btn-primary btn-block" style="justify-content:space-between">{{ signInLabel }} <span>&#8594;</span></button>
+      </form>
+    </div>
+  </div>
+</sc-if>
+
+<sc-if value="{{ signedIn }}" hint-placeholder-val="{{ false }}">
+<div style="background:var(--color-bg);min-height:100vh;color:var(--color-text)">
+  <div style="border-bottom:2px solid var(--color-divider)">
+    <div style="max-width:1720px;margin:0 auto;padding:18px 16px;display:flex;align-items:flex-end;gap:24px;flex-wrap:wrap">
+      <div>
+        <div style="font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--color-accent-700);margin-bottom:8px">MistryDeals &#183; internal</div>
+        <h1 class="m-fs-md" style="margin:0;font-size:38px;line-height:1;letter-spacing:-.02em">Carousel</h1>
+      </div>
+      <sc-if value="{{ isWide }}" hint-placeholder-val="{{ true }}">
+      <div class="m-wrap" style="display:flex;align-items:center;gap:0;margin-left:8px">
+        <a href="{{ hCatalogue }}" style="{{ navRest }}">Catalogue</a>
+        <a href="{{ hQueue }}" style="{{ navRest }}">Deal queue</a>
+        <span style="{{ navHere }}">Carousel</span>
+        <a href="{{ hBrands }}" style="{{ navRest }}">Brand rules</a>
+        <a href="{{ hScrapes }}" style="{{ navRest }}">Scrape log</a>
+      </div>
+      </sc-if>
+      <sc-if value="{{ isWide }}" hint-placeholder-val="{{ true }}">
+      <div class="m-wrap" style="margin-left:auto;display:flex;align-items:center;gap:10px">
+        <span style="font-size:12px;color:var(--color-neutral-700)">{{ savedNote }}</span>
+        <span style="font-size:12px;color:var(--color-neutral-700)">{{ userEmail }}</span>
+        <button onClick="{{ refresh }}" class="btn btn-secondary" style="font-size:12px;padding:8px 12px">Refresh</button>
+        <button onClick="{{ signOut }}" class="btn btn-ghost" style="font-size:12px;padding:8px 12px">Sign out</button>
+        <button onClick="{{ toggleDark }}" title="{{ darkTitle }}" style="{{ tDark }}">{{ darkGlyph }}</button>
+      </div>
+      </sc-if>
+      <sc-if value="{{ isNarrow }}" hint-placeholder-val="{{ false }}">
+      <div style="margin-left:auto;display:flex;align-items:center;gap:10px;flex:none">
+        <span style="font-size:12px;color:var(--color-neutral-700);text-align:right">{{ savedNote }}</span>
+        <button onClick="{{ openMenu }}" title="Menu" style="font:inherit;flex:none;width:42px;height:42px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;background:transparent;border:1px solid var(--color-divider);cursor:pointer;padding:0">
+          <span style="display:block;width:18px;height:2px;background:var(--color-text)"></span>
+          <span style="display:block;width:18px;height:2px;background:var(--color-text)"></span>
+          <span style="display:block;width:18px;height:2px;background:var(--color-text)"></span>
+        </button>
+      </div>
+      </sc-if>
+    </div>
+  </div>
+
+  <sc-if value="{{ menuOpen }}" hint-placeholder-val="{{ false }}">
+    <div onClick="{{ closeMenu }}" style="position:fixed;inset:0;background:color-mix(in srgb, var(--color-neutral-900) 55%, transparent);z-index:90;display:flex;justify-content:flex-end">
+      <div onClick="{{ stop }}" style="background:var(--color-bg);width:min(310px,86vw);height:100%;display:flex;flex-direction:column;border-left:2px solid var(--color-text)">
+        <div style="padding:16px;border-bottom:2px solid var(--color-divider);display:flex;align-items:flex-start;gap:12px">
+          <div style="min-width:0">
+            <div style="font-family:var(--font-heading);font-weight:700;font-size:9.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--color-neutral-700)">Signed in</div>
+            <div style="font-size:13px;line-height:1.35;margin-top:4px;overflow-wrap:anywhere">{{ userEmail }}</div>
+          </div>
+          <button onClick="{{ closeMenu }}" class="btn btn-ghost" style="margin-left:auto;font-size:12px;min-height:44px;padding:0 14px;flex:none">Close</button>
+        </div>
+        <div style="display:flex;flex-direction:column;padding:8px 0;border-bottom:1px solid var(--color-divider)">
+          <sc-for list="{{ menuNav }}" as="m" hint-placeholder-count="5">
+            <a href="{{ m.href }}" style="{{ m.style }}">{{ m.label }}</a>
+          </sc-for>
+        </div>
+        <div style="display:flex;align-items:center;gap:10px;padding:14px 16px;border-bottom:1px solid var(--color-divider)">
+          <button onClick="{{ toggleDark }}" title="{{ darkTitle }}" style="{{ tDark }}">{{ darkGlyph }}</button>
+        </div>
+        <button onClick="{{ refresh }}" class="btn btn-secondary" style="margin:14px 16px 0;font-size:12px;padding:9px 12px;justify-content:flex-start">Refresh data</button>
+        <button onClick="{{ signOut }}" class="btn btn-ghost" style="margin:auto 16px 20px;font-size:12px;padding:10px 12px;justify-content:flex-start">Sign out</button>
+      </div>
+    </div>
+  </sc-if>
+
+  <div style="max-width:1720px;margin:0 auto;padding:0 16px 64px">
+    <div class="c-2col" style="display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.05fr);gap:36px;align-items:start">
+
+      <div>
+        <div style="display:flex;align-items:baseline;gap:10px;padding:20px 0 12px;border-bottom:2px solid var(--color-divider)">
+          <h2 style="margin:0;font-size:20px;letter-spacing:-.01em">Pick products</h2>
+          <span style="font-size:12px;color:var(--color-neutral-700)">{{ pickerNote }}</span>
+        </div>
+        <div style="display:flex;gap:8px;flex-wrap:wrap;padding:12px 0">
+          <input class="input" placeholder="Search title or ASIN" style="flex:1 1 200px;min-width:0;padding:8px 10px;font-size:13px" value="{{ query }}" onChange="{{ onQuery }}" />
+          <select class="input" style="flex:0 1 170px;min-width:0;padding:8px 10px;font-size:13px" value="{{ flag }}" onChange="{{ onFlag }}">
+            <sc-for list="{{ flagOptions }}" as="o" hint-placeholder-count="5">
+              <option value="{{ o.value }}">{{ o.label }}</option>
+            </sc-for>
+          </select>
+        </div>
+        <sc-if value="{{ pLoading }}" hint-placeholder-val="{{ true }}">
+          <div style="padding:32px 0;font-size:13px;color:var(--color-neutral-700)">Loading products&#8230;</div>
+        </sc-if>
+        <sc-if value="{{ pError }}" hint-placeholder-val="{{ false }}">
+          <div style="border-left:3px solid var(--color-accent);padding:12px 14px;margin:14px 0;font-size:13px;line-height:1.5;color:var(--color-accent-700)">{{ pError }}</div>
+        </sc-if>
+        <sc-if value="{{ pEmpty }}" hint-placeholder-val="{{ false }}">
+          <div style="padding:32px 0;font-size:13px;color:var(--color-neutral-700)">No products match.</div>
+        </sc-if>
+        <div>
+          <sc-for list="{{ picks }}" as="p" hint-placeholder-count="8">
+            <div style="{{ p.rowStyle }}">
+              <div style="position:relative;width:48px;height:48px;border:1px solid var(--color-divider);background:#ffffff;flex:none;overflow:hidden">
+                <dc-import name="ProductImage" src="{{ p.img }}" alt="" pad="3px" hint-size="100%,100%"></dc-import>
+              </div>
+              <div style="min-width:0;flex:1 1 auto">
+                <div style="font-weight:600;font-size:13px;line-height:1.35;overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical">{{ p.title }}</div>
+                <div style="font-size:11px;color:var(--color-neutral-600);margin-top:3px">{{ p.meta }}</div>
+              </div>
+              <button onClick="{{ p.add }}" title="{{ p.addTitle }}" style="{{ p.addStyle }}">{{ p.addLabel }}</button>
+            </div>
+          </sc-for>
+        </div>
+        <sc-if value="{{ canLoadMore }}" hint-placeholder-val="{{ false }}">
+          <button onClick="{{ loadMore }}" class="btn btn-ghost" style="margin-top:14px;font-size:12px;padding:9px 12px">{{ loadMoreLabel }}</button>
+        </sc-if>
+      </div>
+
+      <div class="c-right" style="border-left:2px solid var(--color-divider);padding-left:32px">
+        <div class="c-static" style="position:sticky;top:0;background:var(--color-bg);padding:20px 0 12px;border-bottom:2px solid var(--color-divider);display:flex;align-items:baseline;gap:10px;flex-wrap:wrap">
+          <h2 style="margin:0;font-size:20px;letter-spacing:-.01em">The carousel</h2>
+          <span style="{{ countStyle }}">{{ countLabel }}</span>
+          <span style="font-size:12px;color:var(--color-neutral-700);margin-left:auto">{{ formatNote }}</span>
+        </div>
+
+        <sc-if value="{{ noSlides }}" hint-placeholder-val="{{ true }}">
+          <div style="border:1px dashed var(--color-divider);padding:28px 20px;margin-top:16px;font-size:13px;line-height:1.55;color:var(--color-neutral-700);text-wrap:pretty">Add at least two products from the left. Instagram allows two to ten slides &#8212; five is the target for a roundup. Each slide gets its own branded creative and its own line of copy.</div>
+        </sc-if>
+
+        <div>
+          <sc-for list="{{ slides }}" as="s" hint-placeholder-count="0">
+            <div class="c-slide" draggable="true" onDragStart="{{ s.onDragStart }}" onDragOver="{{ s.onDragOver }}" onDrop="{{ s.onDrop }}" onDragEnd="{{ s.onDragEnd }}" style="{{ s.rowStyle }}">
+              <div style="display:flex;flex-direction:column;align-items:center;gap:6px;cursor:grab" title="Drag to reorder">
+                <span style="font-family:var(--font-heading);font-weight:800;font-size:15px;line-height:1">{{ s.n }}</span>
+                <span style="font-size:13px;color:var(--color-neutral-600);line-height:1">&#8942;&#8942;</span>
+                <button onClick="{{ s.up }}" title="Move up" style="{{ s.upStyle }}">&#9650;</button>
+                <button onClick="{{ s.down }}" title="Move down" style="{{ s.downStyle }}">&#9660;</button>
+              </div>
+              <a class="c-prev" href="{{ s.fullUrl }}" target="_blank" rel="noopener" title="Open this slide's image full size" style="display:block;position:relative;width:120px;height:63px;border:1px solid var(--color-divider);background:#ffffff;overflow:hidden;flex:none">
+                <sc-if value="{{ s.hasImage }}" hint-placeholder-val="{{ true }}">
+                  <dc-import name="ProductImage" src="{{ s.creative }}" alt="" pad="0px" hint-size="100%,100%"></dc-import>
+                </sc-if>
+                <sc-if value="{{ s.noImage }}" hint-placeholder-val="{{ false }}">
+                  <div style="position:absolute;inset:0;display:grid;place-items:center;background:repeating-linear-gradient(45deg, var(--color-surface) 0 6px, transparent 6px 12px);font-family:var(--font-heading);font-weight:700;font-size:9px;letter-spacing:.08em;text-transform:uppercase;color:var(--color-accent-700);text-align:center;padding:4px">No image</div>
+                </sc-if>
+              </a>
+              <div style="min-width:0">
+                <div style="font-weight:600;font-size:13px;line-height:1.35;overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical">{{ s.title }}</div>
+                <div style="font-size:11px;color:var(--color-neutral-600);margin-top:3px">{{ s.meta }}</div>
+                <sc-if value="{{ s.srcLabel }}" hint-placeholder-val="{{ false }}">
+                  <div><span style="{{ s.srcStyle }}">{{ s.srcLabel }}</span></div>
+                </sc-if>
+                <input class="input" placeholder="{{ s.linePlaceholder }}" style="margin-top:7px;width:100%;padding:6px 8px;font-size:12px" value="{{ s.line }}" onChange="{{ s.onLine }}" />
+                <sc-if value="{{ s.warn }}" hint-placeholder-val="{{ false }}">
+                  <div style="font-size:11px;line-height:1.4;margin-top:5px;color:var(--color-accent-700)">{{ s.warn }}</div>
+                </sc-if>
+              </div>
+              <button onClick="{{ s.remove }}" title="Remove this slide" style="font:inherit;font-family:var(--font-heading);font-weight:700;font-size:10px;letter-spacing:.08em;text-transform:uppercase;align-self:start;background:none;border:0;padding:2px 0;cursor:pointer;color:var(--color-accent-700)">Remove</button>
+            </div>
+          </sc-for>
+        </div>
+
+        <sc-if value="{{ hasSlides }}" hint-placeholder-val="{{ false }}">
+          <div style="margin-top:24px;border-top:2px solid var(--color-divider);padding-top:16px">
+            <div style="display:flex;align-items:baseline;gap:10px;margin-bottom:8px">
+              <div style="font-family:var(--font-heading);font-weight:700;font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--color-neutral-700)">Post caption &#183; generated</div>
+              <button onClick="{{ copyCaption }}" style="font:inherit;font-family:var(--font-heading);font-weight:700;font-size:10px;letter-spacing:.08em;text-transform:uppercase;margin-left:auto;background:none;border:0;padding:0;cursor:pointer;color:var(--color-accent-700)">Copy</button>
+            </div>
+            <div style="border:1px solid var(--color-divider);padding:14px;font-size:12.5px;line-height:1.6;white-space:pre-wrap;overflow-wrap:anywhere;color:var(--color-text)">{{ caption }}</div>
+            <div style="font-size:11px;color:var(--color-neutral-600);margin-top:6px">{{ captionMeta }}</div>
+          </div>
+
+          <div style="margin-top:24px;border-top:2px solid var(--color-divider);padding-top:16px">
+            <div style="font-family:var(--font-heading);font-weight:700;font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--color-neutral-700);margin-bottom:8px">When it posts</div>
+            <div style="font-family:var(--font-heading);font-weight:800;font-size:24px;letter-spacing:-.01em">{{ slotLabel }}</div>
+            <div style="font-size:12px;line-height:1.5;color:var(--color-neutral-700);margin-top:6px;text-wrap:pretty">{{ slotWhy }}</div>
+          </div>
+
+          <sc-if value="{{ warnFallback }}" hint-placeholder-val="{{ false }}">
+            <div style="border-left:3px solid var(--color-accent);padding:12px 14px;margin-top:18px;font-size:12.5px;line-height:1.5;color:var(--color-accent-700);text-wrap:pretty">{{ warnFallback }}</div>
+          </sc-if>
+          <sc-if value="{{ warnFormat }}" hint-placeholder-val="{{ false }}">
+            <div style="border-left:3px solid var(--color-accent);padding:12px 14px;margin-top:12px;font-size:12.5px;line-height:1.5;color:var(--color-accent-700);text-wrap:pretty">{{ warnFormat }}</div>
+          </sc-if>
+
+          <sc-if value="{{ warnCaption }}" hint-placeholder-val="{{ false }}">
+            <div style="border-left:3px solid var(--color-accent);padding:12px 14px;margin-top:12px;font-size:12.5px;line-height:1.5;color:var(--color-accent-700);text-wrap:pretty">{{ warnCaption }}</div>
+          </sc-if>
+
+          <sc-if value="{{ queueError }}" hint-placeholder-val="{{ false }}">
+            <div style="border-left:3px solid var(--color-accent);padding:12px 14px;margin-top:18px;font-size:13px;line-height:1.5;color:var(--color-accent-700);overflow-wrap:anywhere">{{ queueError }}</div>
+          </sc-if>
+          <sc-if value="{{ queueDone }}" hint-placeholder-val="{{ false }}">
+            <div style="border-left:3px solid var(--color-text);padding:12px 14px;margin-top:18px;font-size:13px;line-height:1.5">{{ queueDone }}</div>
+          </sc-if>
+
+          <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:20px">
+            <button onClick="{{ previewSlides }}" disabled="{{ cannotQueue }}" class="btn btn-secondary" style="{{ previewStyle }}">{{ previewLabel }}</button>
+            <button onClick="{{ queueCarousel }}" disabled="{{ cannotQueue }}" class="btn btn-primary" style="{{ queueStyle }}">{{ queueLabel }}</button>
+            <button onClick="{{ clearAll }}" class="btn btn-ghost" style="font-size:12px;padding:10px 12px">Clear</button>
+          </div>
+          <div style="font-size:11px;line-height:1.5;color:var(--color-neutral-600);margin-top:10px;text-wrap:pretty">{{ queueHint }}</div>
+        </sc-if>
+      </div>
+    </div>
+  </div>
+</div>
+</sc-if>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;dark&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:false,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Theme&quot;},&quot;creativeFormat&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;instagram&quot;,&quot;story&quot;],&quot;default&quot;:&quot;instagram&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Creative&quot;},&quot;renderFunction&quot;:{&quot;editor&quot;:&quot;text&quot;,&quot;default&quot;:&quot;carousel-render&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Creative&quot;},&quot;writeIgCaption&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:false,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Creative&quot;},&quot;targetSlides&quot;:{&quot;editor&quot;:&quot;int&quot;,&quot;default&quot;:5,&quot;min&quot;:2,&quot;max&quot;:10,&quot;tsType&quot;:&quot;number&quot;,&quot;section&quot;:&quot;Carousel&quot;}}">
+const BASE = "https://qolksrytidvxarrlygyy.supabase.co";
+const KEY = "sb_publishable_UX38KeF1XAKtzvS01yfx7w_8s5NkOH3";
+const PUBLIC_IMG = BASE + "/storage/v1/object/public/social-images";
+const CAPTION_CANDIDATES = ["caption", "post_text", "message", "post_message", "text", "content", "body"];
+
+class Component extends DCLogic {
+  state = {
+    token: null, user: null, refresh: null, email: "", password: "", authError: "", signingIn: false,
+    dark: false, darkTouched: false, narrow: false, menuOpen: false, saved: "", verifying: true,
+    products: null, query: "", flag: "live", limit: 40, total: null, pError: "",
+    slides: [], lines: {}, dragFrom: null, creativeState: {},
+    igQueue: null, queueing: false, queueError: "", queueDone: "", overlays: null, rendererUp: undefined, rendered: {}, previewing: false, formatIgnored: false, svgReturned: false,
+    schedCols: null, captionCol: undefined
+  };
+
+  componentWillUnmount() { window.removeEventListener("resize", this.onResize); }
+
+  componentDidMount() {
+    this.paint();
+    this.state.narrow = window.innerWidth <= 820;
+    window.addEventListener("resize", this.onResize);
+    let stored = null;
+    try { stored = JSON.parse(localStorage.getItem("md-admin-session") || "null"); } catch (e) {}
+    if (!stored || !stored.token || stored.token === KEY) { this.signOutNow(); return; }
+    this.validateSession(stored);
+  }
+  componentDidUpdate(prevProps) {
+    this.paint();
+    // switching the creative format changes the bucket folder, so every slide's
+    // availability has to be re-established
+    if (prevProps && prevProps.creativeFormat !== this.props.creativeFormat) {
+      (this.state.slides || []).forEach(p => this.checkCreative(p));
+    }
+  }
+
+  onResize = () => {
+    const narrow = window.innerWidth <= 820;
+    if (narrow !== this.state.narrow) this.setState({ narrow: narrow, menuOpen: false });
+  };
+
+  async validateSession(stored) {
+    try {
+      const res = await fetch(BASE + "/auth/v1/user", { headers: { apikey: KEY, Authorization: "Bearer " + stored.token } });
+      if (!res.ok) {
+        const fresh = await this.refreshSession(stored.refresh);
+        if (!fresh) { this.sessionExpired(); return; }
+        this.setState({ token: fresh, refresh: this.state.refresh || stored.refresh, user: stored.user, verifying: false }, () => this.loadAll());
+        return;
+      }
+      const user = await res.json();
+      this.setState({ token: stored.token, refresh: stored.refresh || null, user: (user && user.email) || stored.user, verifying: false }, () => this.loadAll());
+    } catch (e) { this.signOutNow(); }
+  }
+
+  isDark() {
+    if (this._storedDark === undefined) {
+      try { this._storedDark = JSON.parse(localStorage.getItem("md-admin-dark") || "null"); }
+      catch (e) { this._storedDark = null; }
+    }
+    if (this.state.darkTouched) return this.state.dark;
+    // a saved choice outranks the prop default, otherwise every page load and
+    // every navigation snaps back to light
+    if (this._storedDark != null) return this._storedDark;
+    if (this.props.dark != null) return this.props.dark;
+    return this.state.dark;
+  }
+  paint() {
+    const r = document.documentElement.style;
+    const dark = this.isDark();
+    const NEUT = ["#f8f4f4", "#eae7e7", "#d7d3d3", "#bab6b6", "#9b9797", "#7d7979", "#605d5d", "#444141", "#2d2b2b"];
+    r.setProperty("--color-bg", dark ? "#141312" : "#f3f2f2");
+    r.setProperty("--color-surface", dark ? "#1e1c1b" : "#eae9e9");
+    r.setProperty("--color-text", dark ? "#f1efee" : "#201e1d");
+    r.setProperty("--color-divider", dark ? "color-mix(in srgb, #f1efee 26%, transparent)" : "color-mix(in srgb, #201e1d 40%, transparent)");
+    NEUT.forEach((hex, i) => r.setProperty("--color-neutral-" + ((i + 1) * 100), dark ? NEUT[8 - i] : hex));
+    const base = "#ec3013";
+    const mix = (w, p) => "color-mix(in oklch, " + base + ", " + w + " " + p + "%)";
+    const toward = dark ? "#141312" : "white";
+    const away = dark ? "#f1efee" : "black";
+    r.setProperty("--color-accent", base);
+    r.setProperty("--color-accent-100", mix(toward, 88));
+    r.setProperty("--color-accent-200", mix(toward, 74));
+    r.setProperty("--color-accent-300", mix(toward, 56));
+    r.setProperty("--color-accent-400", mix(toward, 28));
+    r.setProperty("--color-accent-500", base);
+    r.setProperty("--color-accent-600", mix(away, 16));
+    r.setProperty("--color-accent-700", mix(away, 30));
+    document.body.style.background = "var(--color-bg)";
+    document.body.style.color = "var(--color-text)";
+  }
+
+  async refreshSession(tokenOverride) {
+    const rt = tokenOverride || this.state.refresh;
+    if (!rt) return null;
+    if (!this._refreshing) {
+      this._refreshing = (async () => {
+        try {
+          const res = await fetch(BASE + "/auth/v1/token?grant_type=refresh_token", {
+            method: "POST", headers: { apikey: KEY, "Content-Type": "application/json" },
+            body: JSON.stringify({ refresh_token: rt })
+          });
+          if (!res.ok) return null;
+          const data = await res.json();
+          if (!data.access_token) return null;
+          const session = { token: data.access_token, refresh: data.refresh_token || rt, user: this.state.user };
+          try { localStorage.setItem("md-admin-session", JSON.stringify(session)); } catch (e) {}
+          this.setState({ token: session.token, refresh: session.refresh });
+          return session.token;
+        } catch (e) { return null; }
+        finally { setTimeout(() => { this._refreshing = null; }, 0); }
+      })();
+    }
+    return this._refreshing;
+  }
+
+  sessionExpired() { this.signOutNow(); this.setState({ authError: "Session expired \u2014 sign in again.", pError: "" }); }
+
+  async req(url, init) {
+    const opts = init || {};
+    let res = await fetch(url, opts);
+    if (res.status === 401 || res.status === 403) {
+      const fresh = await this.refreshSession();
+      if (fresh) {
+        const retry = Object.assign({}, opts);
+        retry.headers = Object.assign({}, opts.headers || {}, { apikey: KEY, Authorization: "Bearer " + fresh });
+        res = await fetch(url, retry);
+      }
+      if (res.status === 401 || res.status === 403) this.sessionExpired();
+    }
+    return res;
+  }
+
+  headers(extra) {
+    return Object.assign({ apikey: KEY, Authorization: "Bearer " + (this.state.token || KEY), "Content-Type": "application/json" }, extra || {});
+  }
+
+  async signIn(e) {
+    if (e && e.preventDefault) e.preventDefault();
+    this.setState({ signingIn: true, authError: "" });
+    try {
+      const res = await fetch(BASE + "/auth/v1/token?grant_type=password", {
+        method: "POST", headers: { apikey: KEY, "Content-Type": "application/json" },
+        body: JSON.stringify({ email: this.state.email, password: this.state.password })
+      });
+      const data = await res.json();
+      if (!res.ok || !data.access_token) {
+        this.setState({ signingIn: false, authError: data.error_description || data.msg || "Sign in failed." });
+        return;
+      }
+      const session = { token: data.access_token, refresh: data.refresh_token || null, user: (data.user && data.user.email) || this.state.email };
+      try { localStorage.setItem("md-admin-session", JSON.stringify(session)); } catch (err) {}
+      this.setState({ token: session.token, refresh: session.refresh, user: session.user, password: "", signingIn: false }, () => this.loadAll());
+    } catch (err) { this.setState({ signingIn: false, authError: "Network error. Try again." }); }
+  }
+
+  signOutNow() {
+    try { localStorage.removeItem("md-admin-session"); } catch (e) {}
+    this.setState({ token: null, user: null, refresh: null, products: null, password: "", verifying: false });
+  }
+
+  loadAll() { this.loadProducts(); this.loadIgQueue(); this.probeSchedule(); this.loadOverlayIndex(); this.probeRenderer(); }
+
+  // Whether carousel-render is deployed decides what the warnings should say:
+  // with it up, no slide needs a pre-existing overlay. An empty productIds is a
+  // no-op for the function but still proves it answers a browser.
+  async probeRenderer() {
+    const fn = this.props.renderFunction || "carousel-render";
+    try {
+      const res = await fetch(BASE + "/functions/v1/" + fn, {
+        method: "POST", headers: this.headers({ "Content-Type": "application/json" }),
+        // an empty productIds is a no-op but still proves the function is
+        // deployed and answering a browser
+        body: JSON.stringify({ productIds: [], format: (this.props.creativeFormat || "instagram") === "story" ? "story" : "square" })
+      });
+      this.setState({ rendererUp: res.status !== 404 });
+    } catch (e) { this.setState({ rendererUp: false }); }
+  }
+
+  // The caption column on scheduled_posts is discovered, not assumed: a wrong
+  // key makes the whole insert 400. PostgREST's OpenAPI document lists every
+  // column whether or not any row exists, so it is asked first; a sample row is
+  // the fallback.
+  async probeSchedule() {
+    // Deliberately a raw fetch, not this.req: the OpenAPI root answers 401 for
+    // some roles, and routing that through this.req made a failed schema probe
+    // call sessionExpired() and sign the admin straight back out — a sign-in loop.
+    let cols = [];
+    try {
+      const res = await fetch(BASE + "/rest/v1/", { headers: this.headers() });
+      if (res.ok) {
+        const spec = await res.json();
+        const def = spec && spec.definitions && spec.definitions.scheduled_posts;
+        if (def && def.properties) cols = Object.keys(def.properties);
+      }
+    } catch (e) {}
+    if (!cols.length) {
+      try {
+        const res = await fetch(BASE + "/rest/v1/scheduled_posts?select=*&limit=1", { headers: this.headers() });
+        if (res.ok) {
+          const rows = await res.json();
+          if (rows && rows[0]) cols = Object.keys(rows[0]);
+        }
+      } catch (e) {}
+    }
+    let cap = null;
+    for (const c of CAPTION_CANDIDATES) if (cols.indexOf(c) !== -1) { cap = c; break; }
+    this.setState({ schedCols: cols, captionCol: cols.length ? cap : undefined });
+  }
+
+  filterClause() {
+    const parts = [];
+    const q = (this.state.query || "").trim();
+    if (q) {
+      const safe = "*" + q.replace(/[(),]/g, " ") + "*";
+      parts.push("or=(title.ilike." + safe + ",display_title.ilike." + safe + ",asin.ilike." + safe + ")");
+    }
+    const f = this.state.flag;
+    if (f === "branded") {
+      const ids = Object.keys(this.state.overlays || {}).slice(0, 300);
+      // an impossible id keeps the query valid (and empty) while the index loads
+      parts.push("id=in.(" + (ids.length ? ids.join(",") : "00000000-0000-0000-0000-000000000000") + ")");
+    }
+    if (f === "live") parts.push("is_active=eq.true");
+    if (f === "top") parts.push("is_active=eq.true", "is_top_deal=eq.true");
+    if (f === "coupon") parts.push("is_active=eq.true", "scraped_coupon_price=not.is.null");
+    if (f === "discount") parts.push("is_active=eq.true", "original_price=not.is.null");
+    // a slide with no product photo renders an empty plate
+    parts.push("image_url=not.is.null");
+    return parts.join("&");
+  }
+
+  async loadProducts() {
+    this.setState({ pError: "" });
+    try {
+      const qs = this.filterClause();
+      const cols = "id,asin,slug,title,display_title,price,original_price,scraped_coupon_price,image_url,is_active,is_top_deal,last_price_sync";
+      const res = await this.req(BASE + "/rest/v1/products?select=" + cols + "&order=last_price_sync.desc.nullslast&limit=" +
+        (this.state.limit || 40) + (qs ? "&" + qs : ""), { headers: this.headers({ Prefer: "count=exact" }) });
+      if (!res.ok) { this.setState({ products: [], pError: "Could not read products (HTTP " + res.status + ")" }); return; }
+      const range = res.headers.get("content-range") || "";
+      const total = range.indexOf("/") !== -1 ? parseInt(range.split("/")[1], 10) : null;
+      this.setState({ products: await res.json(), total: isNaN(total) ? null : total });
+    } catch (e) { this.setState({ products: [], pError: "Network error reading products." }); }
+  }
+
+  // the cadence is measured against everything already on the Instagram grid,
+  // pending or published — a carousel dropped next to a single post reads as spam
+  async loadIgQueue() {
+    try {
+      const res = await this.req(BASE + "/rest/v1/scheduled_posts?select=id,platform,status,scheduled_at" +
+        "&platform=in.(instagram,instagram_carousel)&status=in.(pending,published)&order=scheduled_at.desc&limit=40",
+        { headers: this.headers() });
+      if (!res.ok) { this.setState({ igQueue: [] }); return; }
+      this.setState({ igQueue: await res.json() });
+    } catch (e) { this.setState({ igQueue: [] }); }
+  }
+
+  titleOf(p) { return this.decode(p.display_title || p.title || "") || "(untitled)"; }
+  decode(s) {
+    if (!s) return "";
+    if (s.indexOf("&") === -1) return s;
+    const el = document.createElement("textarea");
+    el.innerHTML = s;
+    return el.value;
+  }
+
+  priceOf(p) {
+    const cp = parseFloat(p.scraped_coupon_price);
+    const base = parseFloat(p.price);
+    return !isNaN(cp) && cp > 0 && cp < base ? cp : (isNaN(base) ? null : base);
+  }
+  pctOf(p) {
+    const was = parseFloat(p.original_price);
+    const now = this.priceOf(p);
+    if (!was || now == null || was <= now) return null;
+    return Math.round((1 - now / was) * 100);
+  }
+  money(v) { return v == null ? "" : "$" + Number(v).toFixed(2); }
+
+  defaultLine(p) {
+    const pct = this.pctOf(p);
+    const now = this.priceOf(p);
+    return (pct ? pct + "% off \u2014 " : "") + (now != null ? this.money(now) : "");
+  }
+
+  // The branded image this product has actually been posted with. The real
+  // pipeline writes social-images/overlays/{product_id}-{ts}.png and points
+  // scheduled_posts.image_url at it, so that — not the og share card — is the
+  // creative a carousel slide should carry. Newest wins.
+  overlayUrl(p) {
+    const hit = (this.state.overlays || {})[p.id];
+    return hit ? PUBLIC_IMG + "/overlays/" + hit.name : "";
+  }
+
+  creativeUrl(p) {
+    if (!p.slug) return this.overlayUrl(p);
+    const fmt = (this.props.creativeFormat || "instagram") === "story" ? "story" : "instagram";
+    return PUBLIC_IMG + "/social/" + p.slug + "-" + fmt + ".png";
+  }
+
+  // One listing of the overlays folder answers "does this product have a
+  // branded image" for the whole catalogue, without a request per slide.
+  async loadOverlayIndex() {
+    const map = {};
+    try {
+      for (let off = 0; off < 6000; off += 1000) {
+        const res = await fetch(BASE + "/storage/v1/object/list/social-images", {
+          method: "POST", headers: this.headers(),
+          body: JSON.stringify({ prefix: "overlays/", limit: 1000, offset: off, sortBy: { column: "name", order: "asc" } })
+        });
+        if (!res.ok) break;
+        const rows = await res.json();
+        rows.forEach(r => {
+          const name = r.name || "";
+          const m = name.match(/^([0-9a-f-]{36})-(\d+)\.png$/i);
+          if (!m) return;
+          const ts = parseInt(m[2], 10);
+          if (!map[m[1]] || ts > map[m[1]].ts) map[m[1]] = { ts: ts, name: name };
+        });
+        if (rows.length < 1000) break;
+      }
+    } catch (e) {}
+    this.setState({ overlays: map }, () => {
+      (this.state.slides || []).forEach(p => this.checkCreative(p));
+    });
+  }
+
+  // Whether a branded creative actually exists is settled the moment the slide
+  // is added, not at queue time: a blank preview and a dead primary button is
+  // the worst possible order to learn it in.
+  async checkCreative(p) {
+    const url = this.creativeUrl(p);
+    const state = Object.assign({}, this.state.creativeState || {});
+    state[p.id] = "checking";
+    this.setState({ creativeState: state });
+    const ok = url ? await this.probeImage(url) : false;
+    const next = Object.assign({}, this.state.creativeState || {});
+    next[p.id] = ok ? "ok" : "missing";
+    this.setState({ creativeState: next });
+  }
+
+  // What actually goes to Instagram: the branded card when it exists, the
+  // product photo when it does not. A labelled fallback beats an unpostable
+  // carousel.
+  effectiveUrl(p) {
+    const fresh = (this.state.rendered || {})[p.id];
+    if (fresh) return fresh;
+    const st = (this.state.creativeState || {})[p.id];
+    if (st === "missing") return p.image_url || "";
+    return this.creativeUrl(p) || p.image_url || "";
+  }
+
+  // Generate without queueing, so the real slides can be looked at first.
+  async previewSlides() {
+    const slides = this.state.slides || [];
+    if (slides.length < 2) return;
+    this.setState({ previewing: true, queueError: "", queueDone: "", saved: "Generating\u2026" });
+    try {
+      const urls = await this.renderCreatives();
+      const map = Object.assign({}, this.state.rendered || {});
+      slides.forEach((p, i) => { map[p.id] = urls[i]; });
+      this.setState({ rendered: map, previewing: false, saved: "Slides generated" });
+    } catch (e) {
+      this.setState({ previewing: false, saved: "", queueError: (e && e.message) || "Generating the slides failed." });
+    }
+  }
+
+  addSlide(p) {
+    const slides = (this.state.slides || []).slice();
+    if (slides.some(s => s.id === p.id)) return;
+    if (slides.length >= 10) { this.setState({ queueError: "Instagram allows ten slides at most." }); return; }
+    slides.push(p);
+    const lines = Object.assign({}, this.state.lines);
+    if (lines[p.id] == null) lines[p.id] = this.defaultLine(p);
+    this.setState({ slides: slides, lines: lines, queueError: "", queueDone: "" }, () => this.checkCreative(p));
+  }
+  removeSlide(id) {
+    this.setState({ slides: (this.state.slides || []).filter(s => s.id !== id), queueError: "", queueDone: "" });
+  }
+  move(from, to) {
+    const slides = (this.state.slides || []).slice();
+    if (to < 0 || to >= slides.length || from === to) return;
+    const [row] = slides.splice(from, 1);
+    slides.splice(to, 0, row);
+    this.setState({ slides: slides });
+  }
+
+  buildCaption() {
+    const slides = this.state.slides || [];
+    if (!slides.length) return "";
+    const lines = [];
+    lines.push(slides.length + " deals worth a look today");
+    lines.push("");
+    slides.forEach((p, i) => {
+      const line = (this.state.lines[p.id] || "").trim();
+      lines.push((i + 1) + " \u00b7 " + this.titleOf(p) + (line ? " \u2014 " + line : ""));
+    });
+    lines.push("");
+    lines.push("Swipe through. Every price is measured against what the product actually sold for, not the list price.");
+    lines.push("Links in bio \u00b7 mistrydeals.com");
+    lines.push("");
+    lines.push("#mistrydeals #amazondeals #dealsoftheday #pricedrop");
+    return lines.join("\n");
+  }
+
+  // The real path: carousel-render generates one square creative per slide and
+  // carousel-render v2 fans out to generate-share-image-v2 and returns one PNG
+  // per slide, in the order asked. If it is unreachable this throws and the
+  // caller falls back to collectCreatives().
+  async renderCreatives() {
+    const fn = this.props.renderFunction || "carousel-render";
+    const slides = this.state.slides || [];
+    // carousel-render's own vocabulary is "square" | "story"; generate-share-image-v2
+    // behind it calls the same canvases instagram / story.
+    const body = {
+      productIds: slides.map(p => p.id),
+      format: (this.props.creativeFormat || "instagram") === "story" ? "story" : "square",
+      lines: slides.map(p => (this.state.lines[p.id] || "").trim())
+    };
+    const res = await this.req(BASE + "/functions/v1/" + fn, {
+      method: "POST", headers: this.headers({ "Content-Type": "application/json" }), body: JSON.stringify(body)
+    });
+    if (!res.ok) throw new Error(fn + " answered HTTP " + res.status + ". " + (await res.text()).slice(0, 200));
+    const data = await res.json();
+    if (data && data.success === false) throw new Error(fn + " reported failure: " + (data.error || "no reason given"));
+    const urls = (data && (data.urls || data.images || data.result)) || null;
+    if (!Array.isArray(urls) || urls.length !== slides.length) {
+      throw new Error(fn + " returned " + (Array.isArray(urls) ? urls.length : "no") + " urls for " + slides.length + " slides.");
+    }
+    if (urls.some(u => !u)) throw new Error(fn + " returned an empty url for at least one slide.");
+    // og/{slug}.png is the 1200x630 Facebook link card; an .svg cannot be posted
+    // at all. Either means the renderer did not honour the requested format.
+    this.setState({
+      formatIgnored: (this.props.creativeFormat || "instagram") !== "facebook" && urls.some(u => u.indexOf("/og/") !== -1),
+      svgReturned: urls.some(u => /\.svg(\?|$)/i.test(u))
+    });
+    return urls;
+  }
+
+  // Fallback when carousel-render is not deployed or fails: the newest overlay
+  // this product was last posted with, and the raw product photo when it has
+  // never been posted.
+  collectCreatives() {
+    const slides = this.state.slides || [];
+    const fallbacks = [];
+    const urls = slides.map(p => {
+      const st = (this.state.creativeState || {})[p.id];
+      if (st === "missing" || !this.creativeUrl(p)) fallbacks.push(this.titleOf(p));
+      return this.effectiveUrl(p);
+    });
+    this._skipped = fallbacks;
+    return urls;
+  }
+
+  // scheduled_posts has no caption column — the publisher composes the caption
+  // itself. products.ig_caption is the one admin-owned override it can read, so
+  // the generated caption is written there on the cover product.
+  // Off by default, and it never overwrites: ig_caption is a single-product
+  // caption that a later solo post of the same product would publish, so a
+  // roundup written over it is durable cross-feature damage with no undo.
+  async writeIgCaption(productId, text) {
+    let existing = null;
+    try {
+      const r = await this.req(BASE + "/rest/v1/products?select=ig_caption&id=eq." + productId, { headers: this.headers() });
+      if (r.ok) { const rows = await r.json(); existing = rows && rows[0] ? rows[0].ig_caption : null; }
+      else return { ok: false, reason: "could not read the product's current caption" };
+    } catch (e) { return { ok: false, reason: "could not read the product's current caption" }; }
+    if (existing != null && String(existing).trim() !== "") {
+      return { ok: false, skipped: true, reason: "the cover product already has its own ig_caption, which was left alone" };
+    }
+    const res = await this.req(BASE + "/rest/v1/products?id=eq." + productId, {
+      method: "PATCH", headers: this.headers({ Prefer: "return=minimal" }),
+      body: JSON.stringify({ ig_caption: text })
+    });
+    return res.ok ? { ok: true } : { ok: false, reason: "the write was rejected (HTTP " + res.status + ")" };
+  }
+
+  // An image load is not CORS-restricted, so this checks the bucket honestly.
+  // A missing PNG has to stop the queue: Instagram fetches every child URL and
+  // one 404 fails the whole container.
+  probeImage(url) {
+    return new Promise(resolve => {
+      const img = new Image();
+      const done = ok => { img.onload = img.onerror = null; resolve(ok); };
+      img.onload = () => done(true);
+      img.onerror = () => done(false);
+      setTimeout(() => done(false), 9000);
+      img.src = url + (url.indexOf("?") === -1 ? "?" : "&") + "probe=" + Date.now();
+    });
+  }
+
+  async checkCreatives(urls) {
+    const slides = this.state.slides || [];
+    const results = await Promise.all(urls.map(u => this.probeImage(u)));
+    return results.map((ok, i) => (ok ? null : (i + 1) + " \u00b7 " + this.titleOf(slides[i]))).filter(Boolean);
+  }
+
+  async queueCarousel() {
+    const slides = this.state.slides || [];
+    if (slides.length < 2) { this.setState({ queueError: "A carousel needs at least two slides." }); return; }
+    this.setState({ queueing: true, queueError: "", queueDone: "", saved: "Generating creatives\u2026" });
+    try {
+      let urls = null;
+      let renderNote = "";
+      try {
+        urls = await this.renderCreatives();
+        this._skipped = [];
+      } catch (e) {
+        // not deployed yet, or it failed: keep the queue usable, say so plainly
+        urls = this.collectCreatives();
+        renderNote = " Slides were NOT freshly generated \u2014 " + ((e && e.message) || "the renderer was unreachable") +
+          " \u2014 so existing images were used.";
+      }
+
+      this.setState({ saved: "Checking the images\u2026" });
+      const missing = await this.checkCreatives(urls);
+      if (missing.length) {
+        throw new Error("These slides have no usable image at all \u2014 neither a branded creative nor a product photo, so Instagram would reject the post: " +
+          missing.join("; ") + ". Remove them, or give the product an image in the catalogue.");
+      }
+
+      // process-scheduled-posts-v2 owns carousel spacing, so the row is simply
+      // eligible from now — the UI does not pick a slot.
+      const row = {
+        product_id: slides[0].id,
+        platform: "instagram",
+        status: "pending",
+        scheduled_at: new Date().toISOString(),
+        carousel_image_urls: urls
+      };
+      if (this.state.captionCol) row[this.state.captionCol] = this.buildCaption();
+
+      // the cover slide's product carries the caption, since the row cannot
+      let captionNote = "";
+      if (!this.state.captionCol && this.props.writeIgCaption === true) {
+        this.setState({ saved: "Writing the caption\u2026" });
+        const r = await this.writeIgCaption(slides[0].id, this.buildCaption());
+        captionNote = r.ok
+          ? " Caption written to products.ig_caption on the cover product, which had none."
+          : " Caption not written \u2014 " + r.reason + ". The publisher will compose its own.";
+      } else if (!this.state.captionCol) {
+        captionNote = " No caption was written: scheduled_posts has no caption column. Copy the caption above if you want this exact copy.";
+      }
+
+      this.setState({ saved: "Queueing\u2026" });
+      const res = await this.req(BASE + "/rest/v1/scheduled_posts", {
+        method: "POST", headers: this.headers({ Prefer: "return=representation" }), body: JSON.stringify(row)
+      });
+      const text = await res.text();
+      if (!res.ok) throw new Error("Queue failed (HTTP " + res.status + "). " + text.slice(0, 220));
+      const when = "the scheduler's next carousel slot";
+      const skipped = this._skipped || [];
+      this.setState({
+        queueing: false, saved: "Carousel queued",
+        queueDone: slides.length + " slides queued for Instagram, to go out at " + when + "." + renderNote + captionNote +
+          (skipped.length ? " " + skipped.length + " slide" + (skipped.length === 1 ? "" : "s") + " posted the raw product photo, having no branded overlay yet: " + skipped.join("; ") + "." : ""),
+        slides: [], lines: {}
+      }, () => this.loadIgQueue());
+    } catch (e) {
+      this.setState({ queueing: false, saved: "", queueError: (e && e.message) || "Something went wrong queueing the carousel." });
+    }
+  }
+
+  adminHref(page) {
+    const deployed = { catalogue: "/catalogue", dealqueue: "/dealqueue", carousel: "/carousel", brands: "/brandrules", scrapes: "/scrapelog" };
+    if (/^\/(catalogue|dealqueue|carousel|brandrules|scrapelog)/.test(location.pathname) || location.pathname.indexOf("/admin/") !== -1) return deployed[page] || "/catalogue";
+    const local = {
+      catalogue: "MistryDeals Admin v2.dc.html",
+      dealqueue: "MistryDeals Deal Queue.dc.html",
+      carousel: "MistryDeals Carousel.dc.html",
+      brands: "MistryDeals Deal Queue.dc.html#brands",
+      scrapes: "MistryDeals Deal Queue.dc.html#scrapes"
+    };
+    return local[page] || local.catalogue;
+  }
+
+  renderVals() {
+    const signedIn = !!this.state.token && !this.state.verifying;
+    const slides = this.state.slides || [];
+    const target = Math.max(2, Math.min(10, Number(this.props.targetSlides != null ? this.props.targetSlides : 5)));
+    const navBase = "font:inherit;font-family:var(--font-heading);font-weight:700;font-size:11px;letter-spacing:.1em;text-transform:uppercase;text-decoration:none;padding:8px 12px;";
+
+    return {
+      verifying: this.state.verifying,
+      signedOut: !this.state.token && !this.state.verifying,
+      signedIn: signedIn,
+      isNarrow: !!this.state.narrow,
+      isWide: !this.state.narrow,
+      email: this.state.email,
+      password: this.state.password,
+      authError: this.state.authError,
+      signInLabel: this.state.signingIn ? "Signing in\u2026" : "Sign in",
+      onEmail: e => this.setState({ email: e.target.value }),
+      onPassword: e => this.setState({ password: e.target.value }),
+      onSignIn: e => this.signIn(e),
+      signOut: () => this.signOutNow(),
+      refresh: () => { this.setState({ menuOpen: false }); this.loadAll(); },
+      userEmail: this.state.user || "",
+      savedNote: this.state.saved || "",
+      stop: e => e.stopPropagation(),
+      menuOpen: !!this.state.menuOpen,
+      openMenu: () => this.setState({ menuOpen: true }),
+      closeMenu: () => this.setState({ menuOpen: false }),
+      darkGlyph: this.isDark() ? "\u2600" : "\u263e",
+      darkTitle: this.isDark() ? "Switch to the light theme" : "Switch to the dark theme",
+      tDark: "font:inherit;font-size:13px;line-height:1;width:42px;height:42px;display:grid;place-items:center;cursor:pointer;border:1px solid var(--color-divider);background:transparent;color:var(--color-text)",
+      toggleDark: () => {
+        const next = !this.isDark();
+        this._storedDark = next;
+        try { localStorage.setItem("md-admin-dark", JSON.stringify(next)); } catch (e) {}
+        this.setState({ dark: next, darkTouched: true });
+      },
+
+      navHere: navBase + "border:1px solid var(--color-text);background:var(--color-text);color:var(--color-bg)",
+      navRest: navBase + "border:1px solid var(--color-divider);color:var(--color-text);border-left:0",
+      hCatalogue: this.adminHref("catalogue"),
+      hQueue: this.adminHref("dealqueue"),
+      hBrands: this.adminHref("brands"),
+      hScrapes: this.adminHref("scrapes"),
+      menuNav: [
+        { label: "Catalogue", href: this.adminHref("catalogue") },
+        { label: "Deal queue", href: this.adminHref("dealqueue") },
+        { label: "Carousel", href: this.adminHref("carousel"), here: true },
+        { label: "Brand rules", href: this.adminHref("brands") },
+        { label: "Scrape log", href: this.adminHref("scrapes") }
+      ].map(m => ({
+        label: m.label, href: m.href,
+        style: "font:inherit;font-family:var(--font-heading);font-weight:700;font-size:13px;letter-spacing:.06em;text-transform:uppercase;text-decoration:none;padding:14px 16px;min-height:52px;display:flex;align-items:center;color:var(--color-" +
+          (m.here ? "accent-700" : "text") + ")"
+      })),
+
+      query: this.state.query,
+      onQuery: e => { this.setState({ query: e.target.value }); clearTimeout(this._qt); this._qt = setTimeout(() => this.loadProducts(), 260); },
+      flag: this.state.flag,
+      onFlag: e => this.setState({ flag: e.target.value, limit: 40 }, () => this.loadProducts()),
+      flagOptions: [
+        { value: "branded", label: "Has a branded overlay" },
+        { value: "live", label: "Live products" },
+        { value: "top", label: "Top deals" },
+        { value: "discount", label: "Has a was-price" },
+        { value: "coupon", label: "Has a coupon" },
+        { value: "all", label: "Everything" }
+      ],
+      pLoading: signedIn && this.state.products == null,
+      pError: this.state.pError,
+      pEmpty: !!(this.state.products && !this.state.products.length && !this.state.pError),
+      pickerNote: this.state.total != null ? this.state.total.toLocaleString() + " match" : "",
+      canLoadMore: !!(this.state.products && this.state.total != null && this.state.products.length < this.state.total),
+      loadMoreLabel: "Load 40 more",
+      loadMore: () => this.setState({ limit: (this.state.limit || 40) + 40 }, () => this.loadProducts()),
+
+      picks: (this.state.products || []).map(p => {
+        const inSet = slides.some(s => s.id === p.id);
+        const pct = this.pctOf(p);
+        return {
+          img: p.image_url || "",
+          title: this.titleOf(p),
+          meta: [this.money(this.priceOf(p)), pct ? pct + "% off" : "", p.slug ? "" : "no slug"].filter(Boolean).join(" \u00b7 "),
+          rowStyle: "display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid var(--color-divider)" +
+            (inSet ? ";opacity:.5" : ""),
+          add: () => (inSet ? this.removeSlide(p.id) : this.addSlide(p)),
+          addLabel: inSet ? "Added" : "Add",
+          addTitle: inSet ? "Click to take this slide out again" : "Add as a carousel slide",
+          addStyle: "font:inherit;font-family:var(--font-heading);font-weight:700;font-size:10px;letter-spacing:.08em;text-transform:uppercase;flex:none;padding:8px 11px;min-height:36px;cursor:pointer;border:1px solid " +
+            (inSet ? "var(--color-divider);background:transparent;color:var(--color-neutral-700)" : "var(--color-text);background:var(--color-text);color:var(--color-bg)")
+        };
+      }),
+
+      noSlides: !slides.length,
+      hasSlides: slides.length > 0,
+      countLabel: slides.length + " of 10" + (slides.length === target ? " \u00b7 on target" : ""),
+      countStyle: "font-family:var(--font-heading);font-weight:800;font-size:11px;letter-spacing:.08em;text-transform:uppercase;padding:4px 7px;border:1px solid " +
+        (slides.length >= 2 && slides.length <= 10
+          ? "var(--color-text);background:var(--color-text);color:var(--color-bg)"
+          : "var(--color-accent);color:var(--color-accent-700)"),
+      formatNote: (() => {
+        const fmt = this.props.creativeFormat || "instagram";
+        const size = fmt === "story" ? "1080\u00d71920" : "1080\u00d71080";
+        if (this.state.rendererUp === undefined) return "Checking the renderer\u2026";
+        if (!this.state.rendererUp) return "carousel-render offline \u00b7 " + Object.keys(this.state.overlays || {}).length.toLocaleString() + " products have an existing overlay";
+        if (this.state.formatIgnored) return "carousel-render \u00b7 returned the 1200\u00d7630 card, format ignored";
+        return "carousel-render \u00b7 " + fmt + ", " + size;
+      })(),
+
+      slides: slides.map((p, i) => {
+        const cst = (this.state.creativeState || {})[p.id];
+        return {
+        n: i + 1,
+        creative: this.effectiveUrl(p),
+        hasImage: !!this.effectiveUrl(p),
+        noImage: !this.effectiveUrl(p),
+        srcLabel: (this.state.rendered || {})[p.id] ? "Generated"
+          // with the renderer up, no slide depends on a pre-existing image
+          : this.state.rendererUp ? "Will be generated"
+          : cst === "checking" ? "Checking\u2026" : cst === "missing" ? "Product photo" : cst === "ok" ? "Branded overlay" : "",
+        srcStyle: "display:inline-block;font-family:var(--font-heading);font-weight:700;font-size:8.5px;letter-spacing:.07em;text-transform:uppercase;padding:2px 4px;margin-top:5px;border:1px solid " +
+          ((this.state.rendered || {})[p.id] ? "var(--color-text);background:var(--color-text);color:var(--color-bg)"
+            : cst === "missing" ? "var(--color-accent);color:var(--color-accent-700)" : "var(--color-divider);color:var(--color-neutral-700)"),
+        fullUrl: this.effectiveUrl(p),
+        title: this.titleOf(p),
+        meta: [this.money(this.priceOf(p)), this.pctOf(p) ? this.pctOf(p) + "% off" : ""].filter(Boolean).join(" \u00b7 "),
+        line: this.state.lines[p.id] || "",
+        linePlaceholder: "This slide's line of copy",
+        onLine: e => {
+          const lines = Object.assign({}, this.state.lines);
+          lines[p.id] = e.target.value;
+          this.setState({ lines: lines });
+        },
+        warn: cst === "missing" && !this.state.rendererUp
+          ? "Never posted, so it has no branded overlay \u2014 the raw product photo goes out instead."
+          : "",
+        rowStyle: "display:grid;grid-template-columns:26px 120px minmax(0,1fr) auto;gap:12px;align-items:start;padding:14px 0;border-bottom:1px solid var(--color-divider);background:" +
+          (this.state.dragFrom === i ? "var(--color-surface)" : "transparent"),
+        remove: () => this.removeSlide(p.id),
+        up: () => this.move(i, i - 1),
+        down: () => this.move(i, i + 1),
+        upStyle: "font:inherit;font-size:8px;line-height:1;width:20px;height:18px;display:grid;place-items:center;cursor:pointer;border:1px solid var(--color-divider);background:transparent;color:var(--color-" + (i === 0 ? "neutral-500" : "text") + ")",
+        downStyle: "font:inherit;font-size:8px;line-height:1;width:20px;height:18px;display:grid;place-items:center;cursor:pointer;border:1px solid var(--color-divider);background:transparent;color:var(--color-" + (i === slides.length - 1 ? "neutral-500" : "text") + ")",
+        onDragStart: () => this.setState({ dragFrom: i }),
+        onDragOver: e => { e.preventDefault(); },
+        onDrop: e => { e.preventDefault(); const from = this.state.dragFrom; if (from != null) this.move(from, i); this.setState({ dragFrom: null }); },
+        onDragEnd: () => this.setState({ dragFrom: null })
+        };
+      }),
+
+      // the two things that quietly degrade a queued carousel, said out loud
+      // before the button rather than after it
+      warnFallback: (() => {
+        if (this.state.rendererUp) return "";
+        const n = slides.filter(p => (this.state.creativeState || {})[p.id] === "missing").length;
+        if (!n) return "";
+        return "carousel-render is not deployed yet, so nothing is freshly generated. " + n + " of " + slides.length +
+          " slides would post the raw product photo \u2014 a branded overlay only exists once a product has been posted. Use the \u201cHas a branded overlay\u201d filter to pick from the " +
+          Object.keys(this.state.overlays || {}).length + " products that already have one.";
+      })(),
+      warnFormat: this.state.svgReturned
+        ? "The renderer returned SVG files. Instagram's Graph API requires JPEG or PNG for every carousel child \u2014 an SVG url fails container creation, so this carousel cannot publish. See handoff/CLAUDE-CODE-PROMPT-8-png-not-svg.md."
+        : this.state.formatIgnored
+          ? "carousel-render returned the 1200\u00d7630 Facebook link card (og/{slug}.png) instead of the requested " +
+            (this.props.creativeFormat || "instagram") + " canvas. These slides are the wrong size."
+          : "",
+      warnCaption: this.state.captionCol === null
+        ? (this.props.writeIgCaption === true
+            ? "Caption will be written to products.ig_caption on the cover product \u2014 but only if that product has none of its own. ig_caption is a single-product caption, so an existing one is never overwritten: a later solo post of that product would publish this roundup copy."
+            : "scheduled_posts has no caption column, so the publisher composes the caption itself and the one above is not sent. Copy it if you want this exact copy, or switch on \u201cWrite ig caption\u201d in Tweaks to put it on the cover product.")
+        : "",
+      copyCaption: async () => {
+        try { await navigator.clipboard.writeText(this.buildCaption()); this.setState({ saved: "Caption copied" }); }
+        catch (e) { this.setState({ saved: "Could not copy \u2014 select the text instead" }); }
+      },
+
+      caption: this.buildCaption(),
+      captionMeta: (() => {
+        const n = this.buildCaption().length;
+        const col = this.state.captionCol;
+        return n + " characters" + (n > 2200 ? " \u2014 over Instagram's 2,200 limit" : "") +
+          (col === undefined ? "" : col ? " \u00b7 writes to scheduled_posts." + col
+            : this.props.writeIgCaption === false ? " \u00b7 not written anywhere" : " \u00b7 writes to products.ig_caption on the cover product");
+      })(),
+
+      slotLabel: "Next carousel slot",
+      slotWhy: (() => {
+        const rows = this.state.igQueue || [];
+        const last = rows.map(r => Date.parse(r.scheduled_at || "")).filter(Boolean).sort((a, b) => b - a)[0];
+        const when = last ? new Date(last).toLocaleString("en-US", { timeZone: "America/New_York", day: "numeric", month: "short", hour: "numeric", minute: "2-digit" }) + " ET" : "";
+        return "process-scheduled-posts-v2 owns carousel spacing, so the row is queued as eligible now and the scheduler decides when it goes out." +
+          (when ? " For reference, the last Instagram post sits at " + when + "." : "");
+      })(),
+
+      queueError: this.state.queueError,
+      queueDone: this.state.queueDone,
+      cannotQueue: slides.length < 2 || !!this.state.queueing,
+      queueLabel: this.state.queueing ? "Working\u2026" : (slides.length < 2 ? "Add two or more slides" : "Render and queue " + slides.length + " slides"),
+      queueStyle: "font-size:13px;padding:12px 16px;justify-content:space-between" + (slides.length < 2 || this.state.queueing ? ";opacity:.45;cursor:not-allowed" : ""),
+      queueCarousel: () => this.queueCarousel(),
+      previewSlides: () => this.previewSlides(),
+      previewLabel: this.state.previewing ? "Generating\u2026" : "Generate slides",
+      previewStyle: "font-size:13px;padding:12px 16px;justify-content:flex-start" + (slides.length < 2 || this.state.previewing ? ";opacity:.45;cursor:not-allowed" : ""),
+      clearAll: () => this.setState({ slides: [], lines: {}, rendered: {}, queueError: "", queueDone: "" }),
+      queueHint: "Generate slides renders them without posting \u2014 click any preview to open the full-size image. Queueing regenerates, verifies every image loads, then writes one scheduled_posts row with carousel_image_urls in this order. Slide one is the cover."
+    };
+  }
+}
+</script>
+</body>
+</html>

@@ -21,6 +21,10 @@
       "destination": "/dealqueue"
     },
     {
+      "source": "/admin/carousel",
+      "destination": "/carousel"
+    },
+    {
       "source": "/admin/brands",
       "destination": "/brandrules"
     },
@@ -37,6 +41,10 @@
     {
       "source": "/dealqueue",
       "destination": "/dealqueue.html"
+    },
+    {
+      "source": "/carousel",
+      "destination": "/carousel.html"
     },
     {
       "source": "/brandrules",
