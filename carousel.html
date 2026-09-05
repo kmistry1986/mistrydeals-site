@@ -83,6 +83,8 @@
         <span style="{{ navHere }}">Carousel</span>
         <a href="{{ hBrands }}" style="{{ navRest }}">Brand rules</a>
         <a href="{{ hScrapes }}" style="{{ navRest }}">Scrape log</a>
+        <a href="{{ hReddit }}" style="{{ navRest }}">Reddit poster</a>
+        <a href="{{ hGuides }}" style="{{ navRest }}">Buying guides</a>
       </div>
       </sc-if>
       <sc-if value="{{ isWide }}" hint-placeholder-val="{{ true }}">
@@ -831,14 +833,16 @@ class Component extends DCLogic {
   }
 
   adminHref(page) {
-    const deployed = { catalogue: "/catalogue", dealqueue: "/dealqueue", carousel: "/carousel", brands: "/brandrules", scrapes: "/scrapelog" };
-    if (/^\/(catalogue|dealqueue|carousel|brandrules|scrapelog)/.test(location.pathname) || location.pathname.indexOf("/admin/") !== -1) return deployed[page] || "/catalogue";
+    const deployed = { catalogue: "/catalogue", dealqueue: "/dealqueue", carousel: "/carousel", brands: "/brandrules", scrapes: "/scrapelog", reddit: "/redditposter", guides: "/buyingguides" };
+    if (/^\/(catalogue|dealqueue|carousel|brandrules|scrapelog|redditposter|buyingguides)/.test(location.pathname) || location.pathname.indexOf("/admin/") !== -1) return deployed[page] || "/catalogue";
     const local = {
       catalogue: "MistryDeals Admin v2.dc.html",
       dealqueue: "MistryDeals Deal Queue.dc.html",
       carousel: "MistryDeals Carousel.dc.html",
       brands: "MistryDeals Deal Queue.dc.html#brands",
-      scrapes: "MistryDeals Deal Queue.dc.html#scrapes"
+      scrapes: "MistryDeals Deal Queue.dc.html#scrapes",
+      reddit: "MistryDeals Reddit Poster.dc.html",
+      guides: "MistryDeals Buying Guides.dc.html"
     };
     return local[page] || local.catalogue;
   }
@@ -886,12 +890,16 @@ class Component extends DCLogic {
       hQueue: this.adminHref("dealqueue"),
       hBrands: this.adminHref("brands"),
       hScrapes: this.adminHref("scrapes"),
+      hReddit: this.adminHref("reddit"),
+      hGuides: this.adminHref("guides"),
       menuNav: [
         { label: "Catalogue", href: this.adminHref("catalogue") },
         { label: "Deal queue", href: this.adminHref("dealqueue") },
         { label: "Carousel", href: this.adminHref("carousel"), here: true },
         { label: "Brand rules", href: this.adminHref("brands") },
-        { label: "Scrape log", href: this.adminHref("scrapes") }
+        { label: "Scrape log", href: this.adminHref("scrapes") },
+        { label: "Reddit poster", href: this.adminHref("reddit") },
+        { label: "Buying guides", href: this.adminHref("guides") }
       ].map(m => ({
         label: m.label, href: m.href,
         style: "font:inherit;font-family:var(--font-heading);font-weight:700;font-size:13px;letter-spacing:.06em;text-transform:uppercase;text-decoration:none;padding:14px 16px;min-height:52px;display:flex;align-items:center;color:var(--color-" +

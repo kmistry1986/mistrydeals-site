@@ -1,0 +1,673 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="/support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="/_ds/modernist-424462e2-4060-4771-92af-91bbc246b8fd/styles.css">
+<script src="/_ds/modernist-424462e2-4060-4771-92af-91bbc246b8fd/_ds_bundle.js"></script>
+<style>
+  body { margin:0; background: var(--color-bg); color: var(--color-text); font-family: var(--font-body); }
+  a { color: var(--color-accent-700); }
+  a:hover { color: var(--color-accent-900); }
+  h1, h2, h3, label { font-family: var(--font-heading); }
+  .rp-label { display:block; font-family:var(--font-heading); font-weight:700; font-size:10px; letter-spacing:.1em; text-transform:uppercase; color:var(--color-neutral-700); margin-bottom:7px; }
+  .rp-input { width:100%; font:inherit; font-size:14px; padding:11px 12px; background:var(--color-bg); color:var(--color-text); border:1px solid var(--color-divider); border-radius:0; }
+  .rp-input:focus-visible { outline:2px solid var(--color-accent); outline-offset:2px; border-color:var(--color-text); }
+  textarea.rp-input { resize:vertical; min-height:130px; line-height:1.5; }
+  @media (max-width: 720px) { .rp-two { grid-template-columns: 1fr !important; } }
+</style>
+</helmet>
+
+<sc-if value="{{ verifying }}" hint-placeholder-val="{{ true }}">
+  <div style="background:var(--color-bg);min-height:100vh;display:grid;place-items:center;padding:24px;color:var(--color-text)">
+    <div style="display:flex;align-items:center;gap:9px;font-family:var(--font-heading);font-weight:800;font-size:13px;letter-spacing:.12em;text-transform:uppercase;color:var(--color-neutral-700)">
+      <span style="width:13px;height:13px;background:var(--color-accent);display:block"></span>Mistrydeals
+    </div>
+  </div>
+</sc-if>
+
+<sc-if value="{{ signedOut }}" hint-placeholder-val="{{ false }}">
+  <div style="background:var(--color-bg);min-height:100vh;display:grid;place-items:center;padding:24px;color:var(--color-text)">
+    <div style="width:100%;max-width:380px">
+      <div style="display:flex;align-items:center;gap:9px;font-family:var(--font-heading);font-weight:800;font-size:13px;letter-spacing:.12em;text-transform:uppercase;margin-bottom:28px">
+        <span style="width:13px;height:13px;background:var(--color-accent);display:block"></span>Mistrydeals
+      </div>
+      <h1 style="margin:0 0 8px;font-size:34px;line-height:1.05;letter-spacing:-.02em">Admin sign in</h1>
+      <p style="margin:0 0 24px;font-size:14px;color:var(--color-neutral-700)">This area posts to Reddit as the MistryDeals bot.</p>
+      <form onSubmit="{{ onSignIn }}">
+        <div class="field" style="margin-bottom:14px">
+          <label>Email</label>
+          <input class="input" type="email" autocomplete="username" value="{{ email }}" onChange="{{ onEmail }}" />
+        </div>
+        <div class="field" style="margin-bottom:18px">
+          <label>Password</label>
+          <input class="input" type="password" autocomplete="current-password" value="{{ password }}" onChange="{{ onPassword }}" />
+        </div>
+        <sc-if value="{{ authError }}" hint-placeholder-val="{{ false }}">
+          <div style="border-left:3px solid var(--color-accent);padding:8px 12px;margin-bottom:16px;font-size:13px;color:var(--color-accent-700)">{{ authError }}</div>
+        </sc-if>
+        <button type="submit" class="btn btn-primary btn-block" style="justify-content:space-between">{{ signInLabel }} <span>&#8594;</span></button>
+      </form>
+    </div>
+  </div>
+</sc-if>
+
+<sc-if value="{{ signedIn }}" hint-placeholder-val="{{ false }}">
+<div style="min-height:100vh;background:var(--color-bg);color:var(--color-text)">
+  <div style="border-bottom:2px solid var(--color-divider)">
+    <div style="max-width:1560px;margin:0 auto;padding:18px 16px;display:flex;align-items:flex-end;gap:24px;flex-wrap:wrap">
+      <div>
+        <div style="font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--color-accent-700);margin-bottom:8px">MistryDeals &#183; internal</div>
+        <h1 style="margin:0;font-size:38px;line-height:1;letter-spacing:-.02em">Reddit poster</h1>
+      </div>
+      <sc-if value="{{ isWide }}" hint-placeholder-val="{{ true }}">
+      <div style="display:flex;align-items:center;gap:0;margin-left:8px;flex-wrap:wrap">
+        <a href="{{ hCatalogue }}" style="{{ navRest }}">Catalogue</a>
+        <a href="{{ hQueue }}" style="{{ navRest }}">Deal queue</a>
+        <a href="{{ hCarousel }}" style="{{ navRest }}">Carousel</a>
+        <a href="{{ hBrands }}" style="{{ navRest }}">Brand rules</a>
+        <a href="{{ hScrapes }}" style="{{ navRest }}">Scrape log</a>
+        <span style="{{ navHere }}">Reddit poster</span>
+        <a href="{{ hGuides }}" style="{{ navRest }}">Buying guides</a>
+      </div>
+      </sc-if>
+      <sc-if value="{{ isWide }}" hint-placeholder-val="{{ true }}">
+      <div style="margin-left:auto;display:flex;align-items:center;gap:10px">
+        <span style="font-size:12px;color:var(--color-neutral-700)">Posting as <strong>mistrydeals-bot</strong></span>
+        <span style="font-size:12px;color:var(--color-neutral-700)">{{ userEmail }}</span>
+        <button onClick="{{ signOut }}" class="btn btn-ghost" style="font-size:12px;padding:8px 12px">Sign out</button>
+      </div>
+      </sc-if>
+      <sc-if value="{{ isNarrow }}" hint-placeholder-val="{{ false }}">
+      <div style="margin-left:auto;display:flex;align-items:center;gap:10px;flex:none">
+        <button onClick="{{ openMenu }}" title="Menu" style="font:inherit;flex:none;width:42px;height:42px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;background:transparent;border:1px solid var(--color-divider);cursor:pointer;padding:0">
+          <span style="display:block;width:18px;height:2px;background:var(--color-text)"></span>
+          <span style="display:block;width:18px;height:2px;background:var(--color-text)"></span>
+          <span style="display:block;width:18px;height:2px;background:var(--color-text)"></span>
+        </button>
+      </div>
+      </sc-if>
+    </div>
+  </div>
+
+  <sc-if value="{{ menuOpen }}" hint-placeholder-val="{{ false }}">
+    <div onClick="{{ closeMenu }}" style="position:fixed;inset:0;background:color-mix(in srgb, var(--color-neutral-900) 55%, transparent);z-index:90;display:flex;justify-content:flex-end">
+      <div onClick="{{ stop }}" style="background:var(--color-bg);width:min(310px,86vw);height:100%;display:flex;flex-direction:column;border-left:2px solid var(--color-text)">
+        <div style="padding:16px;border-bottom:2px solid var(--color-divider);display:flex;align-items:flex-start;gap:12px">
+          <div style="min-width:0">
+            <div style="font-family:var(--font-heading);font-weight:700;font-size:9.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--color-neutral-700)">Signed in</div>
+            <div style="font-size:13px;line-height:1.35;margin-top:4px;overflow-wrap:anywhere">{{ userEmail }}</div>
+          </div>
+          <button onClick="{{ closeMenu }}" class="btn btn-ghost" style="margin-left:auto;font-size:12px;min-height:44px;padding:0 14px;flex:none">Close</button>
+        </div>
+        <div style="display:flex;flex-direction:column;padding:8px 0;border-bottom:1px solid var(--color-divider)">
+          <sc-for list="{{ menuNav }}" as="m" hint-placeholder-count="6">
+            <a href="{{ m.href }}" style="{{ m.style }}">{{ m.label }}</a>
+          </sc-for>
+        </div>
+        <button onClick="{{ signOut }}" class="btn btn-ghost" style="margin:auto 16px 20px;font-size:12px;padding:10px 12px;justify-content:flex-start">Sign out</button>
+      </div>
+    </div>
+  </sc-if>
+
+  <div style="max-width:900px;margin:0 auto;padding:32px 16px 64px">
+    <div style="display:grid;grid-template-columns:minmax(0,1fr);gap:26px">
+      <div>
+        <div style="display:flex;align-items:baseline;gap:14px;padding-bottom:10px;border-bottom:2px solid var(--color-divider)">
+          <div style="font-family:var(--font-heading);font-weight:700;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--color-neutral-700)">Recently synced products</div>
+          <button onClick="{{ reloadProducts }}" style="margin-left:auto;font:inherit;font-family:var(--font-heading);font-weight:700;font-size:10px;letter-spacing:.08em;text-transform:uppercase;background:none;border:0;padding:0;cursor:pointer;color:var(--color-neutral-700);white-space:nowrap">Reload</button>
+        </div>
+        <div style="margin-top:14px">
+          <input class="rp-input" placeholder="Filter by title, ASIN or category" value="{{ prodQuery }}" onChange="{{ onProdQuery }}" />
+        </div>
+        <sc-if value="{{ prodLoading }}" hint-placeholder-val="{{ true }}">
+          <div style="padding:16px 0;font-size:13px;color:var(--color-neutral-700)">Loading the catalogue&#8230;</div>
+        </sc-if>
+        <sc-if value="{{ prodErr }}" hint-placeholder-val="{{ false }}">
+          <div style="border-left:3px solid var(--color-accent);padding:10px 14px;margin-top:14px;font-size:13px;color:var(--color-accent-700)">{{ prodErr }}</div>
+        </sc-if>
+        <sc-if value="{{ prodEmpty }}" hint-placeholder-val="{{ false }}">
+          <div style="padding:16px 0;font-size:13px;color:var(--color-neutral-700)">No live products found.</div>
+        </sc-if>
+        <div style="margin-top:8px;max-height:340px;overflow-y:auto">
+          <sc-for list="{{ prodRows }}" as="p" hint-placeholder-count="6">
+            <button onClick="{{ p.pick }}" style="{{ p.rowStyle }}">
+              <span style="min-width:0">
+                <span style="display:block;font-size:13px;line-height:1.35;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ p.title }}</span>
+                <span style="display:block;margin-top:3px;font-size:11px;color:var(--color-neutral-700)">{{ p.meta }}</span>
+              </span>
+              <span style="font-size:11px;color:var(--color-neutral-700)">synced {{ p.when }}</span>
+              <span style="font-family:var(--font-heading);font-weight:700;font-size:10px;letter-spacing:.08em;text-transform:uppercase;white-space:nowrap">{{ p.pickLabel }}</span>
+            </button>
+          </sc-for>
+        </div>
+      </div>
+
+      <div>
+        <div style="font-family:var(--font-heading);font-weight:700;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--color-neutral-700);padding-bottom:10px;border-bottom:2px solid var(--color-divider)">Post details</div>
+
+        <div style="margin-top:22px;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:22px" class="rp-two">
+          <div>
+            <label class="rp-label" for="rp-sub">Subreddit</label>
+            <select id="rp-sub" class="rp-input" value="{{ subreddit }}" onChange="{{ onSubreddit }}">
+              <sc-for list="{{ subOptions }}" as="o" hint-placeholder-count="2">
+                <option value="{{ o.value }}">{{ o.label }}</option>
+              </sc-for>
+            </select>
+            <div style="margin-top:8px;display:flex;flex-wrap:wrap;gap:6px">
+              <sc-for list="{{ subChips }}" as="c" hint-placeholder-count="4">
+                <button onClick="{{ c.pick }}" style="{{ c.style }}">{{ c.label }}</button>
+              </sc-for>
+            </div>
+          </div>
+          <div>
+            <label class="rp-label" for="rp-flair">Title prefix</label>
+            <div style="display:flex;flex-wrap:wrap;gap:6px" id="rp-flair">
+              <sc-for list="{{ prefixChips }}" as="c" hint-placeholder-count="3">
+                <button onClick="{{ c.pick }}" style="{{ c.style }}">{{ c.label }}</button>
+              </sc-for>
+            </div>
+          </div>
+        </div>
+
+        <div style="margin-top:22px">
+          <label class="rp-label" for="rp-title">Post title</label>
+          <input id="rp-title" class="rp-input" placeholder="e.g. Anker 737 power bank down to $89 (was $149)" value="{{ title }}" onChange="{{ onTitle }}" />
+          <div style="margin-top:6px;font-size:12px;color:{{ titleCountColor }}">{{ titleCount }}</div>
+        </div>
+
+        <div style="margin-top:22px">
+          <label class="rp-label" for="rp-body">Post body <span style="text-transform:none;letter-spacing:0;font-weight:400">(optional)</span></label>
+          <textarea id="rp-body" class="rp-input" placeholder="Link, price history, why it&#39;s a good deal&#8230;" value="{{ body }}" onChange="{{ onBody }}"></textarea>
+        </div>
+
+        <div style="margin-top:22px;border-left:3px solid var(--color-accent);padding:14px 16px">
+          <sc-if value="{{ ruleNone }}" hint-placeholder-val="{{ true }}">
+            <div style="font-size:13px;color:var(--color-neutral-700)">{{ ruleNone }}</div>
+          </sc-if>
+          <sc-if value="{{ ruleSub }}" hint-placeholder-val="{{ false }}">
+            <div style="font-family:var(--font-heading);font-weight:700;font-size:10px;letter-spacing:.1em;text-transform:uppercase;margin-bottom:10px">{{ ruleSub }}</div>
+            <div style="display:flex;flex-direction:column;gap:5px">
+              <sc-for list="{{ ruleList }}" as="r" hint-placeholder-count="8">
+                <div style="display:flex;gap:8px;align-items:flex-start;font-size:13px;line-height:1.45">
+                  <span style="{{ r.markStyle }}">{{ r.mark }}</span>
+                  <span>{{ r.text }}</span>
+                </div>
+              </sc-for>
+            </div>
+            <div style="margin-top:12px;display:flex;align-items:center;gap:10px;flex-wrap:wrap">
+              <code style="font-size:12px;background:var(--color-neutral-200);padding:5px 8px">{{ ruleTemplate }}</code>
+              <button onClick="{{ useTemplate }}" style="font:inherit;font-family:var(--font-heading);font-weight:700;font-size:10px;letter-spacing:.08em;text-transform:uppercase;background:none;border:1px solid var(--color-divider);padding:6px 10px;cursor:pointer;color:var(--color-text);white-space:nowrap">Use template</button>
+            </div>
+          </sc-if>
+        </div>
+
+        <div style="margin-top:24px;display:flex;align-items:center;gap:10px;flex-wrap:wrap">
+          <button onClick="{{ submit }}" class="btn btn-primary" disabled="{{ submitDisabled }}" style="font-size:12px;padding:12px 18px;min-height:44px;white-space:nowrap;justify-content:flex-start">{{ submitLabel }}</button>
+          <button onClick="{{ clear }}" class="btn btn-secondary" style="font-size:12px;padding:12px 18px;min-height:44px;white-space:nowrap;justify-content:flex-start">Clear</button>
+        </div>
+
+        <sc-if value="{{ statusText }}" hint-placeholder-val="{{ false }}">
+          <div style="{{ statusStyle }}">
+            <span>{{ statusText }}</span>
+            <sc-if value="{{ postUrl }}" hint-placeholder-val="{{ false }}">
+              <a href="{{ postUrl }}" target="_blank" rel="noopener" style="margin-left:8px;font-family:var(--font-heading);font-weight:700;font-size:11px;letter-spacing:.08em;text-transform:uppercase">View post &#8594;</a>
+            </sc-if>
+          </div>
+        </sc-if>
+      </div>
+
+      <div>
+        <div style="font-family:var(--font-heading);font-weight:700;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--color-neutral-700);padding-bottom:10px;border-bottom:2px solid var(--color-divider)">Recent posts this session</div>
+        <sc-if value="{{ noHistory }}" hint-placeholder-val="{{ true }}">
+          <div style="padding:18px 0;font-size:13px;color:var(--color-neutral-700)">Nothing posted yet.</div>
+        </sc-if>
+        <sc-for list="{{ history }}" as="h" hint-placeholder-count="0">
+          <div style="display:grid;grid-template-columns:96px minmax(0,1fr) auto;gap:14px;align-items:baseline;padding:13px 0;border-bottom:1px solid var(--color-divider)">
+            <span style="font-family:var(--font-heading);font-weight:700;font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--color-neutral-700)">{{ h.when }}</span>
+            <span style="font-size:13px;line-height:1.4">{{ h.line }}</span>
+            <a href="{{ h.url }}" target="_blank" rel="noopener" style="font-family:var(--font-heading);font-weight:700;font-size:10px;letter-spacing:.08em;text-transform:uppercase;white-space:nowrap">Open &#8594;</a>
+          </div>
+        </sc-for>
+      </div>
+    </div>
+  </div>
+</div>
+</sc-if>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:1280,&quot;height&quot;:900}}">
+const BASE = "https://qolksrytidvxarrlygyy.supabase.co";
+const KEY = "sb_publishable_UX38KeF1XAKtzvS01yfx7w_8s5NkOH3";
+const FN = BASE + "/functions/v1/reddit-oauth-callback";
+// title length Reddit itself enforces
+const TITLE_MAX = 300;
+
+// Per-subreddit posting rules. Keys are lowercase subreddit names; the panel and
+// the pre-post check both read from here, so adding a subreddit is one entry.
+const SUBREDDIT_RULES = {
+  deals: {
+    name: "deals",
+    titleTemplate: "[DEAL] {product} ${price} [Ends MM.DD.YY]",
+    rules: [
+      ["ok", "Affiliate links (Amazon Associates) allowed"],
+      ["no", "Referral links (sign-up rewards) not allowed outside the megathread"],
+      ["no", "No counterfeit, knock-off or unbranded items"],
+      ["no", "No SlickDeals link-spam \u2014 link direct to the deal"],
+      ["no", "No dropshipping, self-promotion or Shopify stores"],
+      ["warn", "Price must be in the title (a range for product lines)"],
+      ["warn", "Include the region if applicable \u2014 [US], [US/CA]"],
+      ["warn", "Include the expiry date in the title \u2014 [Ends MM.DD]"]
+    ],
+    validateTitle: title => {
+      if (!/\$/.test(title)) return "r/deals requires a price in the title (e.g. $29.99).";
+      if (!/\[deal/i.test(title)) return "r/deals titles should start with [DEAL].";
+      return null;
+    }
+  }
+};
+
+// Amazon Associates tag — same single source the public site uses, so a stale
+// affiliate_link in the data cannot leak a different tag into a Reddit post
+const TAG = "mistrydealshp-20";
+function amzUrl(link, asin) {
+  const base = link || (asin ? "https://www.amazon.com/dp/" + asin : "");
+  if (!base) return "";
+  if (/[?&]tag=/.test(base)) return base.replace(/([?&]tag=)[^&]*/, "$1" + TAG);
+  return base + (base.indexOf("?") === -1 ? "?" : "&") + "tag=" + TAG;
+}
+
+class Component extends DCLogic {
+  state = {
+    token: null, user: null, refresh: null, email: "", password: "",
+    authError: "", signingIn: false, verifying: true,
+    narrow: false, menuOpen: false,
+    subreddit: "", title: "", body: "",
+    busy: false, statusText: "", statusKind: "", postUrl: "",
+    history: [],
+    products: null, prodErr: "", prodQuery: "", pickedId: null
+  };
+
+  decode(str) {
+    if (str == null) return "";
+    const s = String(str);
+    if (s.indexOf("&") === -1) return s;
+    const el = document.createElement("textarea");
+    el.innerHTML = s;
+    return el.value;
+  }
+
+  // the live catalogue, most recently synced first — the same rows the
+  // catalogue page shows, so a picked product is one that is actually posted
+  async loadProducts() {
+    this.setState({ prodErr: "" });
+    try {
+      // select=* rather than a column list: the catalogue page does the same,
+      // and naming a column this table does not have 400s the whole request
+      const res = await this.req(BASE + "/rest/v1/products?select=*&is_active=eq.true&order=last_price_sync.desc.nullslast&limit=60",
+        { headers: this.headers() });
+      if (!res.ok) {
+        let why = "";
+        try { const j = await res.json(); why = j.message || j.hint || ""; } catch (e) {}
+        this.setState({ products: [], prodErr: "Could not load products (" + res.status + ")" + (why ? " \u2014 " + why : "") });
+        return;
+      }
+      this.setState({ products: await res.json() });
+    } catch (e) {
+      this.setState({ products: [], prodErr: "Could not load products \u2014 network error" });
+    }
+  }
+
+  async req(url, init) {
+    const opts = init || {};
+    let res = await fetch(url, opts);
+    if (res.status === 401 || res.status === 403) {
+      const fresh = await this.refreshSession();
+      if (fresh) {
+        const retry = Object.assign({}, opts);
+        retry.headers = Object.assign({}, opts.headers || {}, { apikey: KEY, Authorization: "Bearer " + fresh });
+        res = await fetch(url, retry);
+      }
+    }
+    return res;
+  }
+
+  headers(extra) {
+    return Object.assign({ apikey: KEY, Authorization: "Bearer " + (this.state.token || KEY), "Content-Type": "application/json" }, extra || {});
+  }
+
+  netPrice(p) {
+    const price = parseFloat(p.price);
+    const cp = parseFloat(p.scraped_coupon_price);
+    if (!isNaN(cp) && cp > 0 && (isNaN(price) || cp < price)) return cp;
+    return isNaN(price) ? null : price;
+  }
+
+  money(v) { return v == null ? "" : "$" + (Math.round(v) === v ? v : v.toFixed(2)); }
+
+  // Fills the form from a product, in the picked subreddit's house style: the
+  // r/deals template when that sub is selected, a plain headline otherwise.
+  applyProduct(p) {
+    const sub = this.state.subreddit.trim().toLowerCase().replace(/^\/?r\//, "");
+    const spec = SUBREDDIT_RULES[sub];
+    const name = this.decode(p.display_title || p.title || "").trim();
+    const net = this.netPrice(p);
+    const was = parseFloat(p.original_price);
+    const code = p.coupon_code ? String(p.coupon_code).replace(/\s+/g, " ").trim() : "";
+    const off = (net && was > net) ? Math.round((1 - net / was) * 100) : null;
+    const url = amzUrl(p.affiliate_link, p.asin || p.amazon_asin);
+
+    const title = spec
+      ? ("[DEAL] " + name + " " + this.money(net) + (was > net ? " (was " + this.money(was) + ")" : "") + " [US]").replace(/\s+/g, " ").trim()
+      : (name + " \u2014 " + this.money(net) + (off ? " (" + off + "% off)" : "")).trim();
+
+    const body = [
+      url ? url : "",
+      "",
+      was > net ? "Was " + this.money(was) + ", now " + this.money(net) + (off ? " \u2014 " + off + "% off." : ".") : this.money(net) + ".",
+      code ? "Clip the coupon / use code " + code + " at checkout." : "",
+      "",
+      "Affiliate link \u2014 posted by the MistryDeals bot."
+    ].filter((l, i, a) => !(l === "" && a[i - 1] === "")).join("\n").trim();
+
+    this.setState({ pickedId: p.id, title: title, body: body, statusText: "", postUrl: "" });
+  }
+
+  // same shared admin session the other pages use — this page can post as the
+  // bot, so it gates exactly like the rest of the admin
+  componentDidMount() {
+    this.state.narrow = window.innerWidth <= 820;
+    window.addEventListener("resize", this.onResize);
+    let stored = null;
+    try { stored = JSON.parse(localStorage.getItem("md-admin-session") || "null"); } catch (e) {}
+    if (!stored || !stored.token || stored.token === KEY) { this.signOutNow(); return; }
+    this.validateSession(stored);
+  }
+
+  componentWillUnmount() { window.removeEventListener("resize", this.onResize); }
+
+  onResize = () => {
+    const narrow = window.innerWidth <= 820;
+    if (narrow !== this.state.narrow) this.setState({ narrow: narrow, menuOpen: false });
+  };
+
+  async validateSession(stored) {
+    try {
+      const res = await fetch(BASE + "/auth/v1/user", { headers: { apikey: KEY, Authorization: "Bearer " + stored.token } });
+      if (!res.ok) {
+        const fresh = await this.refreshSession(stored.refresh);
+        if (!fresh) { this.signOutNow(); this.setState({ authError: "Session expired \u2014 sign in again." }); return; }
+        this.setState({ token: fresh, refresh: stored.refresh, user: stored.user, verifying: false }, () => this.loadProducts());
+        return;
+      }
+      const user = await res.json();
+      this.setState({ token: stored.token, refresh: stored.refresh || null, user: (user && user.email) || stored.user, verifying: false },
+        () => this.loadProducts());
+    } catch (e) { this.signOutNow(); }
+  }
+
+  async refreshSession(tokenOverride) {
+    const rt = tokenOverride || this.state.refresh;
+    if (!rt) return null;
+    try {
+      const res = await fetch(BASE + "/auth/v1/token?grant_type=refresh_token", {
+        method: "POST", headers: { apikey: KEY, "Content-Type": "application/json" },
+        body: JSON.stringify({ refresh_token: rt })
+      });
+      if (!res.ok) return null;
+      const data = await res.json();
+      if (!data.access_token) return null;
+      const session = { token: data.access_token, refresh: data.refresh_token || rt, user: this.state.user };
+      try { localStorage.setItem("md-admin-session", JSON.stringify(session)); } catch (e) {}
+      this.setState({ token: session.token, refresh: session.refresh });
+      return session.token;
+    } catch (e) { return null; }
+  }
+
+  async signIn(e) {
+    if (e && e.preventDefault) e.preventDefault();
+    this.setState({ signingIn: true, authError: "" });
+    try {
+      const res = await fetch(BASE + "/auth/v1/token?grant_type=password", {
+        method: "POST", headers: { apikey: KEY, "Content-Type": "application/json" },
+        body: JSON.stringify({ email: this.state.email, password: this.state.password })
+      });
+      const data = await res.json();
+      if (!res.ok || !data.access_token) {
+        this.setState({ signingIn: false, authError: data.error_description || data.msg || "Sign in failed." });
+        return;
+      }
+      const session = { token: data.access_token, refresh: data.refresh_token || null, user: (data.user && data.user.email) || this.state.email };
+      try { localStorage.setItem("md-admin-session", JSON.stringify(session)); } catch (err) {}
+      this.setState({ token: session.token, refresh: session.refresh, user: session.user, password: "", signingIn: false, verifying: false },
+        () => this.loadProducts());
+    } catch (err) { this.setState({ signingIn: false, authError: "Network error. Try again." }); }
+  }
+
+  signOutNow() {
+    try { localStorage.removeItem("md-admin-session"); } catch (e) {}
+    this.setState({ token: null, user: null, refresh: null, password: "", verifying: false, menuOpen: false });
+  }
+
+  // deployed, the admin sections are real paths; opened as a local file they are
+  // sibling DC files — same resolution the other admin pages use
+  adminHref(page) {
+    const deployed = {
+      catalogue: "/catalogue", dealqueue: "/dealqueue", carousel: "/carousel",
+      brands: "/brandrules", scrapes: "/scrapelog", reddit: "/redditposter", guides: "/buyingguides"
+    };
+    if (/^\/(catalogue|dealqueue|carousel|brandrules|scrapelog|redditposter|buyingguides)/.test(location.pathname) ||
+        location.pathname.indexOf("/admin/") !== -1) return deployed[page] || "/catalogue";
+    const local = {
+      catalogue: "MistryDeals Admin v2.dc.html", dealqueue: "MistryDeals Deal Queue.dc.html",
+      carousel: "MistryDeals Carousel.dc.html", brands: "MistryDeals Deal Queue.dc.html#brands",
+      scrapes: "MistryDeals Deal Queue.dc.html#scrapes", reddit: "MistryDeals Reddit Poster.dc.html",
+      guides: "MistryDeals Buying Guides.dc.html"
+    };
+    return local[page] || local.catalogue;
+  }
+
+  chip(label, on, pick) {
+    return {
+      label: label, pick: pick,
+      style: "font:inherit;font-family:var(--font-heading);font-weight:700;font-size:10px;letter-spacing:.08em;" +
+        "text-transform:uppercase;padding:7px 10px;cursor:pointer;border:1px solid " +
+        (on ? "var(--color-accent)" : "var(--color-divider)") + ";background:" +
+        (on ? "var(--color-accent)" : "none") + ";color:" + (on ? "var(--color-bg)" : "var(--color-text)")
+    };
+  }
+
+  // a prefix toggles: tapping it again takes it back off the title
+  togglePrefix(tag) {
+    const t = this.state.title;
+    const re = new RegExp("\\s*\\[" + tag.replace(/[[\]]/g, "") + "\\]\\s*", "i");
+    if (re.test(t)) { this.setState({ title: t.replace(re, " ").trim() }); return; }
+    this.setState({ title: (tag + " " + t.trim()).trim() });
+  }
+
+  async submit() {
+    const sub = this.state.subreddit.trim().replace(/^\/?r\//i, "");
+    const title = this.state.title.trim();
+    if (!sub || !title) {
+      this.setState({ statusText: "A subreddit and a title are both required.", statusKind: "error", postUrl: "" });
+      return;
+    }
+    const spec = SUBREDDIT_RULES[sub.toLowerCase()];
+    if (spec && spec.validateTitle) {
+      const why = spec.validateTitle(title);
+      if (why) { this.setState({ statusText: why, statusKind: "error", postUrl: "" }); return; }
+    }
+    if (title.length > TITLE_MAX) {
+      this.setState({ statusText: "Reddit titles cap at " + TITLE_MAX + " characters.", statusKind: "error", postUrl: "" });
+      return;
+    }
+    this.setState({ busy: true, statusText: "Posting to r/" + sub + "\u2026", statusKind: "info", postUrl: "" });
+    try {
+      const res = await fetch(FN, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          apikey: KEY,
+          Authorization: "Bearer " + (this.state.token || KEY)
+        },
+        body: JSON.stringify({ subreddit: sub, title: title, text: this.state.body.trim() })
+      });
+      let payload = null;
+      try { payload = await res.json(); } catch (e) {}
+      if (!res.ok) {
+        const why = (payload && (payload.error || payload.message)) || ("HTTP " + res.status);
+        this.setState({ busy: false, statusText: "Could not post \u2014 " + why, statusKind: "error", postUrl: "" });
+        return;
+      }
+      const url = (payload && (payload.postUrl || payload.url)) || "";
+      const stamp = new Date();
+      this.setState({
+        busy: false, statusText: "Posted to r/" + sub + ".", statusKind: "ok", postUrl: url,
+        title: "", body: "",
+        history: [{
+          when: stamp.toLocaleTimeString([], { hour: "numeric", minute: "2-digit" }),
+          line: "r/" + sub + " \u2014 " + title, url: url || ("https://reddit.com/r/" + sub)
+        }].concat(this.state.history).slice(0, 12)
+      });
+    } catch (e) {
+      this.setState({ busy: false, statusText: "Could not post \u2014 network error.", statusKind: "error", postUrl: "" });
+    }
+  }
+
+  renderVals() {
+    const navBase = "font:inherit;font-family:var(--font-heading);font-weight:700;font-size:11px;letter-spacing:.1em;" +
+      "text-transform:uppercase;text-decoration:none;padding:8px 12px;";
+    const kind = this.state.statusKind;
+    const len = this.state.title.trim().length;
+    // only subreddits with rules on file — posting into a sub whose rules we
+    // have not encoded is how the bot gets banned
+    const subs = Object.keys(SUBREDDIT_RULES);
+    const spec = SUBREDDIT_RULES[this.state.subreddit.trim().toLowerCase().replace(/^\/?r\//, "")];
+    const prefixes = ["[Deal]", "[Expired]", "[Free]"];
+    const menuBase = "font:inherit;font-family:var(--font-heading);font-weight:700;font-size:12px;letter-spacing:.08em;" +
+      "text-transform:uppercase;text-decoration:none;padding:13px 16px;min-height:44px;display:flex;align-items:center;color:var(--color-";
+    return {
+      verifying: this.state.verifying,
+      signedOut: !this.state.token && !this.state.verifying,
+      signedIn: !!this.state.token && !this.state.verifying,
+      isNarrow: !!this.state.narrow,
+      isWide: !this.state.narrow,
+      email: this.state.email,
+      onEmail: e => this.setState({ email: e.target.value }),
+      password: this.state.password,
+      onPassword: e => this.setState({ password: e.target.value }),
+      onSignIn: e => this.signIn(e),
+      signInLabel: this.state.signingIn ? "Signing in\u2026" : "Sign in",
+      authError: this.state.authError,
+      signOut: () => this.signOutNow(),
+      userEmail: this.state.user || "",
+      menuOpen: !!this.state.menuOpen,
+      openMenu: () => this.setState({ menuOpen: true }),
+      closeMenu: () => this.setState({ menuOpen: false }),
+      stop: e => e.stopPropagation(),
+      menuNav: [
+        { label: "Catalogue", href: this.adminHref("catalogue") },
+        { label: "Deal queue", href: this.adminHref("dealqueue") },
+        { label: "Carousel", href: this.adminHref("carousel") },
+        { label: "Brand rules", href: this.adminHref("brands") },
+        { label: "Scrape log", href: this.adminHref("scrapes") },
+        { label: "Reddit poster", href: this.adminHref("reddit"), here: true },
+        { label: "Buying guides", href: this.adminHref("guides") }
+      ].map(m => ({
+        label: m.label, href: m.href,
+        style: menuBase + (m.here ? "accent-700)" : "text)")
+      })),
+
+      navHere: navBase + "border:1px solid var(--color-text);background:var(--color-text);color:var(--color-bg);border-left:0",
+      navRest: navBase + "border:1px solid var(--color-divider);color:var(--color-text)",
+      hCatalogue: this.adminHref("catalogue"),
+      hQueue: this.adminHref("dealqueue"),
+      hCarousel: this.adminHref("carousel"),
+      hBrands: this.adminHref("brands"),
+      hScrapes: this.adminHref("scrapes"),
+      hGuides: this.adminHref("guides"),
+
+      subreddit: this.state.subreddit,
+      onSubreddit: e => this.setState({ subreddit: e.target.value }),
+      title: this.state.title,
+      onTitle: e => this.setState({ title: e.target.value }),
+      body: this.state.body,
+      onBody: e => this.setState({ body: e.target.value }),
+
+      subOptions: [{ value: "", label: "\u2014 pick a subreddit \u2014" }]
+        .concat(subs.map(s => ({ value: s, label: "r/" + s }))),
+      subChips: subs.map(s => this.chip("r/" + s, this.state.subreddit.trim().toLowerCase() === s.toLowerCase(),
+        () => this.setState({ subreddit: s }))),
+      prefixChips: prefixes.map(p => this.chip(p, new RegExp("\\[" + p.slice(1, -1) + "\\]", "i").test(this.state.title),
+        () => this.togglePrefix(p))),
+
+      ruleSub: spec ? "r/" + spec.name + " rules" : "",
+      ruleNone: spec ? "" : "Enter a subreddit to see its posting rules.",
+      ruleTemplate: spec ? spec.titleTemplate : "",
+      useTemplate: () => spec && this.setState({ title: spec.titleTemplate }),
+      ruleList: spec ? spec.rules.map(r => ({
+        mark: r[0] === "ok" ? "\u2713" : r[0] === "no" ? "\u2715" : "!",
+        text: r[1],
+        markStyle: "font-family:var(--font-heading);font-weight:800;font-size:12px;width:14px;flex:none;color:var(--color-" +
+          (r[0] === "no" ? "accent" : r[0] === "warn" ? "neutral-900" : "neutral-700") + ")"
+      })) : [],
+
+      titleCount: len + " / " + TITLE_MAX + " characters",
+      titleCountColor: len > TITLE_MAX ? "var(--color-accent-700)" : "var(--color-neutral-700)",
+
+      submit: () => this.submit(),
+      submitLabel: this.state.busy ? "Posting\u2026" : "Post to Reddit",
+      submitDisabled: this.state.busy,
+      clear: () => this.setState({ subreddit: "", title: "", body: "", statusText: "", postUrl: "" }),
+
+      statusText: this.state.statusText,
+      postUrl: this.state.postUrl,
+      statusStyle: "margin-top:20px;padding:12px 14px;font-size:13px;line-height:1.45;border-left:3px solid var(--color-" +
+        (kind === "error" ? "accent" : kind === "ok" ? "text" : "divider") + ");color:var(--color-" +
+        (kind === "error" ? "accent-700" : "text") + ")",
+
+      history: this.state.history,
+      noHistory: this.state.history.length === 0,
+
+      prodQuery: this.state.prodQuery,
+      onProdQuery: e => this.setState({ prodQuery: e.target.value }),
+      reloadProducts: () => { this.setState({ products: null }); this.loadProducts(); },
+      prodErr: this.state.prodErr,
+      prodLoading: this.state.products == null && !this.state.prodErr,
+      prodEmpty: !!(this.state.products && !this.state.products.length && !this.state.prodErr),
+      prodRows: (() => {
+        const q = this.state.prodQuery.trim().toLowerCase();
+        const rows = (this.state.products || []).filter(p => {
+          if (!q) return true;
+          return (this.decode(p.display_title || p.title || "") + " " + (p.asin || p.amazon_asin || "") + " " + (p.category || ""))
+            .toLowerCase().indexOf(q) !== -1;
+        }).slice(0, 25);
+        return rows.map(p => {
+          const net = this.netPrice(p);
+          const was = parseFloat(p.original_price);
+          const off = (net && was > net) ? Math.round((1 - net / was) * 100) : null;
+          const synced = p.last_price_sync ? new Date(p.last_price_sync) : null;
+          const on = this.state.pickedId === p.id;
+          return {
+            title: this.decode(p.display_title || p.title || "") || "(untitled)",
+            meta: [net == null ? "no price" : this.money(net), off ? off + "% off" : "", p.category || ""].filter(Boolean).join("  \u00b7  "),
+            when: synced ? synced.toLocaleDateString([], { month: "short", day: "numeric" }) : "never",
+            pick: () => this.applyProduct(p),
+            rowStyle: "display:grid;grid-template-columns:minmax(0,1fr) 96px 64px;gap:12px;align-items:center;width:100%;text-align:left;" +
+              "font:inherit;background:" + (on ? "var(--color-neutral-200)" : "none") + ";border:0;border-bottom:1px solid var(--color-divider);" +
+              "padding:11px 8px;cursor:pointer",
+            pickLabel: on ? "Filled" : "Use \u2192"
+          };
+        });
+      })()
+    };
+  }
+}
+</script>
+</body>
+</html>

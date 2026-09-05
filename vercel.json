@@ -31,6 +31,26 @@
     {
       "source": "/admin/scrapes",
       "destination": "/scrapelog"
+    },
+    {
+      "source": "/admin/reddit",
+      "destination": "/redditposter"
+    },
+    {
+      "source": "/admin/reddit-poster",
+      "destination": "/redditposter"
+    },
+    {
+      "source": "/reddit-poster",
+      "destination": "/redditposter"
+    },
+    {
+      "source": "/admin/guides",
+      "destination": "/buyingguides"
+    },
+    {
+      "source": "/buying-guides",
+      "destination": "/buyingguides"
     }
   ],
   "rewrites": [
@@ -53,6 +73,14 @@
     {
       "source": "/scrapelog",
       "destination": "/dealqueue.html"
+    },
+    {
+      "source": "/redditposter",
+      "destination": "/redditposter.html"
+    },
+    {
+      "source": "/buyingguides",
+      "destination": "/buyingguides.html"
     },
     {
       "source": "/d/:slug",

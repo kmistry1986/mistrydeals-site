@@ -12,7 +12,7 @@
   <script src="/_ds/modernist-424462e2-4060-4771-92af-91bbc246b8fd/_ds_bundle.js"></script>
 </helmet>
 <div style="display:flex;flex-direction:column;background:var(--color-surface);border:1px solid var(--color-divider);height:100%;min-width:0" style-hover="border-color:var(--color-accent)">
-  <div style="position:relative;aspect-ratio:4/3;background:#ffffff;display:grid;place-items:center;overflow:hidden">
+  <a href="{{ deal.url }}" target="_blank" rel="nofollow sponsored noopener" style="position:relative;aspect-ratio:4/3;background:#ffffff;display:grid;place-items:center;overflow:hidden;text-decoration:none">
     <sc-if value="{{ deal.img }}" hint-placeholder-val="{{ false }}">
       <img src="{{ deal.img }}" alt="{{ deal.title }}" style="position:absolute;inset:0;width:100%;height:100%;object-fit:contain;padding:10px;box-sizing:border-box;display:block" />
     </sc-if>
@@ -20,21 +20,27 @@
       <span style="font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--color-neutral-500)">{{ deal.cat }}</span>
     </sc-if>
     <div style="position:absolute;top:0;left:0;background:var(--color-accent);color:#f3f2f2;font-family:var(--font-heading);font-weight:800;font-size:19px;line-height:1;padding:7px 9px 8px">{{ deal.off }}</div>
-  </div>
-  <div style="display:grid;grid-template-rows:14px 38px auto 16px 26px auto;gap:8px;padding:12px 12px 14px;flex:1">
+  </a>
+  <div style="display:grid;grid-template-rows:14px 38px auto 16px minmax(26px,auto) auto;gap:8px;padding:12px 12px 14px;flex:1">
     <div style="font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--color-neutral-600);overflow:hidden;white-space:nowrap;text-overflow:ellipsis">{{ deal.cat }}</div>
-    <div style="font-family:var(--font-heading);font-weight:800;font-size:15px;line-height:1.24;letter-spacing:-.01em;overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical">{{ deal.title }}</div>
+    <a href="{{ deal.url }}" target="_blank" rel="nofollow sponsored noopener" style="font-family:var(--font-heading);font-weight:800;font-size:15px;line-height:1.24;letter-spacing:-.01em;overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;color:var(--color-text);text-decoration:none" style-hover="color:var(--color-accent-700)">{{ deal.title }}</a>
     <div style="display:flex;align-items:baseline;gap:8px;min-width:0">
       <span style="font-family:var(--font-heading);font-weight:800;font-size:30px;line-height:1;letter-spacing:-.02em">{{ deal.price }}</span>
       <span style="font-size:13px;text-decoration:line-through;color:var(--color-neutral-600)">{{ deal.was }}</span>
+      <sc-if value="{{ deal.hasEff }}" hint-placeholder-val="{{ false }}">
+        <span style="font-size:12px;line-height:1.3;color:var(--color-accent-700);font-weight:600">{{ deal.effLine }}</span>
+      </sc-if>
     </div>
     <div style="display:flex;align-items:center;gap:8px;font-size:11px;color:var(--color-neutral-700);white-space:nowrap;overflow:hidden">
       <span>★ {{ deal.rating }} {{ deal.reviews }}</span>
       <span>{{ deal.updated }}</span>
     </div>
-    <div style="display:flex;align-items:center">
+    <div style="display:flex;align-items:center;gap:6px;row-gap:4px;flex-wrap:wrap;min-width:0">
       <sc-if value="{{ deal.code }}" hint-placeholder-val="{{ false }}">
-        <div style="font-size:11px;font-family:var(--font-heading);font-weight:600;letter-spacing:.06em;border:1px dashed var(--color-accent);color:var(--color-accent-700);padding:4px 8px">CODE {{ deal.code }}</div>
+        <div style="font-size:11px;font-family:var(--font-heading);font-weight:600;letter-spacing:.06em;border:1px dashed var(--color-accent);color:var(--color-accent-700);padding:4px 8px;white-space:nowrap">CODE {{ deal.code }}</div>
+      </sc-if>
+      <sc-if value="{{ deal.hasCash }}" hint-placeholder-val="{{ false }}">
+        <div title="{{ deal.cashTitle }}" style="font-size:10.5px;font-family:var(--font-heading);font-weight:700;letter-spacing:.04em;line-height:1.25;background:var(--color-text);color:var(--color-bg);padding:5px 8px;min-width:0;flex:1 1 auto">{{ deal.cashBadge }}</div>
       </sc-if>
     </div>
     <a href="{{ deal.url }}" target="_blank" rel="nofollow sponsored noopener" class="btn btn-primary btn-block" style="justify-content:space-between;white-space:nowrap;font-size:13px;gap:8px">View on Amazon <span>&#8594;</span></a>

@@ -193,12 +193,15 @@
         <a href="{{ hCarousel }}" style="{{ carouselTabStyle }}">Carousel</a>
         <a href="{{ hBrands }}" onClick="{{ goBrands }}" style="{{ brandTabStyle }}">Brand rules</a>
         <a href="{{ hScrapes }}" onClick="{{ goScrapes }}" style="{{ scrapeTabStyle }}">Scrape log</a>
+        <a href="{{ hReddit }}" style="{{ redditTabStyle }}">Reddit poster</a>
+        <a href="{{ hGuides }}" style="{{ redditTabStyle }}">Buying guides</a>
       </div>
       </sc-if>
       <sc-if value="{{ isWide }}" hint-placeholder-val="{{ true }}">
       <div class="m-wrap" style="margin-left:auto;display:flex;align-items:center;gap:10px">
         <span style="font-size:12px;color:var(--color-neutral-700)">{{ savedNote }}</span>
         <span style="font-size:12px;color:var(--color-neutral-700)">{{ userEmail }}</span>
+        <a href="{{ hSite }}" style="font:inherit;font-family:var(--font-heading);font-weight:700;font-size:11px;letter-spacing:.1em;text-transform:uppercase;text-decoration:none;padding:8px 12px;border:1px solid var(--color-divider);color:var(--color-text)">View site</a>
         <button onClick="{{ refresh }}" class="btn btn-secondary" style="font-size:12px;padding:8px 12px">Refresh</button>
         <button onClick="{{ signOut }}" class="btn btn-ghost" style="font-size:12px;padding:8px 12px">Sign out</button>
         <button onClick="{{ toggleDark }}" title="{{ darkTitle }}" style="{{ tDark }}">{{ darkGlyph }}</button>
@@ -368,9 +371,9 @@
     </sc-if>
 
     <div style="overflow-x:auto;padding-bottom:48px">
-      <div class="m-scroll" style="min-width:1190px">
-        <div class="m-hide" style="display:grid;grid-template-columns:3px 64px minmax(220px,1fr) 104px 84px 120px 108px 96px 236px;gap:10px;padding:10px 0;border-bottom:2px solid var(--color-divider);font-family:var(--font-heading);font-weight:700;font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--color-neutral-700)">
-          <span></span><span></span><span>Deal</span><span>Price</span><span>Rating</span><span>Source</span><span>Forum</span><span>Added</span><span>Review</span>
+      <div class="m-scroll" style="min-width:1282px">
+        <div class="m-hide" style="display:grid;grid-template-columns:3px 64px minmax(220px,1fr) 104px 84px 92px 120px 108px 96px 236px;gap:10px;padding:10px 0;border-bottom:2px solid var(--color-divider);font-family:var(--font-heading);font-weight:700;font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--color-neutral-700)">
+          <span></span><span></span><span>Deal</span><span>Price</span><span>Rating</span><span>Cashback</span><span>Source</span><span>Forum</span><span>Added</span><span>Review</span>
         </div>
 
         <sc-if value="{{ loading }}" hint-placeholder-val="{{ true }}">
@@ -453,6 +456,15 @@
                 <sc-if value="{{ r.offCell }}" hint-placeholder-val="{{ true }}">
                   <div style="{{ r.offStyle }}">{{ r.offCell }}</div>
                 </sc-if>
+              </sc-if>
+            </div>
+            <div style="min-width:0">
+              <sc-if value="{{ r.cashNarrowLabel }}" hint-placeholder-val="{{ false }}">
+                <div style="{{ r.labelStyle }}">Cashback</div>
+              </sc-if>
+              <div style="{{ r.cashStyle }}" title="{{ r.cashTitle }}">{{ r.cashback }}</div>
+              <sc-if value="{{ r.cashNote }}" hint-placeholder-val="{{ false }}">
+                <div style="font-size:10.5px;line-height:1.3;color:var(--color-neutral-600);margin-top:2px">{{ r.cashNote }}</div>
               </sc-if>
             </div>
             <div style="min-width:0;font-size:12px;line-height:1.35">
@@ -554,6 +566,9 @@
                 <sc-if value="{{ r.canUndo }}" hint-placeholder-val="{{ false }}">
                   <button onClick="{{ r.undo }}" style="font:inherit;font-family:var(--font-heading);font-weight:700;font-size:10px;letter-spacing:.08em;text-transform:uppercase;background:none;border:0;padding:0;margin-top:6px;cursor:pointer;color:var(--color-neutral-700)">Back to pending</button>
                 </sc-if>
+                <sc-if value="{{ r.canDelete }}" hint-placeholder-val="{{ false }}">
+                  <button onClick="{{ r.deleteRow }}" title="Delete this queue record outright \u2014 the scraper may pick the deal up again later" style="font:inherit;font-family:var(--font-heading);font-weight:700;font-size:10px;letter-spacing:.08em;text-transform:uppercase;background:none;border:0;padding:0;margin-top:6px;cursor:pointer;color:var(--color-accent-700);display:block">Delete row</button>
+                </sc-if>
               </sc-if>
             </div>
           </div>
@@ -574,12 +589,20 @@
           <h2 style="margin:0;font-size:28px;line-height:1.05;letter-spacing:-.02em">Brand rules</h2>
           <p style="margin:8px 0 0;font-size:13px;line-height:1.5;color:var(--color-neutral-700);max-width:640px;text-wrap:pretty">A scraped deal whose title carries one of these keywords is approved or rejected the moment it lands, without waiting for review. Keyword matching is case-insensitive.</p>
         </div>
-        <span style="margin-left:auto;font-size:12px;color:var(--color-neutral-700)">{{ brandSummary }}</span>
+        <div style="margin-left:auto;display:flex;align-items:center;gap:14px">
+          <span style="font-size:12px;color:var(--color-neutral-700)">{{ brandSummary }}</span>
+          <sc-if value="{{ showPauseAll }}" hint-placeholder-val="{{ true }}">
+            <button onClick="{{ pauseAll }}" title="{{ pauseAllTitle }}" style="{{ pauseAllStyle }}">{{ pauseAllLabel }}</button>
+          </sc-if>
+        </div>
       </div>
+      <sc-if value="{{ pausedBanner }}" hint-placeholder-val="{{ false }}">
+        <div style="border-left:3px solid var(--color-accent);padding:10px 14px;margin:18px 0 0;font-size:13px;line-height:1.45;color:var(--color-accent-700)">{{ pausedBanner }}</div>
+      </sc-if>
 
       <div style="border:2px solid var(--color-text);padding:16px;margin:22px 0 28px">
         <div style="font-family:var(--font-heading);font-weight:700;font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--color-neutral-700);margin-bottom:12px">Add a rule</div>
-        <div class="m-stack" style="display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr) 160px 110px max-content;gap:12px;align-items:end">
+        <div class="m-stack" style="display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr) 160px 110px minmax(0,1fr) max-content;gap:12px;align-items:end">
           <div class="field" style="margin:0">
             <label>Brand name</label>
             <input class="input" style="padding:7px 10px;font-size:13px" placeholder="Anker" value="{{ newName }}" onChange="{{ onNewName }}" />
@@ -599,6 +622,14 @@
             <label>Min discount %</label>
             <input class="input" style="padding:7px 10px;font-size:13px" placeholder="any" value="{{ newMin }}" onChange="{{ onNewMin }}" />
           </div>
+          <div class="field" style="margin:0">
+            <label>Default category</label>
+            <select class="input" style="padding:7px 10px;font-size:13px" value="{{ newCat }}" onChange="{{ onNewCat }}">
+              <sc-for list="{{ newCatOptions }}" as="o" hint-placeholder-count="8">
+                <option value="{{ o.value }}">{{ o.label }}</option>
+              </sc-for>
+            </select>
+          </div>
           <button onClick="{{ addRule }}" class="btn btn-primary" style="font-size:12px;padding:9px 14px;justify-content:flex-start;white-space:nowrap">{{ addLabel }}</button>
         </div>
         <sc-if value="{{ brandError }}" hint-placeholder-val="{{ false }}">
@@ -607,9 +638,13 @@
       </div>
 
       <div style="overflow-x:auto">
-      <div style="min-width:1010px">
+      <div style="min-width:1160px">
         <div style="{{ brandHeadStyle }}">
-          <span></span><span>Brand</span><span>Keyword</span><span>Rule</span><span>Min discount</span><span>Decisions</span><span>Last fired</span><span></span>
+          <span></span>
+          <sc-for list="{{ brandHead }}" as="h" hint-placeholder-count="7">
+            <span style="{{ h.style }}" title="{{ h.title }}" onClick="{{ h.onSort }}"><span style="min-width:0;overflow-wrap:break-word">{{ h.label }}</span><span style="{{ h.arrowStyle }}">{{ h.arrow }}</span></span>
+          </sc-for>
+          <span></span>
         </div>
 
         <sc-if value="{{ brandLoading }}" hint-placeholder-val="{{ true }}">
@@ -628,12 +663,19 @@
                 <div style="font-size:13px;line-height:1.35;color:var(--color-neutral-700)">{{ b.keyword }}</div>
                 <div><span style="{{ b.ruleStyle }}">{{ b.ruleLabel }}</span></div>
                 <div style="font-size:13px;line-height:1.35" title="{{ b.minTitle }}">{{ b.minLabel }}</div>
+                <div title="{{ b.catTitle }}">
+                  <select style="{{ b.catSelectStyle }}" value="{{ b.catValue }}" onChange="{{ b.catPick }}">
+                    <sc-for list="{{ b.catOptions }}" as="o" hint-placeholder-count="8">
+                      <option value="{{ o.value }}">{{ o.label }}</option>
+                    </sc-for>
+                  </select>
+                </div>
                 <div style="font-family:var(--font-heading);font-weight:800;font-size:15px;line-height:1.2" title="{{ b.hitsTitle }}">{{ b.hits }}</div>
                 <div style="font-size:12px;color:var(--color-neutral-700);line-height:1.35" title="{{ b.updatedTitle }}">{{ b.updated }}</div>
                 <div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap">
                   <button onClick="{{ b.edit }}" style="{{ b.ghostStyle }}">Edit</button>
                   <sc-if value="{{ b.canToggle }}" hint-placeholder-val="{{ false }}">
-                    <button onClick="{{ b.toggle }}" style="{{ b.ghostStyle }}">{{ b.toggleLabel }}</button>
+                    <button onClick="{{ b.toggle }}" title="{{ b.toggleTitle }}" style="{{ b.ghostStyle }}">{{ b.toggleLabel }}</button>
                   </sc-if>
                   <button onClick="{{ b.remove }}" style="{{ b.dangerStyle }}">Remove</button>
                 </div>
@@ -649,6 +691,11 @@
                   <option value="block">Auto-reject</option>
                 </select>
                 <input class="input" style="padding:6px 8px;font-size:13px" placeholder="any" value="{{ b.draftMin }}" onChange="{{ b.onMin }}" />
+                <select class="input" style="padding:6px 8px;font-size:13px" value="{{ b.draftCat }}" onChange="{{ b.onCat }}">
+                  <sc-for list="{{ b.catOptions }}" as="o" hint-placeholder-count="8">
+                    <option value="{{ o.value }}">{{ o.label }}</option>
+                  </sc-for>
+                </select>
                 <div style="font-family:var(--font-heading);font-weight:800;font-size:15px;line-height:1.2">{{ b.hits }}</div>
                 <div style="font-size:12px;color:var(--color-neutral-700);line-height:1.35">{{ b.updated }}</div>
                 <div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap">
@@ -672,11 +719,6 @@
         <div>
           <h2 style="margin:0 0 6px;font-size:26px;line-height:1.1;letter-spacing:-.015em">Scrape log</h2>
           <p style="margin:0;font-size:13px;color:var(--color-neutral-700);max-width:64ch;text-wrap:pretty">Every run each scraper has recorded in <code style="font-size:12px">scraper_heartbeat</code>, newest first. A run that found nothing still writes a row, so silence here means the function never fired.</p>
-        </div>
-        <div class="m-wrap" style="margin-left:auto;display:flex;align-items:center;gap:8px">
-          <sc-for list="{{ runFilters }}" as="f" hint-placeholder-count="3">
-            <button onClick="{{ f.pick }}" style="{{ f.style }}">{{ f.label }}</button>
-          </sc-for>
         </div>
       </div>
 
@@ -810,6 +852,30 @@
       </div>
     </div>
   </sc-if>
+  <sc-if value="{{ addOpen }}" hint-placeholder-val="{{ false }}">
+    <div style="position:fixed;inset:0;background:color-mix(in srgb, var(--color-neutral-900) 55%, transparent);display:grid;place-items:center;padding:24px;z-index:85">
+      <div style="background:var(--color-bg);border:2px solid var(--color-text);max-width:620px;width:100%;padding:24px;max-height:88vh;overflow:auto">
+        <h2 style="margin:0 0 8px;font-size:22px;line-height:1.15;letter-spacing:-.01em">Add to catalogue</h2>
+        <p style="margin:0 0 20px;font-size:13px;line-height:1.5;color:var(--color-neutral-700);text-wrap:pretty">{{ addSummary }}</p>
+        <div class="m-stack" style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px">
+          <sc-for list="{{ addFields }}" as="f" hint-placeholder-count="6">
+            <div class="field" style="{{ f.wrapStyle }}">
+              <label style="{{ f.labelStyle }}">{{ f.label }}<span style="{{ f.flagStyle }}">{{ f.flag }}</span></label>
+              <input class="input" value="{{ f.value }}" placeholder="{{ f.placeholder }}" onChange="{{ f.onChange }}" style="{{ f.style }}" />
+              <div style="{{ f.hintStyle }}">{{ f.hint }}</div>
+            </div>
+          </sc-for>
+        </div>
+        <sc-if value="{{ addErr }}" hint-placeholder-val="{{ false }}">
+          <div style="margin-top:16px;font-size:13px;line-height:1.4;padding:10px 12px;border:2px solid var(--color-accent);color:var(--color-accent-700)">{{ addErr }}</div>
+        </sc-if>
+        <div style="display:flex;gap:10px;margin-top:22px">
+          <button onClick="{{ addSave }}" class="btn btn-primary" style="font-size:13px;padding:9px 14px">{{ addSaveLabel }}</button>
+          <button onClick="{{ addCancel }}" class="btn btn-ghost" style="font-size:13px;padding:9px 14px">Cancel</button>
+        </div>
+      </div>
+    </div>
+  </sc-if>
 </div>
 </sc-if>
 </x-dc>
@@ -818,6 +884,13 @@
 // dealnews never got past its deploy tests, trigger-scraper is the
 // pre-versioning dispatcher the scraper-* functions replaced (last run Aug 14)
 const HIDDEN_SCRAPERS = ["dealnews", "trigger"];
+// Not scrapers, and no longer shown in the log: the Amazon data sync pipeline
+// and the brand auto-approver are back-office jobs that fire every few minutes
+// and drowned the run history.
+const HIDDEN_JOBS = ["sync-approved", "sync-amazon", "amazon-data-sync", "amazon-sync", "auto-approve", "autoapprove", "auto-approval"];
+// both statuses are "approved, awaiting sync" — the second is the row the
+// Sync button handed to the Amazon data sync pipeline
+const APPROVED_STATUSES = ["approved", "approved_needs_amazon_data_sync"];
 const BASE = "https://qolksrytidvxarrlygyy.supabase.co";
 const KEY = "sb_publishable_UX38KeF1XAKtzvS01yfx7w_8s5NkOH3";
 
@@ -827,11 +900,13 @@ class Component extends DCLogic {
   state = {
     token: null, refresh: null, user: null, email: "", password: "", authError: "", signingIn: false,
     rows: null, status: "pending", source: "All sources", query: "", limit: 50, total: null,
-    counts: {}, statusList: ["pending", "approved", "rejected"], statusCounts: {}, sources: [], busyId: null, saved: "", error: "", picks: {}, confirmBox: null, byAsin: {}, verifying: true,
+    counts: {}, statusList: ["pending", "approved", "rejected"], statusCounts: {}, sources: [], busyId: null, saved: "", error: "", picks: {}, confirmBox: null, addBox: null, byAsin: {}, verifying: true,
     newestByAsin: {}, matched: false, matchErr: "", tab: "queue", brands: null, audit: null, auditErr: "", matched: null, brandErr: "", brandBusy: "",
     dark: false, darkTouched: false, narrow: false, menuOpen: false, scrapeOpen: false, filterOpen: false,
     heartbeat: null, runs: null, runsErr: "", runsLimit: 100, runsFilter: "scrapers", openRun: null,
-    nb: { name: "", kw: "", rule: "auto_approve", min: "" }, editId: null, ed: {},
+    nb: { name: "", kw: "", rule: "auto_approve", min: "", cat: "" }, editId: null, ed: {},
+    bSort: "brand", bDir: "asc",
+    catNames: null, catIdByName: {}, catNameById: {},
     histBox: null, hist: null, histRuns: null, histErr: ""
   };
 
@@ -1012,7 +1087,8 @@ class Component extends DCLogic {
   // dealnews never got past its deploy tests — hidden until it actually runs
   isScraper(src) {
     const f = this.family(src);
-    return f.indexOf("sync-approved") !== 0 && HIDDEN_SCRAPERS.indexOf(f) === -1;
+    if (HIDDEN_SCRAPERS.indexOf(f) !== -1) return false;
+    return !HIDDEN_JOBS.some(j => f.indexOf(j) === 0);
   }
 
   famLabel(f) { return f ? f.charAt(0).toUpperCase() + f.slice(1) : "\u2014"; }
@@ -1045,10 +1121,10 @@ class Component extends DCLogic {
 
   // sync-approved-deals writes every 5 minutes and would otherwise fill any
   // page of rows, so the split happens server-side, not after the fetch
-  runFilterClause(f) {
-    if (f === "sync") return "&source=ilike.sync-approved*";
-    if (f === "all") return "";
-    return "&source=not.ilike.sync-approved*";
+  // the hidden back-office jobs are excluded server-side so they never eat a
+  // page of rows; isScraper() catches any naming variant after the fetch
+  runFilterClause() {
+    return "&source=not.ilike.sync-approved*&source=not.ilike.auto-approve*&source=not.ilike.amazon-sync*";
   }
 
   async loadHeartbeat() {
@@ -1102,10 +1178,14 @@ class Component extends DCLogic {
       const res = await this.req(BASE + "/rest/v1/product_pipeline?select=status&order=created_at.desc&limit=1000", { headers: this.headers() });
       const seen = res.ok ? (await res.json()).map(r => r.status).filter(Boolean) : [];
       const list = base.slice();
-      seen.forEach(s => { if (list.indexOf(s) === -1) list.push(s); });
+      // approved_needs_amazon_data_sync is folded into the approved pill, so it
+      // must not also appear as a status of its own
+      seen.forEach(s => { if (list.indexOf(s) === -1 && APPROVED_STATUSES.indexOf(s) === -1) list.push(s); });
       const counts = {};
       for (const s of list) {
-        if (s === "rejected") {
+        if (s === "approved") {
+          counts.approved = await this.count("status=in.(" + APPROVED_STATUSES.join(",") + ")");
+        } else if (s === "rejected") {
           counts.rejected = await this.count("status=eq.rejected&or=(skip_reason.is.null,skip_reason.neq." + encodeURIComponent(CAPTURE_REASON) + ")");
           counts.capture = await this.count("status=eq.rejected&skip_reason=eq." + encodeURIComponent(CAPTURE_REASON));
         } else counts[s] = await this.count("status=eq." + encodeURIComponent(s));
@@ -1143,6 +1223,9 @@ class Component extends DCLogic {
     // it is a deal handed to the extension. Keep the two apart in both directions.
     else if (st === "capture") { parts.push("status=eq.rejected"); parts.push("skip_reason=eq." + encodeURIComponent(CAPTURE_REASON)); }
     else if (st === "rejected") { parts.push("status=eq.rejected"); parts.push("or=(skip_reason.is.null,skip_reason.neq." + encodeURIComponent(CAPTURE_REASON) + ")"); }
+    // "Approved, awaiting sync" covers both the plain approved rows and the ones
+    // explicitly handed to the Amazon data sync — same waiting room, one view
+    else if (st === "approved") parts.push("status=in.(" + APPROVED_STATUSES.join(",") + ")");
     else if (st !== "all") parts.push("status=eq." + st);
     if (this.state.source !== "All sources") parts.push("source=eq." + encodeURIComponent(this.state.source));
     const q = (this.state.query || "").trim();
@@ -1256,7 +1339,7 @@ class Component extends DCLogic {
     if (!asins.length) { this.setState({ byAsin: {}, matched: true, matchErr: "" }); return; }
     this.setState({ matched: false, matchErr: "" });
     try {
-      const map = await this.fetchProducts(asins, "id,asin,display_title,last_price_sync,price,original_price,is_active");
+      const map = await this.fetchProducts(asins, "id,asin,display_title,last_price_sync,price,original_price,is_active,prime_cashback_percent");
       this.setState({ byAsin: map, matched: true, matchErr: "" });
     } catch (e) {
       // don't let a failed lookup masquerade as an empty catalogue
@@ -1282,7 +1365,14 @@ class Component extends DCLogic {
   // this ASIN (or was never checked at all) — Sync now will fix it.
   // Uses the newest scrape across every queue row for the ASIN, so this agrees
   // with the Awaiting sync count exactly.
+  // explicitly handed to the Amazon sync pipeline — awaiting sync by status
+  // alone, whether or not a catalogue row exists yet
+  needsAmazonSync(row) {
+    return /needs_amazon_data_sync/i.test(String((row && row.status) || ""));
+  }
+
   isAwaitingSync(row) {
+    if (this.needsAmazonSync(row)) return true;
     const p = this.product(row);
     if (!p) return false;
     if (!p.last_price_sync) return true;
@@ -1314,6 +1404,7 @@ class Component extends DCLogic {
   // approved but nothing in the catalogue carries this ASIN — sync cannot help.
   // Only trustworthy once the lookup has actually come back.
   isMissingProduct(row) {
+    if (this.needsAmazonSync(row)) return false;
     return this.state.matched && !this.product(row);
   }
 
@@ -1357,7 +1448,7 @@ class Component extends DCLogic {
     const today = new Date(); today.setHours(0, 0, 0, 0);
     const [pending, approved, rejected, gaps] = await Promise.all([
       this.count("status=eq.pending"),
-      this.count("status=eq.approved"),
+      this.count("status=in.(" + APPROVED_STATUSES.join(",") + ")"),
       this.count("status=eq.rejected"),
       this.countQueueGaps()
     ]);
@@ -1374,9 +1465,13 @@ class Component extends DCLogic {
       const qrows = await q.json();
       const asins = [];
       const newest = {};
+      // ASINs sitting in approved_needs_amazon_data_sync are awaiting sync by
+      // status, so they count even when no catalogue row exists yet
+      const flagged = {};
       qrows.forEach(r => {
         if (!r.asin) return;
         if (asins.indexOf(r.asin) === -1) asins.push(r.asin);
+        if (this.needsAmazonSync(r)) flagged[r.asin] = true;
         const s = this.scrapedAt(r);
         if (s > (newest[r.asin] || 0)) newest[r.asin] = s;
       });
@@ -1386,6 +1481,7 @@ class Component extends DCLogic {
       const found = await this.fetchProducts(asins, "asin,last_price_sync");
       let stale = 0, missing = 0;
       asins.forEach(a => {
+        if (flagged[a]) { stale++; return; }
         const p = found[String(a).trim().toUpperCase()];
         if (!p) { missing++; return; }
         if (!p.last_price_sync) { stale++; return; }
@@ -1679,8 +1775,8 @@ class Component extends DCLogic {
     return null;
   }
 
-  async createProduct(row) {
-    const asin = row.asin && String(row.asin).trim().toUpperCase();
+  async createProduct(row, over) {
+    const asin = (over && over.asin) || (row.asin && String(row.asin).trim().toUpperCase());
     if (!asin) return null;
     const title = this.decode(row.title || "") || asin;
     const body = {
@@ -1707,6 +1803,16 @@ class Component extends DCLogic {
       is_active: false,
       last_price_sync: null
     };
+    // hand-filled values win over the scraped ones, but only where they were
+    // actually supplied — the scraped fields stay as the record of the scrape
+    if (over) {
+      if (over.title) { body.title = over.title; body.display_title = over.title; }
+      if (over.category) body.category = over.category;
+      if (over.price != null) body.price = over.price;
+      if (over.original_price != null) body.original_price = over.original_price;
+      if (over.image_url) body.image_url = over.image_url;
+      body.affiliate_link = "https://www.amazon.com/dp/" + asin + "?tag=mistrydealshp-20";
+    }
     // only sent once the column exists upstream, so an un-migrated DB can't break approvals
     const forum = this.forumOf(row);
     if (forum) body.forum_link = forum;
@@ -1746,6 +1852,36 @@ class Component extends DCLogic {
     if (i > -1) cur.splice(i, 1); else cur.push(plat);
     picks[id] = cur;
     this.setState({ picks: picks });
+  }
+
+  // a sync error is a dead row, not a verdict — reopening it just re-fails, so
+  // these rows get an outright delete of the pipeline record. The catalogue is
+  // left alone: a failed sync never created a product.
+  isSyncError(row) {
+    return /error|fail/i.test(String((row && row.status) || ""));
+  }
+
+  async deleteRow(row) {
+    const label = this.decode(row.title || row.asin || "this row");
+    const ok = await this.ask({
+      title: "Delete this row?",
+      body: label,
+      detail: "The queue record is deleted outright. It is not marked rejected, so the scraper can pick this deal up again on a later run.",
+      label: "Delete row",
+      danger: true
+    });
+    if (!ok) return;
+    this.setState({ busyId: row.id });
+    try {
+      const res = await this.req(BASE + "/rest/v1/product_pipeline?id=eq." + row.id, {
+        method: "DELETE", headers: this.headers({ Prefer: "return=minimal" })
+      });
+      this.setState({ busyId: null, saved: res.ok ? "Row deleted" : "Could not delete the row (" + res.status + ")" });
+      if (res.ok) { this.removeRows([row.id]); this.loadCounts(); }
+    } catch (e) {
+      this.setState({ busyId: null, saved: "Delete failed \u2014 network error" });
+    }
+    this.clearNote();
   }
 
   ask(opts) {
@@ -1816,6 +1952,19 @@ class Component extends DCLogic {
     this.setState({
       rows: kept,
       total: this.state.total == null ? null : Math.max(0, this.state.total - (next.length - kept.length))
+    });
+  }
+
+  // takes rows out of the view outright — for records that no longer exist,
+  // where dropRows' status-patch logic has nothing to work from
+  removeRows(ids) {
+    const set = {};
+    ids.forEach(id => { set[id] = true; });
+    const all = this.state.rows || [];
+    const kept = all.filter(r => !set[r.id]);
+    this.setState({
+      rows: kept,
+      total: this.state.total == null ? null : Math.max(0, this.state.total - (all.length - kept.length))
     });
   }
 
@@ -1908,12 +2057,76 @@ class Component extends DCLogic {
     this.clearNote();
   }
 
-  // repairs a deal approved before the catalogue row existed
-  async addToCatalogue(row) {
-    this.setState({ busyId: row.id, saved: "Creating catalogue row\u2026" });
-    const pid = await this.awaitProduct(row, 1) || await this.createProduct(row);
-    this.setState({ busyId: null });
-    if (pid) { this.setState({ saved: "Added \u2014 hidden until synced" }); this.loadCounts(); }
+  // A row that never reached the catalogue is usually missing something the
+  // insert needs, so the gaps are shown and filled before anything is written
+  // rather than a placeholder product being created and repaired later.
+  ADD_FIELDS = [
+    { key: "asin", label: "ASIN", req: true, hint: "10 characters, from the Amazon URL" },
+    { key: "title", label: "Title", req: true, wide: true },
+    { key: "price", label: "Price", req: true, num: true, hint: "What the shopper pays now" },
+    { key: "original_price", label: "Was price", num: true, hint: "Blank if there is no discount" },
+    { key: "category", label: "Category", req: true, hint: "The sync may overwrite this" },
+    { key: "image_url", label: "Image URL", hint: "Filled in by the sync if blank" }
+  ];
+
+  addDraftOf(row) {
+    const t = this.decode(row.title || "");
+    return {
+      asin: (row.asin || "").toString().trim().toUpperCase(),
+      // a generated "Product B0XXXXXXXX" is a placeholder, not a title
+      title: /^Product [A-Z0-9]{10}$/.test(t) ? "" : t,
+      price: row.scraped_coupon_price != null ? String(row.scraped_coupon_price)
+        : (row.price != null && Number(row.price) > 0 ? String(row.price) : ""),
+      original_price: row.original_price != null ? String(row.original_price) : "",
+      category: row.category && row.category !== "Uncategorized" ? row.category : "",
+      image_url: row.image_url || ""
+    };
+  }
+
+  openAddBox(row) {
+    this.setState({ addBox: { row: row, vals: this.addDraftOf(row), err: "", busy: false } });
+  }
+
+  setAddVal(key, val) {
+    const box = this.state.addBox;
+    if (!box) return;
+    this.setState({ addBox: Object.assign({}, box, { err: "", vals: Object.assign({}, box.vals, { [key]: val }) }) });
+  }
+
+  addMissing() {
+    const v = (this.state.addBox || {}).vals || {};
+    return this.ADD_FIELDS.filter(f => f.req && !String(v[f.key] == null ? "" : v[f.key]).trim()).map(f => f.key);
+  }
+
+  closeAddBox() { this.setState({ addBox: null }); }
+
+  async commitAddBox() {
+    const box = this.state.addBox;
+    if (!box) return;
+    if (this.addMissing().length) {
+      this.setState({ addBox: Object.assign({}, box, { err: "Fill the highlighted fields before adding this product." }) });
+      return;
+    }
+    const v = box.vals;
+    const num = s => { const n = Number(String(s).replace(/[$,]/g, "")); return String(s).trim() && isFinite(n) ? n : null; };
+    const price = num(v.price);
+    const was = num(v.original_price);
+    if (price == null || price <= 0) {
+      this.setState({ addBox: Object.assign({}, box, { err: "Price must be a number above zero." }) });
+      return;
+    }
+    if (was != null && was < price) {
+      this.setState({ addBox: Object.assign({}, box, { err: "Was price is below the current price \u2014 the discount would be negative." }) });
+      return;
+    }
+    const asin = String(v.asin).trim().toUpperCase();
+    this.setState({ addBox: Object.assign({}, box, { busy: true }), busyId: box.row.id, saved: "Creating catalogue row\u2026" });
+    const pid = await this.awaitProduct(box.row, 1) || await this.createProduct(box.row, {
+      asin: asin, title: String(v.title).trim(), category: String(v.category).trim(),
+      price: price, original_price: was, image_url: String(v.image_url).trim() || null
+    });
+    this.setState({ busyId: null, addBox: pid ? null : Object.assign({}, box, { busy: false, err: "The catalogue insert failed \u2014 see the note below the table." }) });
+    if (pid) { this.setState({ saved: "Added \u2014 hidden until synced" }); this.matchProducts(this.state.rows || []); this.loadCounts(); }
     this.clearNote();
   }
 
@@ -2043,7 +2256,93 @@ class Component extends DCLogic {
   // the table has no enabled flag, so a rule is switched off by prefixing its
   // rule value with "off:" — the scraper matches rule exactly, so an off: row
   // is inert but keeps its brand, keyword and action for later
-  ruleActive(b) { return String(b.rule || "").indexOf("off:") !== 0; }
+  // …that prefix scheme is dead (see toggleRule): rule is CHECK-constrained.
+  // Enforcement is switched with a boolean column when brand_rules has one —
+  // its name varies by migration, so it is detected from a loaded row.
+  PAUSE_COLS = [
+    { re: /^(is_)?enabled$/i, activeWhenTrue: true },
+    { re: /^(is_)?active$/i, activeWhenTrue: true },
+    { re: /^(is_)?paused$/i, activeWhenTrue: false },
+    { re: /^(is_)?disabled$/i, activeWhenTrue: false }
+  ];
+
+  pauseCol() {
+    if (this._pauseCol !== undefined) return this._pauseCol;
+    const rows = this.state.brands || [];
+    for (let i = 0; i < rows.length; i++) {
+      const keys = Object.keys(rows[i]);
+      for (const c of this.PAUSE_COLS) {
+        const k = keys.find(k => c.re.test(k));
+        if (k) return (this._pauseCol = { key: k, activeWhenTrue: c.activeWhenTrue });
+      }
+    }
+    return (this._pauseCol = null);
+  }
+
+  // the value to write for the state we want
+  pauseValue(col, wantActive) { return col.activeWhenTrue ? !!wantActive : !wantActive; }
+
+  ruleActive(b) {
+    const col = this.pauseCol();
+    if (col) {
+      const v = b[col.key];
+      if (v == null) return true;
+      return col.activeWhenTrue ? !!v : !v;
+    }
+    return String(b.rule || "").indexOf("off:") !== 0;
+  }
+
+  // true only when every rule is paused — the global button's state
+  allPaused() {
+    const rows = this.state.brands || [];
+    return rows.length > 0 && rows.every(b => !this.ruleActive(b));
+  }
+
+  // one PATCH over the whole table: pause stops the scraper acting on any brand
+  // rule while keeping every rule's brand, keyword, action and category intact
+  async togglePauseAll() {
+    const col = this.pauseCol();
+    if (!col) {
+      this.setState({ brandErr: "Pausing needs a boolean column on brand_rules \u2014 add one with: alter table brand_rules add column enabled boolean not null default true; then reload this page." });
+      return;
+    }
+    const rows = this.state.brands || [];
+    if (!rows.length) return;
+    const wantActive = this.allPaused();
+    const ok = await this.ask({
+      title: wantActive ? "Resume all rules?" : "Pause all rules?",
+      body: rows.length + " rule" + (rows.length === 1 ? "" : "s"),
+      detail: wantActive
+        ? "Auto-approve and auto-reject start acting on newly scraped deals again."
+        : "No rule is enforced while paused \u2014 every scraped deal waits for review instead of being auto-approved or auto-rejected. Nothing is deleted; resume puts them all back.",
+      label: wantActive ? "Resume all" : "Pause all",
+      danger: false
+    });
+    if (!ok) return;
+    this.setState({ brandBusy: "pauseall", brandErr: "" });
+    const patch = {};
+    patch[col.key] = this.pauseValue(col, wantActive);
+    try {
+      const res = await this.req(BASE + "/rest/v1/brand_rules?id=not.is.null", {
+        method: "PATCH", headers: this.headers({ Prefer: "return=minimal" }),
+        body: JSON.stringify(patch)
+      });
+      if (!res.ok) {
+        let why = "";
+        try { const j = await res.json(); why = j.message || j.hint || ""; } catch (e) {}
+        this.setState({ brandBusy: "", brandErr: "Could not " + (wantActive ? "resume" : "pause") + " the rules (" + res.status + ")" + (why ? " \u2014 " + why : "") });
+        return;
+      }
+      this.setState({
+        brands: rows.map(b => Object.assign({}, b, patch)),
+        brandBusy: "",
+        saved: wantActive ? "All rules resumed" : "All rules paused \u2014 nothing is auto-approved or auto-rejected"
+      });
+      this.clearNote();
+    } catch (e) {
+      this.setState({ brandBusy: "", brandErr: "Could not change the rules \u2014 network error" });
+    }
+  }
   // brand_rules has been written with both "block" and "auto_reject" for the
   // same intent. Normalise to one token so the label and the styling can never
   // disagree again — anything that is not an explicit approve is a reject.
@@ -2063,11 +2362,116 @@ class Component extends DCLogic {
         this.setState({ brands: [], brandErr: "Could not load brand rules (" + res.status + ")" + (why ? " \u2014 " + why : "") });
         return;
       }
+      this._pauseCol = undefined; // re-detect the pause column from fresh rows
       this.setState({ brands: await res.json() });
     } catch (e) {
       this.setState({ brands: [], brandErr: "Could not load brand rules \u2014 network error" });
     }
     this.loadBrandHits();
+    if (this.state.catNames === null) this.loadCategories();
+  }
+
+  // categories_v2 is the canonical category list (same source the catalogue
+  // editor uses); brand_rules.default_category stores the name it resolves to.
+  async loadCategories() {
+    try {
+      const res = await this.req(BASE + "/rest/v1/categories_v2?select=id,name,sort_order&is_active=eq.true&order=sort_order.asc,name.asc", { headers: this.headers() });
+      let rows = null;
+      if (res.ok) rows = await res.json();
+      // is_active is not guaranteed to exist — fall back to the plain list
+      if (!rows || !rows.length) {
+        const alt = await this.req(BASE + "/rest/v1/categories_v2?select=id,name&order=name.asc", { headers: this.headers() });
+        if (!alt.ok) { this.setState({ catNames: [] }); return; }
+        rows = await alt.json();
+      }
+      const list = (rows || []).map(r => ({ id: r.id, name: this.decode(r.name || "").trim() })).filter(r => r.name);
+      this.setState({
+        catNames: list.map(r => r.name),
+        catIdByName: list.reduce((m, r) => (m[r.name] = r.id, m), {}),
+        catNameById: list.reduce((m, r) => (m[r.id] = r.name, m), {})
+      });
+    } catch (e) { this.setState({ catNames: [] }); }
+  }
+
+  // brand_rules gained a default-category field; like the min-discount column
+  // its exact name is detected from a loaded row so a rename cannot silently
+  // stop saving. An "_id" column stores the categories_v2 id, otherwise the name.
+  catKey() {
+    const rows = this.state.brands || [];
+    for (let i = 0; i < rows.length; i++) {
+      const keys = Object.keys(rows[i]);
+      const k = keys.find(k => /^default_?category$/i.test(k)) || keys.find(k => /^default_?category_id/i.test(k));
+      if (k) return k;
+    }
+    return "default_category";
+  }
+
+  catIsId() { return /_id/i.test(this.catKey()); }
+
+  // the stored value as a display NAME, whichever way the column stores it.
+  // A uuid is only ever shown as its category name; an unresolved id reads
+  // blank rather than leaking the raw key into the table or the select.
+  catOf(row) {
+    const v = row ? row[this.catKey()] : null;
+    if (v == null || v === "") return "";
+    const s = String(v);
+    const byId = (this.state.catNameById || {})[s];
+    if (byId) return byId;
+    if (this.catIsId() || /^[0-9a-f]{8}-[0-9a-f]{4}-/i.test(s) || /^\d+$/.test(s)) return "";
+    return s;
+  }
+
+  // "" clears the default; a name off the categories_v2 list is refused
+  catPatch(name) {
+    const n = String(name || "").trim();
+    const p = {};
+    if (!n) { p[this.catKey()] = null; return { ok: true, patch: p }; }
+    const id = (this.state.catIdByName || {})[n];
+    if (this.catIsId()) {
+      if (!id) return { ok: false };
+      p[this.catKey()] = id;
+    } else {
+      p[this.catKey()] = n;
+    }
+    return { ok: true, patch: p };
+  }
+
+  // the default category is editable straight from the table row — one pick,
+  // saved immediately, no Edit round-trip
+  async setRuleCategory(row, name) {
+    const cat = this.catPatch(name);
+    if (!cat.ok) { this.setState({ brandErr: "Pick a default category from the list, or leave it blank." }); return; }
+    if (!this.hasCatCol()) { this.setState({ brandErr: "brand_rules has no default-category column \u2014 nothing to save into." }); return; }
+    this.setState({ brandBusy: row.id, brandErr: "" });
+    try {
+      const res = await this.req(BASE + "/rest/v1/brand_rules?id=eq." + row.id, {
+        method: "PATCH", headers: this.headers({ Prefer: "return=minimal" }),
+        body: JSON.stringify(cat.patch)
+      });
+      if (!res.ok) {
+        let why = "";
+        try { const j = await res.json(); why = j.message || j.hint || ""; } catch (e) {}
+        this.setState({ brandBusy: "", brandErr: "Could not set the default category (" + res.status + ")" + (why ? " \u2014 " + why : "") });
+        return;
+      }
+      this.setState({
+        brands: (this.state.brands || []).map(b => b.id === row.id ? Object.assign({}, b, cat.patch) : b),
+        brandBusy: "",
+        saved: name ? "Default category set to " + name : "Default category cleared"
+      });
+      this.clearNote();
+    } catch (e) {
+      this.setState({ brandBusy: "", brandErr: "Could not set the default category \u2014 network error" });
+    }
+  }
+
+  catOptions(current) {
+    const list = (this.state.catNames || []).slice()
+      .sort((x, y) => x.localeCompare(y, "en", { sensitivity: "base" }));
+    const opts = [{ value: "", label: "\u2014 none \u2014" }];
+    const cur = String(current || "").trim();
+    if (cur && list.indexOf(cur) === -1) opts.push({ value: cur, label: cur + " \u2014 retired, re-pick" });
+    return opts.concat(list.map(c => ({ value: c, label: c })));
   }
 
   // Decisions come from auto_approve_audit — one row per verdict a rule
@@ -2159,6 +2563,53 @@ class Component extends DCLogic {
     return newest || "";
   }
 
+  // Every brand rule is loaded at once, so column sorting is done here on the
+  // full set — no server round-trip and no "loaded rows only" caveat.
+  BRAND_COLS = [
+    { key: "brand", label: "Brand" },
+    { key: "keyword", label: "Keyword" },
+    { key: "rule", label: "Rule" },
+    { key: "min", label: "Min discount" },
+    { key: "cat", label: "Default category" },
+    { key: "hits", label: "Decisions" },
+    { key: "fired", label: "Last fired" }
+  ];
+
+  brandSortValue(key, b) {
+    if (key === "brand") return String(b.brand_name || "").toLowerCase();
+    if (key === "keyword") return String(b.keyword || b.brand_name || "").toLowerCase();
+    // paused rules rank last within a direction-independent group, then reject
+    // before approve so the two enforcement kinds never interleave
+    if (key === "rule") return (this.ruleActive(b) ? 0 : 2) + (this.ruleAction(b) === "auto_reject" ? 0 : 1) * 0.5;
+    if (key === "min") { const m = this.minOf(b); return m == null ? null : Number(m); }
+    if (key === "cat") return String(this.catOf(b) || "").toLowerCase();
+    if (key === "hits") { const h = this.brandHits(b); return h == null ? null : Number(h); }
+    if (key === "fired") { const t = this.brandLastFired(b); return t ? new Date(t).getTime() : null; }
+    return null;
+  }
+
+  // blanks always sink, whichever way the column is pointing
+  applyBrandSort(list) {
+    const key = this.state.bSort || "brand";
+    const dir = this.state.bDir === "desc" ? -1 : 1;
+    return (list || []).slice().sort((a, b) => {
+      const va = this.brandSortValue(key, a), vb = this.brandSortValue(key, b);
+      const ea = va == null || va === "", eb = vb == null || vb === "";
+      if (ea && eb) return 0;
+      if (ea) return 1;
+      if (eb) return -1;
+      if (typeof va === "number" && typeof vb === "number") return (va - vb) * dir;
+      return String(va).localeCompare(String(vb)) * dir;
+    });
+  }
+
+  toggleBrandSort(key) {
+    const same = this.state.bSort === key;
+    // text columns read best A→Z first; counts and dates best highest-first
+    const first = key === "brand" || key === "keyword" || key === "cat" || key === "rule" ? "asc" : "desc";
+    this.setState({ bSort: key, bDir: same ? (this.state.bDir === "asc" ? "desc" : "asc") : first });
+  }
+
   sortBrands(list) {
     return (list || []).slice().sort((a, b) =>
       String(a.brand_name || "").toLowerCase().localeCompare(String(b.brand_name || "").toLowerCase()));
@@ -2175,6 +2626,17 @@ class Component extends DCLogic {
     }
     return "min_discount";
   }
+
+  // whether the detected column is real or the hard-coded fallback: a PATCH
+  // naming a column brand_rules does not have is refused outright (PGRST204),
+  // which took the brand-name and keyword edits down with it
+  hasCol(re) {
+    return (this.state.brands || []).some(b => Object.keys(b).some(k => re.test(k)));
+  }
+  // the SAME patterns minKey()/catKey() detect with — a second, tighter regex
+  // here silently dropped default_category_id_v2 from every save
+  hasMinCol() { return this.hasCol(/^min_?discount/i); }
+  hasCatCol() { return this.hasCol(/^default_?category/i); }
 
   minOf(row) {
     const v = row ? row[this.minKey()] : null;
@@ -2202,6 +2664,8 @@ class Component extends DCLogic {
     if (this.keywordTaken(kw)) { this.setState({ brandErr: "A rule already matches the keyword \u201c" + kw + "\u201d." }); return; }
     const min = this.parseMin(this.state.nb.min);
     if (!min.ok) { this.setState({ brandErr: "Minimum discount must be a whole number between 0 and 99, or blank." }); return; }
+    const cat = this.catPatch(this.state.nb.cat);
+    if (!cat.ok) { this.setState({ brandErr: "Pick a default category from the list, or leave it blank." }); return; }
     this.setState({ brandBusy: "add", brandErr: "" });
     const stamp = new Date().toISOString();
     try {
@@ -2209,7 +2673,8 @@ class Component extends DCLogic {
         method: "POST", headers: this.headers({ Prefer: "return=representation" }),
         body: JSON.stringify([Object.assign(
           { brand_name: name, keyword: kw, rule: this.state.nb.rule, created_at: stamp, updated_at: stamp },
-          min.val == null ? {} : { [this.minKey()]: min.val }
+          min.val == null || !this.hasMinCol() ? {} : { [this.minKey()]: min.val },
+          cat.patch[this.catKey()] == null || !this.hasCatCol() ? {} : cat.patch
         )])
       });
       if (!res.ok) {
@@ -2221,7 +2686,7 @@ class Component extends DCLogic {
       const created = await res.json();
       this.setState({
         brands: this.sortBrands((this.state.brands || []).concat(created)),
-        nb: { name: "", kw: "", rule: "auto_approve", min: "" },
+        nb: { name: "", kw: "", rule: "auto_approve", min: "", cat: "" },
         brandBusy: "", saved: name + " added"
       });
       this.clearNote();
@@ -2264,9 +2729,14 @@ class Component extends DCLogic {
     if (this.keywordTaken(kw, row.id)) { this.setState({ brandErr: "Another rule already matches \u201c" + kw + "\u201d." }); return; }
     const min = this.parseMin(d.min == null ? this.minOf(row) : d.min);
     if (!min.ok) { this.setState({ brandErr: "Minimum discount must be a whole number between 0 and 99, or blank." }); return; }
-    const rule = (this.ruleActive(row) ? "" : "off:") + action;
-    const patch = { brand_name: name, keyword: kw, rule: rule };
-    patch[this.minKey()] = min.val;
+    const cat = this.catPatch(d.cat == null ? this.catOf(row) : d.cat);
+    if (!cat.ok) { this.setState({ brandErr: "Pick a default category from the list, or leave it blank." }); return; }
+    // rule is CHECK-constrained to 'auto_approve' | 'block' — the old "off:"
+    // prefix made every paused rule's save fail. Paused state lives in its own
+    // column (see pauseCol), never in this one.
+    const patch = { brand_name: name, keyword: kw, rule: action };
+    if (this.hasCatCol()) Object.assign(patch, cat.patch);
+    if (this.hasMinCol()) patch[this.minKey()] = min.val;
     this.patchRule(row, patch, name + " updated");
   }
 
@@ -2274,7 +2744,27 @@ class Component extends DCLogic {
   // constraint limiting rule to 'auto_approve' | 'block' — so the prefix scheme
   // could never have worked. Until the table gains an enabled flag, say so
   // instead of firing a write the database will refuse.
-  toggleRule(row) {
+  async toggleRule(row) {
+    const col = this.pauseCol();
+    if (col) {
+      const wantActive = !this.ruleActive(row);
+      const patch = {};
+      patch[col.key] = this.pauseValue(col, wantActive);
+      this.setState({ brandBusy: row.id, brandErr: "" });
+      try {
+        const res = await this.req(BASE + "/rest/v1/brand_rules?id=eq." + row.id, {
+          method: "PATCH", headers: this.headers({ Prefer: "return=minimal" }),
+          body: JSON.stringify(patch)
+        });
+        if (!res.ok) { this.setState({ brandBusy: "", brandErr: "Could not change the rule (" + res.status + ")" }); return; }
+        this.setState({
+          brands: (this.state.brands || []).map(b => b.id === row.id ? Object.assign({}, b, patch) : b),
+          brandBusy: "", saved: wantActive ? "Rule resumed" : "Rule paused"
+        });
+        this.clearNote();
+      } catch (e) { this.setState({ brandBusy: "", brandErr: "Could not change the rule \u2014 network error" }); }
+      return;
+    }
     this.setState({ brandErr: "Pausing needs an \u201cenabled\u201d column on brand_rules \u2014 the rule value itself is constrained to auto_approve or block. Remove the rule for now, or ask for the migration." });
   }
 
@@ -2318,13 +2808,16 @@ class Component extends DCLogic {
       tab: "brands",
       nb: { name: guess, kw: guess, rule: "auto_approve" },
       brandErr: this.keywordTaken(guess) ? "A rule already matches \u201c" + guess + "\u201d \u2014 check the list below." : ""
-    }, () => { if (this.state.brands === null) this.loadBrands(); else this.loadBrandHits(); });
+    }, () => {
+      if (this.state.brands === null) this.loadBrands(); else this.loadBrandHits();
+      if (this.state.catNames === null) this.loadCategories();
+    });
   }
 
   // Deployed, each tab is its own path under /admin/ (dealqueue, brands,
   // scrapes). Opened as a local file there is no such path, so the same tabs
   // fall back to #brands / #scrapes.
-  onAdmin() { return /^\/(catalogue|dealqueue|carousel|brandrules|scrapelog)/.test(location.pathname) || location.pathname.indexOf("/admin/") !== -1; }
+  onAdmin() { return /^\/(catalogue|dealqueue|carousel|brandrules|scrapelog|redditposter|buyingguides)/.test(location.pathname) || location.pathname.indexOf("/admin/") !== -1; }
 
   // The forum URL isn't always its own column: some scrapers (slickdeals) stash it
   // inside a JSON blob of source urls, as source_forum. Check the column first,
@@ -2351,16 +2844,18 @@ class Component extends DCLogic {
   }
 
   adminHref(page) {
-    const deployed = { catalogue: "/catalogue", dealqueue: "/dealqueue", carousel: "/carousel", brands: "/brandrules", scrapes: "/scrapelog" };
+    const deployed = { catalogue: "/catalogue", dealqueue: "/dealqueue", carousel: "/carousel", brands: "/brandrules", scrapes: "/scrapelog", reddit: "/redditposter", guides: "/buyingguides" };
     if (this.onAdmin()) return deployed[page] || "/catalogue";
     const local = {
       carousel: "MistryDeals Carousel.dc.html",
       catalogue: "MistryDeals Admin v2.dc.html",
       dealqueue: "MistryDeals Deal Queue.dc.html",
       brands: "MistryDeals Deal Queue.dc.html#brands",
-      scrapes: "MistryDeals Deal Queue.dc.html#scrapes"
+      scrapes: "MistryDeals Deal Queue.dc.html#scrapes",
+      reddit: "MistryDeals Reddit Poster.dc.html",
+      guides: "MistryDeals Buying Guides.dc.html"
     };
-    return local[page] || "./";
+    return local[page] || local.catalogue;
   }
 
   tabFromUrl() {
@@ -2421,8 +2916,8 @@ class Component extends DCLogic {
 
   renderVals() {
     const rows = this.state.rows;
-    const brands = this.state.brands;
-    const brandGrid = "3px minmax(140px,1fr) minmax(140px,1fr) 148px 92px 92px 96px 208px";
+    const brands = this.state.brands ? this.applyBrandSort(this.state.brands) : this.state.brands;
+    const brandGrid = "3px minmax(130px,1fr) minmax(130px,1fr) 148px 92px minmax(150px,1fr) 92px 96px 208px";
     const tabChrome = "font:inherit;font-family:var(--font-heading);font-weight:700;font-size:11px;letter-spacing:.1em;text-transform:uppercase;padding:8px 12px;cursor:pointer;border-left:0;text-decoration:none;";
     const tabOn = tabChrome + "border:1px solid var(--color-text);border-left:0;background:var(--color-text);color:var(--color-bg)";
     const tabOff = tabChrome + "border:1px solid var(--color-divider);border-left:0;background:transparent;color:var(--color-text)";
@@ -2443,7 +2938,7 @@ class Component extends DCLogic {
     // one-line titles, tight rows — more deals per screen, same actions.
     const d = this.density();
     const sig = this.props.signal || "Edge bars";
-    const rowBase = "display:grid;grid-template-columns:3px 64px minmax(220px,1fr) 104px 84px 120px 108px 96px 236px;gap:10px;align-items:start;padding:" + d.pad + "px 0;border-bottom:1px solid var(--color-divider)";
+    const rowBase = "display:grid;grid-template-columns:3px 64px minmax(220px,1fr) 104px 84px 92px 120px 108px 96px 236px;gap:10px;align-items:start;padding:" + d.pad + "px 0;border-bottom:1px solid var(--color-divider)";
 
     return {
       signedIn: !!this.state.token,
@@ -2557,6 +3052,43 @@ class Component extends DCLogic {
         return (box.live ? "Live on the site now \u2014 " : "Hidden from the site \u2014 ") + when + ".";
       })(),
 
+      addOpen: !!this.state.addBox,
+      addSummary: (() => {
+        const box = this.state.addBox;
+        if (!box) return "";
+        const miss = this.addMissing().length;
+        return miss
+          ? miss + (miss === 1 ? " required field is" : " required fields are") + " missing from the scrape \u2014 fill them in and the product is created hidden, ready for a sync."
+          : "Everything needed is here. The product is created hidden until Amazon answers.";
+      })(),
+      addFields: (() => {
+        const box = this.state.addBox;
+        if (!box) return [];
+        const miss = this.addMissing();
+        return this.ADD_FIELDS.map(f => {
+          const bad = miss.indexOf(f.key) > -1;
+          return {
+            label: f.label,
+            value: box.vals[f.key] == null ? "" : box.vals[f.key],
+            placeholder: f.req ? "Required" : "Optional",
+            flag: bad ? "Missing" : "",
+            wrapStyle: "margin:0;grid-column:" + (f.wide ? "1 / -1" : "auto"),
+            labelStyle: "font-size:11px;display:flex;align-items:center;gap:8px",
+            flagStyle: "font-family:var(--font-heading);font-weight:700;font-size:9px;letter-spacing:.08em;text-transform:uppercase;padding:2px 5px;background:var(--color-accent);color:#f3f2f2;display:" + (bad ? "inline-block" : "none"),
+            style: "padding:8px 10px;font-size:13px;width:100%;" +
+              (bad ? "border:2px solid var(--color-accent);background:color-mix(in srgb, var(--color-accent) 8%, transparent)" : ""),
+            hint: bad ? "Nothing was scraped for this \u2014 it is needed to create the product." : (f.hint || ""),
+            hintStyle: "font-size:11px;line-height:1.35;margin-top:4px;color:var(--color-" + (bad ? "accent-700" : "neutral-600") + ")",
+            onChange: e => this.setAddVal(f.key, e.target.value)
+          };
+        });
+      })(),
+      addErr: (this.state.addBox || {}).err || "",
+      addBusy: !!(this.state.addBox || {}).busy,
+      addSaveLabel: (this.state.addBox || {}).busy ? "Adding\u2026" : "Add to catalogue",
+      addSave: () => this.commitAddBox(),
+      addCancel: () => this.closeAddBox(),
+
       confirmOpen: !!this.state.confirmBox,
       confirmTitle: (this.state.confirmBox || {}).title || "",
       confirmBody: (this.state.confirmBox || {}).body || "",
@@ -2636,7 +3168,9 @@ class Component extends DCLogic {
         { label: "Deal queue", href: this.adminHref("dealqueue"), tab: "queue" },
         { label: "Carousel", href: this.adminHref("carousel"), tab: null },
         { label: "Brand rules", href: this.adminHref("brands"), tab: "brands" },
-        { label: "Scrape log", href: this.adminHref("scrapes"), tab: "scrapes" }
+        { label: "Scrape log", href: this.adminHref("scrapes"), tab: "scrapes" },
+        { label: "Buying guides", href: this.adminHref("guides"), tab: null },
+        { label: "View site", href: this.onAdmin() ? "/" : "MistryDeals Site.dc.html", tab: null }
       ].map(m => ({
         label: m.label,
         href: m.href,
@@ -2740,12 +3274,17 @@ class Component extends DCLogic {
       carouselTabStyle: tabOff,
       hBrands: this.adminHref("brands"),
       hScrapes: this.adminHref("scrapes"),
+      hReddit: this.adminHref("reddit"),
+      hGuides: this.adminHref("guides"),
       queueTabStyle: this.state.tab === "queue" ? tabOn : tabOff,
       brandTabStyle: this.state.tab === "brands" ? tabOn : tabOff,
       hCatalogue: this.adminHref("catalogue"),
+      // the live site, not an admin tab — deployed it is the domain root
+      hSite: this.onAdmin() ? "/" : "MistryDeals Site.dc.html",
       onScrapes: this.state.tab === "scrapes",
       goScrapes: (e) => { if (e) e.preventDefault(); this.goTab("scrapes"); },
       scrapeTabStyle: this.state.tab === "scrapes" ? tabOn : tabOff,
+      redditTabStyle: tabOff,
 
       scraperCards: (this.scrapers() || []).map((s, i, arr) => ({
         cardStyle: "padding:16px 20px 16px 0;margin-right:20px" + (i === arr.length - 1 ? "" : ";border-right:1px solid var(--color-divider)"),
@@ -2763,16 +3302,11 @@ class Component extends DCLogic {
         cadence: s.cadence == null ? "" : "runs about every " + this.inMin(s.cadence)
       })),
 
-      runFilters: [["scrapers", "Scrapers"], ["sync", "Sync"], ["all", "Everything"]].map(p =>
-        pill(p[1], this.state.runsFilter === p[0], () =>
-          this.setState({ runsFilter: p[0], openRun: null, runs: null, runsLimit: 100 }, () => this.loadRuns()))),
-
       runsLoading: this.state.tab === "scrapes" && this.state.runs === null && !this.state.runsErr,
       runsErr: this.state.runsErr || "",
       runRows: (() => {
         const all = this.state.runs || [];
-        const f = this.state.runsFilter;
-        const keep = all.filter(r => f === "all" ? true : f === "sync" ? !this.isScraper(r.source) : this.isScraper(r.source));
+        const keep = all.filter(r => this.isScraper(r.source));
         return keep.map(r => {
           const failed = !!r.error_message;
           const found = Number(r.deals_found || 0);
@@ -2812,14 +3346,43 @@ class Component extends DCLogic {
       onNewRule: e => this.setState({ nb: Object.assign({}, this.state.nb, { rule: e.target.value }) }),
       newMin: this.state.nb.min,
       onNewMin: e => this.setState({ nb: Object.assign({}, this.state.nb, { min: e.target.value }) }),
+      newCat: this.state.nb.cat || "",
+      onNewCat: e => this.setState({ nb: Object.assign({}, this.state.nb, { cat: e.target.value }) }),
+      newCatOptions: this.catOptions(this.state.nb.cat),
       addRule: () => this.addRule(),
       addLabel: this.state.brandBusy === "add" ? "Adding\u2026" : "Add rule",
       brandError: this.state.brandErr || "",
       brandLoading: this.state.tab === "brands" && brands === null && !this.state.brandErr,
       brandEmpty: !!(brands && brands.length === 0 && !this.state.brandErr),
       brandHeadStyle: "display:grid;grid-template-columns:" + brandGrid + ";gap:10px;padding:10px 0;border-bottom:2px solid var(--color-divider);font-family:var(--font-heading);font-weight:700;font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--color-neutral-700)",
+      brandHead: this.BRAND_COLS.map(c => {
+        const active = (this.state.bSort || "brand") === c.key;
+        return {
+          label: c.label,
+          arrow: active ? (this.state.bDir === "asc" ? "\u2191" : "\u2193") : "",
+          arrowStyle: "font-size:11px;line-height:1;color:var(--color-accent)",
+          title: active ? "Sorted by " + c.label + " \u2014 click to reverse" : "Click to sort by " + c.label,
+          style: "display:flex;align-items:flex-start;gap:4px;min-width:0;cursor:pointer;user-select:none;color:" +
+            (active ? "var(--color-text)" : "inherit"),
+          onSort: () => this.toggleBrandSort(c.key)
+        };
+      }),
       brandSummary: brands ? (brands.filter(b => this.ruleActive(b)).length + " active of " + brands.length + " rule" + (brands.length === 1 ? "" : "s")) : "",
-      brandFootnote: "Min discount is the smallest percentage off that lets a rule act — blank means any discount qualifies. Decisions count what each rule has actually done, from the auto_approve_audit log — a rule added recently, or one that has not matched yet, reads 0. Rows logged as no_match are excluded: the matcher found no rule for them. Auto-approve clears matching deals straight into the catalogue; Auto-reject keeps them out of it.",
+      pauseAll: () => this.togglePauseAll(),
+      pauseAllLabel: this.state.brandBusy === "pauseall"
+        ? "Working\u2026" : (this.allPaused() ? "Resume all rules" : "Pause all rules"),
+      pauseAllTitle: this.allPaused()
+        ? "Start enforcing every auto-approve and auto-reject rule again"
+        : "Stop enforcing every rule \u2014 scraped deals wait for review instead",
+      pauseAllStyle: "font:inherit;font-family:var(--font-heading);font-weight:700;font-size:10px;letter-spacing:.08em;text-transform:uppercase;padding:8px 12px;cursor:pointer;background:" +
+        (this.allPaused() ? "var(--color-accent)" : "none") + ";color:" +
+        (this.allPaused() ? "var(--color-bg)" : "var(--color-text)") + ";border:2px solid " +
+        (this.allPaused() ? "var(--color-accent)" : "var(--color-text)"),
+      showPauseAll: !!(brands && brands.length),
+      pausedBanner: this.allPaused()
+        ? "All rules are paused \u2014 no scraped deal is auto-approved or auto-rejected until you resume."
+        : "",
+      brandFootnote: "Default category is the category an approved deal from this brand is filed under — blank leaves it Uncategorized for the catalogue editor. Min discount is the smallest percentage off that lets a rule act — blank means any discount qualifies. Decisions count what each rule has actually done, from the auto_approve_audit log — a rule added recently, or one that has not matched yet, reads 0. Rows logged as no_match are excluded: the matcher found no rule for them. Auto-approve clears matching deals straight into the catalogue; Auto-reject keeps them out of it.",
 
       brandRows: (brands || []).map(b => {
         const active = this.ruleActive(b);
@@ -2862,14 +3425,31 @@ class Component extends DCLogic {
           save: () => this.saveEdit(b),
           saveLabel: busy ? "Saving\u2026" : "Save",
           toggle: () => this.toggleRule(b),
-          toggleLabel: active ? "Pause" : "Resume",
-          // hidden until brand_rules gains an enabled flag — see toggleRule
-          canToggle: !this.ruleActive(b),
+          toggleLabel: this.state.brandBusy === b.id ? "\u2026" : (active ? "Pause" : "Resume"),
+          toggleTitle: active
+            ? "Stop enforcing this rule \u2014 deals matching it wait for review"
+            : "Start enforcing this rule again",
+          // always offered: with a pause column it writes; without one it says
+          // what the table is missing rather than hiding the control
+          canToggle: true,
           remove: () => this.removeRule(b),
           draftName: d.name == null ? (b.brand_name || "") : d.name,
           draftKeyword: d.kw == null ? (b.keyword || "") : d.kw,
           draftRule: d.rule || action,
           draftMin: d.min == null ? (this.minOf(b) == null ? "" : String(this.minOf(b))) : d.min,
+          catLabel: this.catOf(b) || "\u2014",
+          catValue: this.catOf(b) || "",
+          catPick: e => this.setRuleCategory(b, e.target.value),
+          catSelectStyle: "font:inherit;font-family:var(--font-body);font-size:13px;width:100%;padding:4px 6px;background:none;cursor:pointer;border:1px solid " +
+            (this.catOf(b) ? "transparent" : "var(--color-divider)") + ";color:var(--color-" +
+            (this.catOf(b) ? "text" : "neutral-600") + ")",
+          catBusy: this.state.brandBusy === b.id,
+          catTitle: this.catOf(b)
+            ? "Approved deals from this brand are filed under " + this.catOf(b) + " unless the sync overwrites it"
+            : "No default \u2014 matching deals are filed as Uncategorized until edited",
+          draftCat: d.cat == null ? this.catOf(b) : d.cat,
+          catOptions: this.catOptions(d.cat == null ? this.catOf(b) : d.cat),
+          onCat: e => this.setState({ ed: Object.assign({}, this.state.ed, { cat: e.target.value }) }),
           minLabel: this.minOf(b) == null ? "\u2014" : this.minOf(b) + "%",
           minTitle: this.minOf(b) == null
             ? "No threshold \u2014 any discount qualifies"
@@ -2958,6 +3538,26 @@ class Component extends DCLogic {
             : (!isNaN(was) && was > eff ? "$" + was.toFixed(2) : "\u2014"),
           wasInline: !this.state.narrow && !isNaN(was) && was > eff ? "$" + was.toFixed(2) : "",
           rating: r.rating || "\u2014",
+          ...(() => {
+            // cashback is a catalogue field, not a scraped one: read it off the
+            // matched product when the ASIN is already in products
+            const key = (r.asin || "").toString().trim().toUpperCase();
+            const prod = key ? (this.state.byAsin || {})[key] : null;
+            const raw = prod && prod.prime_cashback_percent != null ? Number(prod.prime_cashback_percent)
+              : (r.prime_cashback_percent != null ? Number(r.prime_cashback_percent) : NaN);
+            const pct = isNaN(raw) ? 0 : raw;
+            const paid = !isNaN(eff) ? eff : NaN;
+            return {
+              cashback: pct > 0 ? "+" + Math.round(pct) + "%" : "\u2014",
+              cashNote: pct > 0 && !isNaN(paid) ? "$" + (paid * pct / 100).toFixed(2) + " back" : "",
+              cashNarrowLabel: !!this.state.narrow,
+              cashTitle: pct > 0
+                ? Math.round(pct) + "% back with the Prime Visa on this deal"
+                : (prod ? "No bonus cashback rate set on this product" : "Not in the catalogue yet \u2014 set the rate after it syncs"),
+              cashStyle: "font-family:var(--font-heading);font-weight:800;font-size:" + (pct > 0 ? "14px" : "13px") +
+                ";line-height:1.2;color:" + (pct > 0 ? "var(--color-accent-700)" : "var(--color-neutral-600)")
+            };
+          })(),
           reviews: r.review_count != null ? Number(r.review_count).toLocaleString("en-US") : "\u2014",
           // the source name carries the link on mobile: the forum thread when we
           // have one, otherwise whatever URL the scraper recorded
@@ -2981,13 +3581,20 @@ class Component extends DCLogic {
             const low = raw.toLowerCase();
             if (low === CAPTURE_REASON.toLowerCase()) return "Sent to extension capture";
             if (low === "rejected in review") return "Rejected in review";
+            // an auto_approved_* note may itself contain "already" ("already
+            // enriched"), so it has to be recognised BEFORE the repost matcher
+            if (/^auto[_ ]?approved/.test(low)) return "";
             if (/repost|duplicate|already|seen before|reposted/.test(low)) return "Skipped \u2014 repost: " + raw;
             if (/^(insert|product update) failed/.test(low)) return "Pipeline error: " + raw;
+            // skip_reason doubles as an audit note: an auto_approved_* entry is
+            // the scraper's own record of captured values, not a verdict — the
+            // status badge already says the row was auto-approved, so it is noise
+            if (/^auto[_ ]?approved/.test(low)) return "";
             return "Skipped \u2014 " + raw;
           })(),
           skipTitle: "skip_reason: " + this.decode(r.skip_reason || ""),
           skipStyle: "font-family:var(--font-heading);font-weight:700;font-size:9.5px;letter-spacing:.06em;text-transform:uppercase;margin-top:4px;line-height:1.35;color:" +
-            (/repost|duplicate|already|seen before/.test(String(r.skip_reason || "").toLowerCase())
+            (/^auto[_ ]?approved|repost|duplicate|already|seen before/.test(String(r.skip_reason || "").toLowerCase())
               ? "var(--color-neutral-700)" : "var(--color-accent-700)"),
           amazonUrl: r.amazon_url || (r.asin ? "https://www.amazon.com/dp/" + r.asin : "#"),
           priorNote: (() => {
@@ -3048,7 +3655,7 @@ class Component extends DCLogic {
           syncStale: !pending && !!this.product(r) && !this.product(r).last_price_sync,
           history: () => this.openHistory(r),
           needsRow: !pending && this.isMissingProduct(r),
-          addRow: () => this.addToCatalogue(r),
+          addRow: () => this.openAddBox(r),
           addRowLabel: busy ? "Adding\u2026" : "Add to catalogue",
           syncLabel: busy ? "Syncing\u2026" : "Sync now",
           sync: () => this.syncNow(r),
@@ -3079,6 +3686,8 @@ class Component extends DCLogic {
           syncNoteStyle: "font-size:11px;margin-top:5px;line-height:1.3;color:var(--color-" +
             (st === "approved" && this.isMissingProduct(r) ? "accent-700" : "neutral-600") + ")",
           canUndo: !pending,
+          canDelete: !pending && this.isSyncError(r),
+          deleteRow: () => this.deleteRow(r),
           undo: () => this.undo(r)
         };
       })

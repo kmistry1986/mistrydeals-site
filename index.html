@@ -42,8 +42,8 @@
     <div class="m-wrap" style="display:flex;gap:20px;align-items:center">
       <a href="{{ hHome }}" aria-current="page" onClick="{{ goHome }}">Featured Deals</a>
       <a href="{{ hCat }}" onClick="{{ goCat }}">Categories</a>
+      <a href="{{ hPrime }}" onClick="{{ goPrime }}">Prime Card Deals</a>
       <a href="{{ hGuide }}" onClick="{{ goGuide }}">Buying Guides</a>
-      <a href="{{ hPrime }}" onClick="{{ goPrime }}">Prime Card</a>
       <a href="{{ hAbout }}" onClick="{{ goAbout }}">About</a>
     </div>
     <div class="m-wrap" style="display:flex;gap:8px;align-items:center;min-width:280px">
@@ -242,7 +242,7 @@
   <div class="nav" style="max-width:1280px;margin:0 auto;gap:24px">
     <a href="{{ hHome }}" onClick="{{ goHome }}" class="nav-brand m-wrap" style="display:flex;align-items:center;gap:8px;text-decoration:none"><span style="width:14px;height:14px;background:var(--color-accent);display:block"></span>MISTRYDEALS</a>
     <div class="m-wrap" style="display:flex;gap:20px;align-items:center">
-      <a href="{{ hHome }}" onClick="{{ goHome }}">Featured Deals</a><a href="{{ hCat }}" aria-current="page" onClick="{{ goCat }}">Categories</a><a href="{{ hGuide }}" onClick="{{ goGuide }}">Buying Guides</a><a href="{{ hPrime }}" onClick="{{ goPrime }}">Prime Card</a><a href="{{ hAbout }}" onClick="{{ goAbout }}">About</a>
+      <a href="{{ hHome }}" onClick="{{ goHome }}">Featured Deals</a><a href="{{ hCat }}" aria-current="page" onClick="{{ goCat }}">Categories</a><a href="{{ hPrime }}" onClick="{{ goPrime }}">Prime Card Deals</a><a href="{{ hGuide }}" onClick="{{ goGuide }}">Buying Guides</a><a href="{{ hAbout }}" onClick="{{ goAbout }}">About</a>
     </div>
     <div class="m-wrap" style="display:flex;gap:8px;align-items:center;min-width:280px">
       <input class="input" placeholder="{{ searchLabel }}" value="{{ query }}" onChange="{{ onQuery }}" onKeyDown="{{ onQueryKey }}" /><button onClick="{{ runSearch }}" class="btn btn-secondary">Search</button>
@@ -350,7 +350,7 @@
 <div style="background:var(--color-bg);min-height:100vh">
   <div class="nav" style="max-width:1280px;margin:0 auto;gap:24px">
     <a href="{{ hHome }}" onClick="{{ goHome }}" class="nav-brand m-wrap" style="display:flex;align-items:center;gap:8px;text-decoration:none"><span style="width:14px;height:14px;background:var(--color-accent);display:block"></span>MISTRYDEALS</a>
-    <div class="m-wrap" style="display:flex;gap:20px;align-items:center"><a href="{{ hHome }}" onClick="{{ goHome }}">Featured Deals</a><a href="{{ hCat }}" onClick="{{ goCat }}">Categories</a><a href="{{ hGuide }}" onClick="{{ goGuide }}">Buying Guides</a><a href="{{ hPrime }}" onClick="{{ goPrime }}">Prime Card</a><a href="{{ hAbout }}" onClick="{{ goAbout }}">About</a></div>
+    <div class="m-wrap" style="display:flex;gap:20px;align-items:center"><a href="{{ hHome }}" onClick="{{ goHome }}">Featured Deals</a><a href="{{ hCat }}" onClick="{{ goCat }}">Categories</a><a href="{{ hPrime }}" onClick="{{ goPrime }}">Prime Card Deals</a><a href="{{ hGuide }}" onClick="{{ goGuide }}">Buying Guides</a><a href="{{ hAbout }}" onClick="{{ goAbout }}">About</a></div>
     <div class="m-wrap" style="display:flex;gap:8px;align-items:center;min-width:280px"><input class="input" placeholder="{{ searchLabel }}" value="{{ query }}" onChange="{{ onQuery }}" onKeyDown="{{ onQueryKey }}" /><button onClick="{{ runSearch }}" class="btn btn-secondary">Search</button>
       <button onClick="{{ toggleDark }}" title="{{ darkTitle }}" style="{{ tDarkNav }}">{{ darkGlyph }}</button></div>
   </div>
@@ -446,11 +446,24 @@
 <div style="background:var(--color-bg);min-height:100vh">
   <div class="nav" style="max-width:1280px;margin:0 auto;gap:24px">
     <a href="{{ hHome }}" onClick="{{ goHome }}" class="nav-brand m-wrap" style="display:flex;align-items:center;gap:8px;text-decoration:none"><span style="width:14px;height:14px;background:var(--color-accent);display:block"></span>MISTRYDEALS</a>
-    <div class="m-wrap" style="display:flex;gap:20px;align-items:center"><a href="{{ hHome }}" onClick="{{ goHome }}">Featured Deals</a><a href="{{ hCat }}" onClick="{{ goCat }}">Categories</a><a href="{{ hGuide }}" aria-current="page" onClick="{{ goGuide }}">Buying Guides</a><a href="{{ hPrime }}" onClick="{{ goPrime }}">Prime Card</a><a href="{{ hAbout }}" onClick="{{ goAbout }}">About</a></div>
+    <div class="m-wrap" style="display:flex;gap:20px;align-items:center"><a href="{{ hHome }}" onClick="{{ goHome }}">Featured Deals</a><a href="{{ hCat }}" onClick="{{ goCat }}">Categories</a><a href="{{ hPrime }}" onClick="{{ goPrime }}">Prime Card Deals</a><a href="{{ hGuide }}" aria-current="page" onClick="{{ goGuide }}">Buying Guides</a><a href="{{ hAbout }}" onClick="{{ goAbout }}">About</a></div>
     <div class="m-wrap" style="display:flex;gap:8px;align-items:center;min-width:280px"><input class="input" placeholder="{{ searchLabel }}" value="{{ query }}" onChange="{{ onQuery }}" onKeyDown="{{ onQueryKey }}" /><button onClick="{{ runSearch }}" class="btn btn-secondary">Search</button>
       <button onClick="{{ toggleDark }}" title="{{ darkTitle }}" style="{{ tDarkNav }}">{{ darkGlyph }}</button></div>
   </div>
   <div style="max-width:1280px;margin:0 auto;padding:0 16px 56px">
+    <sc-if value="{{ guideNavShow }}" hint-placeholder-val="{{ true }}">
+      <div style="padding:28px 0 0">
+        <div style="font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--color-neutral-700);margin-bottom:14px">All buying guides</div>
+        <div class="m-stack" style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:20px">
+          <sc-for list="{{ guideNav }}" as="g" hint-placeholder-count="3">
+            <a href="{{ g.href }}" onClick="{{ g.open }}" style="{{ g.style }}">
+              <span style="{{ g.kickerStyle }}">{{ g.kicker }}</span>
+              <span style="{{ g.titleStyle }}">{{ g.title }}</span>
+            </a>
+          </sc-for>
+        </div>
+      </div>
+    </sc-if>
     <div class="m-stack" style="display:grid;grid-template-columns:1.5fr 1fr;gap:48px;padding:40px 0 28px;align-items:end">
       <div>
         <div style="font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--color-accent-700);margin-bottom:16px">{{ guide.kicker }}</div>
@@ -474,7 +487,8 @@
           <p style="font-size:19px;line-height:1.5;max-width:78ch">{{ p }}</p>
         </sc-for>
         <hr class="hr" />
-        <div style="font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--color-neutral-700);margin-bottom:16px">At a glance</div>
+        <div style="font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--color-neutral-700);margin-bottom:8px">At a glance</div>
+        <p style="margin:0 0 18px;font-size:13px;line-height:1.5;color:var(--color-neutral-700);max-width:70ch;text-wrap:pretty">{{ guide.priceAsOf }}</p>
         <div class="m-stack" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:16px;margin:0 0 36px">
           <sc-for list="{{ guide.picks }}" as="d" hint-placeholder-count="5">
             <dc-import name="DealCard" deal="{{ d }}" hint-size="100%,430px"></dc-import>
@@ -484,18 +498,19 @@
         <div style="margin:0 0 28px">
           <sc-for list="{{ guide.picks }}" as="d" hint-placeholder-count="4">
             <div id="{{ d.anchor }}" class="m-stack" style="display:grid;grid-template-columns:150px 1fr;gap:24px;border-top:2px solid var(--color-divider);padding:22px 0">
-              <div style="border:1px solid var(--color-divider);background:#ffffff;height:150px;position:relative;overflow:hidden">
+              <a href="{{ d.url }}" target="_blank" rel="nofollow sponsored noopener" style="border:1px solid var(--color-divider);background:#ffffff;height:150px;position:relative;overflow:hidden;display:block;text-decoration:none" style-hover="border-color:var(--color-accent)">
                 <dc-import name="ProductImage" src="{{ d.img }}" alt="" pad="12px" hint-size="100%,100%"></dc-import>
-              </div>
+              </a>
               <div style="display:flex;flex-direction:column;gap:10px;align-items:flex-start">
                 <div style="font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--color-accent-700)">{{ d.n }} / {{ d.cat }}</div>
-                <h3 style="margin:0;font-size:22px;line-height:1.2">{{ d.title }}</h3>
+                <h3 style="margin:0;font-size:22px;line-height:1.2"><a href="{{ d.url }}" target="_blank" rel="nofollow sponsored noopener" style="color:var(--color-text);text-decoration:none" style-hover="color:var(--color-accent-700)">{{ d.title }}</a></h3>
                 <div style="display:flex;flex-wrap:wrap;align-items:baseline;gap:10px">
                   <span style="font-size:24px;font-weight:600">{{ d.price }}</span>
                   <span style="font-size:15px;color:var(--color-neutral-700);text-decoration:line-through">{{ d.was }}</span>
                   <span style="font-size:13px;color:var(--color-accent-700);font-weight:600">{{ d.off }}</span>
                   <span style="font-size:13px;color:var(--color-neutral-700)">{{ d.stars }}</span>
                 </div>
+                <div style="font-size:12px;line-height:1.4;color:var(--color-neutral-600)">{{ guide.priceStamp }}</div>
                 <p style="margin:0;font-size:16px;line-height:1.55;max-width:78ch">{{ d.description }}</p>
                 <sc-if value="{{ d.hasNote }}" hint-placeholder-val="{{ false }}">
                   <div style="background:var(--color-surface);border-left:2px solid var(--color-accent);padding:10px 14px;font-size:14px;line-height:1.5">
@@ -549,7 +564,7 @@
 <div style="background:var(--color-bg);min-height:100vh">
   <div class="nav" style="max-width:1280px;margin:0 auto;gap:24px">
     <a href="{{ hHome }}" onClick="{{ goHome }}" class="nav-brand m-wrap" style="display:flex;align-items:center;gap:8px;text-decoration:none"><span style="width:14px;height:14px;background:var(--color-accent);display:block"></span>MISTRYDEALS</a>
-    <div class="m-wrap" style="display:flex;gap:20px;align-items:center"><a href="{{ hHome }}" onClick="{{ goHome }}">Featured Deals</a><a href="{{ hCat }}" onClick="{{ goCat }}">Categories</a><a href="{{ hGuide }}" onClick="{{ goGuide }}">Buying Guides</a><a href="{{ hPrime }}" aria-current="page" onClick="{{ goPrime }}">Prime Card</a><a href="{{ hAbout }}" onClick="{{ goAbout }}">About</a></div>
+    <div class="m-wrap" style="display:flex;gap:20px;align-items:center"><a href="{{ hHome }}" onClick="{{ goHome }}">Featured Deals</a><a href="{{ hCat }}" onClick="{{ goCat }}">Categories</a><a href="{{ hPrime }}" aria-current="page" onClick="{{ goPrime }}">Prime Card Deals</a><a href="{{ hGuide }}" onClick="{{ goGuide }}">Buying Guides</a><a href="{{ hAbout }}" onClick="{{ goAbout }}">About</a></div>
     <div class="m-wrap" style="display:flex;gap:8px;align-items:center;min-width:280px"><input class="input" placeholder="{{ searchLabel }}" value="{{ query }}" onChange="{{ onQuery }}" onKeyDown="{{ onQueryKey }}" /><button onClick="{{ runSearch }}" class="btn btn-secondary">Search</button>
       <button onClick="{{ toggleDark }}" title="{{ darkTitle }}" style="{{ tDarkNav }}">{{ darkGlyph }}</button></div>
   </div>
@@ -562,7 +577,7 @@
       </div>
       <div style="border:2px solid var(--color-divider);padding:18px">
         <div style="font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--color-neutral-700);margin-bottom:8px">Today's stack</div>
-        <div class="m-wrap" style="display:flex;align-items:baseline;gap:8px"><span class="m-fs-lg" style="font-family:var(--font-heading);font-weight:800;font-size:44px;line-height:1">{{ primeStack }}</span><span style="font-size:13px;color:var(--color-neutral-700)">back on the 8 deals below</span></div>
+        <div class="m-wrap" style="display:flex;align-items:baseline;gap:8px"><span class="m-fs-lg" style="font-family:var(--font-heading);font-weight:800;font-size:44px;line-height:1">{{ primeStack }}</span><span style="font-size:13px;color:var(--color-neutral-700)">{{ primeStackLine }}</span></div>
         <p style="font-size:12px;color:var(--color-neutral-700);margin:10px 0 0">Cashback figures are illustrative. We are not a lender and earn nothing on card sign-ups.</p>
       </div>
     </div>
@@ -572,23 +587,18 @@
       <div style="background:var(--color-bg);padding:20px"><div style="font-family:var(--font-heading);font-weight:800;font-size:28px;margin-bottom:6px">Stacks</div><p style="margin:0;font-size:14px">Cashback applies on top of coupon codes and lightning deals &#8212; it is calculated on what you pay.</p></div>
       <div style="background:var(--color-bg);padding:20px"><div style="font-family:var(--font-heading);font-weight:800;font-size:28px;margin-bottom:6px">Watch out</div><p style="margin:0;font-size:14px">Points are worth 1¢ each against Amazon. Carrying a balance costs far more than 5% &#8212; only useful if you pay in full.</p></div>
     </div>
-    <h3 style="margin:0 0 14px">Best stacked value right now</h3>
-    <table class="table" style="margin-bottom:28px">
-      <thead><tr><th>Deal</th><th>Category</th><th>List</th><th>Deal price</th><th>Cashback</th><th>Effective</th><th></th></tr></thead>
-      <tbody>
-        <sc-for list="{{ primeRows }}" as="r" hint-placeholder-count="8">
-          <tr>
-            <td style="font-family:var(--font-heading);font-weight:800">{{ r.title }}</td>
-            <td style="color:var(--color-neutral-700);font-size:13px">{{ r.cat }}</td>
-            <td style="text-decoration:line-through;color:var(--color-neutral-600)">{{ r.was }}</td>
-            <td>{{ r.price }}</td>
-            <td style="color:var(--color-accent-700)">{{ r.back }} <span style="font-size:12px;color:var(--color-neutral-600)">{{ r.pct }}</span></td>
-            <td style="font-family:var(--font-heading);font-weight:800;font-size:16px">{{ r.eff }}</td>
-            <td style="text-align:right"><a href="{{ r.url }}" target="_blank" rel="nofollow sponsored noopener" class="btn btn-ghost" style="font-size:13px">View &#8594;</a></td>
-          </tr>
-        </sc-for>
-      </tbody>
-    </table>
+    <div style="display:flex;align-items:baseline;gap:14px;flex-wrap:wrap;margin:0 0 16px">
+      <h3 style="margin:0">Best stacked value right now</h3>
+      <span style="font-size:13px;color:var(--color-neutral-700)">{{ primeSort }}</span>
+    </div>
+    <sc-if value="{{ primeEmpty }}" hint-placeholder-val="{{ true }}">
+      <p style="font-size:15px;color:var(--color-neutral-700);margin:0 0 28px">No deals are carrying a bonus cashback rate right now. Check back &#8212; the rate is set per deal as they are posted.</p>
+    </sc-if>
+    <div class="m-stack" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:16px;margin:0 0 32px">
+      <sc-for list="{{ primeCards }}" as="d" hint-placeholder-count="8">
+        <dc-import name="DealCard" deal="{{ d }}" hint-size="100%,430px"></dc-import>
+      </sc-for>
+    </div>
     <div style="background:var(--color-surface);padding:20px;border-top:2px solid var(--color-divider)">
       <p style="margin:0;font-size:14px;max-width:80ch">MistryDeals is not affiliated with Amazon's card issuer and receives no commission for card applications. We show effective prices because a 5% return changes which deal is actually cheapest &#8212; nothing more.</p>
     </div>
@@ -600,7 +610,7 @@
 <div style="background:var(--color-bg);min-height:100vh">
   <div class="nav" style="max-width:1280px;margin:0 auto;gap:24px">
     <a href="{{ hHome }}" onClick="{{ goHome }}" class="nav-brand m-wrap" style="display:flex;align-items:center;gap:8px;text-decoration:none"><span style="width:14px;height:14px;background:var(--color-accent);display:block"></span>MISTRYDEALS</a>
-    <div class="m-wrap" style="display:flex;gap:20px;align-items:center"><a href="{{ hHome }}" onClick="{{ goHome }}">Featured Deals</a><a href="{{ hCat }}" onClick="{{ goCat }}">Categories</a><a href="{{ hGuide }}" onClick="{{ goGuide }}">Buying Guides</a><a href="{{ hPrime }}" onClick="{{ goPrime }}">Prime Card</a><a href="{{ hAbout }}" aria-current="page" onClick="{{ goAbout }}">About</a></div>
+    <div class="m-wrap" style="display:flex;gap:20px;align-items:center"><a href="{{ hHome }}" onClick="{{ goHome }}">Featured Deals</a><a href="{{ hCat }}" onClick="{{ goCat }}">Categories</a><a href="{{ hPrime }}" onClick="{{ goPrime }}">Prime Card Deals</a><a href="{{ hGuide }}" onClick="{{ goGuide }}">Buying Guides</a><a href="{{ hAbout }}" aria-current="page" onClick="{{ goAbout }}">About</a></div>
     <div class="m-wrap" style="display:flex;gap:8px;align-items:center;min-width:280px"><input class="input" placeholder="{{ searchLabel }}" value="{{ query }}" onChange="{{ onQuery }}" onKeyDown="{{ onQueryKey }}" /><button onClick="{{ runSearch }}" class="btn btn-secondary">Search</button>
       <button onClick="{{ toggleDark }}" title="{{ darkTitle }}" style="{{ tDarkNav }}">{{ darkGlyph }}</button></div>
   </div>
@@ -1106,7 +1116,7 @@ class Component extends DCLogic {
     const screen = SCREEN_OF[parts[0]] || "home";
     const patch = { screen: screen };
     if (screen === "category" && parts[1]) { patch.cat = decodeURIComponent(parts[1]); patch.catShown = 9; }
-    if (screen === "guide" && parts[1]) patch.guideIdx = Number(parts[1]) || 0;
+    if (screen === "guide") patch.guideIdx = Number(parts[1]) || 0;
     if (screen === "home" && parts[1]) patch.chip = decodeURIComponent(parts[1]);
     this.setState(patch);
   };
@@ -1165,8 +1175,8 @@ class Component extends DCLogic {
     return {
       title: r.display_title || r.title || r.display_name || "Product",
       cat: r.category || "Product",
-      price: price != null ? "$" + price.toFixed(2) : "",
-      was: was != null ? "$" + was.toFixed(2) : "",
+      price: price != null ? "$" + Math.round(price) : "",
+      was: was != null ? "$" + Math.round(was) : "",
       off,
       rating: r.rating || "",
       reviews: count ? "(" + Number(count).toLocaleString() + ")" : "",
@@ -1186,13 +1196,30 @@ class Component extends DCLogic {
       hasCode: !!code,
       // a coupon price is only reachable with its code, so the two travel together
       codeLine: code ? (couponPrice != null ? "with code " + code : "code " + code) : "",
+      // cashback is earned on what the shopper actually pays, so it follows the
+      // post-coupon price the card is already showing
+      cashPct: n(r.prime_cashback_percent) || 0,
+      hasCash: (n(r.prime_cashback_percent) || 0) > 0,
+      cashBadge: (n(r.prime_cashback_percent) || 0) > 0 ? "+" + Math.round(n(r.prime_cashback_percent)) + "% BACK WITH PRIME CREDIT CARD" : "",
+      cashTitle: (n(r.prime_cashback_percent) || 0) > 0
+        ? Math.round(n(r.prime_cashback_percent)) + "% back with the Prime Visa" +
+          (price ? " \u2014 about $" + (price * n(r.prime_cashback_percent) / 100).toFixed(2) + " on this price" : "")
+        : "",
       url: amzUrl(r.affiliate_link, asin)
     };
   }
   guideProduct(p, i) {
     const n = v => (v === null || v === undefined || v === "") ? null : parseFloat(v);
     const price = n(p.price), was = n(p.original_price);
-    const stars = [p.rating ? p.rating + "\u2605" : "", p.reviews ? Number(p.reviews).toLocaleString() + " reviews" : ""].filter(Boolean).join(" \u00b7 ");
+    // Two columns carry this: `review_count` is the real one, `reviews` is often
+    // 0 — so prefer review_count and treat 0 as "not captured", not "zero
+    // reviews". The live row is consulted last, for snapshots written before
+    // the count existed.
+    const live = (this.state.liveStats || {})[p.amazon_asin] || {};
+    const count = [p.review_count, p.reviews, live.review_count, live.reviews]
+      .map(v => Number(v)).find(v => isFinite(v) && v > 0) || null;
+    const rating = p.rating || live.rating || "";
+    const stars = [rating ? rating + "\u2605" : "", count ? count.toLocaleString() + " reviews" : ""].filter(Boolean).join(" \u00b7 ");
     return {
       n: String((i || 0) + 1).padStart(2, "0"),
       anchor: "guide-pick-" + ((i || 0) + 1),
@@ -1206,11 +1233,11 @@ class Component extends DCLogic {
       title: p.title || "Product",
       cat: p.category || "Pick",
       sub: p.category || "",
-      price: price != null ? "$" + price.toFixed(2) : "",
-      was: was != null ? "$" + was.toFixed(2) : "",
+      price: price != null ? "$" + Math.round(price) : "",
+      was: was != null ? "$" + Math.round(was) : "",
       off: (price && was && was > price) ? "\u2212" + Math.round((1 - price / was) * 100) + "%" : "",
-      rating: p.rating || "",
-      reviews: p.reviews ? "(" + Number(p.reviews).toLocaleString() + ")" : "",
+      rating: rating,
+      reviews: count ? "(" + count.toLocaleString() + ")" : "",
       stars,
       description: p.description || "",
       note: p.pricing_note || "",
@@ -1221,7 +1248,7 @@ class Component extends DCLogic {
     };
   }
   buildGuide(g) {
-    if (!g) return { kicker: "Buying guide", title: "", caption: "", date: "", count: "", intro: [], sections: [], faq: [], hasFaq: false, howto: [], hasHowto: false, picks: [] };
+    if (!g) return { kicker: "Buying guide", title: "", caption: "", date: "", count: "", priceAsOf: "", priceStamp: "", intro: [], sections: [], faq: [], hasFaq: false, howto: [], hasHowto: false, picks: [] };
     const c = g.content || {};
     const active = this.state.activeAsins;
     const products = (c.products || []).filter(p => !active || !p.amazon_asin || active.indexOf(p.amazon_asin) > -1);
@@ -1232,6 +1259,17 @@ class Component extends DCLogic {
       caption: g.caption || c.subtitle || "",
       date: g.published_at ? "Published " + new Date(g.published_at).toLocaleDateString("en-US", { day: "numeric", month: "long", year: "numeric" }) : "",
       count: products.length + (products.length === 1 ? " pick" : " picks"),
+      // the picks store a price snapshot taken when the guide was written, so
+      // the page says so rather than implying the figures are live
+      // the short form repeats under every pick; the long one heads the section
+      priceStamp: g.published_at
+        ? "Price accurate as of " + new Date(g.published_at).toLocaleDateString("en-US", { day: "numeric", month: "long", year: "numeric" }) + " \u2014 check Amazon for the current price."
+        : "Price accurate as of publishing \u2014 check Amazon for the current price.",
+      priceAsOf: g.published_at
+        ? "Prices and discounts were correct on " +
+          new Date(g.published_at).toLocaleDateString("en-US", { day: "numeric", month: "long", year: "numeric" }) +
+          " and may have changed since. Check the current price on Amazon before buying."
+        : "Prices and discounts were correct when this guide was published and may have changed since. Check the current price on Amazon before buying.",
       intro,
       sections: (c.sections || []).map((sec, i) => ({ n: String(i + 1).padStart(2, "0"), title: sec.title || "", content: sec.content || "" })),
       faq: c.faq || [],
@@ -1307,6 +1345,7 @@ class Component extends DCLogic {
       if (chip === "50% off or more") return d.offNum >= 50;
       if (chip === "Lowest ever") return d.top;
       if (chip === "Has coupon code") return d.hasCode;
+      if (chip === "Prime card cashback") return d.hasCash;
       if (chip === "New today") return Date.now() - d.createdAt < 86400000;
       if (chip !== "All deals") return d.catRaw === chip;
       return true;
@@ -1379,7 +1418,7 @@ class Component extends DCLogic {
       if (!res.ok) return;
       const rows = await res.json();
       if (Array.isArray(rows) && rows.length) {
-        this.setState({ guideRows: rows, guideIdx: 0 });
+        this.setState({ guideRows: rows, guideIdx: Math.max(0, Math.min(this.state.guideIdx || 0, rows.length - 1)) });
         this.loadActiveAsins(rows);
       }
     } catch (e) {}
@@ -1394,12 +1433,20 @@ class Component extends DCLogic {
     if (!asins.length) return;
     try {
       const q = "in.(" + asins.map(a => '"' + a + '"').join(",") + ")";
-      const res = await fetch(BASE + "/rest/v1/products?select=amazon_asin&is_active=eq.true&amazon_asin=" + encodeURIComponent(q), {
+      // rating and review_count come back with the same request: a guide's picks
+      // are a snapshot taken when it was written, and older ones carry no
+      // rating count at all, so the live row fills that in
+      // the column in `products` is `asin`; `amazon_asin` is only the key inside
+      // guide_calendar.content.products, so the two must not be confused here
+      const res = await fetch(BASE + "/rest/v1/products?select=asin,rating,review_count,reviews&is_active=eq.true&asin=" + encodeURIComponent(q), {
         headers: { apikey: KEY, Authorization: "Bearer " + KEY }
       });
       if (!res.ok) return;
       const found = await res.json();
-      if (Array.isArray(found)) this.setState({ activeAsins: found.map(r => r.amazon_asin) });
+      if (!Array.isArray(found)) return;
+      const map = {};
+      found.forEach(r => { if (r.asin) map[r.asin] = r; });
+      this.setState({ activeAsins: found.map(r => r.asin), liveStats: map });
     } catch (e) {}
   }
   async loadDeals() {
@@ -1719,7 +1766,7 @@ class Component extends DCLogic {
             ? "background:var(--color-accent);color:#f3f2f2;font-weight:600"
             : "background:transparent;color:var(--color-text)")
       })),
-      chips: ["All deals", "Under $25", "50% off or more", "Lowest ever", "Has coupon code", "New today", "Electronics", "Home & Kitchen", "Games and Toys"].map(label => ({
+      chips: ["All deals", "Under $25", "50% off or more", "Lowest ever", "Has coupon code", "Prime card cashback", "New today", "Electronics", "Home & Kitchen", "Games and Toys"].map(label => ({
         label,
         pick: () => this.setState({ chip: label, shown: 12 }),
         style: "font:inherit;font-size:12px;padding:6px 12px;cursor:pointer;white-space:nowrap;border:1px solid " +
@@ -1760,12 +1807,23 @@ class Component extends DCLogic {
           };
         });
       })(this.state.guideRows, this),
-      guideNav: (this.state.guideRows || []).map((g, i) => ({
-        title: g.title || "",
-        style: "font-size:13px;text-decoration:none;padding:6px 0;border-bottom:1px solid var(--color-divider);line-height:1.35;color:" +
-          (i === (this.state.guideIdx || 0) ? "var(--color-accent)" : "inherit"),
-        open: (e) => { if (e && e.preventDefault) e.preventDefault(); this.setState({ guideIdx: i }); }
-      })),
+      // every published guide, so the page is not stuck on the newest one; the
+      // index goes in the hash so a guide is linkable on its own
+      guideNav: (this.state.guideRows || []).map((g, i) => {
+        const on = i === (this.state.guideIdx || 0);
+        return {
+          title: g.title || "",
+          kicker: g.event_name || "Buying guide",
+          href: this.path("guide", String(i)),
+          style: "text-decoration:none;line-height:1.3;display:flex;flex-direction:column;gap:6px;padding:12px 0 0;border-top:2px solid " +
+            (on ? "var(--color-accent)" : "var(--color-divider)") + ";color:" + (on ? "var(--color-accent-700)" : "inherit"),
+          kickerStyle: "font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:" +
+            (on ? "var(--color-accent-700)" : "var(--color-neutral-700)"),
+          titleStyle: "font-size:14px;font-weight:" + (on ? "600" : "400"),
+          open: (e) => { if (e && e.preventDefault) e.preventDefault(); this.go("guide", String(i)); this.setState({ guideIdx: i }); }
+        };
+      }),
+      guideNavShow: (this.state.guideRows || []).length > 1,
       guide: this.buildGuide((this.state.guideRows || [])[this.state.guideIdx || 0]),
       guideHero: (function (rows, idx) {
         const g = (rows || [])[idx || 0];
@@ -1881,35 +1939,27 @@ class Component extends DCLogic {
         { name: "Computers & Laptops", n: 11 }, { name: "Networking", n: 7 },
         { name: "Cameras", n: 6 }, { name: "Storage", n: 5 }
       ],
-      primeRows: (function (rows, demo, couponPriceOf) {
-        if (!rows || !rows.length) return demo;
-        return rows.map(r => {
-          const cp = couponPriceOf(r);
-          const price = (cp != null && cp > 0 ? cp : parseFloat(r.price)) || 0;
-          const was = parseFloat(r.original_price);
-          const pct = parseFloat(r.prime_cashback_percent) || 0;
-          const back = price * pct / 100;
-          return {
-            title: r.display_title || r.title || "Product",
-            cat: r.category || "",
-            was: !isNaN(was) && was > 0 ? "$" + was.toFixed(2) : "\u2014",
-            price: "$" + price.toFixed(2),
-            pct: pct + "%",
-            back: "$" + back.toFixed(2),
-            eff: "$" + (price - back).toFixed(2),
-            url: amzUrl(r.affiliate_link, r.amazon_asin)
-          };
+      // the same cards the rest of the site uses, ordered by the cash actually
+      // coming back rather than by headline discount — that reordering is the
+      // reason this page exists alongside the homepage filter
+      primeCards: (() => {
+        const rows = (this.state.primeLive || []).map(r => {
+          const d = this.mapRow(r);
+          const price = isFinite(d.priceNum) ? d.priceNum : null;
+          const back = price != null ? price * d.cashPct / 100 : 0;
+          d.backNum = back;
+          d.hasEff = d.cashPct > 0 && price != null;
+          d.effLine = d.hasEff ? "$" + (price - back).toFixed(2).replace(/\.00$/, "") + " after " + Math.round(d.cashPct) + "% back" : "";
+          return d;
         });
-      })(this.state.primeLive, [
-        { title: "Apple AirPods 4", cat: "Electronics", was: "$129.00", price: "$99.00", back: "$4.95", eff: "$94.05" },
-        { title: "JBL Quantum One Headset", cat: "Games and Toys", was: "$329.95", price: "$99.99", back: "$5.00", eff: "$94.99" },
-        { title: "Dell 16 Plus Laptop", cat: "Electronics", was: "$2,199.00", price: "$1,199.99", back: "$60.00", eff: "$1,139.99" },
-        { title: "EGO 56V Trimmer & Blower", cat: "Home & Kitchen", was: "$329.99", price: "$199.99", back: "$10.00", eff: "$189.99" },
-        { title: "Walking Pad Treadmill", cat: "Sports & Outdoors", was: "$169.99", price: "$129.99", back: "$6.50", eff: "$123.49" },
-        { title: "Versace Eros Flame EDP", cat: "Health & Beauty", was: "$190.00", price: "$74.99", back: "$3.75", eff: "$71.24" },
-        { title: "Everyfun Double Hammock", cat: "Home & Kitchen", was: "$128.00", price: "$49.50", back: "$2.48", eff: "$47.02" },
-        { title: "Anker 67W GaN Charger", cat: "Electronics", was: "$49.99", price: "$34.98", back: "$1.75", eff: "$33.23" }
-      ], r => this.couponPriceOf(r)),
+        return rows.sort((a, b) => b.backNum - a.backNum);
+      })(),
+      primeEmpty: !((this.state.primeLive || []).length),
+      primeSort: (this.state.primeLive || []).length ? "Sorted by cashback earned" : "",
+      primeStackLine: (() => {
+        const n = (this.state.primeLive || []).length;
+        return n ? "back across the " + n + (n === 1 ? " deal" : " deals") + " below" : "no bonus-rate deals right now";
+      })(),
       primeStack: (rows => {
         if (!rows || !rows.length) return "\u2014";
         const t = rows.reduce((sum, r) => {
@@ -1917,7 +1967,7 @@ class Component extends DCLogic {
           const p = (cp != null && cp > 0 ? cp : parseFloat(r.price)) || 0;
           return sum + p * (parseFloat(r.prime_cashback_percent) || 0) / 100;
         }, 0);
-        return "$" + t.toFixed(2);
+        return "$" + Math.round(t);
       })(this.state.primeLive),
       primeCount: (this.state.primeLive || []).length,
       faqs: [

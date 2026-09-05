@@ -1,0 +1,2025 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="/support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="/_ds/modernist-424462e2-4060-4771-92af-91bbc246b8fd/styles.css">
+<script src="/_ds/modernist-424462e2-4060-4771-92af-91bbc246b8fd/_ds_bundle.js"></script>
+<style>
+  body { margin:0; background: var(--color-bg); color: var(--color-text); font-family: var(--font-body); }
+  a { color: var(--color-accent-700); }
+  a:hover { color: var(--color-accent-900); }
+  h1, h2, h3, label { font-family: var(--font-heading); }
+  textarea.input { resize:vertical; line-height:1.5; font-family: var(--font-body); }
+  @media (max-width: 1080px) { .bg-split { grid-template-columns: 1fr !important; } }
+  @media (max-width: 720px) { .bg-two { grid-template-columns: 1fr !important; } }
+  @media (max-width: 720px) { .bg-why { display: none !important; } }
+</style>
+</helmet>
+
+<sc-if value="{{ verifying }}" hint-placeholder-val="{{ true }}">
+  <div style="background:var(--color-bg);min-height:100vh;display:grid;place-items:center;padding:24px;color:var(--color-text)">
+    <div style="display:flex;align-items:center;gap:9px;font-family:var(--font-heading);font-weight:800;font-size:13px;letter-spacing:.12em;text-transform:uppercase;color:var(--color-neutral-700)">
+      <span style="width:13px;height:13px;background:var(--color-accent);display:block"></span>Mistrydeals
+    </div>
+  </div>
+</sc-if>
+
+<sc-if value="{{ signedOut }}" hint-placeholder-val="{{ false }}">
+  <div style="background:var(--color-bg);min-height:100vh;display:grid;place-items:center;padding:24px;color:var(--color-text)">
+    <div style="width:100%;max-width:380px">
+      <div style="display:flex;align-items:center;gap:9px;font-family:var(--font-heading);font-weight:800;font-size:13px;letter-spacing:.12em;text-transform:uppercase;margin-bottom:28px">
+        <span style="width:13px;height:13px;background:var(--color-accent);display:block"></span>Mistrydeals
+      </div>
+      <h1 style="margin:0 0 8px;font-size:34px;line-height:1.05;letter-spacing:-.02em">Admin sign in</h1>
+      <p style="margin:0 0 24px;font-size:14px;color:var(--color-neutral-700)">Buying guides publish straight to the live site.</p>
+      <form onSubmit="{{ onSignIn }}">
+        <div class="field" style="margin-bottom:14px">
+          <label>Email</label>
+          <input class="input" type="email" autocomplete="username" value="{{ email }}" onChange="{{ onEmail }}" />
+        </div>
+        <div class="field" style="margin-bottom:18px">
+          <label>Password</label>
+          <input class="input" type="password" autocomplete="current-password" value="{{ password }}" onChange="{{ onPassword }}" />
+        </div>
+        <sc-if value="{{ authError }}" hint-placeholder-val="{{ false }}">
+          <div style="border-left:3px solid var(--color-accent);padding:8px 12px;margin-bottom:16px;font-size:13px;color:var(--color-accent-700)">{{ authError }}</div>
+        </sc-if>
+        <button type="submit" class="btn btn-primary btn-block" style="justify-content:space-between">{{ signInLabel }} <span>&#8594;</span></button>
+      </form>
+    </div>
+  </div>
+</sc-if>
+
+<sc-if value="{{ signedIn }}" hint-placeholder-val="{{ false }}">
+<div style="min-height:100vh;background:var(--color-bg);color:var(--color-text)">
+  <div style="border-bottom:2px solid var(--color-divider)">
+    <div style="max-width:1560px;margin:0 auto;padding:18px 16px;display:flex;align-items:flex-end;gap:24px;flex-wrap:wrap">
+      <div>
+        <div style="font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--color-accent-700);margin-bottom:8px">MistryDeals &#183; internal</div>
+        <h1 style="margin:0;font-size:38px;line-height:1;letter-spacing:-.02em">Buying guides</h1>
+      </div>
+      <sc-if value="{{ isWide }}" hint-placeholder-val="{{ true }}">
+      <div style="display:flex;align-items:center;gap:0;margin-left:8px;flex-wrap:wrap">
+        <a href="{{ hCatalogue }}" style="{{ navRest }}">Catalogue</a>
+        <a href="{{ hQueue }}" style="{{ navRest }}">Deal queue</a>
+        <a href="{{ hCarousel }}" style="{{ navRest }}">Carousel</a>
+        <a href="{{ hBrands }}" style="{{ navRest }}">Brand rules</a>
+        <a href="{{ hScrapes }}" style="{{ navRest }}">Scrape log</a>
+        <a href="{{ hReddit }}" style="{{ navRest }}">Reddit poster</a>
+        <span style="{{ navHere }}">Buying guides</span>
+      </div>
+      </sc-if>
+      <sc-if value="{{ isWide }}" hint-placeholder-val="{{ true }}">
+      <div style="margin-left:auto;display:flex;align-items:center;gap:10px">
+        <span style="font-size:12px;color:var(--color-neutral-700)">{{ userEmail }}</span>
+        <a href="{{ hSite }}" style="{{ navRest }}">View site</a>
+        <button onClick="{{ signOut }}" class="btn btn-ghost" style="font-size:12px;padding:8px 12px">Sign out</button>
+      </div>
+      </sc-if>
+      <sc-if value="{{ isNarrow }}" hint-placeholder-val="{{ false }}">
+      <div style="margin-left:auto;display:flex;align-items:center;gap:10px;flex:none">
+        <button onClick="{{ openMenu }}" title="Menu" style="font:inherit;flex:none;width:42px;height:42px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;background:transparent;border:1px solid var(--color-divider);cursor:pointer;padding:0">
+          <span style="display:block;width:18px;height:2px;background:var(--color-text)"></span>
+          <span style="display:block;width:18px;height:2px;background:var(--color-text)"></span>
+          <span style="display:block;width:18px;height:2px;background:var(--color-text)"></span>
+        </button>
+      </div>
+      </sc-if>
+    </div>
+  </div>
+
+  <sc-if value="{{ menuOpen }}" hint-placeholder-val="{{ false }}">
+    <div onClick="{{ closeMenu }}" style="position:fixed;inset:0;background:color-mix(in srgb, var(--color-neutral-900) 55%, transparent);z-index:90;display:flex;justify-content:flex-end">
+      <div onClick="{{ stop }}" style="background:var(--color-bg);width:min(310px,86vw);height:100%;display:flex;flex-direction:column;border-left:2px solid var(--color-text)">
+        <div style="padding:16px;border-bottom:2px solid var(--color-divider);display:flex;align-items:flex-start;gap:12px">
+          <div style="min-width:0">
+            <div style="font-family:var(--font-heading);font-weight:700;font-size:9.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--color-neutral-700)">Signed in</div>
+            <div style="font-size:13px;line-height:1.35;margin-top:4px;overflow-wrap:anywhere">{{ userEmail }}</div>
+          </div>
+          <button onClick="{{ closeMenu }}" class="btn btn-ghost" style="margin-left:auto;font-size:12px;min-height:44px;padding:0 14px;flex:none">Close</button>
+        </div>
+        <div style="display:flex;flex-direction:column;padding:8px 0;border-bottom:1px solid var(--color-divider)">
+          <sc-for list="{{ menuNav }}" as="m" hint-placeholder-count="7">
+            <a href="{{ m.href }}" style="{{ m.style }}">{{ m.label }}</a>
+          </sc-for>
+        </div>
+        <button onClick="{{ signOut }}" class="btn btn-ghost" style="margin:auto 16px 20px;font-size:12px;padding:10px 12px;justify-content:flex-start">Sign out</button>
+      </div>
+    </div>
+  </sc-if>
+
+  <div style="max-width:1560px;margin:0 auto;padding:28px 16px 72px">
+    <div class="bg-split" style="display:grid;grid-template-columns:340px minmax(0,1fr);gap:36px;align-items:start">
+
+      <div>
+        <div style="display:flex;align-items:baseline;gap:12px;padding-bottom:10px;border-bottom:2px solid var(--color-divider)">
+          <div style="font-family:var(--font-heading);font-weight:700;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--color-neutral-700)">{{ listCount }}</div>
+          <button onClick="{{ reloadGuides }}" style="margin-left:auto;font:inherit;font-family:var(--font-heading);font-weight:700;font-size:10px;letter-spacing:.08em;text-transform:uppercase;background:none;border:0;padding:0;cursor:pointer;color:var(--color-neutral-700)">Reload</button>
+        </div>
+        <button onClick="{{ newGuide }}" class="btn btn-primary btn-block" style="margin-top:14px;font-size:12px;padding:11px 14px;min-height:44px;justify-content:flex-start">New guide</button>
+        <div style="margin-top:12px;display:flex;gap:6px;flex-wrap:wrap">
+          <sc-for list="{{ listTabs }}" as="t" hint-placeholder-count="3">
+            <button onClick="{{ t.pick }}" style="{{ t.style }}">{{ t.label }}</button>
+          </sc-for>
+        </div>
+        <input class="input" placeholder="Search guides" style="margin-top:10px;padding:9px 11px;font-size:13px" value="{{ listQuery }}" onChange="{{ onListQuery }}" />
+        <sc-if value="{{ listLoading }}" hint-placeholder-val="{{ true }}">
+          <div style="padding:18px 0;font-size:13px;color:var(--color-neutral-700)">Loading guides&#8230;</div>
+        </sc-if>
+        <sc-if value="{{ listErr }}" hint-placeholder-val="{{ false }}">
+          <div style="border-left:3px solid var(--color-accent);padding:10px 14px;margin-top:14px;font-size:13px;color:var(--color-accent-700)">{{ listErr }}</div>
+        </sc-if>
+        <sc-if value="{{ listEmpty }}" hint-placeholder-val="{{ false }}">
+          <div style="padding:18px 0;font-size:13px;color:var(--color-neutral-700)">Nothing matches that.</div>
+        </sc-if>
+        <div style="margin-top:8px;max-height:70vh;overflow-y:auto">
+          <sc-for list="{{ guideList }}" as="g" hint-placeholder-count="8">
+            <div style="{{ g.wrapStyle }}">
+              <button onClick="{{ g.open }}" style="{{ g.rowStyle }}">
+                <span style="display:block;font-size:13px;line-height:1.35;font-weight:600">{{ g.title }}</span>
+                <span style="display:block;margin-top:4px;font-size:11px;color:var(--color-neutral-700)">{{ g.meta }}</span>
+              </button>
+              <div style="display:flex;align-items:center;gap:8px;padding:0 8px 10px">
+                <span style="{{ g.badgeStyle }}">{{ g.badge }}</span>
+                <button onClick="{{ g.toggle }}" style="margin-left:auto;{{ g.toggleStyle }}">{{ g.toggleLabel }}</button>
+              </div>
+            </div>
+          </sc-for>
+        </div>
+      </div>
+
+      <div>
+        <sc-if value="{{ noDraft }}" hint-placeholder-val="{{ true }}">
+          <div style="border:2px solid var(--color-divider);padding:40px 32px">
+            <h2 style="margin:0 0 10px;font-size:26px;line-height:1.1;letter-spacing:-.01em">Pick a guide, or start a new one</h2>
+            <p style="margin:0;font-size:14px;line-height:1.55;color:var(--color-neutral-700);max-width:52ch;text-wrap:pretty">{{ emptyNote }}</p>
+          </div>
+        </sc-if>
+
+        <sc-if value="{{ hasDraft }}" hint-placeholder-val="{{ false }}">
+        <div>
+          <div style="display:flex;align-items:baseline;gap:14px;padding-bottom:10px;border-bottom:2px solid var(--color-divider);flex-wrap:wrap">
+            <div style="font-family:var(--font-heading);font-weight:700;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--color-neutral-700)">{{ editHeading }}</div>
+            <span style="{{ dirtyStyle }}">{{ dirtyLabel }}</span>
+            <div style="margin-left:auto;display:flex;gap:8px;flex-wrap:wrap">
+              <button onClick="{{ openPreview }}" class="btn btn-secondary" style="font-size:12px;padding:10px 14px;min-height:44px;white-space:nowrap;justify-content:flex-start">Preview</button>
+              <button onClick="{{ save }}" class="btn btn-primary" disabled="{{ saving }}" style="font-size:12px;padding:10px 16px;min-height:44px;white-space:nowrap;justify-content:flex-start">{{ saveLabel }}</button>
+              <button onClick="{{ closeDraft }}" class="btn btn-ghost" style="font-size:12px;padding:10px 14px;min-height:44px;white-space:nowrap;justify-content:flex-start">Close</button>
+            </div>
+          </div>
+
+          <sc-if value="{{ statusText }}" hint-placeholder-val="{{ false }}">
+            <div style="{{ statusStyle }}">
+              <span>{{ statusText }}</span>
+              <sc-if value="{{ previewHref }}" hint-placeholder-val="{{ false }}">
+                <a href="{{ previewHref }}" target="_blank" rel="noopener" style="margin-left:8px;font-family:var(--font-heading);font-weight:700;font-size:11px;letter-spacing:.08em;text-transform:uppercase">View on site &#8594;</a>
+              </sc-if>
+            </div>
+          </sc-if>
+
+          <div class="bg-two" style="margin-top:22px;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:20px">
+            <div class="field" style="margin:0;grid-column:1 / -1">
+              <label>Title</label>
+              <input class="input" placeholder="The Best Cheap Smart Home Devices in 2026" value="{{ fTitle }}" onChange="{{ onTitle }}" style="{{ titleStyle }}" />
+            </div>
+            <div class="field" style="margin:0">
+              <label>Kicker</label>
+              <input class="input" placeholder="Buying guide" value="{{ fEvent }}" onChange="{{ onEvent }}" />
+              <div style="font-size:11px;line-height:1.35;margin-top:4px;color:var(--color-neutral-600)">Small label above the title. Blank reads &#8220;Buying guide&#8221;.</div>
+            </div>
+            <div class="field" style="margin:0">
+              <label style="display:flex;align-items:center;gap:8px">Caption<button onClick="{{ aiCaption }}" style="{{ aiCaptionBtn.style }}">{{ aiCaptionBtn.label }}</button></label>
+              <input class="input" placeholder="One line under the title" value="{{ fCaption }}" onChange="{{ onCaption }}" />
+            </div>
+          </div>
+
+          <div style="margin-top:26px">
+            <div class="field" style="margin:0">
+              <label style="display:flex;align-items:center;gap:8px">Intro<button onClick="{{ aiIntro }}" style="{{ aiIntroBtn.style }}">{{ aiIntroBtn.label }}</button></label>
+              <textarea class="input" rows="5" placeholder="One paragraph per block, separated by a blank line." value="{{ fIntro }}" onChange="{{ onIntro }}"></textarea>
+              <div style="font-size:11px;line-height:1.35;margin-top:4px;color:var(--color-neutral-600)">{{ introNote }}</div>
+            </div>
+          </div>
+
+          <div style="margin-top:22px">
+            <div class="field" style="margin:0">
+              <label style="display:flex;align-items:center;gap:8px">How to buy well<button onClick="{{ aiHowto }}" style="{{ aiHowtoBtn.style }}">{{ aiHowtoBtn.label }}</button></label>
+              <textarea class="input" rows="4" placeholder="One tip per line. Rendered as a numbered list." value="{{ fHowto }}" onChange="{{ onHowto }}"></textarea>
+              <div style="font-size:11px;line-height:1.35;margin-top:4px;color:var(--color-neutral-600)">{{ howtoNote }}</div>
+            </div>
+          </div>
+
+          <div style="margin-top:34px;display:flex;align-items:baseline;gap:14px;padding-bottom:10px;border-bottom:2px solid var(--color-divider);flex-wrap:wrap">
+            <div style="font-family:var(--font-heading);font-weight:700;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--color-neutral-700)">Publishing</div>
+          </div>
+          <div class="bg-two" style="margin-top:18px;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:20px;align-items:start">
+            <div>
+              <div style="font-family:var(--font-heading);font-weight:700;font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--color-neutral-700);margin-bottom:8px">Live on the site</div>
+              <div style="display:flex;gap:6px">
+                <sc-for list="{{ pubTabs }}" as="t" hint-placeholder-count="2">
+                  <button onClick="{{ t.pick }}" style="{{ t.style }}">{{ t.label }}</button>
+                </sc-for>
+              </div>
+              <div style="font-size:11px;line-height:1.4;margin-top:8px;color:var(--color-neutral-600);max-width:40ch;text-wrap:pretty">{{ pubNote }}</div>
+            </div>
+            <div class="field" style="margin:0">
+              <label>Publish date</label>
+              <input class="input" type="date" value="{{ fDate }}" onChange="{{ onDate }}" />
+              <div style="font-size:11px;line-height:1.35;margin-top:4px;color:var(--color-neutral-600)">{{ dateNote }}</div>
+            </div>
+          </div>
+
+          <div style="margin-top:34px;display:flex;align-items:baseline;gap:14px;padding-bottom:10px;border-bottom:2px solid var(--color-divider);flex-wrap:wrap">
+            <div style="font-family:var(--font-heading);font-weight:700;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--color-neutral-700)">Picks</div>
+            <span style="font-size:12px;color:var(--color-neutral-700)">{{ pickCountLabel }}</span>
+            <button onClick="{{ refreshPrices }}" style="{{ refreshStyle }}">{{ refreshLabel }}</button>
+            <button onClick="{{ aiAllPicks }}" style="{{ aiAllBtn.style }}">{{ aiAllBtn.label }}</button>
+          </div>
+
+          <div style="margin-top:18px;border:2px solid var(--color-text);padding:16px">
+            <div style="display:flex;align-items:baseline;gap:12px;flex-wrap:wrap;margin-bottom:12px">
+              <div style="font-family:var(--font-heading);font-weight:700;font-size:10px;letter-spacing:.1em;text-transform:uppercase">Suggest picks</div>
+              <div style="font-size:11px;color:var(--color-neutral-700)">Scores every live product on discount, sync recency, category coverage and price spread</div>
+            </div>
+            <div style="display:grid;grid-template-columns:minmax(0,2fr) minmax(0,1fr) minmax(0,1fr) minmax(0,1fr) auto;gap:12px;align-items:end" class="bg-two">
+              <div class="field" style="margin:0">
+                <label style="font-size:11px">Topic</label>
+                <input class="input" placeholder="e.g. Prime Day headphones under $150" value="{{ sgTopic }}" onChange="{{ onSgTopic }}" />
+              </div>
+              <div class="field" style="margin:0">
+                <label style="font-size:11px">Category</label>
+                <select class="input" value="{{ sgCat }}" onChange="{{ onSgCat }}">
+                  <sc-for list="{{ catOptions }}" as="o" hint-placeholder-count="6">
+                    <option value="{{ o.value }}">{{ o.label }}</option>
+                  </sc-for>
+                </select>
+              </div>
+              <div class="field" style="margin:0">
+                <label style="font-size:11px">Max price</label>
+                <input class="input" inputmode="decimal" placeholder="any" value="{{ sgMax }}" onChange="{{ onSgMax }}" />
+              </div>
+              <div class="field" style="margin:0">
+                <label style="font-size:11px">Shortlist</label>
+                <input class="input" inputmode="numeric" placeholder="20" value="{{ sgCount }}" onChange="{{ onSgCount }}" />
+              </div>
+              <button onClick="{{ suggestPicks }}" class="btn btn-primary" style="font-size:12px;padding:10px 14px;min-height:44px;white-space:nowrap;justify-content:flex-start">{{ suggestLabel }}</button>
+            </div>
+            <sc-if value="{{ sgErr }}" hint-placeholder-val="{{ false }}">
+              <div style="border-left:3px solid var(--color-accent);padding:10px 14px;margin-top:12px;font-size:13px;color:var(--color-accent-700)">{{ sgErr }}</div>
+            </sc-if>
+            <sc-if value="{{ sgNote }}" hint-placeholder-val="{{ false }}">
+              <div style="font-size:11px;line-height:1.4;margin-top:10px;color:var(--color-neutral-600);max-width:66ch;text-wrap:pretty">{{ sgNote }}</div>
+            </sc-if>
+            <sc-if value="{{ sgHasRows }}" hint-placeholder-val="{{ false }}">
+              <div style="margin-top:14px;max-height:420px;overflow:auto;border-top:2px solid var(--color-divider)">
+                <table class="table" style="width:100%;border-collapse:collapse;table-layout:auto">
+                  <thead>
+                    <tr style="position:sticky;top:0;z-index:1;background:var(--color-bg)">
+                      <sc-for list="{{ sortCols }}" as="h" hint-placeholder-count="9">
+                        <th style="{{ h.style }}"><button onClick="{{ h.sort }}" style="{{ h.btnStyle }}">{{ h.label }}</button></th>
+                      </sc-for>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <sc-for list="{{ suggestRows }}" as="s" hint-placeholder-count="0">
+                      <tr onClick="{{ s.toggle }}" title="{{ s.why }}" style="{{ s.rowStyle }}">
+                        <td style="{{ s.boxCell }}"><span style="{{ s.boxStyle }}">{{ s.mark }}</span></td>
+                        <td style="{{ s.scoreCell }}">{{ s.score }}</td>
+                        <td style="{{ s.titleCell }}">{{ s.title }}</td>
+                        <td style="{{ s.numCell }}">{{ s.price }}</td>
+                        <td style="{{ s.numCell }}">{{ s.was }}</td>
+                        <td style="{{ s.offCell }}">{{ s.off }}</td>
+                        <td style="{{ s.catCell }}">{{ s.cat }}</td>
+                        <td style="{{ s.asinCell }}">{{ s.asin }}</td>
+                        <td style="{{ s.syncCell }}">{{ s.synced }}</td>
+                      </tr>
+                    </sc-for>
+                  </tbody>
+                </table>
+              </div>
+              <div style="margin-top:12px;display:flex;gap:10px;flex-wrap:wrap">
+                <button onClick="{{ addSuggested }}" class="btn btn-primary" style="font-size:12px;padding:10px 16px;min-height:44px;justify-content:flex-start">{{ addSuggestedLabel }}</button>
+                <button onClick="{{ toggleAll }}" class="btn btn-secondary" style="font-size:12px;padding:10px 14px;min-height:44px;justify-content:flex-start">{{ allLabel }}</button>
+                <button onClick="{{ clearSuggest }}" class="btn btn-ghost" style="font-size:12px;padding:10px 14px;min-height:44px;justify-content:flex-start">Discard shortlist</button>
+              </div>
+            </sc-if>
+          </div>
+
+          <div style="margin-top:18px;border:1px solid var(--color-divider);padding:16px">
+            <div style="font-family:var(--font-heading);font-weight:700;font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--color-neutral-700);margin-bottom:12px">Fill from the catalogue</div>
+            <div style="display:grid;grid-template-columns:minmax(0,1.3fr) minmax(0,1fr) minmax(0,1fr) minmax(0,1fr) auto;gap:12px;align-items:end" class="bg-two">
+              <div class="field" style="margin:0">
+                <label style="font-size:11px">Category</label>
+                <select class="input" value="{{ afCat }}" onChange="{{ onAfCat }}">
+                  <sc-for list="{{ catOptions }}" as="o" hint-placeholder-count="6">
+                    <option value="{{ o.value }}">{{ o.label }}</option>
+                  </sc-for>
+                </select>
+              </div>
+              <div class="field" style="margin:0">
+                <label style="font-size:11px">Min discount %</label>
+                <input class="input" inputmode="numeric" value="{{ afDisc }}" onChange="{{ onAfDisc }}" />
+              </div>
+              <div class="field" style="margin:0">
+                <label style="font-size:11px">Max price</label>
+                <input class="input" inputmode="decimal" placeholder="any" value="{{ afMax }}" onChange="{{ onAfMax }}" />
+              </div>
+              <div class="field" style="margin:0">
+                <label style="font-size:11px">How many</label>
+                <input class="input" inputmode="numeric" value="{{ afCount }}" onChange="{{ onAfCount }}" />
+              </div>
+              <button onClick="{{ autoFill }}" class="btn btn-secondary" style="font-size:12px;padding:10px 14px;min-height:44px;white-space:nowrap;justify-content:flex-start">{{ autoFillLabel }}</button>
+            </div>
+            <div style="font-size:11px;line-height:1.4;margin-top:10px;color:var(--color-neutral-600);max-width:66ch;text-wrap:pretty">{{ autoFillNote }}</div>
+          </div>
+
+          <div style="margin-top:16px;border:1px solid var(--color-divider);padding:16px">
+            <div style="font-family:var(--font-heading);font-weight:700;font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--color-neutral-700);margin-bottom:12px">Add one product</div>
+            <input class="input" placeholder="Search the catalogue by title, ASIN or category" value="{{ prodQuery }}" onChange="{{ onProdQuery }}" style="font-size:13px;padding:9px 11px" />
+            <sc-if value="{{ prodErr }}" hint-placeholder-val="{{ false }}">
+              <div style="border-left:3px solid var(--color-accent);padding:10px 14px;margin-top:12px;font-size:13px;color:var(--color-accent-700)">{{ prodErr }}</div>
+            </sc-if>
+            <sc-if value="{{ searchHint }}" hint-placeholder-val="{{ true }}">
+              <div style="padding:12px 0 0;font-size:12px;color:var(--color-neutral-700)">{{ searchHint }}</div>
+            </sc-if>
+            <div style="margin-top:6px;max-height:260px;overflow-y:auto">
+              <sc-for list="{{ prodRows }}" as="p" hint-placeholder-count="0">
+                <button onClick="{{ p.add }}" style="{{ p.rowStyle }}">
+                  <span style="min-width:0">
+                    <span style="display:block;font-size:13px;line-height:1.35;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ p.title }}</span>
+                    <span style="display:block;margin-top:3px;font-size:11px;color:var(--color-neutral-700)">{{ p.meta }}</span>
+                  </span>
+                  <span style="{{ p.syncedStyle }}">{{ p.synced }}</span>
+                  <span style="font-family:var(--font-heading);font-weight:700;font-size:10px;letter-spacing:.08em;text-transform:uppercase;white-space:nowrap">{{ p.addLabel }}</span>
+                </button>
+              </sc-for>
+            </div>
+          </div>
+
+          <sc-if value="{{ noPicks }}" hint-placeholder-val="{{ true }}">
+            <div style="margin-top:20px;border-left:3px solid var(--color-accent);padding:12px 14px;font-size:13px;line-height:1.45;color:var(--color-accent-700)">A guide needs at least one pick before it can be saved.</div>
+          </sc-if>
+          <sc-if value="{{ writeGap }}" hint-placeholder-val="{{ false }}">
+            <div style="margin-top:20px;border-left:3px solid var(--color-accent);padding:12px 14px;font-size:13px;line-height:1.45;color:var(--color-accent-700);text-wrap:pretty">{{ writeGap }}</div>
+          </sc-if>
+
+          <div style="margin-top:20px;display:flex;flex-direction:column;gap:12px">
+            <sc-for list="{{ picks }}" as="p" hint-placeholder-count="0">
+              <div style="{{ p.boxStyle }}">
+                <div style="display:grid;grid-template-columns:34px minmax(0,1fr) auto;gap:12px;align-items:center;padding:12px 14px">
+                  <span style="font-family:var(--font-heading);font-weight:700;font-size:15px;color:var(--color-neutral-700)">{{ p.n }}</span>
+                  <button onClick="{{ p.toggle }}" style="min-width:0;text-align:left;font:inherit;background:none;border:0;padding:0;cursor:pointer;color:var(--color-text)">
+                    <span style="display:block;font-size:14px;line-height:1.35;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ p.title }}</span>
+                    <span style="display:block;margin-top:4px;font-size:11px;color:var(--color-neutral-700)">{{ p.meta }}</span>
+                  </button>
+                  <span style="display:flex;align-items:center;gap:6px">
+                    <span style="{{ p.noWriteStyle }}">{{ p.noWrite }}</span>
+                    <span style="{{ p.warnStyle }}">{{ p.warn }}</span>
+                    <button onClick="{{ p.up }}" title="Move up" style="{{ p.moveStyle }}">&#8593;</button>
+                    <button onClick="{{ p.down }}" title="Move down" style="{{ p.moveStyle }}">&#8595;</button>
+                    <button onClick="{{ p.remove }}" title="Remove" style="{{ p.moveStyle }}">&#10005;</button>
+                    <button onClick="{{ p.toggle }}" style="font:inherit;font-family:var(--font-heading);font-weight:700;font-size:10px;letter-spacing:.08em;text-transform:uppercase;background:none;border:1px solid var(--color-divider);padding:7px 10px;cursor:pointer;color:var(--color-text);white-space:nowrap">{{ p.toggleLabel }}</button>
+                  </span>
+                </div>
+                <sc-if value="{{ p.open }}" hint-placeholder-val="{{ false }}">
+                  <div style="padding:4px 14px 16px;border-top:1px solid var(--color-divider)">
+                    <div class="bg-two" style="margin-top:14px;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:16px">
+                      <div class="field" style="margin:0;grid-column:1 / -1">
+                        <label style="font-size:11px">Title</label>
+                        <input class="input" value="{{ p.fTitle }}" onChange="{{ p.onTitle }}" style="font-size:13px;padding:9px 11px" />
+                      </div>
+                      <div class="field" style="margin:0">
+                        <label style="font-size:11px">ASIN</label>
+                        <input class="input" value="{{ p.fAsin }}" onChange="{{ p.onAsin }}" style="font-size:13px;padding:9px 11px" />
+                      </div>
+                      <div class="field" style="margin:0">
+                        <label style="font-size:11px">Category</label>
+                        <input class="input" value="{{ p.fCat }}" onChange="{{ p.onCat }}" style="font-size:13px;padding:9px 11px" />
+                      </div>
+                      <div class="field" style="margin:0">
+                        <label style="font-size:11px">Price</label>
+                        <input class="input" inputmode="decimal" value="{{ p.fPrice }}" onChange="{{ p.onPrice }}" style="font-size:13px;padding:9px 11px" />
+                      </div>
+                      <div class="field" style="margin:0">
+                        <label style="font-size:11px">Was price</label>
+                        <input class="input" inputmode="decimal" value="{{ p.fWas }}" onChange="{{ p.onWas }}" style="font-size:13px;padding:9px 11px" />
+                      </div>
+                      <div style="grid-column:1 / -1;{{ p.driftWrap }}">
+                        <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
+                          <span style="font-size:12px;line-height:1.4;color:var(--color-accent-700)">{{ p.drift }}</span>
+                          <button onClick="{{ p.useLive }}" style="font:inherit;font-family:var(--font-heading);font-weight:700;font-size:10px;letter-spacing:.08em;text-transform:uppercase;background:none;border:1px solid var(--color-divider);padding:6px 10px;cursor:pointer;color:var(--color-text);white-space:nowrap">Use it</button>
+                        </div>
+                      </div>
+                      <div class="field" style="margin:0;grid-column:1 / -1">
+                        <label style="font-size:11px;display:flex;align-items:center;gap:8px">Why it made the list<button onClick="{{ p.ai }}" style="{{ p.aiBtn.style }}">{{ p.aiBtn.label }}</button></label>
+                        <textarea class="input" rows="3" placeholder="The write-up under this pick." value="{{ p.fDesc }}" onChange="{{ p.onDesc }}" style="font-size:13px;padding:9px 11px"></textarea>
+                      </div>
+                      <div class="field" style="margin:0;grid-column:1 / -1">
+                        <label style="font-size:11px">Pricing note</label>
+                        <input class="input" placeholder="e.g. Cheapest it has been since March." value="{{ p.fNote }}" onChange="{{ p.onNote }}" style="font-size:13px;padding:9px 11px" />
+                      </div>
+                    </div>
+                  </div>
+                </sc-if>
+              </div>
+            </sc-for>
+          </div>
+
+          <div style="margin-top:26px;display:flex;gap:10px;flex-wrap:wrap">
+            <button onClick="{{ save }}" class="btn btn-primary" disabled="{{ saving }}" style="font-size:12px;padding:12px 18px;min-height:44px;white-space:nowrap;justify-content:flex-start">{{ saveLabel }}</button>
+            <sc-if value="{{ canDelete }}" hint-placeholder-val="{{ false }}">
+              <button onClick="{{ askDelete }}" class="btn btn-ghost" style="font-size:12px;padding:12px 18px;min-height:44px;justify-content:flex-start;color:var(--color-accent-700)">Delete guide</button>
+            </sc-if>
+          </div>
+        </div>
+        </sc-if>
+      </div>
+    </div>
+  </div>
+
+  <sc-if value="{{ confirmOpen }}" hint-placeholder-val="{{ false }}">
+    <div style="position:fixed;inset:0;background:color-mix(in srgb, var(--color-neutral-900) 55%, transparent);display:grid;place-items:center;padding:24px;z-index:85">
+      <div style="background:var(--color-bg);border:2px solid var(--color-text);max-width:480px;width:100%;padding:24px">
+        <h2 style="margin:0 0 8px;font-size:22px;line-height:1.15;letter-spacing:-.01em">{{ confirmTitle }}</h2>
+        <p style="margin:0 0 22px;font-size:13px;line-height:1.5;color:var(--color-neutral-700);text-wrap:pretty">{{ confirmBody }}</p>
+        <div style="display:flex;gap:10px;flex-wrap:wrap">
+          <button onClick="{{ confirmGo }}" class="btn btn-primary" style="font-size:13px;padding:9px 14px;justify-content:flex-start">{{ confirmLabel }}</button>
+          <button onClick="{{ confirmCancel }}" class="btn btn-ghost" style="font-size:13px;padding:9px 14px;justify-content:flex-start">Cancel</button>
+        </div>
+      </div>
+    </div>
+  </sc-if>
+</div>
+</sc-if>
+
+<sc-if value="{{ previewOpen }}" hint-placeholder-val="{{ false }}">
+  <div style="position:fixed;inset:0;z-index:120;background:color-mix(in srgb, var(--color-neutral-900) 62%, transparent);overflow-y:auto;padding:28px 20px">
+    <div style="max-width:1000px;margin:0 auto;background:var(--color-bg);border:2px solid var(--color-text)">
+      <div style="position:sticky;top:0;z-index:2;background:var(--color-bg);border-bottom:2px solid var(--color-text);padding:14px 22px;display:flex;align-items:center;gap:14px;flex-wrap:wrap">
+        <div style="font-family:var(--font-heading);font-weight:700;font-size:11px;letter-spacing:.1em;text-transform:uppercase">Preview</div>
+        <span style="{{ pv.stateStyle }}">{{ pv.state }}</span>
+        <div style="font-size:11px;color:var(--color-neutral-700)">As the site would render it, from what is on screen &mdash; saved or not</div>
+        <button onClick="{{ closePreview }}" class="btn btn-ghost" style="margin-left:auto;font-size:12px;padding:9px 14px;min-height:44px;justify-content:flex-start">Close preview</button>
+      </div>
+
+      <div style="padding:34px 42px 46px">
+        <div style="font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--color-accent-700);margin-bottom:16px">{{ pv.kicker }}</div>
+        <h1 style="font-size:52px;line-height:1;letter-spacing:-.03em;margin:0 0 16px;font-family:var(--font-heading)">{{ pv.title }}</h1>
+        <sc-if value="{{ pv.hasCaption }}" hint-placeholder-val="{{ false }}">
+          <p style="font-size:19px;max-width:56ch;margin:0">{{ pv.caption }}</p>
+        </sc-if>
+        <div style="margin-top:22px;border-top:2px solid var(--color-divider);padding-top:12px;display:flex;gap:24px;flex-wrap:wrap;font-size:13px;color:var(--color-neutral-700)">
+          <span>MistryDeals research desk</span>
+          <span>{{ pv.date }}</span>
+          <span>{{ pv.count }}</span>
+        </div>
+
+        <sc-if value="{{ pv.hasIntro }}" hint-placeholder-val="{{ true }}">
+          <div style="margin-top:30px">
+            <sc-for list="{{ pv.intro }}" as="p" hint-placeholder-count="2">
+              <p style="font-size:19px;line-height:1.5">{{ p }}</p>
+            </sc-for>
+          </div>
+        </sc-if>
+        <sc-if value="{{ pv.noIntro }}" hint-placeholder-val="{{ false }}">
+          <div style="margin-top:30px;border-left:3px solid var(--color-accent);padding:12px 14px;font-size:13px;color:var(--color-accent-700)">No intro written yet &mdash; the site would open straight on the picks.</div>
+        </sc-if>
+
+        <div style="margin-top:38px;font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--color-neutral-700)">The picks in detail</div>
+        <sc-if value="{{ pv.hasPicks }}" hint-placeholder-val="{{ true }}">
+          <div style="margin-top:8px">
+            <sc-for list="{{ pv.picks }}" as="d" hint-placeholder-count="3">
+              <div style="display:grid;grid-template-columns:150px minmax(0,1fr);gap:24px;border-top:2px solid var(--color-divider);padding:22px 0">
+                <div style="border:1px solid var(--color-divider);background:#ffffff;height:150px;position:relative;overflow:hidden">
+                  <sc-if value="{{ d.hasImg }}" hint-placeholder-val="{{ true }}">
+                    <dc-import name="ProductImage" src="{{ d.img }}" alt="" pad="12px" hint-size="100%,100%"></dc-import>
+                  </sc-if>
+                  <sc-if value="{{ d.noImg }}" hint-placeholder-val="{{ false }}">
+                    <div style="position:absolute;inset:0;display:grid;place-items:center;font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--color-accent-700)">No image</div>
+                  </sc-if>
+                </div>
+                <div style="display:flex;flex-direction:column;gap:10px;align-items:flex-start;min-width:0">
+                  <div style="font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--color-accent-700)">{{ d.n }} / {{ d.cat }}</div>
+                  <h3 style="margin:0;font-size:22px;line-height:1.2;font-family:var(--font-heading)">{{ d.title }}</h3>
+                  <div style="display:flex;flex-wrap:wrap;align-items:baseline;gap:10px">
+                    <span style="font-size:24px;font-weight:600">{{ d.price }}</span>
+                    <span style="font-size:15px;color:var(--color-neutral-700);text-decoration:line-through">{{ d.was }}</span>
+                    <span style="font-size:13px;color:var(--color-accent-700);font-weight:600">{{ d.off }}</span>
+                  </div>
+                  <sc-if value="{{ d.hasDesc }}" hint-placeholder-val="{{ true }}">
+                    <p style="margin:0;font-size:16px;line-height:1.55">{{ d.description }}</p>
+                  </sc-if>
+                  <sc-if value="{{ d.noDesc }}" hint-placeholder-val="{{ false }}">
+                    <div style="font-size:13px;color:var(--color-accent-700)">No write-up yet &mdash; this pick would publish with no description.</div>
+                  </sc-if>
+                  <sc-if value="{{ d.hasNote }}" hint-placeholder-val="{{ false }}">
+                    <div style="background:var(--color-surface);border-left:2px solid var(--color-accent);padding:10px 14px;font-size:14px;line-height:1.5">
+                      <span style="font-weight:600">Price check. </span>{{ d.note }}
+                    </div>
+                  </sc-if>
+                  <a class="btn btn-primary" href="{{ d.url }}" target="_blank" rel="nofollow sponsored noopener" style="margin-top:2px;font-size:12px">View on Amazon</a>
+                </div>
+              </div>
+            </sc-for>
+          </div>
+        </sc-if>
+        <sc-if value="{{ pv.noPicks }}" hint-placeholder-val="{{ false }}">
+          <div style="margin-top:8px;border-left:3px solid var(--color-accent);padding:12px 14px;font-size:13px;color:var(--color-accent-700)">No picks yet.</div>
+        </sc-if>
+
+        <sc-if value="{{ pv.hasHowto }}" hint-placeholder-val="{{ false }}">
+          <div style="margin-top:38px">
+            <div style="font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--color-neutral-700);margin-bottom:16px">How to buy well</div>
+            <sc-for list="{{ pv.howto }}" as="h" hint-placeholder-count="3">
+              <div style="display:grid;grid-template-columns:36px minmax(0,1fr);gap:14px;border-top:1px solid var(--color-divider);padding:14px 0">
+                <span style="font-size:13px;color:var(--color-accent-700);font-weight:600">{{ h.n }}</span>
+                <span style="font-size:16px;line-height:1.5">{{ h.text }}</span>
+              </div>
+            </sc-for>
+          </div>
+        </sc-if>
+      </div>
+    </div>
+  </div>
+</sc-if>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:1480,&quot;height&quot;:1000},&quot;pickCount&quot;:{&quot;editor&quot;:&quot;int&quot;,&quot;default&quot;:8,&quot;min&quot;:3,&quot;max&quot;:15,&quot;tsType&quot;:&quot;number&quot;,&quot;section&quot;:&quot;Defaults&quot;}}">
+const BASE = "https://qolksrytidvxarrlygyy.supabase.co";
+const KEY = "sb_publishable_UX38KeF1XAKtzvS01yfx7w_8s5NkOH3";
+const GUIDES = BASE + "/rest/v1/guide_calendar";
+
+class Component extends DCLogic {
+  state = {
+    token: null, user: null, refresh: null, email: "", password: "",
+    authError: "", signingIn: false, verifying: true,
+    narrow: false, menuOpen: false,
+    guides: null, listErr: "", listQuery: "", listTab: "All",
+    liveMap: {}, catNames: null, catalogueCount: null,
+    searchRows: null, searching: false, prodErr: "", prodQuery: "", filling: false,
+    draft: null, dirty: false, saving: false, openPick: null,
+    statusText: "", statusKind: "", savedSlug: null,
+    afCat: "", afDisc: "", afCount: "", afMax: "",
+    sgTopic: "", sgCat: "", sgMax: "", sgCount: "", sgRows: null, sgSel: {},
+    sgBusy: false, sgErr: "", sgNote: "", sgSort: "score", sgDir: -1,
+    confirm: null, busyId: null, aiBusy: null
+  };
+
+  decode(str) {
+    if (str == null) return "";
+    const s = String(str);
+    if (s.indexOf("&") === -1) return s;
+    const el = document.createElement("textarea");
+    el.innerHTML = s;
+    return el.value;
+  }
+
+  num(v) {
+    if (v === null || v === undefined || String(v).trim() === "") return null;
+    const n = Number(String(v).replace(/[$,\s]/g, ""));
+    return isFinite(n) ? n : null;
+  }
+
+  money(v) { return v == null ? "" : "$" + (Math.round(v) === v ? v : v.toFixed(2)); }
+
+  reviewsOf(p) {
+    const n = [p.review_count, p.reviews].map(v => Number(v)).find(v => isFinite(v) && v > 0);
+    return n || null;
+  }
+
+  discountOf(p) {
+    const price = this.num(p.price), was = this.num(p.original_price);
+    if (price == null || was == null || was <= price) return 0;
+    return Math.round((1 - price / was) * 100);
+  }
+
+  // ---- session: the same shared admin session every other admin page uses ----
+  componentDidMount() {
+    this.state.narrow = window.innerWidth <= 980;
+    window.addEventListener("resize", this.onResize);
+    let stored = null;
+    try { stored = JSON.parse(localStorage.getItem("md-admin-session") || "null"); } catch (e) {}
+    if (!stored || !stored.token || stored.token === KEY) { this.signOutNow(); return; }
+    this.validateSession(stored);
+  }
+
+  componentWillUnmount() {
+    window.removeEventListener("resize", this.onResize);
+    if (this.searchTimer) clearTimeout(this.searchTimer);
+  }
+
+  onResize = () => {
+    const narrow = window.innerWidth <= 980;
+    if (narrow !== this.state.narrow) this.setState({ narrow: narrow, menuOpen: false });
+  };
+
+  async validateSession(stored) {
+    try {
+      const res = await fetch(BASE + "/auth/v1/user", { headers: { apikey: KEY, Authorization: "Bearer " + stored.token } });
+      if (!res.ok) {
+        const fresh = await this.refreshSession(stored.refresh);
+        if (!fresh) { this.signOutNow(); this.setState({ authError: "Session expired \u2014 sign in again." }); return; }
+        this.setState({ token: fresh, refresh: stored.refresh, user: stored.user, verifying: false }, () => this.loadAll());
+        return;
+      }
+      const user = await res.json();
+      this.setState({ token: stored.token, refresh: stored.refresh || null, user: (user && user.email) || stored.user, verifying: false },
+        () => this.loadAll());
+    } catch (e) { this.signOutNow(); }
+  }
+
+  async refreshSession(tokenOverride) {
+    const rt = tokenOverride || this.state.refresh;
+    if (!rt) return null;
+    try {
+      const res = await fetch(BASE + "/auth/v1/token?grant_type=refresh_token", {
+        method: "POST", headers: { apikey: KEY, "Content-Type": "application/json" },
+        body: JSON.stringify({ refresh_token: rt })
+      });
+      if (!res.ok) return null;
+      const data = await res.json();
+      if (!data.access_token) return null;
+      const session = { token: data.access_token, refresh: data.refresh_token || rt, user: this.state.user };
+      try { localStorage.setItem("md-admin-session", JSON.stringify(session)); } catch (e) {}
+      this.setState({ token: session.token, refresh: session.refresh });
+      return session.token;
+    } catch (e) { return null; }
+  }
+
+  async signIn(e) {
+    if (e && e.preventDefault) e.preventDefault();
+    this.setState({ signingIn: true, authError: "" });
+    try {
+      const res = await fetch(BASE + "/auth/v1/token?grant_type=password", {
+        method: "POST", headers: { apikey: KEY, "Content-Type": "application/json" },
+        body: JSON.stringify({ email: this.state.email, password: this.state.password })
+      });
+      const data = await res.json();
+      if (!res.ok || !data.access_token) {
+        this.setState({ signingIn: false, authError: data.error_description || data.msg || "Sign in failed." });
+        return;
+      }
+      const session = { token: data.access_token, refresh: data.refresh_token || null, user: (data.user && data.user.email) || this.state.email };
+      try { localStorage.setItem("md-admin-session", JSON.stringify(session)); } catch (err) {}
+      this.setState({ token: session.token, refresh: session.refresh, user: session.user, password: "", signingIn: false, verifying: false },
+        () => this.loadAll());
+    } catch (err) { this.setState({ signingIn: false, authError: "Network error. Try again." }); }
+  }
+
+  signOutNow() {
+    try { localStorage.removeItem("md-admin-session"); } catch (e) {}
+    this.setState({ token: null, user: null, refresh: null, password: "", verifying: false, menuOpen: false });
+  }
+
+  async req(url, init) {
+    const opts = init || {};
+    let res = await fetch(url, opts);
+    if (res.status === 401 || res.status === 403) {
+      const fresh = await this.refreshSession();
+      if (fresh) {
+        const retry = Object.assign({}, opts);
+        retry.headers = Object.assign({}, opts.headers || {}, { apikey: KEY, Authorization: "Bearer " + fresh });
+        res = await fetch(url, retry);
+      }
+    }
+    return res;
+  }
+
+  headers(extra) {
+    return Object.assign({ apikey: KEY, Authorization: "Bearer " + (this.state.token || KEY), "Content-Type": "application/json" }, extra || {});
+  }
+
+  loadAll() { this.loadGuides(); this.loadCatalogueMeta(); }
+
+  // drafts included — the point of the page is to see the 20-odd unpublished rows
+  async loadGuides() {
+    this.setState({ listErr: "" });
+    try {
+      const res = await this.req(GUIDES + "?select=*&order=published_at.desc.nullslast", { headers: this.headers() });
+      if (!res.ok) {
+        let why = ""; try { const j = await res.json(); why = j.message || j.hint || ""; } catch (e) {}
+        this.setState({ guides: [], listErr: "Could not load guides (" + res.status + ")" + (why ? " \u2014 " + why : "") });
+        return;
+      }
+      const rows = await res.json();
+      this.setState({ guides: rows });
+      // resolve every pick's ASIN once, so the list's price-drift flags and the
+      // editor's "Not live" chips are answers, not guesses from a partial cache
+      this.loadLive(rows.reduce((a, g) => a.concat(((g.content || {}).products || []).map(p => p.amazon_asin)), []));
+    } catch (e) { this.setState({ guides: [], listErr: "Could not load guides \u2014 network error." }); }
+  }
+
+  // The catalogue is far too big to hold in the page (thousands of active rows),
+  // and a partial window is worse than none: it makes live products look
+  // missing. So nothing is cached wholesale — the count and the category list
+  // are read up front, and products are fetched per question: by query for the
+  // search, by ASIN for the picks, by category for a fill.
+  // select=* throughout for the reason the other admin pages use it: naming a
+  // column this table does not have 400s the whole request.
+  async loadCatalogueMeta() {
+    try {
+      const res = await this.req(BASE + "/rest/v1/products?select=id&is_active=eq.true&limit=1",
+        { headers: this.headers({ Prefer: "count=exact" }) });
+      const range = res.headers.get("content-range") || "";
+      const total = range.indexOf("/") > -1 ? parseInt(range.split("/")[1], 10) : null;
+      if (isFinite(total)) this.setState({ catalogueCount: total });
+    } catch (e) {}
+    try {
+      const res = await this.req(BASE + "/rest/v1/categories?select=*&is_active=eq.true", { headers: this.headers() });
+      if (res.ok) {
+        const rows = await res.json();
+        const names = rows.map(r => r.name || r.category || r.title).filter(Boolean).sort();
+        if (names.length) { this.setState({ catNames: names }); return; }
+      }
+    } catch (e) {}
+    // no categories table reachable — fall back to whatever the guides already use
+    const fromGuides = Array.from(new Set((this.state.guides || [])
+      .reduce((a, g) => a.concat(((g.content || {}).products || []).map(p => p.category)), [])
+      .filter(Boolean))).sort();
+    this.setState({ catNames: fromGuides });
+  }
+
+  // one row per ASIN the guides actually use, so "not live" means not live
+  // rather than "outside the window I happened to load"
+  async loadLive(asins) {
+    const want = Array.from(new Set((asins || [])
+      .map(a => String(a || "").trim().toUpperCase()).filter(Boolean)))
+      .filter(a => this.state.liveMap[a] === undefined);
+    if (!want.length) return;
+    // chunked: a very long in.() list can exceed the URL limit
+    for (let i = 0; i < want.length; i += 60) {
+      const chunk = want.slice(i, i + 60);
+      try {
+        const res = await this.req(BASE + "/rest/v1/products?select=*&is_active=eq.true&asin=in.(" +
+          chunk.map(encodeURIComponent).join(",") + ")", { headers: this.headers() });
+        if (!res.ok) continue;
+        const rows = await res.json();
+        const patch = {};
+        chunk.forEach(a => { patch[a] = false; });
+        rows.forEach(r => {
+          const a = (r.asin || r.amazon_asin || "").toString().trim().toUpperCase();
+          if (a) patch[a] = r;
+        });
+        this.setState({ liveMap: Object.assign({}, this.state.liveMap, patch) });
+      } catch (e) {}
+    }
+  }
+
+  // server-side search: every active product is reachable, and the rows come
+  // back genuinely newest-synced first
+  async searchProducts(q) {
+    const term = String(q || "").trim();
+    if (!term) { this.setState({ searchRows: null, searching: false, prodErr: "" }); return; }
+    this.setState({ searching: true, prodErr: "" });
+    const esc = term.replace(/[(),*]/g, " ").trim();
+    const like = "*" + esc.split(/\s+/).join("*") + "*";
+    const url = BASE + "/rest/v1/products?select=*&is_active=eq.true" +
+      "&or=(title.ilike." + encodeURIComponent(like) + ",display_title.ilike." + encodeURIComponent(like) +
+      ",asin.ilike." + encodeURIComponent("*" + esc + "*") + ",category.ilike." + encodeURIComponent(like) + ")" +
+      "&order=last_price_sync.desc.nullslast&limit=25";
+    try {
+      const res = await this.req(url, { headers: this.headers() });
+      // a stale response from an earlier keystroke must not overwrite a newer one
+      if (this.state.prodQuery.trim() !== term) return;
+      if (!res.ok) {
+        let why = ""; try { const j = await res.json(); why = j.message || j.hint || ""; } catch (e) {}
+        this.setState({ searching: false, searchRows: [], prodErr: "Search failed (" + res.status + ")" + (why ? " \u2014 " + why : "") });
+        return;
+      }
+      this.setState({ searching: false, searchRows: await res.json() });
+    } catch (e) {
+      if (this.state.prodQuery.trim() !== term) return;
+      this.setState({ searching: false, searchRows: [], prodErr: "Search failed \u2014 network error." });
+    }
+  }
+
+  onQueryTyped(q) {
+    this.setState({ prodQuery: q });
+    if (this.searchTimer) clearTimeout(this.searchTimer);
+    if (!q.trim()) { this.setState({ searchRows: null, searching: false }); return; }
+    this.searchTimer = setTimeout(() => this.searchProducts(q), 280);
+  }
+
+  // the fill pool is fetched per run and scoped by category, so it is the whole
+  // catalogue for that category rather than a slice of the newest syncs
+  // Paged to the end rather than capped: the discount ranking is computed here,
+  // so a truncated pool would silently drop the deepest discounts whenever the
+  // deal happens to sit on an older sync date.
+  async fetchPool(cat) {
+    const PAGE = 1000, MAX = 20000;
+    let out = [], from = 0;
+    for (;;) {
+      const url = BASE + "/rest/v1/products?select=*&is_active=eq.true" +
+        (cat ? "&category=eq." + encodeURIComponent(cat) : "") +
+        "&order=id.asc&limit=" + PAGE + "&offset=" + from;
+      const res = await this.req(url, { headers: this.headers() });
+      if (!res.ok) throw new Error("HTTP " + res.status);
+      const rows = await res.json();
+      out = out.concat(rows);
+      if (rows.length < PAGE || out.length >= MAX) break;
+      from += PAGE;
+      this.setState({ statusText: "Reading the catalogue\u2026 " + out.length.toLocaleString() + " products", statusKind: "info" });
+    }
+    return out;
+  }
+
+  // ---- draft ----
+  blankDraft() {
+    return {
+      id: null, title: "", caption: "", event: "", published: false, date: "",
+      intro: "", howto: "", picks: [], content: {}
+    };
+  }
+
+  draftFrom(row) {
+    const c = row.content || {};
+    const intro = Array.isArray(c.intro) ? c.intro : (c.intro ? [c.intro] : []);
+    return {
+      id: row.id,
+      title: this.decode(row.title || ""),
+      caption: this.decode(row.caption || c.subtitle || ""),
+      event: this.decode(row.event_name || ""),
+      published: !!row.published,
+      date: row.published_at ? String(row.published_at).slice(0, 10) : "",
+      intro: intro.join("\n\n"),
+      howto: (c.howto || []).join("\n"),
+      picks: (c.products || []).map(p => Object.assign({}, p)),
+      // every other key in content (sections, faq, anything the app adds later)
+      // rides along untouched so this editor cannot silently drop it
+      content: c
+    };
+  }
+
+  setDraft(patch) {
+    this.setState({ draft: Object.assign({}, this.state.draft, patch), dirty: true, statusText: "" });
+  }
+
+  openGuide(row) {
+    if (this.state.dirty) {
+      this.setState({ confirm: { kind: "switch", row: row } });
+      return;
+    }
+    this.setState({ draft: this.draftFrom(row), dirty: false, openPick: null, statusText: "", savedSlug: null, openId: row.id });
+    this.loadLive(((row.content || {}).products || []).map(p => p.amazon_asin));
+  }
+
+  newGuide() {
+    if (this.state.dirty) { this.setState({ confirm: { kind: "new" } }); return; }
+    this.setState({ draft: this.blankDraft(), dirty: false, openPick: null, statusText: "", savedSlug: null, openId: null });
+  }
+
+  closeDraft() {
+    if (this.state.dirty) { this.setState({ confirm: { kind: "close" } }); return; }
+    this.setState({ draft: null, dirty: false, openPick: null, statusText: "" });
+  }
+
+  setPick(i, key, val) {
+    const picks = (this.state.draft.picks || []).slice();
+    picks[i] = Object.assign({}, picks[i], { [key]: val });
+    this.setDraft({ picks: picks });
+  }
+
+  movePick(i, dir) {
+    const picks = (this.state.draft.picks || []).slice();
+    const j = i + dir;
+    if (j < 0 || j >= picks.length) return;
+    const t = picks[i]; picks[i] = picks[j]; picks[j] = t;
+    this.setState({ openPick: this.state.openPick === i ? j : this.state.openPick === j ? i : this.state.openPick });
+    this.setDraft({ picks: picks });
+  }
+
+  removePick(i) {
+    const picks = (this.state.draft.picks || []).slice();
+    picks.splice(i, 1);
+    this.setState({ openPick: null });
+    this.setDraft({ picks: picks });
+  }
+
+  pickFromProduct(p) {
+    const price = this.num(p.scraped_coupon_price) != null && this.num(p.scraped_coupon_price) > 0
+      ? this.num(p.scraped_coupon_price) : this.num(p.price);
+    return {
+      amazon_asin: (p.asin || p.amazon_asin || "").toString().trim().toUpperCase(),
+      title: this.decode(p.display_title || p.title || ""),
+      category: p.category || "",
+      price: price,
+      original_price: this.num(p.original_price),
+      image_url: p.image_url || "",
+      rating: p.rating || null,
+      // `review_count` is the column that actually holds the count; `reviews` is
+      // frequently 0. Both are written so either reader finds the real number.
+      reviews: this.reviewsOf(p),
+      review_count: this.reviewsOf(p),
+      description: "",
+      pricing_note: ""
+    };
+  }
+
+  addProduct(p) {
+    const asin = (p.asin || p.amazon_asin || "").toString().trim().toUpperCase();
+    const picks = (this.state.draft.picks || []).slice();
+    if (picks.some(x => (x.amazon_asin || "").toUpperCase() === asin)) return;
+    picks.push(this.pickFromProduct(p));
+    // came straight from the catalogue, so it is live by definition
+    if (asin) this.setState({ liveMap: Object.assign({}, this.state.liveMap, { [asin]: p }) });
+    this.setState({ openPick: picks.length - 1 });
+    this.setDraft({ picks: picks });
+  }
+
+  // ---- suggest: score the catalogue, propose a shortlist, let the human choose ----
+  // Four terms, weighted 40/25/20/15. Discount and sync recency are properties
+  // of a product on its own; coverage and price-tier spread depend on what is
+  // already in the shortlist, so the list is built greedily rather than sorted
+  // once — each addition re-prices every remaining candidate.
+  wordsOf(s) {
+    return this.decode(s || "").toLowerCase().replace(/[^a-z0-9 ]+/g, " ")
+      .split(/\s+/).filter(w => w.length > 2);
+  }
+
+  overlapOf(a, b) {
+    if (!a.length || !b.length) return 0;
+    const set = {}; b.forEach(w => { set[w] = 1; });
+    let n = 0; a.forEach(w => { if (set[w]) n++; });
+    return n / Math.max(a.length, b.length);
+  }
+
+  // <24h old = 1.0, straight line to 0 at 14 days, never synced = 0
+  recencyOf(p) {
+    const t = p.last_price_sync ? Date.parse(p.last_price_sync) : NaN;
+    if (!t || isNaN(t)) return 0;
+    const days = (Date.now() - t) / 86400000;
+    if (days <= 1) return 1;
+    if (days >= 14) return 0;
+    return 1 - (days - 1) / 13;
+  }
+
+  scoreShortlist(rows, want) {
+    if (!rows.length) return [];
+    const prices = rows.map(p => this.num(p.price)).filter(v => v != null).sort((a, b) => a - b);
+    const cuts = [prices[Math.floor(prices.length / 3)], prices[Math.floor(prices.length * 2 / 3)]];
+    const cand = rows.map(p => {
+      const price = this.num(p.price);
+      const disc = Math.min(1, this.discountOf(p) / 50);
+      const rec = this.recencyOf(p);
+      return {
+        p: p, disc: disc, rec: rec, statik: disc * 40 + rec * 25,
+        words: this.wordsOf(p.display_title || p.title),
+        cat: (p.category || "\u2014").toLowerCase(),
+        tier: price == null ? 1 : price <= cuts[0] ? 0 : price <= cuts[1] ? 1 : 2
+      };
+    }).sort((a, b) => b.statik - a.statik)
+      // the greedy pass is O(want \u00d7 pool); the top 120 by the static terms is
+      // far more than 30 picks can ever need, and keeps a 20k-row pool instant
+      .slice(0, 120);
+    const out = [], catN = {}, tierN = [0, 0, 0];
+    while (out.length < want) {
+      let best = null, bestScore = -1, bestCov = 0, bestTier = 0;
+      for (let i = 0; i < cand.length; i++) {
+        const c = cand[i];
+        if (c.taken) continue;
+        let cov = 1 / ((catN[c.cat] || 0) + 1);
+        for (let j = 0; j < out.length; j++) {
+          if (this.overlapOf(c.words, out[j].words) >= 0.8) { cov = 0; break; }
+        }
+        const tier = 1 / (tierN[c.tier] + 1);
+        const score = c.statik + cov * 20 + tier * 15;
+        if (score > bestScore) { bestScore = score; best = c; bestCov = cov; bestTier = tier; }
+      }
+      if (!best) break;
+      best.taken = true;
+      best.score = Math.round(bestScore);
+      best.cov = bestCov; best.tierScore = bestTier;
+      catN[best.cat] = (catN[best.cat] || 0) + 1;
+      tierN[best.tier]++;
+      out.push(best);
+    }
+    return out;
+  }
+
+  async suggestPicks() {
+    const topic = (this.state.sgTopic || "").trim();
+    const cat = this.state.sgCat;
+    const want = Math.max(5, Math.min(30, this.num(this.state.sgCount) || 20));
+    this.setState({ sgBusy: true, sgErr: "", sgNote: "", statusText: "Reading the catalogue\u2026", statusKind: "info" });
+    let rows = [];
+    try { rows = await this.fetchPool(cat); }
+    catch (e) {
+      this.setState({ sgBusy: false, statusText: "",
+        sgErr: "Could not read the catalogue \u2014 " + (e && e.message ? e.message : "network error") + "." });
+      return;
+    }
+    const maxPrice = this.num(this.state.sgMax);
+    const have = (this.state.draft.picks || []).map(p => (p.amazon_asin || "").toUpperCase());
+    let pool = rows
+      .filter(p => this.num(p.price) != null)
+      .filter(p => maxPrice == null || this.num(p.price) <= maxPrice)
+      .filter(p => have.indexOf((p.asin || p.amazon_asin || "").toString().toUpperCase()) === -1);
+    let note = "";
+    const kw = this.wordsOf(topic);
+    if (kw.length) {
+      const hit = pool.filter(p => {
+        const hay = (this.decode(p.display_title || p.title || "") + " " + (p.category || "")).toLowerCase();
+        return kw.some(w => hay.indexOf(w) > -1);
+      });
+      // a topic that matches almost nothing would starve the ranking, so it is
+      // treated as a hint and dropped rather than returning three products
+      if (hit.length >= want) { pool = hit; note = hit.length.toLocaleString() + " products match the topic."; }
+      else note = "Only " + hit.length + " product" + (hit.length === 1 ? "" : "s") +
+        " matched those words, so the topic was ignored and the whole" + (cat ? " category" : " catalogue") + " was ranked.";
+    }
+    const ranked = this.scoreShortlist(pool, want);
+    const sel = {};
+    const seedCount = Math.max(1, Math.min(ranked.length, this.props.pickCount || 8));
+    ranked.slice(0, seedCount).forEach(c => {
+      const a = (c.p.asin || c.p.amazon_asin || "").toString().trim().toUpperCase();
+      if (a) sel[a] = true;
+    });
+    this.setState({
+      sgBusy: false, sgRows: ranked, sgSel: sel, statusText: "",
+      sgNote: ranked.length
+        ? note + (note ? " " : "") + "Top " + seedCount + " pre-ticked \u2014 change the selection, then add."
+        : "Nothing in the catalogue matches that filter."
+    });
+  }
+
+  // sorting reorders sgRows itself, not just the view, so "Add selected" always
+  // adds in the order the admin is looking at
+  SORT_KEYS = {
+    score: c => c.score,
+    title: c => this.decode(c.p.display_title || c.p.title || "").toLowerCase(),
+    price: c => this.num(c.p.price),
+    was: c => this.num(c.p.original_price),
+    off: c => this.discountOf(c.p),
+    cat: c => (c.p.category || "").toLowerCase(),
+    asin: c => (c.p.asin || c.p.amazon_asin || "").toString().toUpperCase(),
+    sync: c => (c.p.last_price_sync ? Date.parse(c.p.last_price_sync) : 0)
+  };
+
+  sortSuggest(key) {
+    if (!this.SORT_KEYS[key]) return;
+    const textual = key === "title" || key === "cat" || key === "asin";
+    const dir = this.state.sgSort === key ? -this.state.sgDir : (textual ? 1 : -1);
+    const get = this.SORT_KEYS[key];
+    const rows = (this.state.sgRows || []).slice().sort((a, b) => {
+      const x = get(a), y = get(b);
+      // nulls last whichever way the column is pointing
+      if (x == null && y == null) return 0;
+      if (x == null) return 1;
+      if (y == null) return -1;
+      if (x < y) return -dir;
+      if (x > y) return dir;
+      return b.score - a.score;
+    });
+    this.setState({ sgRows: rows, sgSort: key, sgDir: dir });
+  }
+
+  // Renders the draft in memory, not the saved row, so unsaved edits show and a
+  // guide can be read end to end before it is ever published. Gaps are called
+  // out rather than hidden \u2014 the point of looking is to find them.
+  buildPreview() {
+    const d = this.state.draft || {};
+    const picks = d.picks || [];
+    const stamp = [];
+    (picks).forEach(p => { const a = (p.amazon_asin || "").toUpperCase(); if (this.state.liveMap[a]) stamp.push(a); });
+    return {
+      kicker: (d.event || "").trim() || "Buying guide",
+      title: (d.title || "").trim() || "Untitled guide",
+      caption: (d.caption || "").trim(),
+      hasCaption: !!(d.caption || "").trim(),
+      date: d.date ? this.when(d.date + "T12:00:00") : "no date set",
+      count: picks.length + (picks.length === 1 ? " pick" : " picks"),
+      state: d.published ? "Live on the site" : "Draft \u2014 not on the site",
+      stateStyle: "font-family:var(--font-heading);font-weight:700;font-size:10px;letter-spacing:.1em;" +
+        "text-transform:uppercase;padding:5px 9px;border:1px solid var(--color-" +
+        (d.published ? "text);background:var(--color-text);color:var(--color-bg)" : "accent);color:var(--color-accent-700)"),
+      intro: (d.intro || "").split(/\n\s*\n/).map(s => s.trim()).filter(Boolean),
+      hasIntro: !!(d.intro || "").trim(),
+      noIntro: !(d.intro || "").trim(),
+      noPicks: picks.length === 0,
+      howto: (d.howto || "").split("\n").map(s => s.trim()).filter(Boolean)
+        .map((t, i) => ({ n: String(i + 1).padStart(2, "0"), text: t })),
+      hasHowto: !!(d.howto || "").trim(),
+      hasPicks: picks.length > 0,
+      picks: picks.map((p, i) => {
+        const price = this.num(p.price), was = this.num(p.original_price);
+        const off = (price != null && was != null && was > price) ? Math.round((1 - price / was) * 100) : 0;
+        const asin = (p.amazon_asin || "").trim().toUpperCase();
+        return {
+          n: String(i + 1).padStart(2, "0"),
+          cat: (p.category || "Uncategorised"),
+          title: (p.title || "").trim() || "(untitled)",
+          price: price != null ? this.money(price) : "no price",
+          was: (was != null && price != null && was > price) ? this.money(was) : "",
+          off: off ? off + "% off" : "",
+          img: p.image_url || "",
+          hasImg: !!p.image_url,
+          noImg: !p.image_url,
+          url: asin ? "https://www.amazon.com/dp/" + asin : "#",
+          description: (p.description || "").trim(),
+          hasDesc: !!(p.description || "").trim(),
+          noDesc: !(p.description || "").trim(),
+          note: (p.pricing_note || "").trim(),
+          hasNote: !!(p.pricing_note || "").trim()
+        };
+      })
+    };
+  }
+
+  toggleSuggest(asin) {
+    const sel = Object.assign({}, this.state.sgSel);
+    if (sel[asin]) delete sel[asin]; else sel[asin] = true;
+    this.setState({ sgSel: sel });
+  }
+
+  addSuggested() {
+    const rows = this.state.sgRows || [];
+    const sel = this.state.sgSel || {};
+    const chosen = rows.filter(c => sel[(c.p.asin || c.p.amazon_asin || "").toString().trim().toUpperCase()]);
+    if (!chosen.length) { this.setState({ sgNote: "Tick at least one product first." }); return; }
+    const picks = (this.state.draft.picks || []).slice();
+    const have = picks.map(p => (p.amazon_asin || "").toUpperCase());
+    const seed = {};
+    const added = [];
+    chosen.forEach(c => {
+      const a = (c.p.asin || c.p.amazon_asin || "").toString().trim().toUpperCase();
+      if (!a || have.indexOf(a) > -1) return;
+      seed[a] = c.p;
+      added.push(this.pickFromProduct(c.p));
+    });
+    if (!added.length) { this.setState({ sgNote: "Those are already in the guide." }); return; }
+    this.setState({
+      draft: Object.assign({}, this.state.draft, { picks: picks.concat(added) }),
+      liveMap: Object.assign({}, this.state.liveMap, seed),
+      dirty: true, openPick: null, sgRows: null, sgSel: {}, sgNote: "",
+      statusText: "Added " + added.length + (added.length === 1 ? " pick" : " picks") +
+        " in ranked order \u2014 write the notes, then save.",
+      statusKind: "ok"
+    });
+  }
+
+  // The rule fills the list; the write-ups are still yours. Existing picks are
+  // kept and only topped up, so a hand-built list is never wiped by a refill.
+  async autoFill() {
+    const cat = this.state.afCat;
+    const minDisc = this.num(this.state.afDisc) || 0;
+    const want = Math.max(1, Math.min(30, this.num(this.state.afCount) || this.props.pickCount || 8));
+    const picks = (this.state.draft.picks || []).slice();
+    const have = picks.map(p => (p.amazon_asin || "").toUpperCase());
+    let rows = [];
+    this.setState({ filling: true, statusText: "Reading the catalogue\u2026", statusKind: "info" });
+    try { rows = await this.fetchPool(cat); }
+    catch (e) {
+      this.setState({ filling: false, statusText: "Could not read the catalogue \u2014 " + (e && e.message ? e.message : "network error") + ".", statusKind: "error" });
+      return;
+    }
+    this.setState({ filling: false });
+    const maxPrice = this.num(this.state.afMax);
+    const pool = rows
+      .filter(p => this.discountOf(p) >= minDisc)
+      .filter(p => this.num(p.price) != null)
+      .filter(p => maxPrice == null || this.num(p.price) <= maxPrice)
+      .filter(p => have.indexOf((p.asin || p.amazon_asin || "").toString().toUpperCase()) === -1)
+      .sort((a, b) => this.discountOf(b) - this.discountOf(a));
+    const room = want - picks.length;
+    if (room <= 0) {
+      this.setState({ statusText: "Already at " + picks.length + " picks \u2014 raise \u201cHow many\u201d or remove one first.", statusKind: "info" });
+      return;
+    }
+    const added = pool.slice(0, room).map(p => this.pickFromProduct(p));
+    // fetched live, so they are known-live: seed the map rather than re-asking
+    const seed = {};
+    pool.slice(0, room).forEach(p => {
+      const a = (p.asin || p.amazon_asin || "").toString().trim().toUpperCase();
+      if (a) seed[a] = p;
+    });
+    if (added.length) this.setState({ liveMap: Object.assign({}, this.state.liveMap, seed) });
+    if (!added.length) {
+      this.setState({ statusText: "Nothing in the catalogue matches that" +
+        [cat ? " category" : "", minDisc ? " discount" : "", maxPrice != null ? " price cap" : ""].filter(Boolean).join(" and") + ".",
+        statusKind: "info" });
+      return;
+    }
+    this.setState({
+      draft: Object.assign({}, this.state.draft, { picks: picks.concat(added) }),
+      dirty: true, openPick: null,
+      statusText: "Added " + added.length + (added.length === 1 ? " pick" : " picks") + " \u2014 write the notes, then save.",
+      statusKind: "ok"
+    });
+  }
+
+  // ---- AI drafting ----
+  // Two routes, one call site. Inside the design tool the built-in helper
+  // answers; on the deployed site that helper does not exist, so the same
+  // prompt goes to a Supabase function that holds the Anthropic key
+  // server-side (never ship a key into this page). Whichever answers, the
+  // draft lands in the field as editable text and nothing is saved until you
+  // press Save.
+  async askClaude(prompt, maxTokens) {
+    const sys = "You write for MistryDeals, a US deals site. Plain, specific, unhyped US English \u2014 " +
+      "US spelling, and prices in US dollars only: never pounds, euros or any other currency. " +
+      "Never invent specifications, prices, dates, review counts or awards \u2014 use only the facts given. " +
+      "No emoji, no markdown, no headings, no bullet characters, no preamble: return only the requested copy.";
+    if (window.claude && window.claude.complete) {
+      return await window.claude.complete({
+        system: sys, max_tokens: maxTokens || 700,
+        messages: [{ role: "user", content: prompt }]
+      });
+    }
+    const res = await this.req(BASE + "/functions/v1/draft-guide-copy", {
+      method: "POST", headers: this.headers(),
+      body: JSON.stringify({ system: sys, prompt: prompt, max_tokens: maxTokens || 700 })
+    });
+    if (!res.ok) {
+      let why = ""; try { const j = await res.json(); why = j.error || j.message || ""; } catch (e) {}
+      throw new Error(res.status === 404
+        ? "the draft-guide-copy function is not deployed yet"
+        : "HTTP " + res.status + (why ? " \u2014 " + why : ""));
+    }
+    const j = await res.json();
+    return j.text || j.completion || "";
+  }
+
+  clean(s) {
+    return String(s || "").trim()
+      .replace(/^["'\u201c\u2018]+|["'\u201d\u2019]+$/g, "")
+      .replace(/^(?:#+\s*|\d+[.)]\s*|[-*\u2022]\s*)/gm, "")
+      .trim();
+  }
+
+  // the picks are the guide's only source of truth, so every prompt carries them
+  picksContext() {
+    const d = this.state.draft || {};
+    const lines = (d.picks || []).map((p, i) => {
+      const price = this.num(p.price), was = this.num(p.original_price);
+      const off = (price != null && was != null && was > price) ? Math.round((1 - price / was) * 100) : null;
+      return (i + 1) + ". " + (p.title || "untitled") +
+        (p.category ? " [" + p.category + "]" : "") +
+        (price != null ? " \u2014 " + this.money(price) : "") +
+        (was != null && off ? " (was " + this.money(was) + ", " + off + "% off)" : "");
+    });
+    return "Guide title: " + (d.title || "(untitled)") + "\n" +
+      (d.event ? "Occasion: " + d.event + "\n" : "") +
+      (lines.length ? "The picks, in order:\n" + lines.join("\n") : "No picks chosen yet.");
+  }
+
+  async runAi(key, prompt, maxTokens, apply) {
+    if (this.state.aiBusy) return;
+    this.setState({ aiBusy: key, statusText: "Drafting\u2026", statusKind: "info" });
+    try {
+      const out = await this.askClaude(prompt, maxTokens);
+      const text = this.clean(out);
+      if (!text) { this.setState({ aiBusy: null, statusText: "The model returned nothing \u2014 try again.", statusKind: "error" }); return; }
+      apply(text);
+      this.setState({ aiBusy: null, statusText: "Drafted \u2014 read it, edit it, then save.", statusKind: "ok" });
+    } catch (e) {
+      this.setState({ aiBusy: null, statusText: "Could not draft \u2014 " + (e && e.message ? e.message : "network error") + ".", statusKind: "error" });
+    }
+  }
+
+  aiCaption() {
+    this.runAi("caption",
+      this.picksContext() + "\n\nWrite one subtitle line for this guide: at most 90 characters, no full stop, " +
+      "saying who the guide is for or what it covers. Return the line only.", 200,
+      t => this.setDraft({ caption: t.split("\n")[0].slice(0, 140) }));
+  }
+
+  aiIntro() {
+    this.runAi("intro",
+      this.picksContext() + "\n\nWrite the intro for this guide: exactly two paragraphs separated by one blank line, " +
+      "about 45 words each. The first says what the guide covers and who it is for; the second says how the picks were " +
+      "chosen (real discounts on the products listed, verified prices). Do not list the products. Do not quote prices.", 500,
+      t => this.setDraft({ intro: t }));
+  }
+
+  aiHowto() {
+    this.runAi("howto",
+      this.picksContext() + "\n\nWrite four short buying tips for this category \u2014 one per line, no numbering, " +
+      "at most 18 words each, each a concrete thing to check or avoid when buying. Generic price advice is not useful; " +
+      "be specific to what these products are.", 400,
+      t => this.setDraft({ howto: t.split("\n").map(l => this.clean(l)).filter(Boolean).slice(0, 6).join("\n") }));
+  }
+
+  aiPick(i) {
+    const p = (this.state.draft.picks || [])[i];
+    if (!p) return;
+    const price = this.num(p.price), was = this.num(p.original_price);
+    const off = (price != null && was != null && was > price) ? Math.round((1 - price / was) * 100) : null;
+    this.runAi("pick" + i,
+      "Guide: " + (this.state.draft.title || "(untitled)") + "\n" +
+      "This pick: " + (p.title || "untitled") + (p.category ? "\nCategory: " + p.category : "") +
+      (price != null ? "\nPrice now: " + this.money(price) : "") +
+      (was != null ? "\nUsual price: " + this.money(was) : "") +
+      (off ? "\nDiscount: " + off + "%" : "") +
+      "\n\nWrite two or three sentences on why this made the list: what it is good for and who should buy it. " +
+      "Work only from the product name and category \u2014 do not invent specifications, battery life, dimensions or reviews. " +
+      "Do not repeat the price.", 400,
+      t => {
+        const picks = (this.state.draft.picks || []).slice();
+        picks[i] = Object.assign({}, picks[i], { description: t });
+        this.setDraft({ picks: picks });
+      });
+  }
+
+  // sequential on purpose: the helper is rate-limited per minute, and a failed
+  // pick mid-run leaves every earlier write-up in place
+  async aiAllPicks() {
+    const picks = (this.state.draft.picks || []);
+    const todo = picks.map((p, i) => i).filter(i => !(picks[i].description || "").trim());
+    if (!todo.length) { this.setState({ statusText: "Every pick already has a write-up.", statusKind: "info" }); return; }
+    this.setState({ aiBusy: "all", statusText: "Drafting " + todo.length + " write-ups\u2026", statusKind: "info" });
+    let done = 0;
+    for (const i of todo) {
+      const p = (this.state.draft.picks || [])[i];
+      if (!p) continue;
+      const price = this.num(p.price), was = this.num(p.original_price);
+      const off = (price != null && was != null && was > price) ? Math.round((1 - price / was) * 100) : null;
+      try {
+        const out = await this.askClaude(
+          "Guide: " + (this.state.draft.title || "(untitled)") + "\nThis pick: " + (p.title || "untitled") +
+          (p.category ? "\nCategory: " + p.category : "") + (off ? "\nDiscount: " + off + "%" : "") +
+          "\n\nWrite two or three sentences on why this made the list: what it is good for and who should buy it. " +
+          "Work only from the product name and category \u2014 invent no specifications or reviews. Do not repeat the price.", 400);
+        const text = this.clean(out);
+        if (!text) continue;
+        const picksNow = (this.state.draft.picks || []).slice();
+        picksNow[i] = Object.assign({}, picksNow[i], { description: text });
+        this.setState({ draft: Object.assign({}, this.state.draft, { picks: picksNow }), dirty: true });
+        done++;
+        this.setState({ statusText: "Drafting write-ups\u2026 " + done + " of " + todo.length, statusKind: "info" });
+      } catch (e) {
+        this.setState({ aiBusy: null, statusText: "Stopped after " + done + " \u2014 " + (e && e.message ? e.message : "network error") + ".", statusKind: "error" });
+        return;
+      }
+    }
+    this.setState({ aiBusy: null, statusText: "Drafted " + done + " write-up" + (done === 1 ? "" : "s") + " \u2014 read them before saving.", statusKind: "ok" });
+  }
+
+  aiBtn(key, label) {
+    const busy = this.state.aiBusy === key;
+    const off = !!this.state.aiBusy && !busy;
+    return {
+      label: busy ? "Drafting\u2026" : label,
+      style: "font:inherit;font-family:var(--font-heading);font-weight:700;font-size:9.5px;letter-spacing:.08em;text-transform:uppercase;" +
+        "padding:5px 8px;cursor:" + (off ? "default" : "pointer") + ";border:1px solid var(--color-divider);background:none;" +
+        "color:var(--color-" + (busy ? "accent-700" : "neutral-700") + ");opacity:" + (off ? ".45" : "1") + ";white-space:nowrap"
+    };
+  }
+
+  // A pick stores a snapshot of the price, so a guide drifts every time the
+  // catalogue re-syncs. This finds the live row by ASIN and re-reads only the
+  // machine fields — the title, category and write-ups are yours and stay put.
+  liveFor(pick) {
+    const asin = (pick.amazon_asin || "").toString().trim().toUpperCase();
+    if (!asin) return null;
+    // undefined = not looked up yet, false = looked up and genuinely not live
+    const hit = this.state.liveMap[asin];
+    return hit || null;
+  }
+
+  // only after the lookup has actually answered for this ASIN
+  isDead(pick) {
+    const asin = (pick.amazon_asin || "").toString().trim().toUpperCase();
+    return !!asin && this.state.liveMap[asin] === false;
+  }
+
+  livePrice(p) {
+    const cp = this.num(p.scraped_coupon_price);
+    return cp != null && cp > 0 ? cp : this.num(p.price);
+  }
+
+  // what a refresh would change, so the button can say so before it is pressed
+  driftOf(pick) {
+    const live = this.liveFor(pick);
+    if (!live) return null;
+    const now = this.livePrice(live), was = this.num(live.original_price);
+    const changed = now !== this.num(pick.price) || was !== this.num(pick.original_price);
+    return changed ? { now: now, was: was } : null;
+  }
+
+  async refreshPrices() {
+    // re-read the picks from the catalogue first, so a refresh reflects the
+    // database now rather than whatever was cached when the guide was opened
+    this.setState({ statusText: "Checking the catalogue\u2026", statusKind: "info" });
+    const asins = (this.state.draft.picks || []).map(p => p.amazon_asin);
+    this.setState({ liveMap: (() => {
+      const m = Object.assign({}, this.state.liveMap);
+      asins.forEach(a => { delete m[String(a || "").trim().toUpperCase()]; });
+      return m;
+    })() });
+    await this.loadLive(asins);
+    const picks = (this.state.draft.picks || []).slice();
+    let moved = 0, missing = 0, meta = 0;
+    const next = picks.map(p => {
+      const live = this.liveFor(p);
+      if (!live) { if (this.isDead(p)) missing++; return p; }
+      const d = this.driftOf(p);
+      const liveReviews = this.reviewsOf(live);
+      // a rating count can arrive long after the price settles, so it is
+      // refreshed even when the price itself has not moved
+      const metaStale = (live.rating || null) !== (p.rating || null) || liveReviews !== this.reviewsOf(p);
+      if (!d && !metaStale) return p;
+      if (d) moved++; else meta++;
+      return Object.assign({}, p, {
+        price: d ? d.now : p.price, original_price: d ? d.was : p.original_price,
+        image_url: live.image_url || p.image_url || "",
+        rating: live.rating || null,
+        reviews: liveReviews, review_count: liveReviews
+      });
+    });
+    if (!moved && meta) {
+      this.setState({
+        draft: Object.assign({}, this.state.draft, { picks: next }), dirty: true,
+        statusText: "Prices are current. Refreshed the star rating and rating count on " + meta +
+          (meta === 1 ? " pick" : " picks") + " \u2014 save to publish that.",
+        statusKind: "ok"
+      });
+      return;
+    }
+    if (!moved) {
+      this.setState({ statusText: missing
+        ? "Every price is current. " + missing + (missing === 1 ? " pick is" : " picks are") + " no longer in the live catalogue \u2014 those are flagged below."
+        : "Every price already matches the catalogue.", statusKind: "info" });
+      return;
+    }
+    this.setState({
+      draft: Object.assign({}, this.state.draft, { picks: next }), dirty: true,
+      statusText: "Updated " + moved + (moved === 1 ? " price" : " prices") + " from the catalogue" +
+        (meta ? " and the rating count on " + meta + " more" : "") +
+        (missing ? ", " + missing + " pick" + (missing === 1 ? "" : "s") + " not found" : "") + " \u2014 save to publish the change.",
+      statusKind: "ok"
+    });
+  }
+
+  async save() {
+    const d = this.state.draft;
+    if (!d) return;
+    const title = (d.title || "").trim();
+    if (!title) { this.setState({ statusText: "A guide needs a title.", statusKind: "error" }); return; }
+    if (!(d.picks || []).length) { this.setState({ statusText: "A guide needs at least one pick.", statusKind: "error" }); return; }
+    const bad = (d.picks || []).findIndex(p => !(p.title || "").trim() || !(p.amazon_asin || "").trim());
+    if (bad > -1) {
+      this.setState({ openPick: bad, statusText: "Pick " + (bad + 1) + " needs a title and an ASIN.", statusKind: "error" });
+      return;
+    }
+    // hard stop: a pick with no write-up renders as a bare price on the site,
+    // which is the one thing a buying guide is not
+    const blank = (d.picks || []).map((p, i) => (p.description || "").trim() ? -1 : i).filter(i => i > -1);
+    if (blank.length) {
+      this.setState({
+        openPick: blank[0],
+        statusText: blank.length === 1
+          ? "Pick " + (blank[0] + 1) + " has no write-up \u2014 every pick needs one before this can be saved."
+          : blank.length + " picks have no write-up (" + blank.map(i => i + 1).join(", ") + ") \u2014 every pick needs one before this can be saved.",
+        statusKind: "error"
+      });
+      return;
+    }
+    // a published guide with no date sorts last on the site, so publishing
+    // without one stamps today rather than leaving the row undated
+    const iso = d.date ? new Date(d.date + "T12:00:00").toISOString() : (d.published ? new Date().toISOString() : null);
+    const content = Object.assign({}, d.content || {}, {
+      subtitle: (d.caption || "").trim(),
+      intro: (d.intro || "").split(/\n\s*\n/).map(s => s.trim()).filter(Boolean),
+      howto: (d.howto || "").split("\n").map(s => s.trim()).filter(Boolean),
+      products: (d.picks || []).map(p => ({
+        amazon_asin: (p.amazon_asin || "").trim().toUpperCase(),
+        title: (p.title || "").trim(),
+        category: (p.category || "").trim(),
+        price: this.num(p.price),
+        original_price: this.num(p.original_price),
+        image_url: (p.image_url || "").trim() || null,
+        rating: p.rating || null,
+        reviews: this.reviewsOf(p),
+        review_count: this.reviewsOf(p),
+        description: (p.description || "").trim(),
+        pricing_note: (p.pricing_note || "").trim()
+      }))
+    });
+    const body = {
+      title: title,
+      caption: (d.caption || "").trim() || null,
+      event_name: (d.event || "").trim() || null,
+      published: !!d.published,
+      published_at: iso,
+      content: content
+    };
+    this.setState({ saving: true, statusText: "Saving\u2026", statusKind: "info" });
+    try {
+      const url = d.id ? GUIDES + "?id=eq." + encodeURIComponent(d.id) : GUIDES;
+      const res = await this.req(url, {
+        method: d.id ? "PATCH" : "POST",
+        headers: this.headers({ Prefer: "return=representation" }),
+        body: JSON.stringify(body)
+      });
+      if (!res.ok) {
+        let why = ""; try { const j = await res.json(); why = j.message || j.hint || ""; } catch (e) {}
+        this.setState({ saving: false, statusText: "Save failed (" + res.status + ")" + (why ? " \u2014 " + why : ""), statusKind: "error" });
+        return;
+      }
+      let rows = []; try { rows = await res.json(); } catch (e) {}
+      const row = Array.isArray(rows) ? rows[0] : rows;
+      this.setState({
+        saving: false, dirty: false,
+        draft: row && row.id ? this.draftFrom(row) : this.state.draft,
+        savedSlug: !!(d.published),
+        statusText: d.published ? "Saved and live on the site." : "Saved as a draft \u2014 not on the site yet.",
+        statusKind: "ok"
+      });
+      this.loadGuides();
+    } catch (e) {
+      this.setState({ saving: false, statusText: "Save failed \u2014 network error.", statusKind: "error" });
+    }
+  }
+
+  // One-click publish, but never past the rule save() enforces: most rows in the
+  // calendar are empty placeholders, and publishing one would put a titled page
+  // with no picks on the live site.
+  async togglePublished(row) {
+    const next = !row.published;
+    if (next && !(((row.content || {}).products || []).length)) {
+      this.setState({
+        statusText: "\u201c" + this.decode(row.title || "this guide") + "\u201d has no picks yet \u2014 open it, fill the picks, then publish.",
+        statusKind: "error"
+      });
+      if (!this.state.dirty) this.openGuide(row);
+      return;
+    }
+    this.setState({ busyId: row.id });
+    const body = { published: next };
+    if (next && !row.published_at) body.published_at = new Date().toISOString();
+    try {
+      const res = await this.req(GUIDES + "?id=eq." + encodeURIComponent(row.id), {
+        method: "PATCH", headers: this.headers({ Prefer: "return=representation" }), body: JSON.stringify(body)
+      });
+      this.setState({ busyId: null });
+      if (!res.ok) {
+        let why = ""; try { const j = await res.json(); why = j.message || ""; } catch (e) {}
+        this.setState({ statusText: "Could not " + (next ? "publish" : "unpublish") + " (" + res.status + ")" + (why ? " \u2014 " + why : ""), statusKind: "error" });
+        return;
+      }
+      this.loadGuides();
+      if (this.state.draft && this.state.draft.id === row.id && !this.state.dirty) {
+        this.setState({ draft: Object.assign({}, this.state.draft, { published: next }) });
+      }
+    } catch (e) { this.setState({ busyId: null, statusText: "Network error.", statusKind: "error" }); }
+  }
+
+  async deleteGuide() {
+    const d = this.state.draft;
+    if (!d || !d.id) return;
+    this.setState({ confirm: null, saving: true, statusText: "Deleting\u2026", statusKind: "info" });
+    try {
+      const res = await this.req(GUIDES + "?id=eq." + encodeURIComponent(d.id), { method: "DELETE", headers: this.headers() });
+      if (!res.ok) { this.setState({ saving: false, statusText: "Delete failed (" + res.status + ").", statusKind: "error" }); return; }
+      this.setState({ saving: false, draft: null, dirty: false, statusText: "" });
+      this.loadGuides();
+    } catch (e) { this.setState({ saving: false, statusText: "Delete failed \u2014 network error.", statusKind: "error" }); }
+  }
+
+  adminHref(page) {
+    const deployed = {
+      catalogue: "/catalogue", dealqueue: "/dealqueue", carousel: "/carousel",
+      brands: "/brandrules", scrapes: "/scrapelog", reddit: "/redditposter", guides: "/buyingguides"
+    };
+    const onAdmin = /^\/(catalogue|dealqueue|carousel|brandrules|scrapelog|redditposter|buyingguides)/.test(location.pathname) ||
+      location.pathname.indexOf("/admin/") !== -1;
+    if (onAdmin) return deployed[page] || "/catalogue";
+    const local = {
+      catalogue: "MistryDeals Admin v2.dc.html", dealqueue: "MistryDeals Deal Queue.dc.html",
+      carousel: "MistryDeals Carousel.dc.html", brands: "MistryDeals Deal Queue.dc.html#brands",
+      scrapes: "MistryDeals Deal Queue.dc.html#scrapes", reddit: "MistryDeals Reddit Poster.dc.html",
+      guides: "MistryDeals Buying Guides.dc.html"
+    };
+    return local[page] || local.catalogue;
+  }
+
+  onAdmin() {
+    return /^\/(catalogue|dealqueue|carousel|brandrules|scrapelog|redditposter|buyingguides)/.test(location.pathname) ||
+      location.pathname.indexOf("/admin/") !== -1;
+  }
+
+  chip(label, on, pick) {
+    return {
+      label: label, pick: pick,
+      style: "font:inherit;font-family:var(--font-heading);font-weight:700;font-size:10px;letter-spacing:.08em;" +
+        "text-transform:uppercase;padding:8px 11px;min-height:38px;cursor:pointer;border:1px solid " +
+        (on ? "var(--color-accent)" : "var(--color-divider)") + ";background:" +
+        (on ? "var(--color-accent)" : "none") + ";color:" + (on ? "var(--color-bg)" : "var(--color-text)")
+    };
+  }
+
+  when(iso) {
+    if (!iso) return "no date";
+    const t = Date.parse(iso);
+    if (!t) return "no date";
+    return new Date(t).toLocaleDateString("en-US", { day: "numeric", month: "short", year: "numeric" });
+  }
+
+  renderVals() {
+    const navBase = "font:inherit;font-family:var(--font-heading);font-weight:700;font-size:11px;letter-spacing:.1em;" +
+      "text-transform:uppercase;text-decoration:none;padding:8px 12px;";
+    const menuBase = "font:inherit;font-family:var(--font-heading);font-weight:700;font-size:12px;letter-spacing:.08em;" +
+      "text-transform:uppercase;text-decoration:none;padding:13px 16px;min-height:44px;display:flex;align-items:center;color:var(--color-";
+    const d = this.state.draft;
+    const kind = this.state.statusKind;
+    const all = this.state.guides || [];
+    const q = (this.state.listQuery || "").trim().toLowerCase();
+    const tab = this.state.listTab || "All";
+    const shown = all.filter(g => {
+      if (tab === "Published" && !g.published) return false;
+      if (tab === "Drafts" && g.published) return false;
+      if (q && (this.decode(g.title || "") + " " + (g.event_name || "")).toLowerCase().indexOf(q) === -1) return false;
+      return true;
+    });
+    const cats = this.state.catNames || [];
+    const pickCount = (d && (d.picks || []).length) || 0;
+    const cf = this.state.confirm;
+    const introParas = d ? (d.intro || "").split(/\n\s*\n/).map(s => s.trim()).filter(Boolean).length : 0;
+    const howtoLines = d ? (d.howto || "").split("\n").map(s => s.trim()).filter(Boolean).length : 0;
+    const pq = (this.state.prodQuery || "").trim().toLowerCase();
+    const drifted = d ? (d.picks || []).filter(p => this.driftOf(p)).length : 0;
+
+    return {
+      verifying: this.state.verifying,
+      signedOut: !this.state.token && !this.state.verifying,
+      signedIn: !!this.state.token && !this.state.verifying,
+      isNarrow: !!this.state.narrow,
+      isWide: !this.state.narrow,
+      email: this.state.email,
+      onEmail: e => this.setState({ email: e.target.value }),
+      password: this.state.password,
+      onPassword: e => this.setState({ password: e.target.value }),
+      onSignIn: e => this.signIn(e),
+      signInLabel: this.state.signingIn ? "Signing in\u2026" : "Sign in",
+      authError: this.state.authError,
+      signOut: () => this.signOutNow(),
+      userEmail: this.state.user || "",
+      menuOpen: !!this.state.menuOpen,
+      openMenu: () => this.setState({ menuOpen: true }),
+      closeMenu: () => this.setState({ menuOpen: false }),
+      stop: e => e.stopPropagation(),
+      menuNav: [
+        { label: "Catalogue", href: this.adminHref("catalogue") },
+        { label: "Deal queue", href: this.adminHref("dealqueue") },
+        { label: "Carousel", href: this.adminHref("carousel") },
+        { label: "Brand rules", href: this.adminHref("brands") },
+        { label: "Scrape log", href: this.adminHref("scrapes") },
+        { label: "Reddit poster", href: this.adminHref("reddit") },
+        { label: "Buying guides", href: this.adminHref("guides"), here: true },
+        { label: "View site", href: this.onAdmin() ? "/" : "MistryDeals Site.dc.html" }
+      ].map(m => ({ label: m.label, href: m.href, style: menuBase + (m.here ? "accent-700)" : "text)") })),
+      navHere: navBase + "border:1px solid var(--color-text);background:var(--color-text);color:var(--color-bg);border-left:0",
+      navRest: navBase + "border:1px solid var(--color-divider);color:var(--color-text)",
+      hCatalogue: this.adminHref("catalogue"),
+      hQueue: this.adminHref("dealqueue"),
+      hCarousel: this.adminHref("carousel"),
+      hBrands: this.adminHref("brands"),
+      hScrapes: this.adminHref("scrapes"),
+      hReddit: this.adminHref("reddit"),
+      hSite: this.onAdmin() ? "/" : "MistryDeals Site.dc.html",
+
+      listCount: all.length ? all.filter(g => g.published).length + " live \u00b7 " + all.filter(g => !g.published).length + " drafts" : "Guides",
+      reloadGuides: () => { this.setState({ guides: null }); this.loadGuides(); },
+      newGuide: () => this.newGuide(),
+      listTabs: ["All", "Published", "Drafts"].map(t => this.chip(t, tab === t, () => this.setState({ listTab: t }))),
+      listQuery: this.state.listQuery,
+      onListQuery: e => this.setState({ listQuery: e.target.value }),
+      listLoading: this.state.guides == null && !this.state.listErr,
+      listErr: this.state.listErr,
+      listEmpty: !!(this.state.guides && this.state.guides.length && !shown.length),
+      guideList: shown.map(g => {
+        const on = d && d.id === g.id;
+        const gp = (g.content || {}).products || [];
+        const n = gp.length;
+        // flagged in the list too, so a stale live guide is visible without opening it
+        const stale = gp.filter(p => this.driftOf(p)).length;
+        return {
+          title: this.decode(g.title || "") || "(untitled)",
+          meta: [this.when(g.published_at), n + (n === 1 ? " pick" : " picks"), g.event_name || "",
+            stale ? stale + " price" + (stale === 1 ? "" : "s") + " moved" : ""].filter(Boolean).join("  \u00b7  "),
+          badge: g.published ? "Live" : "Draft",
+          badgeStyle: "font-family:var(--font-heading);font-weight:700;font-size:9px;letter-spacing:.08em;text-transform:uppercase;padding:3px 6px;" +
+            (g.published ? "background:var(--color-text);color:var(--color-bg)" : "border:1px solid var(--color-divider);color:var(--color-neutral-700)"),
+          toggleLabel: this.state.busyId === g.id ? "Working\u2026"
+            : g.published ? "Unpublish" : (n ? "Publish" : "Needs picks"),
+          toggleStyle: "font:inherit;font-family:var(--font-heading);font-weight:700;font-size:10px;letter-spacing:.08em;text-transform:uppercase;" +
+            "background:none;padding:6px 9px;cursor:pointer;white-space:nowrap;border:1px solid var(--color-divider);color:var(--color-" +
+            (!g.published && !n ? "neutral-600" : "text") + ")",
+          toggle: () => this.togglePublished(g),
+          open: () => this.openGuide(g),
+          wrapStyle: "border:1px solid " + (on ? "var(--color-text)" : "var(--color-divider)") + ";border-width:" + (on ? "2px" : "1px") + ";margin-bottom:8px",
+          rowStyle: "display:block;width:100%;text-align:left;font:inherit;background:none;border:0;padding:12px 8px 8px;cursor:pointer;color:var(--color-text)"
+        };
+      }),
+
+      noDraft: !d,
+      hasDraft: !!d,
+      emptyNote: all.length
+        ? (() => {
+          const live = all.filter(g => g.published).length;
+          const empty = all.filter(g => !g.published && !(((g.content || {}).products || []).length)).length;
+          return "There are " + all.length + " guides in the calendar and " + live + " are live. " +
+            (empty ? "The other " + empty + " are titles and dates only \u2014 no picks written yet, so each needs its picks filled before it can go live. " : "") +
+            "Open one and fill its picks from the catalogue, or start a new guide.";
+        })()
+        : "Start a new guide, set a category and a minimum discount, and the picks fill from the live catalogue.",
+
+      editHeading: d ? (d.id ? "Editing guide" : "New guide") : "",
+      dirtyLabel: this.state.dirty ? "Unsaved changes" : "",
+      dirtyStyle: "font-family:var(--font-heading);font-weight:700;font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:var(--color-accent-700);display:" +
+        (this.state.dirty ? "inline-block" : "none"),
+      save: () => this.save(),
+      saving: !!this.state.saving,
+      // the label names the outcome, not the verb: an unpublished guide saves as
+      // a draft you can come back to, which "Create guide" did not say
+      saveLabel: this.state.saving ? "Saving\u2026"
+        : (d && d.published ? (d.id ? "Save changes" : "Save and publish")
+          : (d && d.id ? "Save draft" : "Save as draft")),
+      closeDraft: () => this.closeDraft(),
+      canDelete: !!(d && d.id),
+      askDelete: () => this.setState({ confirm: { kind: "delete" } }),
+
+      statusText: this.state.statusText,
+      statusStyle: "margin-top:18px;padding:12px 14px;font-size:13px;line-height:1.45;border-left:3px solid var(--color-" +
+        (kind === "error" ? "accent" : kind === "ok" ? "text" : "divider") + ");color:var(--color-" +
+        (kind === "error" ? "accent-700" : "text") + ")",
+      previewHref: this.state.savedSlug ? (this.onAdmin() ? "/#/guides" : "MistryDeals Site.dc.html#/guides") : "",
+
+      previewOpen: !!this.state.previewOpen,
+      openPreview: () => this.setState({ previewOpen: true }),
+      closePreview: () => this.setState({ previewOpen: false }),
+      pv: this.state.previewOpen ? this.buildPreview() : {},
+
+      fTitle: d ? d.title : "",
+      titleStyle: d && !(d.title || "").trim()
+        ? "border:2px solid var(--color-accent);background:color-mix(in srgb, var(--color-accent) 8%, transparent)" : "",
+      onTitle: e => this.setDraft({ title: e.target.value }),
+      fCaption: d ? d.caption : "",
+      onCaption: e => this.setDraft({ caption: e.target.value }),
+      fEvent: d ? d.event : "",
+      onEvent: e => this.setDraft({ event: e.target.value }),
+      fIntro: d ? d.intro : "",
+      onIntro: e => this.setDraft({ intro: e.target.value }),
+      introNote: introParas ? introParas + (introParas === 1 ? " paragraph" : " paragraphs") : "Blank leaves the guide with no intro.",
+      fHowto: d ? d.howto : "",
+      onHowto: e => this.setDraft({ howto: e.target.value }),
+      howtoNote: howtoLines ? howtoLines + (howtoLines === 1 ? " tip" : " tips") : "Blank hides the how-to list.",
+
+      pubTabs: [["Draft", false], ["Published", true]].map(p =>
+        this.chip(p[0], !!(d && d.published) === p[1], () => this.setDraft({ published: p[1] }))),
+      pubNote: d && d.published
+        ? "Live: this guide appears on the site as soon as it is saved."
+        : "A draft is saved but stays off the site until you publish it.",
+      fDate: d ? d.date : "",
+      onDate: e => this.setDraft({ date: e.target.value }),
+      dateNote: d && d.date
+        ? "Guides sort newest first by this date."
+        : (d && d.published ? "Blank stamps today when you save." : "Set the date you want it dated."),
+
+      pickCountLabel: pickCount ? pickCount + (pickCount === 1 ? " pick" : " picks") : "No picks yet",
+      noPicks: !!(d && !pickCount),
+      writeGap: (() => {
+        if (!d || !pickCount) return "";
+        const n = (d.picks || []).filter(p => !(p.description || "").trim()).length;
+        return n ? n + (n === 1 ? " pick has" : " picks have") + " no write-up. Every pick needs one before the guide can be saved \u2014 draft them individually or use Draft missing write-ups." : "";
+      })(),
+
+      aiCaptionBtn: this.aiBtn("caption", "Draft"),
+      aiCaption: () => this.aiCaption(),
+      aiIntroBtn: this.aiBtn("intro", "Draft with AI"),
+      aiIntro: () => this.aiIntro(),
+      aiHowtoBtn: this.aiBtn("howto", "Draft with AI"),
+      aiHowto: () => this.aiHowto(),
+      aiAllBtn: this.aiBtn("all", "Draft missing write-ups"),
+      aiAllPicks: () => this.aiAllPicks(),
+
+      refreshPrices: () => this.refreshPrices(),
+      refreshLabel: drifted ? "Update " + drifted + (drifted === 1 ? " price" : " prices") : "Check prices",
+      refreshStyle: "font:inherit;font-family:var(--font-heading);font-weight:700;font-size:10px;letter-spacing:.08em;text-transform:uppercase;" +
+        "padding:8px 11px;min-height:38px;cursor:pointer;white-space:nowrap;border:1px solid " +
+        (drifted ? "var(--color-accent)" : "var(--color-divider)") + ";background:" + (drifted ? "var(--color-accent)" : "none") +
+        ";color:" + (drifted ? "var(--color-bg)" : "var(--color-neutral-700)"),
+
+      catOptions: [{ value: "", label: "Any category" }].concat(cats.map(c => ({ value: c, label: c }))),
+
+      sgTopic: this.state.sgTopic,
+      onSgTopic: e => this.setState({ sgTopic: e.target.value }),
+      sgCat: this.state.sgCat,
+      onSgCat: e => this.setState({ sgCat: e.target.value }),
+      sgMax: this.state.sgMax,
+      onSgMax: e => this.setState({ sgMax: e.target.value }),
+      sgCount: this.state.sgCount,
+      onSgCount: e => this.setState({ sgCount: e.target.value }),
+      suggestPicks: () => this.suggestPicks(),
+      suggestLabel: this.state.sgBusy ? "Scoring\u2026" : "Score the catalogue",
+      sgErr: this.state.sgErr,
+      sgNote: this.state.sgNote,
+      sgHasRows: !!(this.state.sgRows && this.state.sgRows.length),
+      addSuggested: () => this.addSuggested(),
+      addSuggestedLabel: "Add " + Object.keys(this.state.sgSel || {}).length + " selected \u2192",
+      clearSuggest: () => this.setState({ sgRows: null, sgSel: {}, sgNote: "" }),
+      // one slot, both directions: emptying the selection turns it into Select all
+      allLabel: Object.keys(this.state.sgSel || {}).length ? "Deselect all" : "Select all",
+      toggleAll: () => {
+        if (Object.keys(this.state.sgSel || {}).length) { this.setState({ sgSel: {} }); return; }
+        const sel = {};
+        (this.state.sgRows || []).forEach(c => {
+          const a = (c.p.asin || c.p.amazon_asin || "").toString().trim().toUpperCase();
+          if (a) sel[a] = true;
+        });
+        this.setState({ sgSel: sel });
+      },
+      sortCols: [
+        { key: "", label: "", align: "left", w: "34px" },
+        { key: "score", label: "Score", align: "right", w: "" },
+        { key: "title", label: "Title", align: "left", w: "" },
+        { key: "price", label: "Deal price", align: "right", w: "" },
+        { key: "was", label: "Original", align: "right", w: "" },
+        { key: "off", label: "Off", align: "right", w: "" },
+        { key: "cat", label: "Category", align: "left", w: "" },
+        { key: "asin", label: "ASIN", align: "right", w: "" },
+        { key: "sync", label: "Synced", align: "right", w: "" }
+      ].map(c => {
+        const active = c.key && this.state.sgSort === c.key;
+        return {
+          label: c.label + (active ? (this.state.sgDir === -1 ? "  \u2193" : "  \u2191") : ""),
+          sort: c.key ? () => this.sortSuggest(c.key) : () => {},
+          style: "padding:0;text-align:" + c.align + ";white-space:nowrap" + (c.w ? ";width:" + c.w : ""),
+          btnStyle: "font:inherit;font-family:inherit;font-weight:inherit;font-size:inherit;letter-spacing:inherit;" +
+            "text-transform:inherit;color:" + (active ? "var(--color-accent-700)" : "inherit") +
+            ";background:none;border:0;padding:9px 10px;width:100%;white-space:nowrap;text-align:" + c.align +
+            ";cursor:" + (c.key ? "pointer" : "default")
+        };
+      }),
+
+      suggestRows: (this.state.sgRows || []).map(c => {
+        const p = c.p;
+        const asin = (p.asin || p.amazon_asin || "").toString().trim().toUpperCase();
+        const on = !!(this.state.sgSel || {})[asin];
+        const off = this.discountOf(p);
+        const price = this.num(p.price), was = this.num(p.original_price);
+        const cell = "padding:9px 10px;font-size:12px;line-height:1.35;vertical-align:middle";
+        const numCell = cell + ";text-align:right;white-space:nowrap;font-variant-numeric:tabular-nums";
+        return {
+          score: c.score,
+          title: this.decode(p.display_title || p.title || "") || "(untitled)",
+          price: this.money(price),
+          was: (was != null && price != null && was > price) ? this.money(was) : "\u2014",
+          off: off ? off + "%" : "\u2014",
+          cat: p.category || "\u2014",
+          asin: asin || "\u2014",
+          synced: p.last_price_sync ? this.when(p.last_price_sync) : "never",
+          // the term breakdown that used to have its own column, kept as the
+          // row's hover title so the score stays auditable without the width
+          why: "Score " + c.score + " = discount " + Math.round(c.disc * 40) +
+            " + sync " + Math.round(c.rec * 25) + " + coverage " + Math.round(c.cov * 20) +
+            " + price tier " + Math.round(c.tierScore * 15),
+          mark: on ? "\u2715" : "",
+          toggle: () => this.toggleSuggest(asin),
+          rowStyle: "cursor:pointer;border-bottom:1px solid var(--color-divider);background:" +
+            (on ? "var(--color-accent-100)" : "transparent"),
+          boxCell: cell + ";width:34px",
+          boxStyle: "width:18px;height:18px;display:flex;align-items:center;justify-content:center;" +
+            "font-size:11px;border:1px solid " + (on ? "var(--color-accent)" : "var(--color-divider)") +
+            ";background:" + (on ? "var(--color-accent)" : "transparent") +
+            ";color:" + (on ? "var(--color-bg)" : "transparent"),
+          scoreCell: numCell + ";width:46px;font-family:var(--font-heading);font-weight:700;font-size:14px;color:var(--color-" +
+            (c.score >= 55 ? "accent-700" : "neutral-700") + ")",
+          titleCell: cell + ";max-width:340px;font-weight:600",
+          numCell: numCell,
+          offCell: numCell + (off >= 30 ? ";font-weight:700;color:var(--color-accent-700)" : ""),
+          catCell: cell + ";white-space:nowrap;color:var(--color-neutral-700)",
+          asinCell: numCell + ";font-size:11px;letter-spacing:.03em;color:var(--color-neutral-700)",
+          syncCell: numCell + ";font-weight:600;color:var(--color-" +
+            (p.last_price_sync ? "text" : "accent-700") + ")"
+        };
+      }),
+
+      afCat: this.state.afCat,
+      onAfCat: e => this.setState({ afCat: e.target.value }),
+      afDisc: this.state.afDisc,
+      onAfDisc: e => this.setState({ afDisc: e.target.value }),
+      afMax: this.state.afMax,
+      onAfMax: e => this.setState({ afMax: e.target.value }),
+      afCount: this.state.afCount === "" ? String(this.props.pickCount || 8) : this.state.afCount,
+      onAfCount: e => this.setState({ afCount: e.target.value }),
+      autoFill: () => this.autoFill(),
+      autoFillLabel: this.state.filling ? "Reading\u2026" : "Fill picks",
+      autoFillNote: (this.state.afCat
+        ? "Every live product in " + this.state.afCat + " is ranked"
+        : (this.state.catalogueCount
+          ? "All " + this.state.catalogueCount.toLocaleString() + " live products are ranked"
+          : "Every live product is ranked")) +
+        ", deepest discount first. Picks you already have are kept and the list is topped up to the count.",
+
+      prodQuery: this.state.prodQuery,
+      onProdQuery: e => this.onQueryTyped(e.target.value),
+      prodErr: this.state.prodErr,
+      searchHint: !pq
+        ? "Type to search the whole live catalogue \u2014 most recently synced first."
+        : (this.state.searching ? "Searching\u2026"
+          : (this.state.searchRows && !this.state.searchRows.length ? "Nothing in the catalogue matches that." : "")),
+      prodRows: (() => {
+        if (!pq) return [];
+        const have = d ? (d.picks || []).map(p => (p.amazon_asin || "").toUpperCase()) : [];
+        return (this.state.searchRows || []).map(p => {
+          const asin = (p.asin || p.amazon_asin || "").toString().toUpperCase();
+          const added = have.indexOf(asin) > -1;
+          const off = this.discountOf(p);
+          return {
+            title: this.decode(p.display_title || p.title || "") || "(untitled)",
+            meta: [this.money(this.num(p.price)), off ? off + "% off" : "", p.category || "", asin].filter(Boolean).join("  \u00b7  "),
+            synced: p.last_price_sync ? "synced " + this.when(p.last_price_sync) : "never synced",
+            syncedStyle: "font-size:11px;white-space:nowrap;color:var(--color-" + (p.last_price_sync ? "neutral-700" : "accent-700") + ")",
+            add: () => this.addProduct(p),
+            addLabel: added ? "Added" : "Add \u2192",
+            rowStyle: "display:grid;grid-template-columns:minmax(0,1fr) auto 68px;gap:12px;align-items:center;width:100%;text-align:left;font:inherit;" +
+              "background:" + (added ? "var(--color-neutral-200)" : "none") + ";border:0;border-bottom:1px solid var(--color-divider);padding:10px 6px;cursor:pointer;color:var(--color-text)"
+          };
+        });
+      })(),
+
+      picks: d ? (d.picks || []).map((p, i) => {
+        const open = this.state.openPick === i;
+        const price = this.num(p.price), was = this.num(p.original_price);
+        const off = (price != null && was != null && was > price) ? Math.round((1 - price / was) * 100) : null;
+        const asin = (p.amazon_asin || "").toUpperCase();
+        // the site hides picks whose ASIN is not an active product, so a pick
+        // that would silently vanish is flagged here instead
+        const dead = this.isDead(p);
+        const drift = this.driftOf(p);
+        return {
+          drift: drift ? "Catalogue says " + this.money(drift.now) + (drift.was != null ? " (was " + this.money(drift.was) + ")" : "") : "",
+          driftWrap: "display:" + (drift ? "block" : "none"),
+          useLive: () => {
+            const live = this.liveFor(p);
+            if (!live) return;
+            const picks = (this.state.draft.picks || []).slice();
+            picks[i] = Object.assign({}, picks[i], {
+              price: this.livePrice(live), original_price: this.num(live.original_price)
+            });
+            this.setDraft({ picks: picks });
+          },
+          n: String(i + 1).padStart(2, "0"),
+          title: (p.title || "").trim() || "(untitled pick)",
+          meta: [this.money(price), off ? off + "% off" : "", p.category || "", asin || "no ASIN",
+            drift ? "price moved" : ""].filter(Boolean).join("  \u00b7  "),
+          // a missing write-up blocks the save, so it is flagged as loudly as
+          // a dead ASIN rather than buried in the grey meta line
+          noWrite: (p.description || "").trim() ? "" : "No write-up",
+          noWriteStyle: "font-family:var(--font-heading);font-weight:700;font-size:9px;letter-spacing:.08em;text-transform:uppercase;padding:3px 6px;" +
+            "background:var(--color-accent);color:var(--color-bg);display:" + ((p.description || "").trim() ? "none" : "inline-block"),
+          warn: dead ? "Not live" : "",
+          warnStyle: "font-family:var(--font-heading);font-weight:700;font-size:9px;letter-spacing:.08em;text-transform:uppercase;padding:3px 6px;" +
+            "background:var(--color-accent);color:var(--color-bg);display:" + (dead ? "inline-block" : "none"),
+          open: open,
+          toggle: () => this.setState({ openPick: open ? null : i }),
+          toggleLabel: open ? "Done" : "Edit",
+          up: () => this.movePick(i, -1),
+          down: () => this.movePick(i, 1),
+          remove: () => this.removePick(i),
+          moveStyle: "font:inherit;font-size:12px;width:32px;height:32px;display:grid;place-items:center;background:none;border:1px solid var(--color-divider);cursor:pointer;color:var(--color-text);padding:0",
+          boxStyle: "border:" + (open ? "2px solid var(--color-text)" : "1px solid var(--color-divider)"),
+          fTitle: p.title || "", onTitle: e => this.setPick(i, "title", e.target.value),
+          fAsin: p.amazon_asin || "", onAsin: e => this.setPick(i, "amazon_asin", e.target.value.toUpperCase()),
+          fCat: p.category || "", onCat: e => this.setPick(i, "category", e.target.value),
+          fPrice: p.price == null ? "" : String(p.price), onPrice: e => this.setPick(i, "price", e.target.value),
+          fWas: p.original_price == null ? "" : String(p.original_price), onWas: e => this.setPick(i, "original_price", e.target.value),
+          fDesc: p.description || "", onDesc: e => this.setPick(i, "description", e.target.value),
+          aiBtn: this.aiBtn("pick" + i, (p.description || "").trim() ? "Redraft" : "Draft with AI"),
+          ai: () => this.aiPick(i),
+          fNote: p.pricing_note || "", onNote: e => this.setPick(i, "pricing_note", e.target.value)
+        };
+      }) : [],
+
+      confirmOpen: !!cf,
+      confirmTitle: cf ? (cf.kind === "delete" ? "Delete this guide?" : "Discard unsaved changes?") : "",
+      confirmBody: cf
+        ? (cf.kind === "delete"
+          ? "The guide and its picks are removed from the calendar. This cannot be undone."
+          : "This guide has edits that have not been saved. Leaving now loses them.")
+        : "",
+      confirmLabel: cf ? (cf.kind === "delete" ? "Delete" : "Discard") : "",
+      confirmCancel: () => this.setState({ confirm: null }),
+      confirmGo: () => {
+        const c = this.state.confirm;
+        if (!c) return;
+        if (c.kind === "delete") { this.deleteGuide(); return; }
+        this.setState({ confirm: null, dirty: false, openPick: null, statusText: "" }, () => {
+          if (c.kind === "switch") this.openGuide(c.row);
+          else if (c.kind === "new") this.newGuide();
+          else this.setState({ draft: null });
+        });
+      }
+    };
+  }
+}
+</script>
+</body>
+</html>

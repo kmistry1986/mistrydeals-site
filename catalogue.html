@@ -102,6 +102,8 @@
         <a href="{{ hCarousel }}" style="font:inherit;font-family:var(--font-heading);font-weight:700;font-size:11px;letter-spacing:.1em;text-transform:uppercase;text-decoration:none;padding:8px 12px;border:1px solid var(--color-divider);color:var(--color-text);border-left:0">Carousel</a>
         <a href="{{ hBrands }}" style="font:inherit;font-family:var(--font-heading);font-weight:700;font-size:11px;letter-spacing:.1em;text-transform:uppercase;text-decoration:none;padding:8px 12px;border:1px solid var(--color-divider);color:var(--color-text);border-left:0">Brand rules</a>
         <a href="{{ hScrapes }}" style="font:inherit;font-family:var(--font-heading);font-weight:700;font-size:11px;letter-spacing:.1em;text-transform:uppercase;text-decoration:none;padding:8px 12px;border:1px solid var(--color-divider);color:var(--color-text);border-left:0">Scrape log</a>
+        <a href="{{ hReddit }}" style="font:inherit;font-family:var(--font-heading);font-weight:700;font-size:11px;letter-spacing:.1em;text-transform:uppercase;text-decoration:none;padding:8px 12px;border:1px solid var(--color-divider);color:var(--color-text);border-left:0">Reddit poster</a>
+        <a href="{{ hGuides }}" style="font:inherit;font-family:var(--font-heading);font-weight:700;font-size:11px;letter-spacing:.1em;text-transform:uppercase;text-decoration:none;padding:8px 12px;border:1px solid var(--color-divider);color:var(--color-text);border-left:0">Buying guides</a>
       </div>
       </sc-if>
       <sc-if value="{{ isWide }}" hint-placeholder-val="{{ true }}">
@@ -492,6 +494,10 @@
                   <div class="field" style="margin:0">
                     <label style="font-size:11px">Was</label>
                     <input class="input" inputmode="decimal" style="padding:7px 10px;font-size:13px" value="{{ eWas }}" onChange="{{ onEWas }}" />
+                  </div>
+                  <div class="field" style="margin:0">
+                    <label style="font-size:11px">Cashback %</label>
+                    <input class="input" inputmode="decimal" placeholder="none" style="padding:7px 10px;font-size:13px" value="{{ eCash }}" onChange="{{ onECash }}" />
                   </div>
                 </div>
                 <div style="display:flex;align-items:center;gap:12px;margin-top:14px;flex-wrap:wrap">
@@ -1143,7 +1149,8 @@ class Component extends DCLogic {
         display_title: this.decode(row.display_title || row.title || ""),
         category: (this.state.catNameById || {})[row.category_id_v2] || (row.category == null ? "" : String(row.category)),
         price: row.price == null ? "" : String(row.price),
-        original_price: row.original_price == null ? "" : String(row.original_price)
+        original_price: row.original_price == null ? "" : String(row.original_price),
+        prime_cashback_percent: row.prime_cashback_percent == null ? "" : String(row.prime_cashback_percent)
       }
     });
   }
@@ -1174,13 +1181,21 @@ class Component extends DCLogic {
       this.setState({ editError: "Original price is below the current price \u2014 the discount would be negative." });
       return;
     }
+    // a rate, not an amount: blank clears it, and anything outside 0-100 is a
+    // typo rather than a bonus worth writing to a live row
+    const cash = numOrNull(String(d.prime_cashback_percent == null ? "" : d.prime_cashback_percent).replace(/%/g, ""));
+    if (cash === undefined || (cash != null && (cash < 0 || cash > 100))) {
+      this.setState({ editError: "Cashback must be a percentage between 0 and 100 \u2014 leave it blank for none." });
+      return;
+    }
     const catName = String(d.category || "").trim();
     const patch = {
       display_title: String(d.display_title || "").trim() || null,
       category: catName || null,
       category_id_v2: (this.state.catIdByName || {})[catName] || null,
       price: price,
-      original_price: orig
+      original_price: orig,
+      prime_cashback_percent: cash
     };
 
     this.setState({ savingEdit: true, editError: "", saved: "Saving\u2026" });
@@ -1320,12 +1335,12 @@ class Component extends DCLogic {
       { id: "img", base: dense ? "36px" : "64px", min: 28 },
       { id: "product", base: "minmax(180px,1fr)", label: "Product", sort: "display_title", min: 160 },
       { id: "price", base: "92px", label: "Price", sort: "price" },
-      { id: "off", base: "56px", label: "% off" },
+      { id: "off", base: "56px", label: "% off", local: "off" },
       { id: "cash", base: "78px", label: "Cashback", sort: "prime_cashback_percent" },
       { id: "synced", base: "96px", label: "Synced", sort: "last_price_sync" },
       { id: "flags", base: "120px", label: "Flags", sort: "is_top_deal" },
       { id: "live", base: "96px", label: "Live", sort: "is_active" },
-      { id: "queue", base: "152px", label: "Queue", min: 120 }
+      { id: "queue", base: "152px", label: "Queue", min: 120, local: "queue" }
     ].map(c => Object.assign({}, c, { track: w[c.id] ? w[c.id] + "px" : c.base }));
   }
 
@@ -1365,19 +1380,48 @@ class Component extends DCLogic {
     this.saveColw(colw);
   }
 
-  // Sorting is server-side, so only columns backed by a real product column can
-  // sort — the derived ones (% off, Cashback total, Queue) would only reorder
-  // the loaded page and lie about the rest.
+  // Columns backed by a real product column sort on the server. The derived
+  // ones (% off, Queue) have no column to order by, so they sort the loaded page
+  // in the browser — labelled as such in the header tooltip so the scope is
+  // never mistaken for the whole table.
   sortBy(col) {
-    if (!col.sort) return;
-    const same = this.state.sortCol === col.sort;
+    if (!col.sort && !col.local) return;
+    const key = col.sort || ("local:" + col.local);
+    const same = this.state.sortCol === key;
     const dir = same ? (this.state.sortDir === "asc" ? "desc" : "asc")
-      : (col.sort === "display_title" ? "asc" : "desc");
-    this.setState({ sortCol: col.sort, sortDir: dir }, () => this.loadProducts());
+      : (key === "display_title" ? "asc" : "desc");
+    if (col.local) { this.setState({ sortCol: key, sortDir: dir }); return; }
+    this.setState({ sortCol: key, sortDir: dir }, () => this.loadProducts());
+  }
+
+  // the value a client-side sort ranks on, per derived column
+  localSortKey(which, p) {
+    if (which === "off") {
+      const price = parseFloat(p.price);
+      const was = parseFloat(p.original_price);
+      const cp = parseFloat(p.scraped_coupon_price);
+      const net = !isNaN(cp) && cp > 0 && (isNaN(price) || cp < price) ? cp : price;
+      if (!(net > 0) || !(was > net)) return null;
+      return (1 - net / was) * 100;
+    }
+    if (which === "queue") {
+      const byPlat = (this.state.postState || {})[p.id] || {};
+      const states = ["facebook", "instagram", "instagram_story"].map(k => byPlat[k]).filter(Boolean);
+      if (!states.length) return null;
+      // failures outrank pending, pending outranks sent, then by how many
+      const rank = states.some(s => s.status === "failed") ? 3000
+        : states.some(s => s.status === "pending") ? 2000 : 1000;
+      return rank + states.length;
+    }
+    return null;
   }
 
   sortParam() {
-    if (this.state.sortCol) return this.state.sortCol + "." + (this.state.sortDir || "desc") + ".nullslast";
+    // a derived-column sort is applied in the browser, so the server order
+    // stays whatever the dropdown asked for
+    if (this.state.sortCol && String(this.state.sortCol).indexOf("local:") !== 0) {
+      return this.state.sortCol + "." + (this.state.sortDir || "desc") + ".nullslast";
+    }
     const s = this.state.pSort || "added";
     if (s === "synced") return "last_price_sync.desc.nullslast";
     if (s === "stale") return "last_price_sync.asc.nullsfirst";
@@ -1554,8 +1598,22 @@ class Component extends DCLogic {
     return new Date(t).toLocaleDateString("en-US", { day: "numeric", month: "short" });
   }
 
-  // filtering happens on the server now; these are just the loaded rows
-  visibleProducts() { return this.state.products; }
+  // filtering happens on the server now; these are just the loaded rows — with
+  // a derived-column sort applied here, since the server cannot order by them
+  visibleProducts() {
+    const rows = this.state.products;
+    const key = String(this.state.sortCol || "");
+    if (!rows || key.indexOf("local:") !== 0) return rows;
+    const which = key.slice(6);
+    const asc = this.state.sortDir === "asc";
+    return rows.slice().sort((a, b) => {
+      const x = this.localSortKey(which, a), y = this.localSortKey(which, b);
+      if (x == null && y == null) return 0;
+      if (x == null) return 1;   // blanks always last, either direction
+      if (y == null) return -1;
+      return asc ? x - y : y - x;
+    });
+  }
 
   // the publisher inserts a second row when a post goes out rather than
   // updating the queued one, so the same post arrives twice. Collapse rows for
@@ -1603,15 +1661,18 @@ class Component extends DCLogic {
   // deployed, the admin sections are real paths (/dealqueue, /brandrules,
   // /scrapelog); opened as a local file they are the sibling DC + a hash
   adminHref(page) {
-    const deployed = { catalogue: "/catalogue", dealqueue: "/dealqueue", carousel: "/carousel", brands: "/brandrules", scrapes: "/scrapelog" };
-    if (/^\/(catalogue|dealqueue|carousel|brandrules|scrapelog)/.test(location.pathname) || location.pathname.indexOf("/admin/") !== -1) return deployed[page] || "/catalogue";
+    const deployed = { catalogue: "/catalogue", dealqueue: "/dealqueue", carousel: "/carousel", brands: "/brandrules", scrapes: "/scrapelog", reddit: "/redditposter", guides: "/buyingguides" };
+    if (/^\/(catalogue|dealqueue|carousel|brandrules|scrapelog|redditposter|buyingguides)/.test(location.pathname) || location.pathname.indexOf("/admin/") !== -1) return deployed[page] || "/catalogue";
     const local = {
+      catalogue: "MistryDeals Admin v2.dc.html",
       carousel: "MistryDeals Carousel.dc.html",
       dealqueue: "MistryDeals Deal Queue.dc.html",
       brands: "MistryDeals Deal Queue.dc.html#brands",
-      scrapes: "MistryDeals Deal Queue.dc.html#scrapes"
+      scrapes: "MistryDeals Deal Queue.dc.html#scrapes",
+      reddit: "MistryDeals Reddit Poster.dc.html",
+      guides: "MistryDeals Buying Guides.dc.html"
     };
-    return local[page] || "./";
+    return local[page] || local.catalogue;
   }
 
   renderVals() {
@@ -1667,7 +1728,9 @@ class Component extends DCLogic {
         { label: "Deal queue", href: this.adminHref("dealqueue") },
         { label: "Carousel", href: this.adminHref("carousel") },
         { label: "Brand rules", href: this.adminHref("brands") },
-        { label: "Scrape log", href: this.adminHref("scrapes") }
+        { label: "Scrape log", href: this.adminHref("scrapes") },
+        { label: "Reddit poster", href: this.adminHref("reddit") },
+        { label: "Buying guides", href: this.adminHref("guides") }
       ].map(m => ({
         label: m.label,
         href: m.href,
@@ -1678,6 +1741,8 @@ class Component extends DCLogic {
       hCarousel: this.adminHref("carousel"),
       hBrands: this.adminHref("brands"),
       hScrapes: this.adminHref("scrapes"),
+      hReddit: this.adminHref("reddit"),
+      hGuides: this.adminHref("guides"),
       refresh: () => this.loadAll(),
       toggleDark: () => {
         const next = !this.isDark();
@@ -1833,6 +1898,8 @@ class Component extends DCLogic {
       eCat: (this.state.draft || {}).category || "",
       ePrice: (this.state.draft || {}).price || "",
       eWas: (this.state.draft || {}).original_price || "",
+      eCash: (this.state.draft || {}).prime_cashback_percent || "",
+      onECash: e => this.setDraft("prime_cashback_percent", e.target.value),
       onETitle: e => this.setDraft("display_title", e.target.value),
       onECat: e => this.setDraft("category", e.target.value),
       onEPrice: e => this.setDraft("price", e.target.value),
@@ -1845,8 +1912,11 @@ class Component extends DCLogic {
         const d = this.state.draft || {};
         const num = v => { const s = String(v || "").replace(/[$,\s]/g, ""); const n = parseFloat(s); return isNaN(n) ? null : n; };
         const p = num(d.price), w = num(d.original_price);
-        if (p == null || w == null || w <= p) return "";
-        return "\u2212" + Math.round((1 - p / w) * 100) + "% off once saved";
+        const c = num(String(d.prime_cashback_percent == null ? "" : d.prime_cashback_percent).replace(/%/g, ""));
+        const off = (p != null && w != null && w > p) ? "\u2212" + Math.round((1 - p / w) * 100) + "% off" : "";
+        const back = (c != null && c > 0 && p != null && p > 0) ? "$" + (p * c / 100).toFixed(2) + " back" : "";
+        const parts = [off, back].filter(Boolean);
+        return parts.length ? parts.join(" \u00b7 ") + " once saved" : "";
       })(),
       // categories_v2 is the only source of category values; an off-list value
       // on the row shows as an unsaveable prompt so it has to be re-picked
@@ -1918,18 +1988,20 @@ class Component extends DCLogic {
       headStyle: "display:grid;grid-template-columns:" + this.gridTemplate() +
         ";gap:10px;padding:10px 0;border-bottom:2px solid var(--color-divider);font-family:var(--font-heading);font-weight:700;font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--color-neutral-700)",
       headCols: this.COLS().map(c => {
-        const active = c.sort && this.state.sortCol === c.sort;
+        const key = c.sort || (c.local ? "local:" + c.local : "");
+        const active = !!key && this.state.sortCol === key;
         return {
           label: c.label || "",
-          sortable: !!c.sort,
+          sortable: !!key,
           arrow: active ? (this.state.sortDir === "asc" ? "\u2191" : "\u2193") : "",
-          title: c.sort ? (active ? "Sorted \u2014 click to reverse" : "Click to sort by " + c.label)
-            : (c.label ? c.label + " \u2014 derived, so not sortable" : ""),
+          title: !key ? "" : (c.local
+            ? (active ? "Sorted within the loaded rows \u2014 click to reverse" : "Click to sort by " + c.label + " (derived: orders the loaded rows only)")
+            : (active ? "Sorted \u2014 click to reverse" : "Click to sort by " + c.label)),
           onSort: () => this.sortBy(c),
           startResize: e => this.startResize(c, e),
           resetCol: e => this.resetCol(c, e),
           cellStyle: "position:relative;display:flex;align-items:center;gap:4px;min-width:0;user-select:none" +
-            (c.sort ? ";cursor:pointer" : ""),
+            (key ? ";cursor:pointer" : ""),
           labelStyle: "overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:" +
             (active ? "var(--color-text)" : "inherit"),
           gripStyle: "position:absolute;top:-10px;right:-8px;width:13px;height:calc(100% + 20px);cursor:col-resize;background:transparent"
@@ -2019,7 +2091,11 @@ class Component extends DCLogic {
           couponCode: code ? "code " + code : "",
           couponCodeStyle: "font-size:10px;letter-spacing:.04em;margin-bottom:2px;color:var(--color-" +
             (coupon != null ? "accent-700" : "neutral-700") + ")",
-          couponUnknown: code && coupon == null ? "coupon price not captured" : "",
+          // "not captured" means the scraper got a code but no coupon price at
+          // all. A coupon price EQUAL to price is captured — the sync copies the
+          // coupon price into price, so equality is the normal synced state and
+          // the old `coupon == null` test flagged every one of those rows.
+          couponUnknown: code && !(cpRaw > 0) ? "coupon price not captured" : "",
           price: !isNaN(price) && price > 0 ? "$" + price.toFixed(2) : "no price",
           // demoted to a strike-through when a coupon beats it
           priceStyle: (!(price > 0)
