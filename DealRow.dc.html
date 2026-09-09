@@ -20,6 +20,9 @@
       <span style="font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:var(--color-neutral-500)">Photo</span>
     </sc-if>
     <div style="position:absolute;top:0;left:0;background:var(--color-accent);color:#f3f2f2;font-family:var(--font-heading);font-weight:800;font-size:13px;line-height:1;padding:5px 6px">{{ deal.off }}</div>
+    <sc-if value="{{ deal.atLowest }}" hint-placeholder-val="{{ false }}">
+      <div style="position:absolute;bottom:0;left:0;right:0;background:var(--color-neutral-900);color:var(--color-bg);font-family:var(--font-heading);font-weight:700;font-size:8px;letter-spacing:.08em;text-transform:uppercase;padding:3px 5px;text-align:center">Lowest ever</div>
+    </sc-if>
   </div>
   <div style="display:flex;flex-direction:column;gap:4px;min-width:0">
     <div style="font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--color-neutral-600)">{{ deal.cat }}</div>
@@ -41,7 +44,10 @@
       <span style="font-size:10px;letter-spacing:.06em;text-transform:uppercase;color:var(--color-accent-700);white-space:nowrap">with code</span>
     </sc-if>
   </div>
-  <a href="{{ deal.url }}" target="_blank" rel="nofollow sponsored noopener" class="btn btn-primary" style="justify-content:space-between;width:100%">View on Amazon <span>&#8594;</span></a>
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(104px,1fr));gap:8px;width:100%">
+    <a href="{{ deal.url }}" target="_blank" rel="nofollow sponsored noopener" class="btn btn-primary" style="justify-content:space-between;font-size:12px;padding:9px 9px;gap:4px;min-width:0">Amazon <span>&#8594;</span></a>
+    <button onClick="{{ deal.history }}" class="btn btn-secondary" style="justify-content:flex-start;font-size:12px;padding:9px 9px;min-width:0">Price history</button>
+  </div>
 </div>
 </x-dc>
 <script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:900,&quot;height&quot;:108},&quot;deal&quot;:{&quot;editor&quot;:null,&quot;tsType&quot;:&quot;object&quot;}}"></script>

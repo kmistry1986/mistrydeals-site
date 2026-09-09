@@ -34,13 +34,16 @@
       .m-row > :nth-child(4) { grid-column: 2 / -1 !important; }
       /* every line below the title runs the full width, from the photo's left
          edge to the right edge — source and forum still share their line */
-      .m-row > :nth-child(5) { grid-column: 2 / -1 !important; }
-            /* rating/reviews are gone on a phone, and forum and added moved into the
+      /* rating/reviews are gone on a phone, and forum and added moved into the
          sourcing band — their own cells have nothing left to show */
       .m-row > :nth-child(5) { display: none !important; }
-      .m-row > :nth-child(6) { grid-column: 2 / -1 !important; border-top: 0 !important; padding-top: 0 !important; }
-      .m-row > :nth-child(7), .m-row > :nth-child(8) { display: none !important; }
-      .m-row > :nth-child(9) { grid-column: 2 / -1 !important; }
+      /* cashback moved into the price band, so its own cell has nothing left */
+      .m-row > :nth-child(6) { display: none !important; }
+      .m-row > :nth-child(7) { grid-column: 2 / -1 !important; border-top: 0 !important; padding-top: 0 !important; }
+      .m-row > :nth-child(8), .m-row > :nth-child(9) { display: none !important; }
+      /* the review band — Approve, Sync and the platform toggles — needs the
+         full row width or its buttons are clipped by the narrow auto track */
+      .m-row > :nth-child(10) { grid-column: 2 / -1 !important; min-width: 0 !important; }
       /* every control in a row is a thumb target on a phone — the platform
          toggles and Approve/Reject write to the database on one tap */
       /* 36px keeps Approve, Reject and the platform toggles comfortably tappable
@@ -409,7 +412,7 @@
             </div>
             <div>
               <sc-if value="{{ r.isNarrow }}" hint-placeholder-val="{{ false }}">
-                <div style="display:grid;grid-template-columns:minmax(0,.9fr) minmax(0,1fr) minmax(0,.7fr) minmax(0,1fr) minmax(0,1.4fr);gap:8px;align-items:start">
+                <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(72px,1fr));gap:10px 8px;align-items:start">
                   <div style="min-width:0">
                     <div style="{{ r.labelStyle }}">Was</div>
                     <div style="font-size:11.5px;color:var(--color-neutral-600);text-decoration:line-through">{{ r.wasStruck }}</div>
@@ -421,6 +424,10 @@
                   <div style="min-width:0">
                     <div style="{{ r.labelStyle }}">Off</div>
                     <div style="{{ r.offFlatStyle }}">{{ r.offInline }}</div>
+                  </div>
+                  <div style="min-width:0">
+                    <div style="{{ r.labelStyle }}">Cash</div>
+                    <div style="{{ r.cashFlatStyle }}" title="{{ r.cashTitle }}">{{ r.cashback }}</div>
                   </div>
                   <div style="min-width:0">
                     <div style="{{ r.labelStyle }}">Coupon</div>
@@ -459,12 +466,11 @@
               </sc-if>
             </div>
             <div style="min-width:0">
-              <sc-if value="{{ r.cashNarrowLabel }}" hint-placeholder-val="{{ false }}">
-                <div style="{{ r.labelStyle }}">Cashback</div>
-              </sc-if>
-              <div style="{{ r.cashStyle }}" title="{{ r.cashTitle }}">{{ r.cashback }}</div>
-              <sc-if value="{{ r.cashNote }}" hint-placeholder-val="{{ false }}">
-                <div style="font-size:10.5px;line-height:1.3;color:var(--color-neutral-600);margin-top:2px">{{ r.cashNote }}</div>
+              <sc-if value="{{ r.isWide }}" hint-placeholder-val="{{ true }}">
+                <div style="{{ r.cashStyle }}" title="{{ r.cashTitle }}">{{ r.cashback }}</div>
+                <sc-if value="{{ r.cashNote }}" hint-placeholder-val="{{ false }}">
+                  <div style="font-size:10.5px;line-height:1.3;color:var(--color-neutral-600);margin-top:2px">{{ r.cashNote }}</div>
+                </sc-if>
               </sc-if>
             </div>
             <div style="min-width:0;font-size:12px;line-height:1.35">
@@ -637,6 +643,7 @@
         </sc-if>
       </div>
 
+      <sc-if value="{{ brandWide }}" hint-placeholder-val="{{ true }}">
       <div style="overflow-x:auto">
       <div style="min-width:1160px">
         <div style="{{ brandHeadStyle }}">
@@ -708,6 +715,26 @@
         </sc-for>
       </div>
       </div>
+      </sc-if>
+
+      <sc-if value="{{ brandNarrow }}" hint-placeholder-val="{{ false }}">
+        <div style="border-top:2px solid var(--color-divider)">
+          <sc-if value="{{ brandLoading }}" hint-placeholder-val="{{ true }}">
+            <div style="padding:34px 0;text-align:center;color:var(--color-neutral-700);font-size:13px">Loading brand rules&#8230;</div>
+          </sc-if>
+          <sc-if value="{{ brandEmpty }}" hint-placeholder-val="{{ false }}">
+            <div style="padding:34px 0;text-align:center;color:var(--color-neutral-700);font-size:13px">No brand rules yet &#8212; every deal comes through for review.</div>
+          </sc-if>
+          <sc-for list="{{ brandRows }}" as="b" hint-placeholder-count="6">
+            <div style="{{ b.miniRowStyle }}">
+              <span style="{{ b.bar }}"></span>
+              <div style="min-width:0;font-weight:600;font-size:14px;line-height:1.3;overflow-wrap:break-word">{{ b.brand }}</div>
+              <div><span style="{{ b.ruleStyle }}">{{ b.ruleLabel }}</span></div>
+              <button onClick="{{ b.edit }}" style="{{ b.miniEditStyle }}">Edit</button>
+            </div>
+          </sc-for>
+        </div>
+      </sc-if>
 
       <p style="margin:22px 0 0;font-size:12px;line-height:1.5;color:var(--color-neutral-600);max-width:640px;text-wrap:pretty">{{ brandFootnote }}</p>
     </div>
@@ -779,6 +806,78 @@
     </div>
     </sc-if>
   </div>
+  <sc-if value="{{ brandModalOpen }}" hint-placeholder-val="{{ false }}">
+    <div onClick="{{ brandModalClose }}" style="position:fixed;inset:0;background:color-mix(in srgb, var(--color-neutral-900) 55%, transparent);display:flex;align-items:flex-end;padding:0;z-index:88">
+      <div onClick="{{ brandModalStop }}" style="background:var(--color-bg);border-top:2px solid var(--color-text);width:100%;max-height:92vh;overflow:auto;padding:20px 18px 26px">
+        <sc-for list="{{ brandRows }}" as="b" hint-placeholder-count="1">
+          <sc-if value="{{ b.editing }}" hint-placeholder-val="{{ false }}">
+            <div>
+              <div style="display:flex;align-items:flex-start;gap:12px;border-bottom:2px solid var(--color-divider);padding-bottom:14px">
+                <div style="min-width:0;flex:1 1 auto">
+                  <div style="font-family:var(--font-heading);font-weight:700;font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--color-neutral-700)">Brand rule</div>
+                  <h2 style="margin:5px 0 0;font-size:22px;line-height:1.15;letter-spacing:-.01em;overflow-wrap:break-word">{{ b.brand }}</h2>
+                </div>
+                <button onClick="{{ b.cancel }}" aria-label="Close" style="font:inherit;font-size:18px;line-height:1;flex:none;width:38px;height:38px;display:flex;align-items:center;justify-content:center;cursor:pointer;background:transparent;border:1px solid var(--color-divider);color:var(--color-text)">&#215;</button>
+              </div>
+
+              <div style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;padding:16px 0;border-bottom:1px solid var(--color-divider)">
+                <div>
+                  <div style="{{ b.metaLabelStyle }}">Decisions</div>
+                  <div style="font-family:var(--font-heading);font-weight:800;font-size:22px;line-height:1.1">{{ b.hits }}</div>
+                  <div style="font-size:11.5px;line-height:1.35;color:var(--color-neutral-600);margin-top:3px">{{ b.hitsTitle }}</div>
+                </div>
+                <div>
+                  <div style="{{ b.metaLabelStyle }}">Last fired</div>
+                  <div style="font-family:var(--font-heading);font-weight:800;font-size:22px;line-height:1.1">{{ b.updated }}</div>
+                  <div style="font-size:11.5px;line-height:1.35;color:var(--color-neutral-600);margin-top:3px">{{ b.updatedTitle }}</div>
+                </div>
+              </div>
+
+              <div style="display:grid;gap:14px;padding:18px 0">
+                <div class="field" style="margin:0">
+                  <label>Brand name</label>
+                  <input class="input" style="padding:9px 11px;font-size:14px" value="{{ b.draftName }}" onChange="{{ b.onName }}" />
+                </div>
+                <div class="field" style="margin:0">
+                  <label>Keyword in title</label>
+                  <input class="input" style="padding:9px 11px;font-size:14px" value="{{ b.draftKeyword }}" onChange="{{ b.onKeyword }}" />
+                </div>
+                <div class="field" style="margin:0">
+                  <label>Rule</label>
+                  <select class="input" style="padding:9px 11px;font-size:14px" value="{{ b.draftRule }}" onChange="{{ b.onRule }}">
+                    <option value="auto_approve">Auto-approve</option>
+                    <option value="block">Auto-reject</option>
+                  </select>
+                </div>
+                <div class="field" style="margin:0">
+                  <label>Min discount</label>
+                  <input class="input" style="padding:9px 11px;font-size:14px" placeholder="any" value="{{ b.draftMin }}" onChange="{{ b.onMin }}" />
+                </div>
+                <div class="field" style="margin:0">
+                  <label>Default category</label>
+                  <select class="input" style="padding:9px 11px;font-size:14px" value="{{ b.draftCat }}" onChange="{{ b.onCat }}">
+                    <sc-for list="{{ b.catOptions }}" as="o" hint-placeholder-count="8">
+                      <option value="{{ o.value }}">{{ o.label }}</option>
+                    </sc-for>
+                  </select>
+                </div>
+              </div>
+
+              <sc-if value="{{ brandError }}" hint-placeholder-val="{{ false }}">
+                <div style="border-left:3px solid var(--color-accent);padding:9px 12px;margin-bottom:14px;font-size:13px;line-height:1.45;color:var(--color-accent-700)">{{ brandError }}</div>
+              </sc-if>
+
+              <div style="display:flex;gap:8px;border-top:2px solid var(--color-divider);padding-top:16px">
+                <button onClick="{{ b.save }}" style="{{ b.modalSaveStyle }}">{{ b.saveLabel }}</button>
+                <button onClick="{{ b.toggle }}" title="{{ b.toggleTitle }}" style="{{ b.modalGhostStyle }}">{{ b.toggleLabel }}</button>
+                <button onClick="{{ b.remove }}" style="{{ b.modalDangerStyle }}">Remove</button>
+              </div>
+            </div>
+          </sc-if>
+        </sc-for>
+      </div>
+    </div>
+  </sc-if>
   <sc-if value="{{ histOpen }}" hint-placeholder-val="{{ false }}">
     <div onClick="{{ histClose }}" style="position:fixed;inset:0;background:color-mix(in srgb, var(--color-neutral-900) 55%, transparent);display:grid;place-items:center;padding:24px;z-index:85">
       <div onClick="{{ histStop }}" style="background:var(--color-bg);border:2px solid var(--color-text);max-width:720px;width:100%;max-height:86vh;overflow:auto;padding:24px">
@@ -1506,6 +1605,9 @@ class Component extends DCLogic {
   // Two independent records back the verdict: price_history is what the sync
   // job recorded against the catalogue row, product_pipeline is every time a
   // scraper saw the ASIN (so it also answers "when was this last on the site").
+  // product_pipeline is the source of truth for prices: it holds every time a
+  // scraper saw the ASIN. price_history is still read, but only to draw the
+  // chart's older tail — the lowest-ever verdict comes from the pipeline alone.
   openHistory(row) {
     const asin = String(row.asin || "").trim().toUpperCase();
     const prod = this.product(row);
@@ -1535,7 +1637,9 @@ class Component extends DCLogic {
     } catch (e) { this.setState({ histErr: String(e.message || e) }); }
   }
 
-  // every price point we have for the ASIN, from both records, oldest first
+  // every price point we have for the ASIN, oldest first. kind marks where the
+  // point came from: only "scrape" (product_pipeline) points count towards the
+  // lowest-ever verdict.
   histPoints() {
     const box = this.state.histBox || {};
     const out = [];
@@ -1553,6 +1657,9 @@ class Component extends DCLogic {
     return out.filter((p, i) => i === 0 || !(p.price === out[i - 1].price &&
       Math.abs(Date.parse(p.at) - Date.parse(out[i - 1].at)) < 120000));
   }
+
+  // the pipeline-only subset the verdict is judged against
+  pipelinePoints() { return this.histPoints().filter(p => p.kind === "scrape"); }
 
   money(v) { return v == null || v === "" || isNaN(Number(v)) ? "\u2014" : "$" + Number(v).toFixed(2); }
 
@@ -2866,7 +2973,15 @@ class Component extends DCLogic {
       return "queue";
     }
     const h = (location.hash || "").replace("#", "");
-    return h === "brands" || h === "scrapes" ? h : "queue";
+    if (h === "brands" || h === "scrapes") return h;
+    // a sibling admin page also leaves the wanted tab here, because a preview
+    // host can swallow the "#brands" hash on navigation
+    try {
+      const s = sessionStorage.getItem("md-admin-tab");
+      sessionStorage.removeItem("md-admin-tab");
+      if (s === "brands" || s === "scrapes") return s;
+    } catch (e) {}
+    return "queue";
   }
 
   openFromHash = () => {
@@ -2976,23 +3091,23 @@ class Component extends DCLogic {
       histSummary: (() => {
         const box = this.state.histBox;
         if (!box || this.state.histRuns === null) return null;
-        const pts = this.histPoints();
+        const pts = this.pipelinePoints();
         const cur = Number(box.price) > 0 ? Number(box.price) : null;
-        // prior = observations other than the one being judged
+        // prior = pipeline observations other than the one being judged
         const prior = pts.map(p => p.price);
         const quiet = "font-size:13.5px;line-height:1.45;color:var(--color-neutral-700)";
-        if (cur == null && !prior.length) return { verdict: "No price on record for this ASIN yet.", verdictStyle: quiet, cells: [] };
+        if (cur == null && !prior.length) return { verdict: "No scraped price on record for this ASIN yet.", verdictStyle: quiet, cells: [] };
         if (!prior.length) return {
-          verdict: "No earlier price on record \u2014 " + this.money(cur) + " is the first we have seen for this ASIN, so there is nothing to judge it against.",
+          verdict: "No earlier scrape on record \u2014 " + this.money(cur) + " is the first the pipeline has seen for this ASIN, so there is nothing to judge it against.",
           verdictStyle: quiet,
-          cells: [{ k: "This deal", v: this.money(cur) }, { k: "Prior points", v: "0" }]
+          cells: [{ k: "This deal", v: this.money(cur) }, { k: "Prior scrapes", v: "0" }]
         };
         const low = Math.min.apply(null, prior), high = Math.max.apply(null, prior);
         const avg = prior.reduce((a, b) => a + b, 0) / prior.length;
         let verdict, good = false;
         if (cur == null) verdict = "This queue row carries no price, so it cannot be judged.";
-        else if (cur < low) { verdict = "Beats every price on record \u2014 previous best " + this.money(low) + "."; good = true; }
-        else if (cur === low) { verdict = "Matches the lowest price on record."; good = true; }
+        else if (cur < low) { verdict = "Beats every scraped price on record \u2014 previous best " + this.money(low) + "."; good = true; }
+        else if (cur === low) { verdict = "Matches the lowest scraped price on record."; good = true; }
         else {
           const pct = Math.round(((cur - low) / low) * 100);
           verdict = pct <= 5 ? "Within " + pct + "% of the lowest on record (" + this.money(low) + ")."
@@ -3003,13 +3118,13 @@ class Component extends DCLogic {
           verdict: verdict,
           verdictStyle: "font-family:var(--font-heading);font-weight:800;font-size:15px;line-height:1.3;color:var(--color-" + (good ? "accent" : "text") + ")",
           cells: prior.length === 1
-            ? [{ k: "This deal", v: this.money(cur) }, { k: "Prior price", v: this.money(low) }, { k: "Prior points", v: "1" }]
+            ? [{ k: "This deal", v: this.money(cur) }, { k: "Prior price", v: this.money(low) }, { k: "Prior scrapes", v: "1" }]
             : [
               { k: "This deal", v: this.money(cur) },
               { k: "Prior low", v: this.money(low) },
               { k: "Prior avg", v: this.money(avg) },
               { k: "Prior high", v: this.money(high) },
-              { k: "Prior points", v: String(prior.length) }
+              { k: "Prior scrapes", v: String(prior.length) }
             ]
         };
       })(),
@@ -3353,6 +3468,13 @@ class Component extends DCLogic {
       addLabel: this.state.brandBusy === "add" ? "Adding\u2026" : "Add rule",
       brandError: this.state.brandErr || "",
       brandLoading: this.state.tab === "brands" && brands === null && !this.state.brandErr,
+      // on a phone the rule list is brand + verdict + Edit only; keyword,
+      // decisions, last fired and every editable field move into a sheet
+      brandWide: !this.state.narrow,
+      brandNarrow: !!this.state.narrow,
+      brandModalOpen: !!(this.state.narrow && this.state.editId != null),
+      brandModalClose: () => this.setState({ editId: null, ed: {}, brandErr: "" }),
+      brandModalStop: e => e.stopPropagation(),
       brandEmpty: !!(brands && brands.length === 0 && !this.state.brandErr),
       brandHeadStyle: "display:grid;grid-template-columns:" + brandGrid + ";gap:10px;padding:10px 0;border-bottom:2px solid var(--color-divider);font-family:var(--font-heading);font-weight:700;font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--color-neutral-700)",
       brandHead: this.BRAND_COLS.map(c => {
@@ -3398,6 +3520,12 @@ class Component extends DCLogic {
           editRowStyle: "display:grid;grid-template-columns:" + brandGrid + ";gap:10px;align-items:center;padding:" + Math.max(6, d.pad - 2) + "px 0;border-bottom:1px solid var(--color-divider);background:color-mix(in srgb, var(--color-accent) 5%, transparent)",
           bar: "display:block;align-self:stretch;background:" +
             (!active ? "transparent" : action === "auto_reject" ? "var(--color-accent)" : "var(--color-neutral-500)"),
+          miniRowStyle: "display:grid;grid-template-columns:3px minmax(0,1fr) auto auto;gap:12px;align-items:center;padding:13px 0;border-bottom:1px solid var(--color-divider)" + (active ? "" : ";opacity:.55"),
+          miniEditStyle: "font:inherit;font-family:var(--font-heading);font-weight:700;font-size:10px;letter-spacing:.08em;text-transform:uppercase;min-height:40px;padding:0 14px;cursor:pointer;border:1px solid var(--color-text);background:transparent;color:var(--color-text)",
+          metaLabelStyle: "font-family:var(--font-heading);font-weight:700;font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:var(--color-neutral-600);margin-bottom:4px",
+          modalSaveStyle: "font:inherit;font-family:var(--font-heading);font-weight:700;font-size:11px;letter-spacing:.08em;text-transform:uppercase;flex:1 1 0;min-height:44px;cursor:pointer;border:1px solid var(--color-text);background:var(--color-text);color:var(--color-bg)" + (busy ? ";opacity:.45" : ""),
+          modalGhostStyle: "font:inherit;font-family:var(--font-heading);font-weight:700;font-size:11px;letter-spacing:.08em;text-transform:uppercase;flex:1 1 0;min-height:44px;cursor:pointer;border:1px solid var(--color-divider);background:transparent;color:var(--color-text)" + (busy ? ";opacity:.45" : ""),
+          modalDangerStyle: "font:inherit;font-family:var(--font-heading);font-weight:700;font-size:11px;letter-spacing:.08em;text-transform:uppercase;flex:1 1 0;min-height:44px;cursor:pointer;border:1px solid var(--color-accent);background:transparent;color:var(--color-accent-700)" + (busy ? ";opacity:.45" : ""),
           brand: b.brand_name || "\u2014",
           keyword: b.keyword || "\u2014",
           ruleLabel: this.ruleLabel(b),
@@ -3555,7 +3683,11 @@ class Component extends DCLogic {
                 ? Math.round(pct) + "% back with the Prime Visa on this deal"
                 : (prod ? "No bonus cashback rate set on this product" : "Not in the catalogue yet \u2014 set the rate after it syncs"),
               cashStyle: "font-family:var(--font-heading);font-weight:800;font-size:" + (pct > 0 ? "14px" : "13px") +
-                ";line-height:1.2;color:" + (pct > 0 ? "var(--color-accent-700)" : "var(--color-neutral-600)")
+                ";line-height:1.2;color:" + (pct > 0 ? "var(--color-accent-700)" : "var(--color-neutral-600)"),
+              // the labelled mobile cell sits in the price band and aligns on
+              // its own label, so it keeps one flat size
+              cashFlatStyle: "font-family:var(--font-heading);font-weight:800;font-size:13px;color:" +
+                (pct > 0 ? "var(--color-accent-700)" : "var(--color-neutral-600)")
             };
           })(),
           reviews: r.review_count != null ? Number(r.review_count).toLocaleString("en-US") : "\u2014",
@@ -3662,14 +3794,19 @@ class Component extends DCLogic {
           isPending: pending,
           isDone: !pending,
           approve: () => (capture ? this.captureInAmazon(r) : this.approve(r)),
-          approveLabel: busy ? "Working\u2026" : capture ? "Approve on Amazon \u2197" : (picked.length ? "Approve & schedule" : "Approve"),
+          // half-width on a phone, so the long capture label is trimmed rather
+          // than left to overflow its box on a 360px screen
+          approveLabel: busy ? "Working\u2026"
+            : capture ? (this.state.narrow ? "Amazon \u2197" : "Approve on Amazon \u2197")
+            : (picked.length ? (this.state.narrow ? "Approve" : "Approve & schedule") : "Approve"),
           needsSync: () => this.markNeedsSync(r),
           needsSyncLabel: busy ? "\u2026" : "Sync",
-          needsSyncStyle: "font:inherit;font-family:var(--font-heading);font-weight:700;font-size:10px;letter-spacing:.08em;text-transform:uppercase;padding:6px 10px;cursor:pointer;border:1px solid var(--color-neutral-400);background:transparent;color:var(--color-neutral-800);white-space:nowrap" + (busy ? ";opacity:.45" : ""),
+          needsSyncStyle: "font:inherit;font-family:var(--font-heading);font-weight:700;font-size:10px;letter-spacing:.08em;text-transform:uppercase;padding:6px 10px;cursor:pointer;border:1px solid var(--color-neutral-400);background:transparent;color:var(--color-neutral-800);white-space:nowrap" +
+            (this.state.narrow ? ";flex:1 1 0;min-width:0;text-align:center" : "") + (busy ? ";opacity:.45" : ""),
           postVerb: picked.length ? "Scheduling for" : "Post to",
           // on a phone approving is the row's one action, so it runs full width
           approveStyle: "font:inherit;font-family:var(--font-heading);font-weight:700;font-size:10px;letter-spacing:.08em;text-transform:uppercase;padding:6px 10px;cursor:pointer;border:1px solid var(--color-text);background:var(--color-text);color:var(--color-bg)" +
-            (this.state.narrow ? ";width:100%;white-space:nowrap;text-align:left" : "") + (busy ? ";opacity:.45" : ""),
+            (this.state.narrow ? ";flex:1 1 0;min-width:0;text-align:center;line-height:1.2" : "") + (busy ? ";opacity:.45" : ""),
           // the platform toggles live on the catalogue page's schedule flow; on a
           // phone the queue is triage only
           showTargets: !this.state.narrow,

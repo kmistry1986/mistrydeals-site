@@ -81,8 +81,8 @@
         <a href="{{ hCatalogue }}" style="{{ navRest }}">Catalogue</a>
         <a href="{{ hQueue }}" style="{{ navRest }}">Deal queue</a>
         <span style="{{ navHere }}">Carousel</span>
-        <a href="{{ hBrands }}" style="{{ navRest }}">Brand rules</a>
-        <a href="{{ hScrapes }}" style="{{ navRest }}">Scrape log</a>
+        <a href="{{ hBrands }}" onClick="{{ markBrands }}" style="{{ navRest }}">Brand rules</a>
+        <a href="{{ hScrapes }}" onClick="{{ markScrapes }}" style="{{ navRest }}">Scrape log</a>
         <a href="{{ hReddit }}" style="{{ navRest }}">Reddit poster</a>
         <a href="{{ hGuides }}" style="{{ navRest }}">Buying guides</a>
       </div>
@@ -91,6 +91,7 @@
       <div class="m-wrap" style="margin-left:auto;display:flex;align-items:center;gap:10px">
         <span style="font-size:12px;color:var(--color-neutral-700)">{{ savedNote }}</span>
         <span style="font-size:12px;color:var(--color-neutral-700)">{{ userEmail }}</span>
+        <a href="{{ hSite }}" style="font:inherit;font-family:var(--font-heading);font-weight:700;font-size:11px;letter-spacing:.1em;text-transform:uppercase;text-decoration:none;padding:8px 12px;border:1px solid var(--color-divider);color:var(--color-text)">View site</a>
         <button onClick="{{ refresh }}" class="btn btn-secondary" style="font-size:12px;padding:8px 12px">Refresh</button>
         <button onClick="{{ signOut }}" class="btn btn-ghost" style="font-size:12px;padding:8px 12px">Sign out</button>
         <button onClick="{{ toggleDark }}" title="{{ darkTitle }}" style="{{ tDark }}">{{ darkGlyph }}</button>
@@ -121,7 +122,7 @@
         </div>
         <div style="display:flex;flex-direction:column;padding:8px 0;border-bottom:1px solid var(--color-divider)">
           <sc-for list="{{ menuNav }}" as="m" hint-placeholder-count="5">
-            <a href="{{ m.href }}" style="{{ m.style }}">{{ m.label }}</a>
+            <a href="{{ m.href }}" onClick="{{ m.pick }}" style="{{ m.style }}">{{ m.label }}</a>
           </sc-for>
         </div>
         <div style="display:flex;align-items:center;gap:10px;padding:14px 16px;border-bottom:1px solid var(--color-divider)">
@@ -832,6 +833,14 @@ class Component extends DCLogic {
     }
   }
 
+  // The host preview can swallow a "#brands" hash on navigation, so the wanted
+  // tab is also left in sessionStorage for the deal-queue page to pick up.
+  markTab(label) {
+    const tab = label === "Brand rules" ? "brands" : label === "Scrape log" ? "scrapes" : "";
+    if (!tab) return null;
+    return () => { try { sessionStorage.setItem("md-admin-tab", tab); } catch (e) {} };
+  }
+
   adminHref(page) {
     const deployed = { catalogue: "/catalogue", dealqueue: "/dealqueue", carousel: "/carousel", brands: "/brandrules", scrapes: "/scrapelog", reddit: "/redditposter", guides: "/buyingguides" };
     if (/^\/(catalogue|dealqueue|carousel|brandrules|scrapelog|redditposter|buyingguides)/.test(location.pathname) || location.pathname.indexOf("/admin/") !== -1) return deployed[page] || "/catalogue";
@@ -854,6 +863,9 @@ class Component extends DCLogic {
     const navBase = "font:inherit;font-family:var(--font-heading);font-weight:700;font-size:11px;letter-spacing:.1em;text-transform:uppercase;text-decoration:none;padding:8px 12px;";
 
     return {
+      markBrands: () => { try { sessionStorage.setItem("md-admin-tab", "brands"); } catch (e) {} },
+      markScrapes: () => { try { sessionStorage.setItem("md-admin-tab", "scrapes"); } catch (e) {} },
+      hSite: /^\/(catalogue|dealqueue|carousel|brandrules|scrapelog|redditposter|buyingguides)/.test(location.pathname) || location.pathname.indexOf("/admin/") !== -1 ? "/" : "MistryDeals Site.dc.html",
       verifying: this.state.verifying,
       signedOut: !this.state.token && !this.state.verifying,
       signedIn: signedIn,
@@ -899,9 +911,10 @@ class Component extends DCLogic {
         { label: "Brand rules", href: this.adminHref("brands") },
         { label: "Scrape log", href: this.adminHref("scrapes") },
         { label: "Reddit poster", href: this.adminHref("reddit") },
-        { label: "Buying guides", href: this.adminHref("guides") }
+        { label: "Buying guides", href: this.adminHref("guides") },
+        { label: "View site", href: /^\/(catalogue|dealqueue|carousel|brandrules|scrapelog|redditposter|buyingguides)/.test(location.pathname) || location.pathname.indexOf("/admin/") !== -1 ? "/" : "MistryDeals Site.dc.html" }
       ].map(m => ({
-        label: m.label, href: m.href,
+        label: m.label, href: m.href, pick: this.markTab(m.label),
         style: "font:inherit;font-family:var(--font-heading);font-weight:700;font-size:13px;letter-spacing:.06em;text-transform:uppercase;text-decoration:none;padding:14px 16px;min-height:52px;display:flex;align-items:center;color:var(--color-" +
           (m.here ? "accent-700" : "text") + ")"
       })),
