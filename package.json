@@ -1,20 +1,8 @@
 {
-  "name": "gods",
-  "version": "0.1.0",
+  "name": "mistrydeals-site",
+  "version": "1.0.0",
   "private": true,
   "scripts": {
-    "dev": "turbo run dev --parallel",
-    "build": "turbo run build",
-    "lint": "turbo run lint",
-    "type-check": "turbo run type-check",
-    "clean": "turbo clean && rm -rf node_modules"
-  },
-  "devDependencies": {
-    "turbo": "^1.10.0",
-    "typescript": "^5.2.0"
-  },
-  "workspaces": [
-    "apps/*",
-    "packages/*"
-  ]
+    "build": "echo 'Static site only'"
+  }
 }

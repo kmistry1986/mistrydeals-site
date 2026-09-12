@@ -1,12 +1,19 @@
 {
-  "buildCommand": "",
-  "outputDirectory": ".",
   "rewrites": [
-    { "source": "/admin/catalogue", "destination": "/admin/catalogue/index.html" },
-    { "source": "/admin/dealqueue", "destination": "/admin/dealqueue/index.html" },
-    { "source": "/admin/brands", "destination": "/admin/brands/index.html" },
-    { "source": "/admin/scrapes", "destination": "/admin/scrapes/index.html" },
-    { "source": "/admin", "destination": "/admin/catalogue/index.html" },
-    { "source": "/d/:slug", "destination": "https://qolksrytidvxarrlygyy.supabase.co/functions/v1/deal-meta?slug=:slug" }
+    {
+      "source": "/d/:slug",
+      "destination": "https://qolksrytidvxarrlygyy.supabase.co/functions/v1/deal-redirect?slug=:slug"
+    }
+  ],
+  "headers": [
+    {
+      "source": "/:path*",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=3600, s-maxage=3600"
+        }
+      ]
+    }
   ]
 }
