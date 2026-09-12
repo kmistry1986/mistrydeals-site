@@ -1,90 +1,19 @@
 {
-  "buildCommand": "",
-  "outputDirectory": ".",
-  "cleanUrls": true,
-  "trailingSlash": false,
-  "redirects": [
-    {
-      "source": "/admin",
-      "destination": "/catalogue"
-    },
-    {
-      "source": "/admin/catalogue",
-      "destination": "/catalogue"
-    },
-    {
-      "source": "/admin/dealqueue",
-      "destination": "/dealqueue"
-    },
-    {
-      "source": "/admin/queue",
-      "destination": "/dealqueue"
-    },
-    {
-      "source": "/admin/carousel",
-      "destination": "/carousel"
-    },
-    {
-      "source": "/admin/brands",
-      "destination": "/brandrules"
-    },
-    {
-      "source": "/admin/scrapes",
-      "destination": "/scrapelog"
-    },
-    {
-      "source": "/admin/reddit",
-      "destination": "/redditposter"
-    },
-    {
-      "source": "/admin/reddit-poster",
-      "destination": "/redditposter"
-    },
-    {
-      "source": "/reddit-poster",
-      "destination": "/redditposter"
-    },
-    {
-      "source": "/admin/guides",
-      "destination": "/buyingguides"
-    },
-    {
-      "source": "/buying-guides",
-      "destination": "/buyingguides"
-    }
-  ],
   "rewrites": [
     {
-      "source": "/catalogue",
-      "destination": "/catalogue.html"
-    },
-    {
-      "source": "/dealqueue",
-      "destination": "/dealqueue.html"
-    },
-    {
-      "source": "/carousel",
-      "destination": "/carousel.html"
-    },
-    {
-      "source": "/brandrules",
-      "destination": "/dealqueue.html"
-    },
-    {
-      "source": "/scrapelog",
-      "destination": "/dealqueue.html"
-    },
-    {
-      "source": "/redditposter",
-      "destination": "/redditposter.html"
-    },
-    {
-      "source": "/buyingguides",
-      "destination": "/buyingguides.html"
-    },
-    {
       "source": "/d/:slug",
-      "destination": "https://qolksrytidvxarrlygyy.supabase.co/functions/v1/deal-meta?slug=:slug"
+      "destination": "https://qolksrytidvxarrlygyy.supabase.co/functions/v1/deal-redirect?slug=:slug"
+    }
+  ],
+  "headers": [
+    {
+      "source": "/:path*",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=3600, s-maxage=3600"
+        }
+      ]
     }
   ]
 }
