@@ -12,6 +12,56 @@
 <link rel="stylesheet" href="/_ds/modernist-424462e2-4060-4771-92af-91bbc246b8fd/styles.css">
 <script src="/_ds/modernist-424462e2-4060-4771-92af-91bbc246b8fd/_ds_bundle.js"></script>
 <style>
+    /* 10a "consumer desk" — navy ink on warm paper, amber reserved for the drop */
+    :root {
+      --color-bg: #f2efe9;
+      --color-surface: #faf8f4;
+      --color-text: #16233a;
+      --color-divider: #cfc9bb;
+      --color-neutral-100: #faf8f4;
+      --color-neutral-200: #f2efe9;
+      --color-neutral-300: #e3dfd5;
+      --color-neutral-400: #c9c4b7;
+      --color-neutral-500: #9aa2b0;
+      --color-neutral-600: #7b8698;
+      --color-neutral-700: #5c6474;
+      --color-neutral-800: #2f3c55;
+      --color-neutral-900: #16233a;
+      --color-accent: #d98014;
+      --color-accent-500: #d98014;
+      --color-accent-100: color-mix(in oklch, #d98014, white 88%);
+      --color-accent-200: color-mix(in oklch, #d98014, white 74%);
+      --color-accent-300: color-mix(in oklch, #d98014, white 56%);
+      --color-accent-400: color-mix(in oklch, #d98014, white 28%);
+      --color-accent-600: color-mix(in oklch, #d98014, black 16%);
+      --color-accent-700: color-mix(in oklch, #d98014, black 30%);
+      --color-accent-800: color-mix(in oklch, #d98014, black 46%);
+      --color-accent-900: color-mix(in oklch, #d98014, black 62%);
+      --color-verify: #1c6b4a;
+      --color-verify-ink: #155a3e;
+    }
+    :root {
+      --color-accent-2: var(--color-accent);
+      --color-accent-2-100: var(--color-accent-100);
+      --color-accent-2-200: var(--color-accent-200);
+      --color-accent-2-300: var(--color-accent-300);
+      --color-accent-2-400: var(--color-accent-400);
+      --color-accent-2-500: var(--color-accent-500);
+      --color-accent-2-600: var(--color-accent-600);
+      --color-accent-2-700: var(--color-accent-700);
+      --color-accent-2-800: var(--color-accent-800);
+      --color-accent-2-900: var(--color-accent-900);
+    }
+
+    /* 10a: navy does the reading and the pressing, amber only points.
+       A solid amber button with light type sits at ~2.6:1 — unusable. */
+    .btn-primary {
+      background: var(--color-neutral-900); color: var(--color-bg);
+      border-color: var(--color-neutral-900);
+    }
+    .btn-primary:hover { background: var(--color-neutral-800); border-color: var(--color-neutral-800); }
+    .btn-primary:active { background: var(--color-neutral-900); }
+
   body { margin:0; background: var(--color-bg); color: var(--color-text); font-family: var(--font-body); }
   a { color: var(--color-accent-700); }
   a:hover { color: var(--color-accent-900); }
@@ -26,7 +76,7 @@
 <sc-if value="{{ verifying }}" hint-placeholder-val="{{ true }}">
   <div style="background:var(--color-bg);min-height:100vh;display:grid;place-items:center;padding:24px;color:var(--color-text)">
     <div style="display:flex;align-items:center;gap:9px;font-family:var(--font-heading);font-weight:800;font-size:13px;letter-spacing:.12em;text-transform:uppercase;color:var(--color-neutral-700)">
-      <span style="width:13px;height:13px;background:var(--color-accent);display:block"></span>Mistrydeals
+      <span style="position:relative;width:18.2px;height:18.2px;flex:none;display:block"><span style="position:absolute;left:0;top:0;width:13px;height:13px;border:1.9px solid var(--color-text);border-radius:50%;box-sizing:border-box;display:block"></span><span style="position:absolute;left:11px;top:10.4px;width:7.2px;height:1.9px;background:var(--color-accent);transform:rotate(45deg);transform-origin:left center;display:block"></span></span>Mistrydeals
     </div>
   </div>
 </sc-if>
@@ -35,7 +85,7 @@
   <div style="background:var(--color-bg);min-height:100vh;display:grid;place-items:center;padding:24px;color:var(--color-text)">
     <div style="width:100%;max-width:380px">
       <div style="display:flex;align-items:center;gap:9px;font-family:var(--font-heading);font-weight:800;font-size:13px;letter-spacing:.12em;text-transform:uppercase;margin-bottom:28px">
-        <span style="width:13px;height:13px;background:var(--color-accent);display:block"></span>Mistrydeals
+        <span style="position:relative;width:18.2px;height:18.2px;flex:none;display:block"><span style="position:absolute;left:0;top:0;width:13px;height:13px;border:1.9px solid var(--color-text);border-radius:50%;box-sizing:border-box;display:block"></span><span style="position:absolute;left:11px;top:10.4px;width:7.2px;height:1.9px;background:var(--color-accent);transform:rotate(45deg);transform-origin:left center;display:block"></span></span>Mistrydeals
       </div>
       <h1 style="margin:0 0 8px;font-size:34px;line-height:1.05;letter-spacing:-.02em">Admin sign in</h1>
       <p style="margin:0 0 24px;font-size:14px;color:var(--color-neutral-700)">Buying guides publish straight to the live site.</p>
@@ -1984,10 +2034,10 @@ class Component extends DCLogic {
           // a dead ASIN rather than buried in the grey meta line
           noWrite: (p.description || "").trim() ? "" : "No write-up",
           noWriteStyle: "font-family:var(--font-heading);font-weight:700;font-size:9px;letter-spacing:.08em;text-transform:uppercase;padding:3px 6px;" +
-            "background:var(--color-accent);color:var(--color-bg);display:" + ((p.description || "").trim() ? "none" : "inline-block"),
+            "background:var(--color-accent);color:#16233a;display:" + ((p.description || "").trim() ? "none" : "inline-block"),
           warn: dead ? "Not live" : "",
           warnStyle: "font-family:var(--font-heading);font-weight:700;font-size:9px;letter-spacing:.08em;text-transform:uppercase;padding:3px 6px;" +
-            "background:var(--color-accent);color:var(--color-bg);display:" + (dead ? "inline-block" : "none"),
+            "background:var(--color-accent);color:#16233a;display:" + (dead ? "inline-block" : "none"),
           open: open,
           toggle: () => this.setState({ openPick: open ? null : i }),
           toggleLabel: open ? "Done" : "Edit",

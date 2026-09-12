@@ -11,6 +11,14 @@
   <link rel="stylesheet" href="/_ds/modernist-424462e2-4060-4771-92af-91bbc246b8fd/styles.css">
   <style>
     body { margin: 0; }
+    /* 10a: navy does the reading and the pressing, amber only points.
+       A solid amber button with light type sits at ~2.6:1 — unusable. */
+    .btn-primary {
+      background: var(--color-neutral-900); color: var(--color-bg);
+      border-color: var(--color-neutral-900);
+    }
+    .btn-primary:hover { background: var(--color-neutral-800); border-color: var(--color-neutral-800); }
+    .btn-primary:active { background: var(--color-neutral-900); }
     a { color: var(--color-accent-700); }
     a:hover { color: var(--color-accent-600); }
 
@@ -35,13 +43,13 @@
 </helmet>
 
 <template id="__bundler_thumbnail">
-  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400"><rect width="400" height="400" fill="#f3f2f2"></rect><rect x="110" y="130" width="180" height="26" fill="#201e1d"></rect><rect x="110" y="176" width="180" height="26" fill="#201e1d"></rect><rect x="110" y="222" width="120" height="26" fill="#ec3013"></rect></svg>
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400"><rect width="400" height="400" fill="#f2efe9"></rect><rect x="110" y="130" width="180" height="26" fill="#16233a"></rect><rect x="110" y="176" width="180" height="26" fill="#16233a"></rect><rect x="110" y="222" width="120" height="26" fill="#d98014"></rect></svg>
 </template>
 
 <sc-if value="{{ verifying }}" hint-placeholder-val="{{ true }}">
   <div style="background:var(--color-bg);min-height:100vh;display:grid;place-items:center;padding:24px;color:var(--color-text)">
     <div class="m-wrap" style="display:flex;align-items:center;gap:9px;font-family:var(--font-heading);font-weight:800;font-size:13px;letter-spacing:.12em;text-transform:uppercase;color:var(--color-neutral-700)">
-      <span style="width:13px;height:13px;background:var(--color-accent);display:block"></span>Mistrydeals
+      <span style="position:relative;width:18.2px;height:18.2px;flex:none;display:block"><span style="position:absolute;left:0;top:0;width:13px;height:13px;border:1.9px solid var(--color-text);border-radius:50%;box-sizing:border-box;display:block"></span><span style="position:absolute;left:11px;top:10.4px;width:7.2px;height:1.9px;background:var(--color-accent);transform:rotate(45deg);transform-origin:left center;display:block"></span></span>Mistrydeals
     </div>
   </div>
 </sc-if>
@@ -50,7 +58,7 @@
   <div style="background:var(--color-bg);min-height:100vh;display:grid;place-items:center;padding:24px;color:var(--color-text)">
     <div style="width:100%;max-width:380px">
       <div class="m-wrap" style="display:flex;align-items:center;gap:9px;font-family:var(--font-heading);font-weight:800;font-size:13px;letter-spacing:.12em;text-transform:uppercase;margin-bottom:28px">
-        <span style="width:13px;height:13px;background:var(--color-accent);display:block"></span>Mistrydeals
+        <span style="position:relative;width:18.2px;height:18.2px;flex:none;display:block"><span style="position:absolute;left:0;top:0;width:13px;height:13px;border:1.9px solid var(--color-text);border-radius:50%;box-sizing:border-box;display:block"></span><span style="position:absolute;left:11px;top:10.4px;width:7.2px;height:1.9px;background:var(--color-accent);transform:rotate(45deg);transform-origin:left center;display:block"></span></span>Mistrydeals
       </div>
       <h1 class="m-fs-md" style="margin:0 0 8px;font-size:34px;line-height:1.05;letter-spacing:-.02em">Admin sign in</h1>
       <p style="margin:0 0 24px;font-size:14px;color:var(--color-neutral-700)">This area manages live deals and social posting.</p>
@@ -817,16 +825,19 @@ class Component extends DCLogic {
   paint() {
     const r = document.documentElement.style;
     const dark = this.isDark();
-    const NEUT = ["#f8f4f4", "#eae7e7", "#d7d3d3", "#bab6b6", "#9b9797", "#7d7979", "#605d5d", "#444141", "#2d2b2b"];
-    r.setProperty("--color-bg", dark ? "#141312" : "#f3f2f2");
-    r.setProperty("--color-surface", dark ? "#1e1c1b" : "#eae9e9");
-    r.setProperty("--color-text", dark ? "#f1efee" : "#201e1d");
-    r.setProperty("--color-divider", dark ? "color-mix(in srgb, #f1efee 26%, transparent)" : "color-mix(in srgb, #201e1d 40%, transparent)");
+    // 10a "consumer desk": navy ink on warm paper, amber reserved for the drop
+    const NEUT = ["#faf8f4", "#f2efe9", "#e3dfd5", "#c9c4b7", "#9aa2b0", "#7b8698", "#5c6474", "#2f3c55", "#16233a"];
+    r.setProperty("--color-bg", dark ? "#11151d" : "#f2efe9");
+    r.setProperty("--color-surface", dark ? "#1a202c" : "#faf8f4");
+    r.setProperty("--color-text", dark ? "#eef0f4" : "#16233a");
+    r.setProperty("--color-divider", dark ? "color-mix(in srgb, #eef0f4 26%, transparent)" : "#cfc9bb");
     NEUT.forEach((hex, i) => r.setProperty("--color-neutral-" + ((i + 1) * 100), dark ? NEUT[8 - i] : hex));
-    const base = "#ec3013";
+    r.setProperty("--color-verify", dark ? "#45a179" : "#1c6b4a");
+    r.setProperty("--color-verify-ink", dark ? "#7fc9a4" : "#155a3e");
+    const base = "#d98014";
     const mix = (w, p) => "color-mix(in oklch, " + base + ", " + w + " " + p + "%)";
-    const toward = dark ? "#141312" : "white";
-    const away = dark ? "#f1efee" : "black";
+    const toward = dark ? "#11151d" : "white";
+    const away = dark ? "#eef0f4" : "black";
     r.setProperty("--color-accent", base);
     r.setProperty("--color-accent-100", mix(toward, 88));
     r.setProperty("--color-accent-200", mix(toward, 74));
@@ -2072,12 +2083,12 @@ class Component extends DCLogic {
     const pill = (label, active, onPick) => ({
       label, pick: onPick,
       style: "font:inherit;font-size:12px;padding:7px 10px;cursor:pointer;white-space:nowrap;border:1px solid " +
-        (active ? "var(--color-accent);background:var(--color-accent);color:#f3f2f2" : "var(--color-divider);background:transparent;color:var(--color-text)")
+        (active ? "var(--color-accent);background:var(--color-accent);color:#16233a" : "var(--color-divider);background:transparent;color:var(--color-text)")
     });
     const chip = (label, on, title, onToggle) => ({
       label, title, toggle: onToggle,
       style: "font:inherit;font-family:var(--font-heading);font-weight:700;font-size:10px;line-height:1;padding:4px 5px;cursor:pointer;border:1px solid " +
-        (on ? "var(--color-accent);background:var(--color-accent);color:#f3f2f2" : "var(--color-divider);background:transparent;color:var(--color-neutral-600)")
+        (on ? "var(--color-accent);background:var(--color-accent);color:#16233a" : "var(--color-divider);background:transparent;color:var(--color-neutral-600)")
     });
 
     const rowBase = "display:grid;grid-template-columns:" + this.gridTemplate() +
@@ -2396,7 +2407,7 @@ class Component extends DCLogic {
       confirmDetail: (this.state.confirmBox || {}).detail || "",
       confirmLabel: (this.state.confirmBox || {}).label || "Confirm",
       confirmStyle: "font-size:13px;padding:9px 14px;cursor:pointer;border:1px solid " +
-        ((this.state.confirmBox || {}).danger ? "var(--color-accent);background:var(--color-accent);color:#f3f2f2" : "var(--color-text);background:var(--color-text);color:var(--color-bg)"),
+        ((this.state.confirmBox || {}).danger ? "var(--color-accent);background:var(--color-accent);color:#16233a" : "var(--color-text);background:var(--color-text);color:var(--color-bg)"),
       confirmYes: () => this.answer(true),
       confirmNo: () => this.answer(false),
       shellStyle: this.state.wide
@@ -2640,7 +2651,7 @@ class Component extends DCLogic {
           queueWhen: "",
           queueStyle: "display:inline-block;white-space:nowrap;font-family:var(--font-heading);font-weight:700;font-size:9.5px;letter-spacing:.08em;text-transform:uppercase;padding:3px 6px;" +
             (anyState.some(s => s.status === "failed")
-              ? "background:var(--color-accent);color:#f3f2f2"
+              ? "background:var(--color-accent);color:#16233a"
               : "border:1px solid var(--color-divider);color:var(--color-neutral-700)"),
           postVerb: "Post to",
           // same control shows state and queues: solid = went out in the last
@@ -2762,7 +2773,7 @@ class Component extends DCLogic {
           bar: "display:block;align-self:stretch;background:" + (st === "failed" ? "var(--color-accent)" : st === "published" ? "var(--color-neutral-500)" : "transparent"),
           statusStyle: "display:inline-block;font-family:var(--font-heading);font-weight:700;font-size:9.5px;letter-spacing:.08em;text-transform:uppercase;padding:3px 6px;" +
             (st === "published" ? "background:var(--color-neutral-900);color:var(--color-bg)"
-              : st === "failed" ? "background:var(--color-accent);color:#f3f2f2"
+              : st === "failed" ? "background:var(--color-accent);color:#16233a"
               : "border:1px solid var(--color-divider);color:var(--color-neutral-700)")
         };
       })
