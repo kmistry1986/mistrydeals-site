@@ -10,6 +10,7 @@
 <helmet>
   <link rel="stylesheet" href="/_ds/modernist-424462e2-4060-4771-92af-91bbc246b8fd/styles.css">
   <style>
+    html { -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
     body { margin: 0; }
     a:hover { color: var(--color-accent-700); }
 
@@ -24,6 +25,9 @@
 
     @media (max-width: 820px) {
       .m-stack { grid-template-columns: minmax(0,1fr) !important; gap: 22px !important; }
+      /* stacked, the cell divider has to run along the new edge, not the side */
+      .m-teaser { gap: 0 !important; }
+      .m-teaser > a:first-child { border-right: 0 !important; border-bottom: 1px solid var(--color-divider); }
       .m-2col { grid-template-columns: repeat(2, minmax(0,1fr)) !important; }
       .m-wrap { flex-wrap: wrap !important; }
       .seg { flex-wrap: wrap !important; max-width: 100%; }
@@ -43,16 +47,58 @@
          the dark toggle. */
       .nav { flex-direction: column; align-items: stretch !important; gap: 10px !important; padding: 12px 16px !important; }
       .nav > .nav-brand { font-size: 16px; }
-      .nav-links {
-        flex-wrap: nowrap !important; overflow-x: auto; gap: 16px !important;
-        font-size: 13px; margin: 0 -16px; padding: 2px 16px 6px;
+      .nav-links { display: none !important; }
+      .nav-links::-webkit-scrollbar { display: none; }
+      .m-wrap { min-width: 0 !important; }
+      /* the segments cannot fit a phone row, so they collapse behind one bar
+         and reopen as stacked full-width rows */
+      .m-filterbar { display: flex !important; margin-bottom: 14px; }
+      .m-controls { display: none !important; }
+      .m-controls.is-open { display: flex !important; }
+      .m-controls {
+        flex-direction: column !important; align-items: stretch !important;
+        gap: 8px !important; width: 100%; margin-bottom: 14px;
+      }
+      .m-clabel { margin-top: 4px; }
+      .m-cdiv { display: none !important; }
+      .m-controls .m-sort, .m-controls .m-seg2 {
+        flex-direction: column !important; overflow: visible !important;
+      }
+      .m-controls .m-sort > button, .m-controls .m-seg2 > button {
+        min-height: 44px; width: 100%; justify-content: flex-start;
+      }
+      .m-controls .m-sort > button + button, .m-controls .m-seg2 > button + button {
+        border-top: 1px solid var(--color-divider);
+      }
+      .m-chips.is-open {
+        display: grid !important; grid-template-columns: repeat(2, minmax(0,1fr));
+      }
+      .m-chips > button { min-height: 44px; }
+      .m-rail, .m-railnav { display: none !important; }
+      .m-minigrid {
+        display: flex !important; gap: 12px !important;
+        overflow-x: auto; scroll-snap-type: x mandatory;
+        min-width: 0 !important; margin: 0 -16px 40px !important;
+        padding: 0 16px 8px !important;
         scrollbar-width: none; -webkit-overflow-scrolling: touch;
       }
-      .nav-links::-webkit-scrollbar { display: none; }
+      .m-minigrid::-webkit-scrollbar { display: none; }
+      .m-minigrid > * { flex: 0 0 158px; scroll-snap-align: start; }
+      .m-minigrid .btn {
+        min-height: 44px; font-size: 12px !important; padding: 8px 6px !important;
+        gap: 2px !important; justify-content: center !important;
+      }
+      .m-minigrid .btn span { display: none !important; }
+      .m-sort {
+        min-width: 0 !important; max-width: 100%; box-sizing: border-box;
+        overflow-x: auto; scrollbar-width: none; -webkit-overflow-scrolling: touch;
+      }
+      .m-sort::-webkit-scrollbar { display: none; }
+      .m-sort > button { flex: 0 0 auto; min-height: 44px; }
       .nav-links > a { white-space: nowrap; }
       /* nowrap + a zero basis, or the design system's width:100% input eats
          the whole first line and pushes Search and the toggle onto a second */
-      .nav-search { min-width: 0 !important; flex-wrap: nowrap !important; }
+      .nav-search { min-width: 0 !important; width: 100%; box-sizing: border-box; flex-wrap: nowrap !important; }
       .nav-search > .input { flex: 1 1 0%; width: auto; min-width: 0; min-height: 44px; }
       .nav-search > .btn { min-height: 44px; flex: 0 0 auto; }
 
@@ -60,6 +106,11 @@
          and the price row to nothing */
       .m-cards { grid-template-columns: minmax(0,1fr) !important; }
       .m-2col { gap: 1px; }
+
+      /* category tiles: a 164px cell gives long names no break point wide
+         enough, so the tail ran past the tile edge */
+      .m-catgrid > a { padding: 14px 12px !important; min-height: 96px !important; }
+      .m-cat-name { font-size: 13.5px !important; }
 
       .m-band { padding: 56px 16px 48px !important; }
       .m-band > .m-fs-xl { margin-bottom: 24px !important; }
@@ -98,7 +149,17 @@
     <div class="m-wrap nav-search" style="display:flex;gap:8px;align-items:center;min-width:280px">
       <input class="input" placeholder="{{ searchLabel }}" value="{{ query }}" onChange="{{ onQuery }}" onKeyDown="{{ onQueryKey }}" />
       <button onClick="{{ runSearch }}" class="btn btn-secondary">Search</button>
-      <button onClick="{{ toggleDark }}" title="{{ darkTitle }}" style="{{ tDarkNav }}">{{ darkGlyph }}</button>
+      <div style="position:relative;flex:none"><button onClick="{{ toggleMenu }}" title="Menu" aria-label="Menu" aria-expanded="{{ menuExpanded }}" style="{{ tMenuBtn }}"><span style="display:block;width:16px;height:2px;background:currentColor"></span><span style="display:block;width:16px;height:2px;background:currentColor"></span><span style="display:block;width:16px;height:2px;background:currentColor"></span></button>
+      <sc-if value="{{ menuOpen }}" hint-placeholder-val="{{ false }}">
+        <div onClick="{{ closeMenu }}" style="position:fixed;inset:0;z-index:40"></div>
+        <div style="position:absolute;right:0;top:calc(100% + 8px);z-index:41;min-width:236px;background:var(--color-bg);border:2px solid var(--color-text);padding:6px 0;box-shadow:var(--shadow-lg)">
+          <sc-for list="{{ menuItems }}" as="m" hint-placeholder-count="5">
+            <a href="{{ m.href }}" onClick="{{ m.open }}" style="{{ m.style }}">{{ m.label }}</a>
+          </sc-for>
+          <div style="height:2px;background:var(--color-divider);margin:6px 0"></div>
+          <button onClick="{{ toggleDarkMenu }}" style="{{ tMenuDark }}"><span>{{ darkRowLabel }}</span><span style="font-size:15px">{{ darkGlyph }}</span></button>
+        </div>
+      </sc-if></div>
     </div>
   </div>
 
@@ -106,8 +167,8 @@
     <sc-if value="{{ browsing }}" hint-placeholder-val="{{ true }}">
     <div class="m-stack" style="display:grid;grid-template-columns:1.5fr 1fr;gap:48px;padding:56px 0 40px;align-items:end">
       <div>
-        <h1 class="m-fs-xl" style="font-size:72px;line-height:.98;letter-spacing:-.03em;margin:0 0 20px;max-width:20em">Every discount, checked against its own price history.</h1>
-        <p style="font-size:18px;max-width:44ch;margin-bottom:24px">{{ dealCount }} live Amazon deals, measured against what each product actually sold for. If the discount isn't real, it doesn't get posted.</p>
+        <h1 class="m-fs-xl" style="font-size:72px;line-height:.98;letter-spacing:-.03em;margin:0 0 20px;max-width:20em">Every discount, checked before it gets posted.</h1>
+        <p style="font-size:18px;max-width:44ch;margin-bottom:24px">{{ dealCount }} live Amazon deals, checked by hand. If the discount isn't real, it doesn't get posted.</p>
         <div style="display:flex;gap:10px">
           <button class="btn btn-primary" style="font-size:15px;padding:12px 18px" onClick="{{ seeDrops }}">See today's drops</button>
           <button class="btn btn-secondary" style="font-size:15px;padding:12px 18px" onClick="{{ goAbout }}">How we verify deals</button>
@@ -125,7 +186,7 @@
     </sc-if>
 
     <sc-if value="{{ browsing }}" hint-placeholder-val="{{ true }}">
-    <div class="m-stack" style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:0;border-top:2px solid var(--color-text);border-bottom:2px solid var(--color-text);margin:0 0 44px">
+    <div class="m-stack m-teaser" style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:0;border-top:2px solid var(--color-text);border-bottom:2px solid var(--color-text);margin:0 0 44px">
       <a href="{{ hGuide }}" onClick="{{ goGuide }}" style="display:flex;flex-direction:column;gap:8px;padding:22px 26px 24px;text-decoration:none;color:inherit;border-right:1px solid var(--color-divider)" style-hover="background:var(--color-surface)">
         <div style="font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--color-accent-700)">Buying guides</div>
         <div style="font-family:var(--font-heading);font-weight:800;font-size:23px;line-height:1.15;letter-spacing:-.02em">{{ guideTeaseTitle }}</div>
@@ -144,18 +205,20 @@
       <h2 style="margin:0">{{ promotedHeading }}</h2>
       <div class="m-wrap" style="display:flex;align-items:center;gap:14px">
         <span class="text-muted" style="font-size:13px">{{ promotedNote }}</span>
-        <div style="display:flex;gap:6px">
+        <div class="m-railnav" style="display:flex;gap:6px">
           <button onClick="{{ railBack }}" aria-label="Scroll left" class="btn btn-secondary" style="padding:8px 12px;font-size:14px;line-height:1">&#8592;</button>
           <button onClick="{{ railFwd }}" aria-label="Scroll right" class="btn btn-secondary" style="padding:8px 12px;font-size:14px;line-height:1">&#8594;</button>
         </div>
       </div>
     </div>
-    <div ref="{{ railRef }}" style="display:flex;gap:20px;overflow-x:auto;scroll-snap-type:x mandatory;padding-bottom:8px;margin-bottom:48px;scrollbar-width:thin">
+    <div ref="{{ railRef }}" class="m-rail" style="display:flex;gap:20px;overflow-x:auto;scroll-snap-type:x mandatory;padding-bottom:8px;margin-bottom:48px;scrollbar-width:thin">
       <sc-for list="{{ promoted }}" as="h" hint-placeholder-count="4">
         <div style="flex:0 0 320px;scroll-snap-align:start;display:flex;flex-direction:column;border:1px solid var(--color-divider);background:var(--color-surface)">
           <div style="position:relative;height:220px;background:#ffffff">
             <dc-import name="ProductImage" src="{{ h.img }}" alt="{{ h.title }}" pad="14px" hint-size="100%,100%"></dc-import>
-            <div class="m-fs-md" style="position:absolute;top:0;left:0;background:var(--color-accent);color:#16233a;font-family:var(--font-heading);font-weight:800;font-size:30px;line-height:1;padding:10px 12px;pointer-events:none">{{ h.off }}</div>
+            <sc-if value="{{ h.hasOff }}" hint-placeholder-val="{{ true }}">
+              <div class="m-fs-md" style="position:absolute;top:0;left:0;background:var(--color-accent);color:#16233a;font-family:var(--font-heading);font-weight:800;font-size:30px;line-height:1;padding:10px 12px;pointer-events:none">{{ h.off }}</div>
+            </sc-if>
             <div style="position:absolute;bottom:0;left:0;background:var(--color-neutral-900);color:var(--color-bg);font-family:var(--font-heading);font-weight:700;font-size:10px;letter-spacing:.1em;text-transform:uppercase;padding:5px 8px;pointer-events:none">{{ h.note }}</div>
             <sc-if value="{{ h.atLowest }}" hint-placeholder-val="{{ false }}">
               <div style="position:absolute;top:0;right:0;background:var(--color-verify);color:var(--color-bg);font-family:var(--font-heading);font-weight:700;font-size:10px;letter-spacing:.1em;text-transform:uppercase;padding:5px 8px;pointer-events:none">Lowest ever</div>
@@ -166,7 +229,9 @@
             <h4 style="margin:0;font-size:19px;line-height:1.2">{{ h.title }}</h4>
             <div class="m-wrap" style="display:flex;align-items:baseline;gap:10px;margin-top:auto;padding-top:8px">
               <span class="m-fs-md" style="font-family:var(--font-heading);font-weight:800;font-size:38px;line-height:1;letter-spacing:-.03em">{{ h.price }}</span>
-              <span style="font-size:14px;text-decoration:line-through;color:var(--color-neutral-600)">{{ h.was }}</span>
+              <sc-if value="{{ h.hasOff }}" hint-placeholder-val="{{ true }}">
+                <span style="font-size:14px;text-decoration:line-through;color:var(--color-neutral-600)">{{ h.was }}</span>
+              </sc-if>
               <sc-if value="{{ h.codeLine }}" hint-placeholder-val="{{ false }}">
                 <span style="font-family:var(--font-heading);font-weight:700;font-size:11px;letter-spacing:.08em;text-transform:uppercase;padding:3px 7px;border:1px solid var(--color-verify);color:var(--color-verify-ink);white-space:nowrap">{{ h.codeLine }}</span>
               </sc-if>
@@ -174,10 +239,14 @@
             <div style="font-size:11px;color:var(--color-neutral-700)">★ {{ h.rating }} {{ h.reviews }}</div>
             <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(118px,1fr));gap:8px">
               <a href="{{ h.url }}" target="_blank" rel="nofollow sponsored noopener" class="btn btn-primary" style="justify-content:space-between;font-size:13px;padding:11px 10px;gap:4px;min-width:0">Amazon <span>&#8594;</span></a>
-              <button onClick="{{ h.history }}" class="btn btn-secondary" style="justify-content:flex-start;font-size:13px;padding:11px 10px;min-width:0">Price history</button>
             </div>
           </div>
         </div>
+      </sc-for>
+    </div>
+    <div class="m-minigrid" style="display:none;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin-bottom:40px">
+      <sc-for list="{{ promotedMini }}" as="h" hint-placeholder-count="4">
+        <dc-import name="DealCardMini" deal="{{ h }}" hint-size="100%,300px"></dc-import>
       </sc-for>
     </div>
     </sc-if>
@@ -197,22 +266,29 @@
       <sc-if value="{{ browsing }}" hint-placeholder-val="{{ true }}">
         <h2 style="margin:0">Featured deals</h2>
       </sc-if>
-      <div class="m-wrap" style="display:flex;gap:10px;align-items:center">
-        <span style="font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--color-neutral-700)">Sort</span>
-        <div style="display:flex;border:1px solid var(--color-divider)">
+      <button onClick="{{ toggleFilters }}" class="m-filterbar" aria-expanded="{{ filtersExpanded }}" style="display:none;font:inherit;width:100%;min-height:44px;align-items:center;justify-content:space-between;gap:12px;padding:0 14px;background:transparent;border:1px solid var(--color-divider);cursor:pointer;color:var(--color-text);text-align:left">
+        <span style="display:flex;flex-direction:column;gap:2px;min-width:0">
+          <span style="font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--color-neutral-700)">Sort &amp; filter</span>
+          <span style="font-family:var(--font-heading);font-weight:700;font-size:13px;overflow:hidden;white-space:nowrap;text-overflow:ellipsis">{{ filterSummary }}</span>
+        </span>
+        <span style="font-size:11px;flex:none;color:var(--color-accent-700)">{{ filterCaret }}</span>
+      </button>
+      <div class="m-wrap m-controls {{ controlsOpen }}" style="display:flex;gap:10px;align-items:center">
+        <span class="m-clabel" style="font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--color-neutral-700)">Sort</span>
+        <div class="m-sort" style="display:flex;border:1px solid var(--color-divider)">
           <sc-for list="{{ sorts }}" as="o" hint-placeholder-count="4">
             <button onClick="{{ o.pick }}" style="{{ o.style }}">{{ o.label }}</button>
           </sc-for>
         </div>
-        <span style="width:1px;height:26px;background:var(--color-divider)"></span>
-        <span style="font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--color-neutral-700)">View</span>
-        <div style="display:flex;border:1px solid var(--color-divider)">
+        <span class="m-cdiv" style="width:1px;height:26px;background:var(--color-divider)"></span>
+        <span class="m-clabel" style="font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--color-neutral-700)">View</span>
+        <div class="m-seg2" style="display:flex;border:1px solid var(--color-divider)">
           <button onClick="{{ setGrid }}" style="{{ vGrid }}">Cards</button>
           <button onClick="{{ setList }}" style="{{ vList }}">List</button>
         </div>
       </div>
     </div>
-    <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:24px">
+    <div class="m-chips m-controls {{ controlsOpen }}" style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:24px">
       <sc-for list="{{ chips }}" as="c" hint-placeholder-count="8">
         <button onClick="{{ c.pick }}" style="{{ c.style }}">{{ c.label }}</button>
       </sc-for>
@@ -245,10 +321,10 @@
 
     <hr class="hr" style="margin:0 0 24px" />
     <h2 style="margin:0 0 20px">Browse by category</h2>
-    <div class="m-2col" style="display:grid;grid-template-columns:repeat(6,1fr);gap:1px;background:var(--color-divider);border:1px solid var(--color-divider);margin-bottom:48px">
+    <div class="m-2col m-catgrid" style="display:grid;grid-template-columns:repeat(6,1fr);gap:1px;background:var(--color-divider);border:1px solid var(--color-divider);margin-bottom:48px">
       <sc-for list="{{ cats }}" as="c" hint-placeholder-count="12">
         <a href="{{ c.href }}" onClick="{{ c.open }}" style="background:var(--color-bg);padding:18px 14px;text-decoration:none;color:inherit;display:flex;flex-direction:column;gap:6px;min-height:104px" style-hover="background:var(--color-accent-100)">
-          <span style="font-family:var(--font-heading);font-weight:800;font-size:15px;line-height:1.2">{{ c.name }}</span>
+          <span class="m-cat-name" style="font-family:var(--font-heading);font-weight:800;font-size:15px;line-height:1.2;overflow-wrap:anywhere;hyphens:auto">{{ c.name }}</span>
           <span style="font-size:11px;color:var(--color-neutral-600);margin-top:auto">{{ c.count }} deals</span>
           <span style="font-size:11px;color:var(--color-accent-700)">up to {{ c.max }} off</span>
         </a>
@@ -278,7 +354,7 @@
       <h2 class="m-fs-xl" style="margin:0 0 40px;font-size:124px;line-height:.9;letter-spacing:-.045em;max-width:16ch">One email a day. Only the real drops.</h2>
       <div style="height:2px;background:var(--color-bg);opacity:.35;margin-bottom:32px"></div>
       <div class="m-stack" style="display:grid;grid-template-columns:1.1fr 1fr;gap:48px;align-items:end">
-        <p style="font-size:20px;margin:0;max-width:40ch">The five deals that beat their own price history, and nothing else. No account, no digest of everything, unsubscribe in one click.</p>
+        <p style="font-size:20px;margin:0;max-width:40ch">The five best deals of the day, and nothing else. No account, no digest of everything, unsubscribe in one click.</p>
         <div class="m-band-form" style="display:flex;gap:10px">
           <input class="input" placeholder="you@email.com" style="background:var(--color-bg);border-color:var(--color-bg);min-height:56px;font-size:17px;padding:0 16px" />
           <button class="btn" style="background:var(--color-bg);color:var(--color-neutral-900);white-space:nowrap;font-size:17px;padding:0 24px;min-height:56px">Subscribe</button>
@@ -316,7 +392,17 @@
     </div>
     <div class="m-wrap nav-search" style="display:flex;gap:8px;align-items:center;min-width:280px">
       <input class="input" placeholder="{{ searchLabel }}" value="{{ query }}" onChange="{{ onQuery }}" onKeyDown="{{ onQueryKey }}" /><button onClick="{{ runSearch }}" class="btn btn-secondary">Search</button>
-      <button onClick="{{ toggleDark }}" title="{{ darkTitle }}" style="{{ tDarkNav }}">{{ darkGlyph }}</button>
+      <div style="position:relative;flex:none"><button onClick="{{ toggleMenu }}" title="Menu" aria-label="Menu" aria-expanded="{{ menuExpanded }}" style="{{ tMenuBtn }}"><span style="display:block;width:16px;height:2px;background:currentColor"></span><span style="display:block;width:16px;height:2px;background:currentColor"></span><span style="display:block;width:16px;height:2px;background:currentColor"></span></button>
+      <sc-if value="{{ menuOpen }}" hint-placeholder-val="{{ false }}">
+        <div onClick="{{ closeMenu }}" style="position:fixed;inset:0;z-index:40"></div>
+        <div style="position:absolute;right:0;top:calc(100% + 8px);z-index:41;min-width:236px;background:var(--color-bg);border:2px solid var(--color-text);padding:6px 0;box-shadow:var(--shadow-lg)">
+          <sc-for list="{{ menuItems }}" as="m" hint-placeholder-count="5">
+            <a href="{{ m.href }}" onClick="{{ m.open }}" style="{{ m.style }}">{{ m.label }}</a>
+          </sc-for>
+          <div style="height:2px;background:var(--color-divider);margin:6px 0"></div>
+          <button onClick="{{ toggleDarkMenu }}" style="{{ tMenuDark }}"><span>{{ darkRowLabel }}</span><span style="font-size:15px">{{ darkGlyph }}</span></button>
+        </div>
+      </sc-if></div>
     </div>
   </div>
   <div style="max-width:1280px;margin:0 auto;padding:0 16px">
@@ -379,7 +465,7 @@
         <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px">
           <span class="text-muted" style="font-size:13px">{{ catShowing }}</span>
           <div class="m-wrap" style="display:flex;gap:10px;align-items:center">
-            <div style="display:flex;border:1px solid var(--color-divider)">
+            <div class="m-sort" style="display:flex;border:1px solid var(--color-divider)">
               <sc-for list="{{ catSorts }}" as="o" hint-placeholder-count="3">
                 <button onClick="{{ o.pick }}" style="{{ o.style }}">{{ o.label }}</button>
               </sc-for>
@@ -422,7 +508,17 @@
     <a href="{{ hHome }}" onClick="{{ goHome }}" class="nav-brand m-wrap" style="display:flex;align-items:center;gap:8px;text-decoration:none"><span style="position:relative;width:19.6px;height:19.6px;flex:none;display:block"><span style="position:absolute;left:0;top:0;width:14px;height:14px;border:2.1px solid var(--color-text);border-radius:50%;box-sizing:border-box;display:block"></span><span style="position:absolute;left:11.9px;top:11.2px;width:7.7px;height:2.1px;background:var(--color-accent);transform:rotate(45deg);transform-origin:left center;display:block"></span></span>MISTRYDEALS</a>
     <div class="m-wrap nav-links" style="display:flex;gap:20px;align-items:center"><a href="{{ hHome }}" onClick="{{ goHome }}">Featured Deals</a><a href="{{ hCat }}" onClick="{{ goCat }}">Categories</a><a href="{{ hPrime }}" onClick="{{ goPrime }}">Prime Card Deals</a><a href="{{ hGuide }}" onClick="{{ goGuide }}">Buying Guides</a><a href="{{ hAbout }}" onClick="{{ goAbout }}">About</a></div>
     <div class="m-wrap nav-search" style="display:flex;gap:8px;align-items:center;min-width:280px"><input class="input" placeholder="{{ searchLabel }}" value="{{ query }}" onChange="{{ onQuery }}" onKeyDown="{{ onQueryKey }}" /><button onClick="{{ runSearch }}" class="btn btn-secondary">Search</button>
-      <button onClick="{{ toggleDark }}" title="{{ darkTitle }}" style="{{ tDarkNav }}">{{ darkGlyph }}</button></div>
+      <div style="position:relative;flex:none"><button onClick="{{ toggleMenu }}" title="Menu" aria-label="Menu" aria-expanded="{{ menuExpanded }}" style="{{ tMenuBtn }}"><span style="display:block;width:16px;height:2px;background:currentColor"></span><span style="display:block;width:16px;height:2px;background:currentColor"></span><span style="display:block;width:16px;height:2px;background:currentColor"></span></button>
+      <sc-if value="{{ menuOpen }}" hint-placeholder-val="{{ false }}">
+        <div onClick="{{ closeMenu }}" style="position:fixed;inset:0;z-index:40"></div>
+        <div style="position:absolute;right:0;top:calc(100% + 8px);z-index:41;min-width:236px;background:var(--color-bg);border:2px solid var(--color-text);padding:6px 0;box-shadow:var(--shadow-lg)">
+          <sc-for list="{{ menuItems }}" as="m" hint-placeholder-count="5">
+            <a href="{{ m.href }}" onClick="{{ m.open }}" style="{{ m.style }}">{{ m.label }}</a>
+          </sc-for>
+          <div style="height:2px;background:var(--color-divider);margin:6px 0"></div>
+          <button onClick="{{ toggleDarkMenu }}" style="{{ tMenuDark }}"><span>{{ darkRowLabel }}</span><span style="font-size:15px">{{ darkGlyph }}</span></button>
+        </div>
+      </sc-if></div></div>
   </div>
   <div style="max-width:1280px;margin:0 auto;padding:0 16px 56px">
     <div style="font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--color-neutral-600);padding:20px 0 24px">Home / Electronics / Headphones and Speakers</div>
@@ -458,20 +554,9 @@
         </div>
         <div style="border:2px solid var(--color-accent);padding:16px;margin-bottom:24px">
           <div style="font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--color-accent-700);margin-bottom:8px">Our verdict</div>
-          <p style="margin:0;font-size:15px"><strong>Buy.</strong> $99 matches the lowest price we have on record and has only been hit twice in the last year, both during Prime events. The 30-day median is $119.</p>
+          <p style="margin:0;font-size:15px"><strong>Buy.</strong> $99 is the best price we have seen on this model, and it has only been offered a handful of times. The 30-day median is $119.</p>
         </div>
-        <div style="margin-bottom:8px;font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--color-neutral-700)">90-day price history</div>
-        <div style="border:1px solid var(--color-divider);background:var(--color-surface);padding:16px">
-          <svg viewBox="0 0 600 150" style="width:100%;height:150px;display:block">
-            <line x1="0" y1="60" x2="600" y2="60" stroke="var(--color-neutral-400)" stroke-width="1" stroke-dasharray="4 4"></line>
-            <sc-for list="{{ bars }}" as="b" hint-placeholder-count="18">
-              <rect x="{{ b.x }}" y="{{ b.y }}" width="24" height="{{ b.h }}" fill="{{ b.fill }}"></rect>
-            </sc-for>
-          </svg>
-          <div style="display:flex;justify-content:space-between;font-size:11px;color:var(--color-neutral-700);padding-top:8px;border-top:1px solid var(--color-divider);margin-top:8px">
-            <span>May 12</span><span>Median $119</span><span>Today &#8212; $99, lowest on record</span>
-          </div>
-        </div>
+        
       </div>
     </div>
     <hr class="hr" style="margin:48px 0 28px" />
@@ -518,7 +603,17 @@
     <a href="{{ hHome }}" onClick="{{ goHome }}" class="nav-brand m-wrap" style="display:flex;align-items:center;gap:8px;text-decoration:none"><span style="position:relative;width:19.6px;height:19.6px;flex:none;display:block"><span style="position:absolute;left:0;top:0;width:14px;height:14px;border:2.1px solid var(--color-text);border-radius:50%;box-sizing:border-box;display:block"></span><span style="position:absolute;left:11.9px;top:11.2px;width:7.7px;height:2.1px;background:var(--color-accent);transform:rotate(45deg);transform-origin:left center;display:block"></span></span>MISTRYDEALS</a>
     <div class="m-wrap nav-links" style="display:flex;gap:20px;align-items:center"><a href="{{ hHome }}" onClick="{{ goHome }}">Featured Deals</a><a href="{{ hCat }}" onClick="{{ goCat }}">Categories</a><a href="{{ hPrime }}" onClick="{{ goPrime }}">Prime Card Deals</a><a href="{{ hGuide }}" aria-current="page" onClick="{{ goGuide }}">Buying Guides</a><a href="{{ hAbout }}" onClick="{{ goAbout }}">About</a></div>
     <div class="m-wrap nav-search" style="display:flex;gap:8px;align-items:center;min-width:280px"><input class="input" placeholder="{{ searchLabel }}" value="{{ query }}" onChange="{{ onQuery }}" onKeyDown="{{ onQueryKey }}" /><button onClick="{{ runSearch }}" class="btn btn-secondary">Search</button>
-      <button onClick="{{ toggleDark }}" title="{{ darkTitle }}" style="{{ tDarkNav }}">{{ darkGlyph }}</button></div>
+      <div style="position:relative;flex:none"><button onClick="{{ toggleMenu }}" title="Menu" aria-label="Menu" aria-expanded="{{ menuExpanded }}" style="{{ tMenuBtn }}"><span style="display:block;width:16px;height:2px;background:currentColor"></span><span style="display:block;width:16px;height:2px;background:currentColor"></span><span style="display:block;width:16px;height:2px;background:currentColor"></span></button>
+      <sc-if value="{{ menuOpen }}" hint-placeholder-val="{{ false }}">
+        <div onClick="{{ closeMenu }}" style="position:fixed;inset:0;z-index:40"></div>
+        <div style="position:absolute;right:0;top:calc(100% + 8px);z-index:41;min-width:236px;background:var(--color-bg);border:2px solid var(--color-text);padding:6px 0;box-shadow:var(--shadow-lg)">
+          <sc-for list="{{ menuItems }}" as="m" hint-placeholder-count="5">
+            <a href="{{ m.href }}" onClick="{{ m.open }}" style="{{ m.style }}">{{ m.label }}</a>
+          </sc-for>
+          <div style="height:2px;background:var(--color-divider);margin:6px 0"></div>
+          <button onClick="{{ toggleDarkMenu }}" style="{{ tMenuDark }}"><span>{{ darkRowLabel }}</span><span style="font-size:15px">{{ darkGlyph }}</span></button>
+        </div>
+      </sc-if></div></div>
   </div>
   <div style="max-width:1280px;margin:0 auto;padding:0 16px 56px">
     <sc-if value="{{ guideNavShow }}" hint-placeholder-val="{{ true }}">
@@ -592,7 +687,6 @@
                 </sc-if>
                 <div style="display:flex;gap:8px;margin-top:2px;flex-wrap:wrap">
                   <a class="btn btn-primary" href="{{ d.url }}" target="_blank" rel="nofollow sponsored noopener" style="font-size:13px;padding:9px 14px">Amazon &#8594;</a>
-                  <button onClick="{{ d.history }}" class="btn btn-secondary" style="justify-content:flex-start;font-size:13px;padding:9px 14px">Price history</button>
                 </div>
               </div>
             </div>
@@ -642,7 +736,17 @@
     <a href="{{ hHome }}" onClick="{{ goHome }}" class="nav-brand m-wrap" style="display:flex;align-items:center;gap:8px;text-decoration:none"><span style="position:relative;width:19.6px;height:19.6px;flex:none;display:block"><span style="position:absolute;left:0;top:0;width:14px;height:14px;border:2.1px solid var(--color-text);border-radius:50%;box-sizing:border-box;display:block"></span><span style="position:absolute;left:11.9px;top:11.2px;width:7.7px;height:2.1px;background:var(--color-accent);transform:rotate(45deg);transform-origin:left center;display:block"></span></span>MISTRYDEALS</a>
     <div class="m-wrap nav-links" style="display:flex;gap:20px;align-items:center"><a href="{{ hHome }}" onClick="{{ goHome }}">Featured Deals</a><a href="{{ hCat }}" onClick="{{ goCat }}">Categories</a><a href="{{ hPrime }}" aria-current="page" onClick="{{ goPrime }}">Prime Card Deals</a><a href="{{ hGuide }}" onClick="{{ goGuide }}">Buying Guides</a><a href="{{ hAbout }}" onClick="{{ goAbout }}">About</a></div>
     <div class="m-wrap nav-search" style="display:flex;gap:8px;align-items:center;min-width:280px"><input class="input" placeholder="{{ searchLabel }}" value="{{ query }}" onChange="{{ onQuery }}" onKeyDown="{{ onQueryKey }}" /><button onClick="{{ runSearch }}" class="btn btn-secondary">Search</button>
-      <button onClick="{{ toggleDark }}" title="{{ darkTitle }}" style="{{ tDarkNav }}">{{ darkGlyph }}</button></div>
+      <div style="position:relative;flex:none"><button onClick="{{ toggleMenu }}" title="Menu" aria-label="Menu" aria-expanded="{{ menuExpanded }}" style="{{ tMenuBtn }}"><span style="display:block;width:16px;height:2px;background:currentColor"></span><span style="display:block;width:16px;height:2px;background:currentColor"></span><span style="display:block;width:16px;height:2px;background:currentColor"></span></button>
+      <sc-if value="{{ menuOpen }}" hint-placeholder-val="{{ false }}">
+        <div onClick="{{ closeMenu }}" style="position:fixed;inset:0;z-index:40"></div>
+        <div style="position:absolute;right:0;top:calc(100% + 8px);z-index:41;min-width:236px;background:var(--color-bg);border:2px solid var(--color-text);padding:6px 0;box-shadow:var(--shadow-lg)">
+          <sc-for list="{{ menuItems }}" as="m" hint-placeholder-count="5">
+            <a href="{{ m.href }}" onClick="{{ m.open }}" style="{{ m.style }}">{{ m.label }}</a>
+          </sc-for>
+          <div style="height:2px;background:var(--color-divider);margin:6px 0"></div>
+          <button onClick="{{ toggleDarkMenu }}" style="{{ tMenuDark }}"><span>{{ darkRowLabel }}</span><span style="font-size:15px">{{ darkGlyph }}</span></button>
+        </div>
+      </sc-if></div></div>
   </div>
   <div style="max-width:1280px;margin:0 auto;padding:0 16px 56px">
     <div class="m-stack" style="display:grid;grid-template-columns:1.5fr 1fr;gap:48px;padding:48px 0 28px;align-items:end">
@@ -696,7 +800,17 @@
     <a href="{{ hHome }}" onClick="{{ goHome }}" class="nav-brand m-wrap" style="display:flex;align-items:center;gap:8px;text-decoration:none"><span style="position:relative;width:19.6px;height:19.6px;flex:none;display:block"><span style="position:absolute;left:0;top:0;width:14px;height:14px;border:2.1px solid var(--color-text);border-radius:50%;box-sizing:border-box;display:block"></span><span style="position:absolute;left:11.9px;top:11.2px;width:7.7px;height:2.1px;background:var(--color-accent);transform:rotate(45deg);transform-origin:left center;display:block"></span></span>MISTRYDEALS</a>
     <div class="m-wrap nav-links" style="display:flex;gap:20px;align-items:center"><a href="{{ hHome }}" onClick="{{ goHome }}">Featured Deals</a><a href="{{ hCat }}" onClick="{{ goCat }}">Categories</a><a href="{{ hPrime }}" onClick="{{ goPrime }}">Prime Card Deals</a><a href="{{ hGuide }}" onClick="{{ goGuide }}">Buying Guides</a><a href="{{ hAbout }}" aria-current="page" onClick="{{ goAbout }}">About</a></div>
     <div class="m-wrap nav-search" style="display:flex;gap:8px;align-items:center;min-width:280px"><input class="input" placeholder="{{ searchLabel }}" value="{{ query }}" onChange="{{ onQuery }}" onKeyDown="{{ onQueryKey }}" /><button onClick="{{ runSearch }}" class="btn btn-secondary">Search</button>
-      <button onClick="{{ toggleDark }}" title="{{ darkTitle }}" style="{{ tDarkNav }}">{{ darkGlyph }}</button></div>
+      <div style="position:relative;flex:none"><button onClick="{{ toggleMenu }}" title="Menu" aria-label="Menu" aria-expanded="{{ menuExpanded }}" style="{{ tMenuBtn }}"><span style="display:block;width:16px;height:2px;background:currentColor"></span><span style="display:block;width:16px;height:2px;background:currentColor"></span><span style="display:block;width:16px;height:2px;background:currentColor"></span></button>
+      <sc-if value="{{ menuOpen }}" hint-placeholder-val="{{ false }}">
+        <div onClick="{{ closeMenu }}" style="position:fixed;inset:0;z-index:40"></div>
+        <div style="position:absolute;right:0;top:calc(100% + 8px);z-index:41;min-width:236px;background:var(--color-bg);border:2px solid var(--color-text);padding:6px 0;box-shadow:var(--shadow-lg)">
+          <sc-for list="{{ menuItems }}" as="m" hint-placeholder-count="5">
+            <a href="{{ m.href }}" onClick="{{ m.open }}" style="{{ m.style }}">{{ m.label }}</a>
+          </sc-for>
+          <div style="height:2px;background:var(--color-divider);margin:6px 0"></div>
+          <button onClick="{{ toggleDarkMenu }}" style="{{ tMenuDark }}"><span>{{ darkRowLabel }}</span><span style="font-size:15px">{{ darkGlyph }}</span></button>
+        </div>
+      </sc-if></div></div>
   </div>
   <div style="max-width:1280px;margin:0 auto;padding:0 16px 56px">
     <div style="padding:56px 0 32px;max-width:62ch">
@@ -714,7 +828,7 @@
     <div class="m-stack" style="display:grid;grid-template-columns:1fr 1fr;gap:56px;margin-bottom:48px">
       <div>
         <h2 style="margin:0 0 24px">The three checks</h2>
-        <div style="border-top:2px solid var(--color-divider);padding:16px 0;display:flex;gap:20px"><span style="font-family:var(--font-heading);font-weight:800;font-size:15px;color:var(--color-accent-700);min-width:26px">01</span><div><h4 style="margin:0 0 6px">Price history, not list price</h4><p style="margin:0;font-size:15px">We compare against the 90-day median the product actually sold at. A "60% off" that only beats a list price nobody paid fails here.</p></div></div>
+        <div style="border-top:2px solid var(--color-divider);padding:16px 0;display:flex;gap:20px"><span style="font-family:var(--font-heading);font-weight:800;font-size:15px;color:var(--color-accent-700);min-width:26px">01</span><div><h4 style="margin:0 0 6px">A real discount, not a list price</h4><p style="margin:0;font-size:15px">We check the discount against what the product is actually selling for. A "60% off" that only beats a list price nobody paid fails here.</p></div></div>
         <div style="border-top:1px solid var(--color-divider);padding:16px 0;display:flex;gap:20px"><span style="font-family:var(--font-heading);font-weight:800;font-size:15px;color:var(--color-accent-700);min-width:26px">02</span><div><h4 style="margin:0 0 6px">Product quality floor</h4><p style="margin:0;font-size:15px">Four stars or better with enough ratings to mean something, and a review profile that doesn't look bought.</p></div></div>
         <div style="border-top:1px solid var(--color-divider);border-bottom:2px solid var(--color-divider);padding:16px 0;display:flex;gap:20px"><span style="font-family:var(--font-heading);font-weight:800;font-size:15px;color:var(--color-accent-700);min-width:26px">03</span><div><h4 style="margin:0 0 6px">Still live when you click</h4><p style="margin:0;font-size:15px">Prices are re-checked hourly and expired deals come down. Every card shows when it was last verified.</p></div></div>
       </div>
@@ -1051,7 +1165,7 @@
     </div>
     <div style="padding:16px 14px 12px">
       <div style="font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--color-accent-700);margin-bottom:10px">{{ addedWeek }} added this week</div>
-      <h1 class="m-fs-md" style="font-size:34px;line-height:1.02;letter-spacing:-.03em;margin:0 0 10px">Every discount, checked against its own price history.</h1>
+      <h1 class="m-fs-md" style="font-size:34px;line-height:1.02;letter-spacing:-.03em;margin:0 0 10px">Every discount, checked before it gets posted.</h1>
       <p style="font-size:14px;margin:0 0 14px">{{ dealCount }} live Amazon deals. If the discount isn't real, it doesn't get posted.</p>
       <div style="display:flex;gap:24px;border-top:2px solid var(--color-divider);border-bottom:2px solid var(--color-divider);padding:10px 0">
         <div><div style="font-family:var(--font-heading);font-weight:800;font-size:22px">{{ dealCount }}</div><div style="font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:var(--color-neutral-700)">Live</div></div>
@@ -1131,109 +1245,11 @@
   </div>
 </div>
 </sc-if>
-<sc-if value="{{ histOpen }}" hint-placeholder-val="{{ false }}">
-  <div onClick="{{ histClose }}" style="position:fixed;inset:0;background:color-mix(in srgb, var(--color-neutral-900) 55%, transparent);display:grid;place-items:center;padding:20px;z-index:95">
-    <div onClick="{{ histStop }}" style="background:var(--color-bg);border:2px solid var(--color-text);max-width:660px;width:100%;max-height:88vh;overflow:auto;padding:22px">
-      <div style="display:flex;align-items:flex-start;gap:14px;border-bottom:2px solid var(--color-divider);padding-bottom:14px">
-        <div style="min-width:0">
-          <div style="font-family:var(--font-heading);font-weight:700;font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--color-neutral-700)">Price history</div>
-          <h2 style="margin:6px 0 0;font-size:20px;line-height:1.22;letter-spacing:-.01em;overflow-wrap:break-word">{{ histTitle }}</h2>
-          <div style="font-size:11px;letter-spacing:.04em;color:var(--color-neutral-600);margin-top:4px">{{ histAsin }}</div>
-        </div>
-        <button onClick="{{ histClose }}" aria-label="Close" style="font:inherit;font-size:18px;line-height:1;flex:none;margin-left:auto;width:38px;height:38px;display:flex;align-items:center;justify-content:center;cursor:pointer;background:transparent;border:1px solid var(--color-divider);color:var(--color-text)">&#215;</button>
-      </div>
-
-      <sc-if value="{{ histErr }}" hint-placeholder-val="{{ false }}">
-        <div style="border-left:3px solid var(--color-accent);padding:12px 14px;margin-top:18px;font-size:13px;line-height:1.45;color:var(--color-accent-700)">{{ histErr }}</div>
-      </sc-if>
-      <sc-if value="{{ histLoading }}" hint-placeholder-val="{{ true }}">
-        <div style="padding:44px;text-align:center;font-size:13px;color:var(--color-neutral-700)">Loading price history&#8230;</div>
-      </sc-if>
-      <sc-if value="{{ histNoChart }}" hint-placeholder-val="{{ false }}">
-        <div style="padding:40px 0;text-align:center;font-size:13px;line-height:1.5;color:var(--color-neutral-700)">Not enough readings yet to chart this one &#8212; we need at least two price checks on record.</div>
-      </sc-if>
-
-      <sc-if value="{{ histHasChart }}" hint-placeholder-val="{{ false }}">
-        <div style="padding:20px 0 0">
-          <div style="position:relative">
-            <svg viewBox="{{ chart.viewBox }}" preserveAspectRatio="none" width="100%" height="240" role="img" style="display:block">
-              <sc-for list="{{ chart.yTicks }}" as="t" hint-placeholder-count="4">
-                <line x1="{{ chart.axisX }}" y1="{{ t.y }}" x2="{{ chart.axisW }}" y2="{{ t.y }}" vector-effect="non-scaling-stroke" style="stroke:var(--color-divider);stroke-width:1;opacity:.55"></line>
-              </sc-for>
-              <line x1="{{ chart.axisX }}" y1="{{ chart.axisTop }}" x2="{{ chart.axisX }}" y2="{{ chart.axisY }}" vector-effect="non-scaling-stroke" style="stroke:var(--color-divider);stroke-width:1"></line>
-              <line x1="{{ chart.axisX }}" y1="{{ chart.axisY }}" x2="{{ chart.axisW }}" y2="{{ chart.axisY }}" vector-effect="non-scaling-stroke" style="stroke:var(--color-text);stroke-width:1"></line>
-              <sc-if value="{{ chart.hasLow }}" hint-placeholder-val="{{ false }}">
-                <line x1="{{ chart.axisX }}" y1="{{ chart.lowY }}" x2="{{ chart.axisW }}" y2="{{ chart.lowY }}" vector-effect="non-scaling-stroke" style="{{ chart.lowLineStyle }}"></line>
-              </sc-if>
-              <sc-if value="{{ chart.hasReg }}" hint-placeholder-val="{{ false }}">
-                <path d="{{ chart.regPath }}" vector-effect="non-scaling-stroke" style="{{ chart.regStyle }}"></path>
-              </sc-if>
-              <sc-if value="{{ chart.hasCoupon }}" hint-placeholder-val="{{ false }}">
-                <path d="{{ chart.couponPath }}" vector-effect="non-scaling-stroke" style="{{ chart.couponStyle }}"></path>
-              </sc-if>
-              <sc-if value="{{ chart.hasPrice }}" hint-placeholder-val="{{ true }}">
-                <path d="{{ chart.pricePath }}" vector-effect="non-scaling-stroke" style="{{ chart.priceStyle }}"></path>
-              </sc-if>
-              <sc-for list="{{ chart.regDots }}" as="d" hint-placeholder-count="6">
-                <circle cx="{{ d.cx }}" cy="{{ d.cy }}" r="3" fill="var(--color-bg)" stroke="var(--color-neutral-500)" stroke-width="1.5" vector-effect="non-scaling-stroke"></circle>
-              </sc-for>
-              <sc-for list="{{ chart.priceDots }}" as="d" hint-placeholder-count="8">
-                <circle cx="{{ d.cx }}" cy="{{ d.cy }}" r="{{ d.r }}" fill="{{ d.fill }}"><title>{{ d.tip }}</title></circle>
-              </sc-for>
-              <sc-for list="{{ chart.couponDots }}" as="d" hint-placeholder-count="3">
-                <circle cx="{{ d.cx }}" cy="{{ d.cy }}" r="3.5" fill="var(--color-bg)" stroke="var(--color-text)" stroke-width="1.5" vector-effect="non-scaling-stroke"><title>{{ d.tip }}</title></circle>
-              </sc-for>
-              <sc-if value="{{ chart.hasLow }}" hint-placeholder-val="{{ false }}">
-                <circle cx="{{ chart.lowX }}" cy="{{ chart.lowY }}" r="5" fill="var(--color-accent-700)"></circle>
-              </sc-if>
-              <sc-for list="{{ chart.hoverDots }}" as="d" hint-placeholder-count="8">
-                <circle cx="{{ d.cx }}" cy="{{ d.cy }}" r="9" fill="transparent" onMouseEnter="{{ d.enter }}" onMouseLeave="{{ d.leave }}" style="cursor:crosshair"><title>{{ d.tip }}</title></circle>
-              </sc-for>
-            </svg>
-            <sc-for list="{{ chart.yTicks }}" as="t" hint-placeholder-count="4">
-              <div style="position:absolute;left:0;top:{{ t.top }};transform:translateY(-50%);font-size:11px;line-height:1;color:var(--color-neutral-600);pointer-events:none;white-space:nowrap">{{ t.label }}</div>
-            </sc-for>
-            <sc-if value="{{ chart.hasLow }}" hint-placeholder-val="{{ false }}">
-              <div style="position:absolute;right:0;top:{{ chart.lowLabelTop }};max-width:38%;overflow:hidden;text-overflow:ellipsis;font-family:var(--font-heading);font-weight:800;font-size:12px;line-height:1.2;color:var(--color-accent-700);pointer-events:none;white-space:nowrap">{{ chart.lowLabel }}</div>
-            </sc-if>
-            <sc-if value="{{ histTipOn }}" hint-placeholder-val="{{ false }}">
-              <div style="position:absolute;left:{{ histTipLeft }};top:{{ histTipTop }};transform:translate(-50%,-160%);background:var(--color-text);color:var(--color-bg);font-family:var(--font-heading);font-weight:700;font-size:11px;padding:5px 8px;white-space:nowrap;pointer-events:none;z-index:2">{{ histTipText }}</div>
-            </sc-if>
-          </div>
-          <div style="position:relative;height:16px;margin-top:2px">
-            <sc-for list="{{ chart.xTicks }}" as="t" hint-placeholder-count="4">
-              <div style="position:absolute;left:{{ t.left }};transform:{{ t.align }};font-size:11px;line-height:1;color:var(--color-neutral-600);white-space:nowrap">{{ t.label }}</div>
-            </sc-for>
-          </div>
-          <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(128px,1fr));gap:2px 18px;padding:14px 0 0;border-top:1px solid var(--color-divider);margin-top:12px">
-            <sc-for list="{{ chart.keyRows }}" as="l" hint-placeholder-count="4">
-              <div style="display:flex;align-items:flex-start;gap:8px;padding:6px 0">
-                <span style="{{ l.swatch }}"></span>
-                <div style="min-width:0">
-                  <div style="font-family:var(--font-heading);font-weight:700;font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:var(--color-neutral-600)">{{ l.label }}</div>
-                  <div style="display:flex;align-items:baseline;gap:6px;margin-top:2px">
-                    <span style="font-family:var(--font-heading);font-weight:800;font-size:17px;line-height:1.1">{{ l.value }}</span>
-                    <span style="font-size:11px;color:var(--color-neutral-600)">{{ l.note }}</span>
-                  </div>
-                </div>
-              </div>
-            </sc-for>
-          </div>
-          <sc-if value="{{ chart.statLine }}" hint-placeholder-val="{{ false }}">
-            <div style="font-size:11.5px;color:var(--color-neutral-600);padding:10px 0 0">{{ chart.statLine }}</div>
-          </sc-if>
-
-          <div style="font-size:11.5px;line-height:1.5;color:var(--color-neutral-600);padding:8px 0 0">Prices are what our checks recorded, not Amazon's own history. Amazon's price can change at any time.</div>
-        </div>
-      </sc-if>
-    </div>
-  </div>
-</sc-if>
 </x-dc>
 <script type="text/x-dc" data-dc-script data-props="{&quot;accent&quot;:{&quot;editor&quot;:&quot;color&quot;,&quot;default&quot;:&quot;#d98014&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;options&quot;:[&quot;#d98014&quot;,&quot;#ec3013&quot;,&quot;#0f6b4f&quot;,&quot;#1b3fd8&quot;],&quot;section&quot;:&quot;Theme&quot;},&quot;dark&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:false,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Theme&quot;}}">
 const mk = (title, cat, sub, price, was, off, rating, reviews, updated, code) => ({
   title, cat, sub, price, was, off: "\u2212" + off + "%", hasOff: true, rating,
-  reviews: "(" + reviews + ")", updated, code: code || "",
+  reviews: "(" + reviews + ")", updated, code: code || "", codeNote: code ? "code " + code : "",
   img: "", noImg: true, url: "#"
 });
 
@@ -1283,7 +1299,7 @@ const ROUTE_OF = { home: "", category: "categories", guide: "guides", prime: "pr
 const SCREEN_OF = { "": "home", deals: "home", categories: "category", guides: "guide", prime: "prime", about: "about", mobile: "mobile", admin: "admin", deal: "detail" };
 
 class Component extends DCLogic {
-  state = { screen: "home", view: "grid", dark: (function(){ try { return localStorage.getItem("md-theme") === "dark"; } catch (e) { return false; } })() };
+  state = { screen: "home", view: (function(){ try { return window.innerWidth <= 560 ? "list" : "grid"; } catch (e) { return "grid"; } })(), dark: (function(){ try { return localStorage.getItem("md-theme") === "dark"; } catch (e) { return false; } })() };
   componentDidMount() {
     this.readHash();
     window.addEventListener("hashchange", this.readHash);
@@ -1360,19 +1376,33 @@ class Component extends DCLogic {
     const BASE = "https://qolksrytidvxarrlygyy.supabase.co";
     const KEY = "sb_publishable_UX38KeF1XAKtzvS01yfx7w_8s5NkOH3";
     try {
-      const res = await fetch(BASE + "/rest/v1/product_pipeline?select=asin,price&status=neq.rejected&price=not.is.null&asin=not.is.null&order=created_at.desc&limit=4000",
+      const res = await fetch(BASE + "/rest/v1/product_pipeline?select=asin,price,original_price,created_at&status=neq.rejected&price=not.is.null&asin=not.is.null&order=created_at.desc&limit=4000",
         { headers: { apikey: KEY, Authorization: "Bearer " + KEY } });
       if (!res.ok) return;
       const map = {};
+      // rows arrive newest first, so the first original_price seen for an ASIN
+      // is the most recent one the scraper observed
+      const regMap = {};
       (await res.json()).forEach(r => {
         const v = Number(r.price);
+        const reg = Number(r.original_price);
+        const ak = String(r.asin || "").trim().toUpperCase();
+        if (ak && reg > 0 && !regMap[ak]) regMap[ak] = { reg, at: r.created_at };
         if (!r.asin || !(v > 0)) return;
         const cur = map[r.asin];
         if (!cur) map[r.asin] = { low: v, n: 1 };
         else { cur.n++; if (v < cur.low) cur.low = v; }
       });
-      this.setState({ lowByAsin: map });
+      this.setState({ lowByAsin: map, regByAsin: regMap });
     } catch (e) {}
+  }
+
+  // latest regular price the scraper saw for this ASIN, falling back to the
+  // snapshot on the products row when the pipeline has nothing newer
+  regularOf(asin, stored) {
+    const rec = asin ? (this.state.regByAsin || {})[asin] : null;
+    const live = rec && rec.reg > 0 ? rec.reg : null;
+    return live != null ? live : stored;
   }
 
   // true only when the pipeline has seen this ASIN more than once — a single
@@ -1398,258 +1428,18 @@ class Component extends DCLogic {
       this.setState({ couponByAsin: map });
     } catch (e) {}
   }
-  // Price history for a public card: the pipeline is the record of what the
-  // scrapers actually saw, so the chart is drawn from it and price_history only
-  // fills the older tail.
-  openHistory(d) {
-    if (!d) return;
-    this.setState({
-      histBox: { asin: String(d.asin || "").trim().toUpperCase(), productId: d.productId || null, title: d.title || "", price: d.priceNum },
-      hist: null, histRuns: null, histErr: "", histTip: null
-    }, () => this.loadHistory());
-  }
 
-  closeHistory() { this.setState({ histBox: null, hist: null, histRuns: null, histErr: "", histTip: null }); }
 
-  async loadHistory() {
-    const box = this.state.histBox;
-    if (!box) return;
-    const BASE = "https://qolksrytidvxarrlygyy.supabase.co";
-    const KEY = "sb_publishable_UX38KeF1XAKtzvS01yfx7w_8s5NkOH3";
-    const HK = { apikey: KEY, Authorization: "Bearer " + KEY };
-    try {
-      if (!box.asin) throw new Error("This product has no ASIN, so the pipeline cannot be searched for it.");
-      const runs = await fetch(BASE + "/rest/v1/product_pipeline?select=*&asin=eq." +
-        encodeURIComponent(box.asin) + "&order=created_at.desc&limit=60", { headers: HK });
-      if (!runs.ok) throw new Error("Could not read product_pipeline (HTTP " + runs.status + ")");
-      const histRuns = await runs.json();
-      let hist = [];
-      if (box.productId) {
-        const h = await fetch(BASE + "/rest/v1/price_history?select=price,recorded_at&product_id=eq." +
-          encodeURIComponent(box.productId) + "&order=recorded_at.asc&limit=200", { headers: HK });
-        if (h.ok) hist = await h.json();
-      }
-      this.setState({ hist: hist, histRuns: histRuns });
-    } catch (e) { this.setState({ histErr: String(e.message || e) }); }
-  }
 
-  // every price point for the ASIN, oldest first. kind marks the origin: only
-  // "scrape" (product_pipeline) points count towards the lowest-ever verdict.
-  histPoints() {
-    const out = [];
-    (this.state.hist || []).forEach(h => {
-      const v = Number(h.price);
-      if (v > 0) out.push({ price: v, at: h.recorded_at, kind: "sync" });
-    });
-    (this.state.histRuns || []).forEach(r => {
-      const v = Number(r.price);
-      if (v > 0) out.push({ price: v, at: r.created_at, kind: "scrape", status: r.status });
-    });
-    out.sort((a, b) => Date.parse(a.at) - Date.parse(b.at));
-    // a price check written the same minute as a scrape is one observation
-    return out.filter((p, i) => i === 0 || !(p.price === out[i - 1].price &&
-      Math.abs(Date.parse(p.at) - Date.parse(out[i - 1].at)) < 120000));
-  }
 
-  // rejected scrapes are excluded everywhere the price is judged: that price was
-  // never one the site offered, so it should not set a low or draw a line
-  pipelinePoints() { return this.histPoints().filter(p => p.kind === "scrape" && p.status !== "rejected"); }
 
-  // product_pipeline column names for coupons vary by scraper generation, so the
-  // coupon series is resolved by shape: any numeric "*coupon*price*" field, and
-  // any "*coupon*code*" string that marks a row as couponed.
-  couponOf(r) {
-    let price = null, code = "";
-    Object.keys(r || {}).forEach(k => {
-      if (!/coupon/i.test(k)) return;
-      const v = r[k];
-      if (/price|amount|value/i.test(k) && v != null && !isNaN(Number(v)) && Number(v) > 0) price = Number(v);
-      else if (/code/i.test(k) && v) code = String(v);
-    });
-    return price == null && !code ? null : { price: price, code: code };
-  }
 
-  // The four series the modal draws, projected into one 720x240 viewBox on a
-  // shared time axis so the reader compares them by height alone.
-  chartData() {
-    const runs = this.state.histRuns;
-    if (!runs) return null;
-    const box = this.state.histBox || {};
-    const t = at => Date.parse(at) || 0;
 
-    const paid = this.histPoints().filter(p => t(p.at) && p.status !== "rejected");
-    const kept = runs.filter(r => r.status !== "rejected");
-    const reg = kept.filter(r => t(r.created_at) && Number(r.original_price) > 0)
-      .map(r => ({ at: r.created_at, price: Number(r.original_price) }))
-      .sort((a, b) => t(a.at) - t(b.at));
-    const coup = kept.map(r => {
-      const c = this.couponOf(r);
-      if (!c || c.price == null || !t(r.created_at)) return null;
-      return { at: r.created_at, price: c.price, code: c.code };
-    }).filter(Boolean).sort((a, b) => t(a.at) - t(b.at));
 
-    const all = paid.concat(reg, coup);
-    // every series needs two points to be a line — one scrape and one list price
-    // used to pass this guard and draw an empty 240px canvas
-    if (paid.length < 2 && reg.length < 2 && coup.length < 2) return null;
 
-    const W = 720, H = 240, L = 62, R = 104, T = 18, B = 34;
-    const times = all.map(p => t(p.at));
-    const t0 = Math.min.apply(null, times), t1 = Math.max.apply(null, times);
-    const tSpan = t1 - t0 || 1;
-    const vals = all.map(p => p.price);
-    const rawLo = Math.min.apply(null, vals), rawHi = Math.max.apply(null, vals);
-    // axis ticks land on round money: a step chosen from the 1/2/5 family scaled
-    // to the regular-to-discount delta, with the bounds snapped out to it
-    const niceStep = (range) => {
-      const raw = (range || 1) / 4;
-      const mag = Math.pow(10, Math.floor(Math.log10(raw)));
-      const n = raw / mag;
-      return (n <= 1 ? 1 : n <= 2 ? 2 : n <= 5 ? 5 : 10) * mag;
-    };
-    const step = niceStep((rawHi - rawLo) * 1.25);
-    let vLo = Math.floor(rawLo / step) * step;
-    let vHi = Math.ceil(rawHi / step) * step;
-    if (vHi - vLo < step) vHi = vLo + step;
-    const x = at => L + ((t(at) - t0) / tSpan) * (W - L - R);
-    const y = v => T + (1 - (v - vLo) / ((vHi - vLo) || 1)) * (H - T - B);
-    const path = arr => arr.map((p, i) => (i ? "L" : "M") + x(p.at).toFixed(1) + " " + y(p.price).toFixed(1)).join(" ");
-    const day = at => new Date(t(at)).toLocaleDateString("en-US", { day: "numeric", month: "short" });
 
-    // lowest ever is judged on pipeline scrapes alone (see openHistory)
-    const scrapes = paid.filter(p => p.kind === "scrape");    const lowSet = scrapes.length ? scrapes : paid;
-    let low = null;
-    // ties go to the most recent sighting — "lowest ever" should read as the last
-    // time that price was seen, not the first
-    lowSet.forEach(p => { if (!low || p.price <= low.price) low = p; });
 
-    const cur = Number(box.price) > 0 ? Number(box.price) : null;
-    const line = (color, dash, w) => "fill:none;stroke:var(--color-" + color + ");stroke-width:" + w +
-      (dash ? ";stroke-dasharray:" + dash : "") + ";stroke-linejoin:round;stroke-linecap:round";
 
-    // four price ticks on a whole-cent step, and up to five date ticks across
-    // the observed span — both drawn as HTML over the chart, since a template
-    // hole inside an SVG <text> renders as a <span> and paints nothing
-    const yTicks = [];
-    const tickText = v => step >= 1 ? "$" + Math.round(v) : "$" + v.toFixed(2);
-    for (let v = vLo; v <= vHi + step / 1000; v += step) {
-      yTicks.push({ y: y(v).toFixed(1), top: (y(v) / H * 100).toFixed(2) + "%", label: tickText(v) });
-    }
-    const nx = Math.min(5, Math.max(2, Math.round((W - L - R) / 130)));
-    const xTicks = [];
-    for (let i = 0; i < nx; i++) {
-      const at = t0 + (tSpan * i) / (nx - 1);
-      const px = L + ((at - t0) / tSpan) * (W - L - R);
-      xTicks.push({
-        left: (px / W * 100).toFixed(2) + "%",
-        label: new Date(at).toLocaleDateString("en-US", { day: "numeric", month: "short" }),
-        align: i === 0 ? "translateX(0)" : i === nx - 1 ? "translateX(-100%)" : "translateX(-50%)"
-      });
-    }
-
-    return {
-      // the chart's key doubles as the figure readout: one row per drawn series,
-      // carrying its own colour, name and latest value, so the numbers are not
-      // repeated in a separate block above the chart
-      keyRows: (() => {
-        const last = arr => (arr.length ? arr[arr.length - 1] : null);
-        const nar = !!this.state.narrow;
-        const sw = fill => fill + ";display:block;flex:none;width:" + (nar ? "14px;margin-top:5px" : "26px");
-        const rows = [];
-        const lp = last(paid);
-        if (paid.length > 1) rows.push({
-          label: "Sale price",
-          value: this.money(cur != null ? cur : (lp ? lp.price : null)),
-          note: cur != null ? "now" : (lp ? day(lp.at) : ""),
-          swatch: sw("background:var(--color-accent);height:3px")
-        });
-        const lr = last(reg);
-        if (reg.length) rows.push({
-          label: "Regular price",
-          value: this.money(lr.price),
-          note: reg.length > 1 ? day(lr.at) : day(lr.at) + ", one reading",
-          swatch: sw("background:repeating-linear-gradient(90deg,var(--color-neutral-500) 0 7px,transparent 7px 12px);height:2px")
-        });
-        const lc = last(coup);
-        if (coup.length) rows.push({
-          label: lc.code ? "With " + lc.code : "With coupon",
-          value: this.money(lc.price),
-          note: day(lc.at),
-          swatch: sw("background:repeating-linear-gradient(90deg,var(--color-text) 0 2px,transparent 2px 6px);height:2px")
-        });
-        if (low) rows.push({
-          label: "Lowest ever",
-          value: this.money(low.price),
-          note: day(low.at),
-          swatch: sw("background:repeating-linear-gradient(90deg,var(--color-accent-700) 0 4px,transparent 4px 8px);height:2px")
-        });
-        return rows;
-      })(),
-      statLine: (() => {
-        const vals = scrapes.map(p => p.price);
-        if (vals.length < 2) return vals.length === 1 ? "1 scrape on record" : "";
-        const avg = vals.reduce((a, b) => a + b, 0) / vals.length;
-        return this.money(Math.max.apply(null, vals)) + " highest \u00b7 " + this.money(avg) +
-          " average \u00b7 " + vals.length + " scrapes on record";
-      })(),
-      viewBox: "0 0 " + W + " " + H,
-      axisY: (H - B).toFixed(1),
-      axisX: L.toFixed(1),
-      axisTop: T.toFixed(1),
-      axisW: W,
-      plotLeft: (L / W * 100).toFixed(2) + "%",
-      yTicks: yTicks,
-      xTicks: xTicks,
-      pricePath: paid.length > 1 ? path(paid) : "",
-      priceStyle: line("accent", "", 2.5),
-      hasPrice: paid.length > 1,
-      regPath: reg.length > 1 ? path(reg) : "",
-      regStyle: line("neutral-500", "7 5", 1.5),
-      hasReg: reg.length > 1,
-      // a marked point per list-price reading, so the line reads as hoverable
-      regDots: reg.map(p => ({ cx: x(p.at).toFixed(1), cy: y(p.price).toFixed(1) })),
-      couponPath: coup.length > 1 ? path(coup) : "",
-      couponStyle: line("text", "2 4", 1.75),
-      hasCoupon: coup.length > 1,
-      couponDots: coup.map(p => ({
-        cx: x(p.at).toFixed(1), cy: y(p.price).toFixed(1),
-        tip: this.money(p.price) + (p.code ? " with " + p.code : " with coupon") + " \u00b7 " + day(p.at)
-      })),
-      priceDots: paid.map(p => ({
-        cx: x(p.at).toFixed(1), cy: y(p.price).toFixed(1),
-        r: p.kind === "scrape" ? "3" : "2",
-        fill: "var(--color-" + (p.kind === "scrape" ? "accent" : "neutral-500") + ")",
-        tip: this.money(p.price) + " \u00b7 " + (p.kind === "scrape" ? "scraped" : "price check") + " \u00b7 " + day(p.at)
-      })),
-      hasLow: !!low,
-      // a generous transparent target over every plotted point, so the price
-      // tooltip is reachable without hitting a 3px dot exactly
-      hoverDots: paid.map(p => ({
-        cx: x(p.at).toFixed(1), cy: y(p.price).toFixed(1),
-        tip: this.money(p.price) + " \u00b7 " + (p.kind === "scrape" ? "scraped" : "price check") + " \u00b7 " + day(p.at)
-      })).concat(
-        reg.map(p => ({ cx: x(p.at).toFixed(1), cy: y(p.price).toFixed(1), tip: this.money(p.price) + " \u00b7 regular price \u00b7 " + day(p.at) })),
-        coup.map(p => ({ cx: x(p.at).toFixed(1), cy: y(p.price).toFixed(1), tip: this.money(p.price) + (p.code ? " with " + p.code : " with coupon") + " \u00b7 " + day(p.at) }))
-      ).map(d => Object.assign(d, {
-        enter: () => this.setState({ histTip: { text: d.tip, left: (Number(d.cx) / W * 100).toFixed(2) + "%", top: (Number(d.cy) / H * 100).toFixed(2) + "%" } }),
-        leave: () => this.setState({ histTip: null })
-      })),
-      lowY: low ? y(low.price).toFixed(1) : "0",
-      lowX: low ? x(low.at).toFixed(1) : "0",
-      // pinned to the wrapper's right edge, not to a percentage of the viewBox:
-      // a nowrap label at 86% of a 360px modal overflowed its own border
-      lowLabelTop: low ? (Math.max(T + 2, y(low.price) - 20) / H * 100).toFixed(2) + "%" : "0",
-      lowLineStyle: "stroke:var(--color-accent-700);stroke-width:1.25;stroke-dasharray:4 4",
-      lowLabel: low ? this.money(low.price) + " \u00b7 " + day(low.at) : "",
-      lowLabelY: low ? Math.max(T + 9, y(low.price) - 7).toFixed(1) : "0",
-      lowCaption: low ? "Lowest ever " + this.money(low.price) + ", recorded " + day(low.at) : "",
-      curLabel: cur == null ? "" : this.money(cur),
-      curY: cur == null ? "0" : Math.min(H - B - 4, Math.max(T + 9, y(cur) + 4)).toFixed(1),
-      labelX: (W - R + 10).toFixed(1),
-      startLabel: day(all.slice().sort((a, b) => t(a.at) - t(b.at))[0].at),
-      endLabel: day(all.slice().sort((a, b) => t(b.at) - t(a.at))[0].at)
-    };
-  }
 
   money(v) { return v == null || v === "" || isNaN(Number(v)) ? "\u2014" : "$" + Number(v).toFixed(2); }
 
@@ -1672,15 +1462,17 @@ class Component extends DCLogic {
     const code = this.couponOf(r);
     const couponPrice = this.couponPriceOf(r);
     const price = couponPrice != null ? couponPrice : n(r.price);
-    const was = n(r.original_price);
-    const off = (price && was && was > price) ? "\u2212" + Math.round((1 - price / was) * 100) + "%" : "";
+    const asinKey = String(r.asin || "").trim().toUpperCase();
+    const was = this.regularOf(asinKey, n(r.original_price));
+    const showWas = was != null && price != null && Math.round(was) > Math.round(price);
+    const off = showWas ? "\u2212" + Math.round((1 - price / was) * 100) + "%" : "";
     const count = r.review_count != null ? r.review_count : r.reviews;
     const asin = r.amazon_asin || r.asin;
     return {
       title: r.display_title || r.title || r.display_name || "Product",
       cat: this.catOf(r, catMap) || "Product",
       price: price != null ? "$" + Math.round(price) : "",
-      was: was != null ? "$" + Math.round(was) : "",
+      was: showWas ? "$" + Math.round(was) : "",
       off,
       rating: r.rating || "",
       reviews: count ? "(" + Number(count).toLocaleString() + ")" : "",
@@ -1692,13 +1484,15 @@ class Component extends DCLogic {
       id: r.id,
       reviewNum: Number(count) || 0,
       priceNum: price != null ? price : Infinity,
-      offNum: (price && was && was > price) ? Math.round((1 - price / was) * 100) : 0,
-      hasOff: !!(price && was && was > price),
+      offNum: showWas ? Math.round((1 - price / was) * 100) : 0,
+      hasOff: showWas,
       ratingNum: parseFloat(r.rating) || 0,
       createdAt: r.created_at ? Date.parse(r.created_at) : 0,
       catRaw: this.catOf(r, catMap),
       syncedAt: r.last_price_sync ? Date.parse(r.last_price_sync) : 0,
       hasCode: !!code,
+      // list-row note: the chip already shows the code, so this only qualifies it
+      codeNote: code ? "code " + code : "",
       // a coupon price is only reachable with its code, so the two travel together
       codeLine: code ? (couponPrice != null ? "with code " + code : "code " + code) : "",
       // cashback is earned on what the shopper actually pays, so it follows the
@@ -1712,13 +1506,14 @@ class Component extends DCLogic {
         : "",
       url: amzUrl(r.affiliate_link, asin),
       asin: asin || "",
-      atLowest: this.atLowest(asin, price),
-      history: () => this.openHistory({ asin: asin, productId: r.id, title: r.display_title || r.title || "Product", priceNum: price })
+      atLowest: this.atLowest(asin, price)
     };
   }
   guideProduct(p, i) {
     const n = v => (v === null || v === undefined || v === "") ? null : parseFloat(v);
-    const price = n(p.price), was = n(p.original_price);
+    const price = n(p.price);
+    const was = this.regularOf(String(p.asin || "").trim().toUpperCase(), n(p.original_price));
+    const showWas = was != null && price != null && Math.round(was) > Math.round(price);
     // Two columns carry this: `review_count` is the real one, `reviews` is often
     // 0 — so prefer review_count and treat 0 as "not captured", not "zero
     // reviews". The live row is consulted last, for snapshots written before
@@ -1742,23 +1537,22 @@ class Component extends DCLogic {
       cat: p.category || "Pick",
       sub: p.category || "",
       price: price != null ? "$" + Math.round(price) : "",
-      was: was != null ? "$" + Math.round(was) : "",
-      off: (price && was && was > price) ? "\u2212" + Math.round((1 - price / was) * 100) + "%" : "",
+      was: showWas ? "$" + Math.round(was) : "",
+      off: showWas ? "\u2212" + Math.round((1 - price / was) * 100) + "%" : "",
       // an empty string still painted the accent block, so the card needs the
       // flag rather than inferring "has a discount" from the label
-      hasOff: !!(price && was && was > price),
+      hasOff: showWas,
       rating: rating,
       reviews: count ? "(" + count.toLocaleString() + ")" : "",
       stars,
       description: p.description || "",
       note: p.pricing_note || "",
       hasNote: !!p.pricing_note,
-      updated: "", code: "",
+      updated: "", code: "", codeNote: "",
       img: p.image_url || "", noImg: !p.image_url,
       url: amzUrl(null, p.amazon_asin),
       asin: p.amazon_asin || "",
-      atLowest: this.atLowest(p.amazon_asin, price),
-      history: () => this.openHistory({ asin: p.amazon_asin, productId: null, title: p.title || "Product", priceNum: price })
+      atLowest: this.atLowest(p.amazon_asin, price)
     };
   }
   buildGuide(g) {
@@ -2025,6 +1819,8 @@ class Component extends DCLogic {
     NEUT.forEach((hex, i) => {
       r.setProperty("--color-neutral-" + ((i + 1) * 100), dark ? NEUT[8 - i] : hex);
     });
+    r.setProperty("--color-prime", dark ? "#4c9fe0" : "#1d6fb8");
+    r.setProperty("--color-prime-ink", dark ? "#16233a" : "#f2efe9");
     r.setProperty("--color-verify", dark ? "#45a179" : "#1c6b4a");
     r.setProperty("--color-verify-ink", dark ? "#7fc9a4" : "#155a3e");
     document.body.style.background = "var(--color-bg)";
@@ -2073,7 +1869,7 @@ class Component extends DCLogic {
   tab(s) {
     return this.state.screen === s
       ? tabBase + "background:var(--color-accent);color:#16233a"
-      : tabBase + "background:rgba(255,255,255,.09);color:#f3f2f2";
+      : tabBase + "background:rgba(255,255,255,.09);color:#eef0f4";
   }
   adminTab(label, active) {
     const base = "font:inherit;font-family:var(--font-heading);font-weight:700;font-size:12px;letter-spacing:.1em;text-transform:uppercase;background:none;border:0;padding:14px 0;cursor:pointer;border-bottom:3px solid ";
@@ -2139,21 +1935,6 @@ class Component extends DCLogic {
       x: 4 + i * 33, y: 130 - h, h, fill: i === 17 ? "var(--color-accent)" : "var(--color-neutral-400)"
     }));
     return {
-      histOpen: !!this.state.histBox,
-      histTitle: (this.state.histBox || {}).title || "",
-      histAsin: (this.state.histBox || {}).asin ? "ASIN " + this.state.histBox.asin : "",
-      histErr: this.state.histErr,
-      histClose: () => this.closeHistory(),
-      histStop: e => e.stopPropagation(),
-      histLoading: !!this.state.histBox && !this.state.histErr && this.state.histRuns === null,
-      histReady: !!this.state.histBox && !this.state.histErr && this.state.histRuns !== null,
-      histHasChart: !!this.state.histBox && this.state.histRuns !== null && !!this.chartData(),
-      histNoChart: !!this.state.histBox && this.state.histRuns !== null && !this.chartData(),
-      histTipOn: !!this.state.histTip,
-      histTipText: (this.state.histTip || {}).text || "",
-      histTipLeft: (this.state.histTip || {}).left || "0",
-      histTipTop: (this.state.histTip || {}).top || "0",
-      chart: this.chartData() || {},
       isHome: s === "home", isCat: s === "category", isDetail: s === "detail",
       isGuide: s === "guide", isPrime: s === "prime", isAbout: s === "about", isMobile: s === "mobile",
       goHome: (e) => { if (e && e.preventDefault) e.preventDefault(); this.go("home"); },
@@ -2175,7 +1956,7 @@ class Component extends DCLogic {
       })(),
       guideTeaseLine: (() => {
         const n = (this.state.guideRows || []).length;
-        return n > 1 ? "Latest of " + n + " guides \u2014 every pick verified against its price history."
+        return n > 1 ? "Latest of " + n + " guides \u2014 every pick checked by hand."
           : "Shortlists we have actually checked, not scraped top sellers.";
       })(),
       primeTeaseLine: (() => {
@@ -2220,10 +2001,33 @@ class Component extends DCLogic {
       goAdmin2: () => this.go("admin2"), isAdmin2: s === "admin2", tAdmin2: this.tab("admin2"),
       toggleDark: (e) => { if (e && e.preventDefault) e.preventDefault(); const next = !this.isDark(); try { localStorage.setItem("md-theme", next ? "dark" : "light"); } catch (err) {} this.setState({ dark: next }); },
       darkGlyph: this.isDark() ? "\u2600" : "\u263D",
+      menuOpen: !!this.state.menuOpen,
+      menuExpanded: this.state.menuOpen ? "true" : "false",
+      toggleMenu: (e) => { if (e && e.preventDefault) e.preventDefault(); this.setState(st => ({ menuOpen: !st.menuOpen })); },
+      closeMenu: () => this.setState({ menuOpen: false }),
+      tMenuBtn: "font:inherit;flex:none;width:44px;height:44px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;cursor:pointer;background:transparent;border:1px solid var(--color-divider);color:var(--color-text)",
+      tMenuDark: "font:inherit;font-family:var(--font-heading);font-weight:700;font-size:13px;letter-spacing:.04em;width:100%;min-height:44px;display:flex;align-items:center;justify-content:space-between;gap:12px;padding:0 16px;background:transparent;border:0;cursor:pointer;color:var(--color-text);text-align:left",
+      darkRowLabel: this.isDark() ? "Light mode" : "Dark mode",
+      toggleDarkMenu: (e) => {
+        if (e && e.preventDefault) e.preventDefault();
+        const next = !this.isDark();
+        try { localStorage.setItem("md-theme", next ? "dark" : "light"); } catch (err) {}
+        this.setState({ dark: next, menuOpen: false }, () => this.paint());
+      },
+      menuItems: [
+        ["home", "Featured Deals"], ["category", "Categories"], ["prime", "Prime Card Deals"],
+        ["guide", "Buying Guides"], ["about", "About"]
+      ].map(it => ({
+        label: it[1],
+        href: this.path(it[0]),
+        open: (e) => { if (e) e.preventDefault(); this.setState({ menuOpen: false }); this.go(it[0]); },
+        style: "display:flex;align-items:center;min-height:44px;padding:0 16px;text-decoration:none;font-family:var(--font-heading);font-weight:700;font-size:13px;letter-spacing:.04em;color:" +
+          (s === it[0] ? "var(--color-accent-700)" : "var(--color-text)")
+      })),
       darkTitle: this.isDark() ? "Switch to light" : "Switch to dark",
       tDarkNav: "font:inherit;font-size:15px;line-height:1;flex:none;width:38px;height:38px;display:flex;align-items:center;justify-content:center;cursor:pointer;background:transparent;color:var(--color-text);border:2px solid var(--color-divider)",
       darkLabel: this.isDark() ? "Light" : "Dark",
-      tDark: tabBase + "font-family:var(--font-heading);font-weight:700;background:" + (this.isDark() ? "#f3f2f2;color:#201e1d" : "rgba(255,255,255,.09);color:#f3f2f2"),
+      tDark: tabBase + "font-family:var(--font-heading);font-weight:700;background:" + (this.isDark() ? "#eef0f4;color:#16233a" : "rgba(255,255,255,.09);color:#f3f2f2"),
       rowStyle2: "display:grid;grid-template-columns:3px 24px minmax(220px,1fr) 84px 54px 62px 148px 96px 92px 34px 104px;gap:10px;align-items:start;padding:" +
         (dense ? "6px 16px" : "9px 16px") + ";border-bottom:1px solid var(--color-divider)",
       railNav: [
@@ -2295,7 +2099,7 @@ class Component extends DCLogic {
         { slot: "2", title: "ThermoMaven Electric Salt & Pepper Grinder", cat: "Home & Kitchen", off: "\u221267%", price: "$19.99", was: "$59.99", rating: "4.7", reviews: "(2,921)", low: "9 months" },
         { slot: "3", title: "Versace Eros Flame Eau de Parfum", cat: "Health & Beauty", off: "\u221261%", price: "$74.99", was: "$190.00", rating: "4.7", reviews: "(2,152)", low: "12 months" }
       ],
-      promoted: (() => {
+      promoted: (this._promoted = (() => {
         const live = this.state.live;
         if (!live || !live.length) return null;
         const map = this.state.promoted || {};
@@ -2321,7 +2125,8 @@ class Component extends DCLogic {
         const pool = recent.length >= 3 ? recent : live.slice(0, 24);
         return pool.slice().sort((a, b) => b.reviewNum - a.reviewNum).slice(0, 3)
           .map(d => Object.assign({}, d, { postedAt: 0, note: "Most reviewed" }));
-      })(),
+      })()),
+      promotedMini: (this._promoted || []).slice(0, 6),
       promotedHeading: (() => {
         const map = this.state.promoted || {};
         const live = this.state.live || [];
@@ -2343,6 +2148,18 @@ class Component extends DCLogic {
         return live.slice().sort((a, b) => (b.top - a.top) || (pct(b) - pct(a))).slice(0, 3)
           .map((d, i) => Object.assign({}, d, { slot: String(i + 1), low: "12 months" }));
       })(this.state.live, ALL.slice(0, 3).map((d, i) => Object.assign({}, d, { slot: String(i + 1), low: "12 months" }))),
+      controlsOpen: this.state.filtersOpen ? "is-open" : "",
+      filtersExpanded: this.state.filtersOpen ? "true" : "false",
+      filterCaret: this.state.filtersOpen ? "\u25B2 Close" : "\u25BC",
+      toggleFilters: () => this.setState(st => ({ filtersOpen: !st.filtersOpen })),
+      // the collapsed bar has to say what is currently applied, or it hides state
+      filterSummary: (() => {
+        const names = { synced: "Just checked", newest: "Newest", drop: "Biggest drop", price: "Price", rating: "Rating" };
+        const sort = names[this.state.sort] || "Just checked";
+        const chip = this.state.chip && this.state.chip !== "All deals" ? this.state.chip : "";
+        const view = this.state.view === "list" ? "List" : "Cards";
+        return [sort, chip, view].filter(Boolean).join(" \u00b7 ");
+      })(),
       sorts: [["synced", "Just checked"], ["newest", "Newest"], ["drop", "Biggest drop"], ["price", "Price"], ["rating", "Rating"]].map(o => ({
         label: o[1],
         pick: () => this.setState({ sort: o[0], shown: 12 }),

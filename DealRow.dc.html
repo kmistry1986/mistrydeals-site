@@ -10,21 +10,61 @@
 <helmet>
   <link rel="stylesheet" href="/_ds/modernist-424462e2-4060-4771-92af-91bbc246b8fd/styles.css">
   <script src="/_ds/modernist-424462e2-4060-4771-92af-91bbc246b8fd/_ds_bundle.js"></script>
+  <style>
+    /* the five fixed columns need ~900px. Between that and phone width the
+       coupon column goes and the title keeps the slack, so the name is never
+       crushed into a sliver. */
+    @media (max-width: 900px) and (min-width: 561px) {
+      .dr { grid-template-columns: 104px minmax(0,1fr) 150px 172px !important; gap: 16px !important; }
+      .dr-code { display: none !important; }
+      .dr-withcode { display: inline-block !important; }
+      .dr-qual { display: none !important; }
+    }
+    /* the five fixed columns need ~650px; on a phone the row becomes four
+       stacked bands instead, so the list never scrolls sideways */
+    @media (max-width: 560px) {
+      .dr {
+        grid-template-columns: 96px minmax(0,1fr) !important;
+        grid-template-areas: "img body" "price price" "acts acts" !important;
+        gap: 14px 14px !important; align-items: start !important;
+        padding: 16px 0 18px !important;
+      }
+      .dr-img { grid-area: img; height: 96px !important; }
+      .dr-body { grid-area: body; gap: 6px !important; }
+      .dr-body > :nth-child(2) {
+        -webkit-line-clamp: 3 !important; font-size: 16px !important;
+        height: 58px; flex: none;
+      }
+      .dr-code { display: none !important; }
+      .dr-price {
+        grid-area: price; flex-direction: row !important; align-items: baseline !important;
+        flex-wrap: wrap !important; gap: 10px !important;
+      }
+      .dr-price > :first-child { font-size: 26px !important; }
+      .dr-qual { display: none !important; }
+      .dr-withcode {
+        display: inline-block !important; margin-left: auto;
+        border: 1px dashed var(--color-accent); padding: 4px 6px;
+      }
+      .dr-acts { grid-area: acts; grid-template-columns: minmax(0,1fr) !important; }
+      .dr-acts > .btn { min-height: 44px; }
+    }
+  </style>
 </helmet>
-<div style="display:grid;grid-template-columns:104px 1fr 120px 170px 176px;gap:20px;align-items:center;padding:14px 0;border-bottom:1px solid var(--color-divider);background:transparent" style-hover="background:color-mix(in srgb, var(--color-accent) 12%, transparent)">
-  <div style="position:relative;height:78px;background:#ffffff;display:grid;place-items:center;overflow:hidden">
+<div class="dr" style="display:grid;grid-template-columns:104px 1fr 120px 170px 176px;gap:20px;align-items:center;padding:14px 0;border-bottom:1px solid var(--color-divider);background:transparent" style-hover="background:color-mix(in srgb, var(--color-accent) 12%, transparent)">
+  <div class="dr-img" style="position:relative;height:78px;background:#ffffff;display:grid;place-items:center;overflow:hidden">
     <sc-if value="{{ deal.img }}" hint-placeholder-val="{{ false }}">
       <img src="{{ deal.img }}" alt="{{ deal.title }}" style="position:absolute;inset:0;width:100%;height:100%;object-fit:contain;padding:6px;box-sizing:border-box;display:block" />
     </sc-if>
     <sc-if value="{{ deal.noImg }}" hint-placeholder-val="{{ true }}">
       <span style="font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:var(--color-neutral-500)">Photo</span>
     </sc-if>
-    <div style="position:absolute;top:0;left:0;background:var(--color-accent);color:#f3f2f2;font-family:var(--font-heading);font-weight:800;font-size:13px;line-height:1;padding:5px 6px">{{ deal.off }}</div>
+    <div style="position:absolute;top:0;left:0;background:var(--color-accent);color:#16233a;font-family:var(--font-heading);font-weight:800;font-size:13px;line-height:1;padding:5px 6px">{{ deal.off }}</div>
     <sc-if value="{{ deal.atLowest }}" hint-placeholder-val="{{ false }}">
       <div style="position:absolute;bottom:0;left:0;right:0;background:var(--color-neutral-900);color:var(--color-bg);font-family:var(--font-heading);font-weight:700;font-size:8px;letter-spacing:.08em;text-transform:uppercase;padding:3px 5px;text-align:center">Lowest ever</div>
     </sc-if>
   </div>
-  <div style="display:flex;flex-direction:column;gap:4px;min-width:0">
+  <div class="dr-body" style="display:flex;flex-direction:column;gap:4px;min-width:0">
     <div style="font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--color-neutral-600)">{{ deal.cat }}</div>
     <div style="font-family:var(--font-heading);font-weight:800;font-size:17px;line-height:1.2;letter-spacing:-.01em;overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical">{{ deal.title }}</div>
     <div style="display:flex;align-items:center;gap:10px;font-size:11px;color:var(--color-neutral-700)">
@@ -32,21 +72,23 @@
       <span>{{ deal.updated }}</span>
     </div>
   </div>
-  <div style="display:flex;align-items:center;min-height:26px">
+  <div class="dr-code" style="display:flex;align-items:center;min-height:26px">
     <sc-if value="{{ deal.code }}" hint-placeholder-val="{{ false }}">
       <div style="font-size:10px;font-family:var(--font-heading);font-weight:600;letter-spacing:.06em;border:1px dashed var(--color-accent);color:var(--color-accent-700);padding:4px 6px;white-space:nowrap">CODE {{ deal.code }}</div>
     </sc-if>
   </div>
-  <div style="display:flex;flex-direction:column;align-items:flex-start;gap:2px">
+  <div class="dr-price" style="display:flex;flex-direction:column;align-items:flex-start;gap:2px">
     <span style="font-family:var(--font-heading);font-weight:800;font-size:30px;line-height:1;letter-spacing:-.02em">{{ deal.price }}</span>
     <span style="font-size:12px;text-decoration:line-through;color:var(--color-neutral-600)">was {{ deal.was }}</span>
     <sc-if value="{{ deal.code }}" hint-placeholder-val="{{ false }}">
-      <span style="font-size:10px;letter-spacing:.06em;text-transform:uppercase;color:var(--color-accent-700);white-space:nowrap">with code</span>
+      <span class="dr-qual" style="font-size:10px;letter-spacing:.06em;text-transform:uppercase;color:var(--color-accent-700);white-space:nowrap">with code</span>
+    </sc-if>
+    <sc-if value="{{ deal.code }}" hint-placeholder-val="{{ false }}">
+      <span class="dr-withcode" style="display:none;font-size:10px;font-family:var(--font-heading);font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--color-accent-700);white-space:nowrap">{{ deal.codeNote }}</span>
     </sc-if>
   </div>
-  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(104px,1fr));gap:8px;width:100%">
+  <div class="dr-acts" style="display:grid;grid-template-columns:1fr;gap:8px;width:100%">
     <a href="{{ deal.url }}" target="_blank" rel="nofollow sponsored noopener" class="btn btn-primary" style="justify-content:space-between;font-size:12px;padding:9px 9px;gap:4px;min-width:0">Amazon <span>&#8594;</span></a>
-    <button onClick="{{ deal.history }}" class="btn btn-secondary" style="justify-content:flex-start;font-size:12px;padding:9px 9px;min-width:0">Price history</button>
   </div>
 </div>
 </x-dc>

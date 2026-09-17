@@ -11,6 +11,7 @@
   <link rel="stylesheet" href="/_ds/modernist-424462e2-4060-4771-92af-91bbc246b8fd/styles.css">
   <script src="/_ds/modernist-424462e2-4060-4771-92af-91bbc246b8fd/_ds_bundle.js"></script>
   <style>
+    html { -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
     body { margin: 0; }
     /* 10a: navy does the reading and the pressing, amber only points.
        A solid amber button with light type sits at ~2.6:1 — unusable. */
@@ -985,6 +986,52 @@
   </sc-if>
 </div>
 </sc-if>
+<sc-if value="{{ ruleOpen }}" hint-placeholder-val="{{ false }}">
+  <div onClick="{{ ruleClose }}" style="position:fixed;inset:0;background:color-mix(in srgb, var(--color-neutral-900) 55%, transparent);display:grid;place-items:center;padding:24px;z-index:92">
+    <div onClick="{{ stop }}" style="background:var(--color-bg);border:2px solid var(--color-text);max-width:560px;width:100%;padding:24px;max-height:88vh;overflow:auto">
+      <div style="font-family:var(--font-heading);font-weight:700;font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--color-neutral-700)">New brand rule</div>
+      <h2 style="margin:6px 0 8px;font-size:22px;line-height:1.15;letter-spacing:-.01em">{{ ruleBrandHeading }}</h2>
+      <p style="margin:0 0 20px;font-size:13px;line-height:1.5;color:var(--color-neutral-700);text-wrap:pretty">{{ ruleSummary }}</p>
+      <div class="m-stack" style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px">
+        <div class="field" style="margin:0">
+          <label>Brand name</label>
+          <input class="input" style="padding:8px 10px;font-size:13px" placeholder="Anker" value="{{ newName }}" onChange="{{ onNewName }}" />
+        </div>
+        <div class="field" style="margin:0">
+          <label>Keyword in title</label>
+          <input class="input" style="padding:8px 10px;font-size:13px" placeholder="defaults to the brand name" value="{{ newKeyword }}" onChange="{{ onNewKeyword }}" />
+        </div>
+        <div class="field" style="margin:0">
+          <label>Rule</label>
+          <select class="input" style="padding:8px 10px;font-size:13px" value="{{ newRule }}" onChange="{{ onNewRule }}">
+            <option value="auto_approve">Auto-approve</option>
+            <option value="block">Auto-reject</option>
+          </select>
+        </div>
+        <div class="field" style="margin:0">
+          <label>Min discount %</label>
+          <input class="input" style="padding:8px 10px;font-size:13px" placeholder="any" value="{{ newMin }}" onChange="{{ onNewMin }}" />
+        </div>
+        <div class="field" style="margin:0;grid-column:1/-1">
+          <label>Default category</label>
+          <select class="input" style="padding:8px 10px;font-size:13px" value="{{ newCat }}" onChange="{{ onNewCat }}">
+            <sc-for list="{{ newCatOptions }}" as="o" hint-placeholder-count="8">
+              <option value="{{ o.value }}">{{ o.label }}</option>
+            </sc-for>
+          </select>
+        </div>
+      </div>
+      <sc-if value="{{ brandError }}" hint-placeholder-val="{{ false }}">
+        <div style="margin-top:16px;font-size:13px;line-height:1.4;padding:10px 12px;border:2px solid var(--color-accent);color:var(--color-accent-700)">{{ brandError }}</div>
+      </sc-if>
+      <div style="display:flex;align-items:center;gap:10px;margin-top:22px;flex-wrap:wrap">
+        <button onClick="{{ addRule }}" class="btn btn-primary" style="font-size:13px;padding:9px 14px;justify-content:flex-start">{{ addLabel }}</button>
+        <button onClick="{{ ruleClose }}" class="btn btn-ghost" style="font-size:13px;padding:9px 14px">Cancel</button>
+        <button onClick="{{ ruleGoPage }}" style="margin-left:auto;font:inherit;font-size:12px;background:none;border:0;padding:0;cursor:pointer;color:var(--color-neutral-700);text-decoration:underline;text-underline-offset:3px">All brand rules</button>
+      </div>
+    </div>
+  </div>
+</sc-if>
 </x-dc>
 <script type="text/x-dc" data-dc-script data-props="{&quot;density&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;Comfortable&quot;,&quot;Compact&quot;,&quot;Triage&quot;],&quot;default&quot;:&quot;Comfortable&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Review surface&quot;},&quot;statusSignal&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;Edge bars&quot;,&quot;Tinted rows&quot;,&quot;Quiet&quot;],&quot;default&quot;:&quot;Edge bars&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Review surface&quot;},&quot;approveMode&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;Open on Amazon (extension captures)&quot;,&quot;Publish from queue data&quot;],&quot;default&quot;:&quot;Open on Amazon (extension captures)&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Approval&quot;},&quot;syncGate&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Approval&quot;}}">
 // retired functions that would otherwise show as permanently overdue:
@@ -1012,6 +1059,7 @@ class Component extends DCLogic {
     dark: false, darkTouched: false, narrow: false, menuOpen: false, scrapeOpen: false, filterOpen: false,
     heartbeat: null, runs: null, runsErr: "", runsLimit: 100, runsFilter: "scrapers", openRun: null,
     nb: { name: "", kw: "", rule: "auto_approve", min: "", cat: "" }, editId: null, ed: {},
+    ruleOpen: false, ruleTitle: "",
     bSort: "brand", bDir: "asc",
     catNames: null, catIdByName: {}, catNameById: {},
     histBox: null, hist: null, histRuns: null, histErr: ""
@@ -2805,6 +2853,7 @@ class Component extends DCLogic {
       this.setState({
         brands: this.sortBrands((this.state.brands || []).concat(created)),
         nb: { name: "", kw: "", rule: "auto_approve", min: "", cat: "" },
+        ruleOpen: false, ruleTitle: "",
         brandBusy: "", saved: name + " added"
       });
       this.clearNote();
@@ -2923,9 +2972,10 @@ class Component extends DCLogic {
     const title = this.decode(row.title || "");
     const guess = (title.match(/[A-Za-z0-9&'+.-]{2,}/) || [""])[0].replace(/[.'+-]+$/, "");
     this.setState({
-      tab: "brands",
-      nb: { name: guess, kw: guess, rule: "auto_approve" },
-      brandErr: this.keywordTaken(guess) ? "A rule already matches \u201c" + guess + "\u201d \u2014 check the list below." : ""
+      ruleOpen: true,
+      ruleTitle: title,
+      nb: { name: guess, kw: guess, rule: "auto_approve", min: "", cat: "" },
+      brandErr: this.keywordTaken(guess) ? "A rule already matches \u201c" + guess + "\u201d \u2014 open all brand rules to edit it." : ""
     }, () => {
       if (this.state.brands === null) this.loadBrands(); else this.loadBrandHits();
       if (this.state.catNames === null) this.loadCategories();
@@ -3477,6 +3527,13 @@ class Component extends DCLogic {
       newCatOptions: this.catOptions(this.state.nb.cat),
       addRule: () => this.addRule(),
       addLabel: this.state.brandBusy === "add" ? "Adding\u2026" : "Add rule",
+      ruleOpen: !!this.state.ruleOpen,
+      ruleClose: () => this.setState({ ruleOpen: false, ruleTitle: "", brandErr: "" }),
+      ruleGoPage: () => this.setState({ ruleOpen: false, ruleTitle: "", tab: "brands" }),
+      ruleBrandHeading: (this.state.nb.name || "").trim() || "Untitled brand",
+      ruleSummary: this.state.ruleTitle
+        ? "Guessed from \u201c" + (this.state.ruleTitle.length > 90 ? this.state.ruleTitle.slice(0, 90) + "\u2026" : this.state.ruleTitle) + "\u201d. Every future deal whose title carries the keyword takes this verdict on arrival."
+        : "Every future deal whose title carries the keyword takes this verdict on arrival.",
       brandError: this.state.brandErr || "",
       brandLoading: this.state.tab === "brands" && brands === null && !this.state.brandErr,
       // on a phone the rule list is brand + verdict + Edit only; keyword,
@@ -3827,7 +3884,7 @@ class Component extends DCLogic {
           rejectStyle: "font:inherit;font-family:var(--font-heading);font-weight:700;font-size:10px;letter-spacing:.08em;text-transform:uppercase;padding:6px 10px;cursor:pointer;border:1px solid var(--color-accent);background:transparent;color:var(--color-accent-700)" + (busy ? ";opacity:.45" : ""),
           targets: targets,
           makeRule: () => this.ruleFromRow(r),
-          makeRuleTitle: "Open Brand rules with a rule started for this deal's brand",
+          makeRuleTitle: "Start a brand rule for this deal without leaving the queue",
           status: st === "rejected" && r.skip_reason === CAPTURE_REASON ? "sent to capture" : st,
           statusStyle: "display:inline-block;font-family:var(--font-heading);font-weight:700;font-size:9.5px;letter-spacing:.08em;text-transform:uppercase;padding:3px 6px;" +
             (st === "approved" ? "background:var(--color-neutral-900);color:var(--color-bg)" : "border:1px solid var(--color-divider);color:var(--color-neutral-700)"),

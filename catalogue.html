@@ -10,6 +10,7 @@
 <helmet>
   <link rel="stylesheet" href="/_ds/modernist-424462e2-4060-4771-92af-91bbc246b8fd/styles.css">
   <style>
+    html { -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
     body { margin: 0; }
     /* 10a: navy does the reading and the pressing, amber only points.
        A solid amber button with light type sits at ~2.6:1 — unusable. */
@@ -474,6 +475,7 @@
                   <button onClick="{{ r.sync }}" title="Re-check this product's price now" style="font:inherit;font-family:var(--font-heading);font-weight:700;font-size:10px;letter-spacing:.08em;text-transform:uppercase;background:none;border:0;padding:0;cursor:pointer;color:var(--color-accent-700)">{{ r.syncLabel }}</button>
                   <button onClick="{{ r.history }}" title="Every price the pipeline has recorded for this ASIN" style="font:inherit;font-family:var(--font-heading);font-weight:700;font-size:10px;letter-spacing:.08em;text-transform:uppercase;background:none;border:0;padding:0;cursor:pointer;color:var(--color-accent-700)">History</button>
                   <button onClick="{{ r.edit }}" title="Edit title, category and prices" style="font:inherit;font-family:var(--font-heading);font-weight:700;font-size:10px;letter-spacing:.08em;text-transform:uppercase;background:none;border:0;padding:0;cursor:pointer;color:var(--color-accent-700)">Edit</button>
+                  <button onClick="{{ r.reel }}" title="Render this deal as a 1080×1920 reel overlay and download the PNG" style="{{ r.reelStyle }}">{{ r.reelLabel }}</button>
                   <button onClick="{{ r.remove }}" title="Delete this product permanently" style="font:inherit;font-family:var(--font-heading);font-weight:700;font-size:10px;letter-spacing:.08em;text-transform:uppercase;background:none;border:0;padding:0;cursor:pointer;color:var(--color-neutral-700)">Delete</button>
                 </div>
               </div>
@@ -757,7 +759,7 @@ class Component extends DCLogic {
     colw: null, sortCol: null, sortDir: "desc", menuOpen: false, pFilterOpen: false,
     histBox: null, hist: null, histRuns: null, histErr: "", histTip: null,
     posts: null, sFilter: "all", sLimit: 50, sTotal: null, postState: null, today: null, slidesOpen: {},
-    saved: "", verifying: true
+    saved: "", verifying: true, reelBusy: ""
   };
 
   componentWillUnmount() { window.removeEventListener("resize", this.onResize); }
@@ -2061,6 +2063,35 @@ class Component extends DCLogic {
     return () => { try { sessionStorage.setItem("md-admin-tab", tab); } catch (e) {} };
   }
 
+  // reel-download returns the PNG bytes rather than writing to storage, so an
+  // on-demand reel never clobbers the pipeline's social/{slug}-reel.png
+  async downloadReel(p) {
+    if (this.state.reelBusy) return;
+    this.setState({ reelBusy: p.id, saved: "Rendering the reel\u2026" });
+    try {
+      const res = await this.req(BASE + "/functions/v1/reel-download", {
+        method: "POST",
+        headers: this.headers({ "Content-Type": "application/json" }),
+        body: JSON.stringify({ productId: p.id, slug: p.slug || null, layout: "safe" })
+      });
+      if (!res.ok) {
+        const t = await res.text().catch(() => "");
+        this.setState({ reelBusy: "", saved: "Reel failed \u2014 " + (t ? t.slice(0, 120) : res.status) });
+        return;
+      }
+      const blob = await res.blob();
+      const name = (p.slug || p.asin || "reel") + "-reel.png";
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url; a.download = name;
+      document.body.appendChild(a); a.click(); a.remove();
+      setTimeout(() => URL.revokeObjectURL(url), 4000);
+      this.setState({ reelBusy: "", saved: name + " downloaded" });
+    } catch (e) {
+      this.setState({ reelBusy: "", saved: "Reel failed \u2014 " + (e && e.message ? e.message : "network error") });
+    }
+  }
+
   adminHref(page) {
     const deployed = { catalogue: "/catalogue", dealqueue: "/dealqueue", carousel: "/carousel", brands: "/brandrules", scrapes: "/scrapelog", reddit: "/redditposter", guides: "/buyingguides" };
     if (/^\/(catalogue|dealqueue|carousel|brandrules|scrapelog|redditposter|buyingguides)/.test(location.pathname) || location.pathname.indexOf("/admin/") !== -1) return deployed[page] || "/catalogue";
@@ -2685,6 +2716,10 @@ class Component extends DCLogic {
           remove: () => this.deleteProduct(p),
           sync: () => this.syncNow(p),
           edit: () => this.startEdit(p),
+          reel: () => this.downloadReel(p),
+          reelLabel: this.state.reelBusy === p.id ? "Rendering\u2026" : "Reel",
+          reelStyle: "font:inherit;font-family:var(--font-heading);font-weight:700;font-size:10px;letter-spacing:.08em;text-transform:uppercase;background:none;border:0;padding:0;cursor:pointer;color:" +
+            (this.state.reelBusy === p.id ? "var(--color-neutral-600)" : "var(--color-accent-700)"),
           editing: this.state.editId === p.id,
           save: () => this.saveEdit(p),
           syncLabel: this.state.syncingId === p.id ? "Syncing\u2026" : "Sync",
