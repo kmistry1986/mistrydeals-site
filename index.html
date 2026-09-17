@@ -1536,6 +1536,8 @@ class Component extends DCLogic {
       cashPct: n(r.prime_cashback_percent) || 0,
       hasCash: (n(r.prime_cashback_percent) || 0) > 0,
       cashBadge: (n(r.prime_cashback_percent) || 0) > 0 ? "+" + Math.round(n(r.prime_cashback_percent)) + "% BACK WITH PRIME CREDIT CARD" : "",
+      // the full badge is too long for a list row's price line
+      cashShort: (n(r.prime_cashback_percent) || 0) > 0 ? "+" + Math.round(n(r.prime_cashback_percent)) + "% BACK" : "",
       cashTitle: (n(r.prime_cashback_percent) || 0) > 0
         ? Math.round(n(r.prime_cashback_percent)) + "% back with the Prime Visa" +
           (price ? " \u2014 about $" + (price * n(r.prime_cashback_percent) / 100).toFixed(2) + " on this price" : "")

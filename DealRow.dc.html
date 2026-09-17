@@ -17,6 +17,7 @@
     @media (max-width: 900px) and (min-width: 561px) {
       .dr { grid-template-columns: 104px minmax(0,1fr) 150px 172px !important; gap: 16px !important; }
       .dr-code { display: none !important; }
+      .dr-cash { margin-left: 0; }
       .dr-withcode { display: inline-block !important; }
       .dr-qual { display: none !important; }
     }
@@ -42,6 +43,7 @@
       }
       .dr-price > :first-child { font-size: 26px !important; }
       .dr-qual { display: none !important; }
+      .dr-cash { margin-left: 0; }
       .dr-withcode {
         display: inline-block !important; margin-left: auto;
         border: 1px dashed var(--color-accent); padding: 4px 6px;
@@ -85,6 +87,9 @@
     </sc-if>
     <sc-if value="{{ deal.code }}" hint-placeholder-val="{{ false }}">
       <span class="dr-withcode" style="display:none;font-size:10px;font-family:var(--font-heading);font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--color-accent-700);white-space:nowrap">{{ deal.codeNote }}</span>
+    </sc-if>
+    <sc-if value="{{ deal.hasCash }}" hint-placeholder-val="{{ false }}">
+      <span class="dr-cash" style="font-size:10px;font-family:var(--font-heading);font-weight:700;letter-spacing:.04em;background:var(--color-prime);color:var(--color-prime-ink);padding:4px 6px;white-space:nowrap">{{ deal.cashShort }}</span>
     </sc-if>
   </div>
   <div class="dr-acts" style="display:grid;grid-template-columns:1fr;gap:8px;width:100%">
