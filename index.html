@@ -773,20 +773,56 @@
       <h3 style="margin:0">Best stacked value right now</h3>
       <span style="font-size:13px;color:var(--color-neutral-700)">{{ primeSort }}</span>
     </div>
-    <div class="m-wrap" style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin:0 0 20px">
-      <span style="font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--color-neutral-700);margin-right:2px">Sort</span>
-      <sc-for list="{{ primeSorts }}" as="s" hint-placeholder-count="6">
-        <button onClick="{{ s.pick }}" style="{{ s.style }}">{{ s.label }}</button>
+    <button onClick="{{ togglePrimeFilters }}" class="m-filterbar" aria-expanded="{{ primeFiltersExpanded }}" style="display:none;font:inherit;width:100%;min-height:44px;align-items:center;justify-content:space-between;gap:12px;padding:0 14px;background:transparent;border:1px solid var(--color-divider);cursor:pointer;color:var(--color-text);text-align:left">
+      <span style="display:flex;flex-direction:column;gap:2px;min-width:0">
+        <span style="font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--color-neutral-700)">Sort &amp; filter</span>
+        <span style="font-family:var(--font-heading);font-weight:700;font-size:13px;overflow:hidden;white-space:nowrap;text-overflow:ellipsis">{{ primeFilterSummary }}</span>
+      </span>
+      <span style="font-size:11px;flex:none;color:var(--color-accent-700)">{{ primeFilterCaret }}</span>
+    </button>
+    <div class="m-wrap m-controls {{ primeControlsOpen }}" style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin:0 0 20px">
+      <span class="m-clabel" style="font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--color-neutral-700);margin-right:2px">Sort</span>
+      <div class="m-sort" style="display:flex;flex-wrap:wrap;gap:8px">
+        <sc-for list="{{ primeSorts }}" as="s" hint-placeholder-count="6">
+          <button onClick="{{ s.pick }}" style="{{ s.style }}">{{ s.label }}</button>
+        </sc-for>
+      </div>
+      <span class="m-cdiv" style="width:1px;height:26px;background:var(--color-divider)"></span>
+      <span class="m-clabel" style="font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--color-neutral-700)">View</span>
+      <div class="m-seg2" style="display:flex;border:1px solid var(--color-divider)">
+        <button onClick="{{ setGrid }}" style="{{ vGrid }}">Cards</button>
+        <button onClick="{{ setList }}" style="{{ vList }}">List</button>
+      </div>
+    </div>
+    <div class="m-chips m-controls {{ primeControlsOpen }}" style="display:flex;gap:8px;flex-wrap:wrap;margin:0 0 24px">
+      <sc-for list="{{ primeChips }}" as="c" hint-placeholder-count="6">
+        <button onClick="{{ c.pick }}" style="{{ c.style }}">{{ c.label }}</button>
       </sc-for>
     </div>
     <sc-if value="{{ primeEmpty }}" hint-placeholder-val="{{ true }}">
       <p style="font-size:15px;color:var(--color-neutral-700);margin:0 0 28px">No deals are carrying a bonus cashback rate right now. Check back &#8212; the rate is set per deal as they are posted.</p>
     </sc-if>
-    <div class="m-stack" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:16px;margin:0 0 32px">
-      <sc-for list="{{ primeCards }}" as="d" hint-placeholder-count="8">
-        <dc-import name="DealCard" deal="{{ d }}" hint-size="100%,430px"></dc-import>
-      </sc-for>
-    </div>
+    <sc-if value="{{ primeNoMatch }}" hint-placeholder-val="{{ false }}">
+      <div style="border:1px solid var(--color-divider);padding:48px;text-align:center;margin:0 0 32px">
+        <div style="font-family:var(--font-heading);font-weight:800;font-size:22px;margin-bottom:8px">Nothing matched that filter</div>
+        <p style="margin:0 0 16px;color:var(--color-neutral-700)">No Prime card deal fits {{ primeChipLabel }} right now.</p>
+        <button onClick="{{ clearPrimeChip }}" class="btn btn-secondary">Show all Prime deals</button>
+      </div>
+    </sc-if>
+    <sc-if value="{{ isGridView }}" hint-placeholder-val="{{ true }}">
+      <div class="m-stack m-cards" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:16px;margin:0 0 32px">
+        <sc-for list="{{ primeCards }}" as="d" hint-placeholder-count="8">
+          <dc-import name="DealCard" deal="{{ d }}" hint-size="100%,430px"></dc-import>
+        </sc-for>
+      </div>
+    </sc-if>
+    <sc-if value="{{ isListView }}" hint-placeholder-val="{{ false }}">
+      <div style="border-top:2px solid var(--color-divider);margin:0 0 32px">
+        <sc-for list="{{ primeCards }}" as="d" hint-placeholder-count="8">
+          <dc-import name="DealRow" deal="{{ d }}" hint-size="100%,108px"></dc-import>
+        </sc-for>
+      </div>
+    </sc-if>
     <div style="background:var(--color-surface);padding:20px;border-top:2px solid var(--color-divider)">
       <p style="margin:0;font-size:14px;max-width:80ch">MistryDeals is not affiliated with Amazon's card issuer. Our card link is a referral and may earn us a bonus if you are approved &#8212; it costs you nothing and changes no rate. We show effective prices because a 5% return changes which deal is actually cheapest.</p>
     </div>
@@ -2352,7 +2388,7 @@ class Component extends DCLogic {
       // every active product carrying a bonus cashback rate. The query returns
       // newest first; anything else is sorted here, on the effective price the
       // cashback produces rather than the sticker price
-      primeCards: (() => {
+      primeCards: (this._primeCards = (() => {
         const rows = (this.state.primeLive || []).map(r => {
           const d = this.mapRow(r);
           const price = isFinite(d.priceNum) ? d.priceNum : null;
@@ -2363,15 +2399,25 @@ class Component extends DCLogic {
           d.effLine = d.hasEff ? "$" + (price - back).toFixed(2).replace(/\.00$/, "") + " after " + Math.round(d.cashPct) + "% back" : "";
           return d;
         });
+        const chip = this.state.primeChip || "All deals";
+        const filtered = rows.filter(d => {
+          if (chip === "Under $25") return isFinite(d.priceNum) && d.priceNum < 25;
+          if (chip === "50% off or more") return d.offNum >= 50;
+          if (chip === "Lowest ever") return d.top;
+          if (chip === "Has coupon code") return d.hasCode;
+          if (chip === "New today") return Date.now() - d.createdAt < 86400000;
+          return true;
+        });
         const s = this.state.primeSortKey || "newest";
-        return rows.slice().sort((a, b) =>
+        return filtered.slice().sort((a, b) =>
           s === "pct" ? b.cashPct - a.cashPct :
           s === "back" ? b.backNum - a.backNum :
           s === "eff" ? a.effNum - b.effNum :
           s === "drop" ? b.offNum - a.offNum :
           s === "price" ? a.priceNum - b.priceNum :
           (b.createdAt - a.createdAt));
-      })(),
+      })()),
+      primeNoMatch: !!((this.state.primeLive || []).length) && !(this._primeCards || []).length,
       primeSorts: [
         { key: "newest", label: "Newest" },
         { key: "eff", label: "Cheapest after cashback" },
@@ -2387,6 +2433,28 @@ class Component extends DCLogic {
             ? "var(--color-accent);background:var(--color-accent);color:#16233a"
             : "var(--color-divider);background:transparent;color:var(--color-text)")
       })),
+      primeChips: ["All deals", "Under $25", "50% off or more", "Lowest ever", "Has coupon code", "New today"].map(label => ({
+        label,
+        pick: () => this.setState({ primeChip: label }),
+        style: "font:inherit;font-size:12px;padding:6px 12px;cursor:pointer;white-space:nowrap;border:1px solid " +
+          ((this.state.primeChip || "All deals") === label
+            ? "var(--color-accent);background:var(--color-accent);color:#16233a"
+            : "var(--color-divider);background:transparent;color:var(--color-text)")
+      })),
+      primeChipLabel: this.state.primeChip || "All deals",
+      clearPrimeChip: () => this.setState({ primeChip: "All deals" }),
+      primeControlsOpen: this.state.primeFiltersOpen ? "is-open" : "",
+      primeFiltersExpanded: this.state.primeFiltersOpen ? "true" : "false",
+      primeFilterCaret: this.state.primeFiltersOpen ? "\u25B2 Close" : "\u25BC",
+      togglePrimeFilters: () => this.setState(st => ({ primeFiltersOpen: !st.primeFiltersOpen })),
+      primeFilterSummary: (() => {
+        const names = { newest: "Newest", eff: "Cheapest after cashback", back: "Most cashback earned",
+          pct: "Highest % back", drop: "Biggest discount", price: "Lowest price" };
+        const sort = names[this.state.primeSortKey || "newest"] || "Newest";
+        const chip = this.state.primeChip && this.state.primeChip !== "All deals" ? this.state.primeChip : "";
+        const view = this.state.view === "list" ? "List" : "Cards";
+        return [sort, chip, view].filter(Boolean).join(" \u00b7 ");
+      })(),
       primeEmpty: !((this.state.primeLive || []).length),
       primeSort: (this.state.primeLive || []).length
         ? ({ newest: "Newest first", eff: "Cheapest after cashback first", back: "Most cashback earned first",
