@@ -16,7 +16,7 @@
     --color-neutral-600:#7b8698; --color-neutral-700:#5c6474; --color-neutral-800:#2f3c55; --color-neutral-900:#16233a;
     --color-accent:#d98014; --color-accent-100:color-mix(in oklch,#d98014,white 88%); --color-accent-700:color-mix(in oklch,#d98014,black 30%); }
   body { margin:0; background:var(--color-bg); color:var(--color-text); font-family:var(--font-body); }
-  a { color:var(--color-accent-700); } a:hover { color:#16233a; }
+  a { color:var(--color-accent-700); } a:hover { color:var(--color-text); }
   input, textarea, select { font:inherit; }
 </style>
 </helmet>
@@ -26,6 +26,7 @@
     <h1 style="margin:0;font-family:var(--font-heading);font-weight:800;font-size:30px;letter-spacing:-.02em">Guide carousel</h1>
     <span style="font-size:13px;color:var(--color-neutral-700)">Instagram &#183; 1080&#215;1350 &#183; hook + tips + CTA</span>
     <a href="{{ guidesHref }}" style="margin-left:auto;font-family:var(--font-heading);font-weight:700;font-size:11px;letter-spacing:.08em;text-transform:uppercase">&#8592; Buying guides</a>
+    <button onClick="{{ toggleDark }}" title="{{ darkTitle }}" style="{{ tDark }}">{{ darkGlyph }}</button>
   </div>
 
   <div style="margin-top:20px;display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:16px;align-items:end">
@@ -236,7 +237,53 @@ class Component extends DCLogic {
   state = { guides: null, guideId: "", slides: null, caption: "", note: "", busy: null, copied: false };
   _refs = []; _refFns = [];
 
-  componentDidMount() { this.load(); this.loadSchedCols(); }
+
+  // shared admin theme: same md-admin-dark key and palette as Catalogue / Deal Queue / Social
+  isDark() {
+    if (this._storedDark === undefined) {
+      try { this._storedDark = JSON.parse(localStorage.getItem("md-admin-dark") || "null"); } catch (e) { this._storedDark = null; }
+    }
+    return this._storedDark === true;
+  }
+  paint() {
+    const r = document.documentElement.style;
+    const dark = this.isDark();
+    const NEUT = ["#faf8f4", "#f2efe9", "#e3dfd5", "#c9c4b7", "#9aa2b0", "#7b8698", "#5c6474", "#2f3c55", "#16233a"];
+    r.setProperty("--color-bg", dark ? "#11151d" : "#f2efe9");
+    r.setProperty("--color-surface", dark ? "#1a202c" : "#faf8f4");
+    r.setProperty("--color-text", dark ? "#eef0f4" : "#16233a");
+    r.setProperty("--color-divider", dark ? "color-mix(in srgb, #eef0f4 26%, transparent)" : "#cfc9bb");
+    NEUT.forEach((hex, i) => r.setProperty("--color-neutral-" + ((i + 1) * 100), dark ? NEUT[8 - i] : hex));
+    r.setProperty("--color-verify", dark ? "#45a179" : "#1c6b4a");
+    r.setProperty("--color-verify-ink", dark ? "#7fc9a4" : "#155a3e");
+    const base = "#d98014";
+    const mix = (w, p) => "color-mix(in oklch, " + base + ", " + w + " " + p + "%)";
+    const toward = dark ? "#11151d" : "white", away = dark ? "#eef0f4" : "black";
+    r.setProperty("--color-accent", base);
+    [[100, toward, 88], [200, toward, 74], [300, toward, 56], [400, toward, 28], [600, away, 16], [700, away, 30], [800, away, 46], [900, away, 62]]
+      .forEach(s => r.setProperty("--color-accent-" + s[0], mix(s[1], s[2])));
+    r.setProperty("--color-accent-500", base);
+    r.colorScheme = dark ? "dark" : "light";
+    document.body.style.background = "var(--color-bg)";
+    document.body.style.color = "var(--color-text)";
+  }
+  darkVals() {
+    return {
+      darkGlyph: this.isDark() ? "\u2600" : "\u263e",
+      darkTitle: this.isDark() ? "Switch to the light theme" : "Switch to the dark theme",
+      darkRowLabel: this.isDark() ? "Light mode" : "Dark mode",
+      tDark: "font:inherit;font-size:13px;line-height:1;width:42px;height:42px;flex:none;display:grid;place-items:center;cursor:pointer;border:1px solid var(--color-divider);background:transparent;color:var(--color-text)",
+      toggleDark: () => {
+        const next = !this.isDark();
+        this._storedDark = next;
+        try { localStorage.setItem("md-admin-dark", JSON.stringify(next)); } catch (e) {}
+        this.forceUpdate(() => this.paint());
+      }
+    };
+  }
+
+  componentDidUpdate() { this.paint(); }
+  componentDidMount() { this.paint(); this.load(); this.loadSchedCols(); }
 
   token() {
     try { const s = JSON.parse(localStorage.getItem("md-admin-session") || "null"); return s && s.token; } catch (e) { return null; }
@@ -589,6 +636,9 @@ class Component extends DCLogic {
   }
 
   renderVals() {
+    return Object.assign(this.renderVals2(), this.darkVals());
+  }
+  renderVals2() {
     const slides = this.state.slides || [];
     const total = slides.length;
     const g = this.guide(this.state.guideId);

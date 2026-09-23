@@ -1,0 +1,15 @@
+User-agent: *
+Allow: /
+Disallow: /catalogue
+Disallow: /dealqueue
+Disallow: /carousel
+Disallow: /guidecarousel
+Disallow: /brandrules
+Disallow: /scrapelog
+Disallow: /redditposter
+Disallow: /buyingguides
+Disallow: /admin
+Disallow: /mobile
+Disallow: /d/
+
+Sitemap: https://mistrydeals.com/sitemap.xml

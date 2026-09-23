@@ -10,6 +10,7 @@
 <helmet>
   <link rel="stylesheet" href="/_ds/modernist-424462e2-4060-4771-92af-91bbc246b8fd/styles.css">
   <style>
+    html { -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
     body { margin: 0; }
     /* 10a: navy does the reading and the pressing, amber only points.
        A solid amber button with light type sits at ~2.6:1 — unusable. */
@@ -108,8 +109,8 @@
         <span style="font:inherit;font-family:var(--font-heading);font-weight:700;font-size:11px;letter-spacing:.1em;text-transform:uppercase;padding:8px 12px;border:1px solid var(--color-text);background:var(--color-text);color:var(--color-bg)">Catalogue</span>
         <a href="{{ hQueue }}" style="font:inherit;font-family:var(--font-heading);font-weight:700;font-size:11px;letter-spacing:.1em;text-transform:uppercase;text-decoration:none;padding:8px 12px;border:1px solid var(--color-divider);color:var(--color-text);border-left:0">Deal queue</a>
         <a href="{{ hCarousel }}" style="font:inherit;font-family:var(--font-heading);font-weight:700;font-size:11px;letter-spacing:.1em;text-transform:uppercase;text-decoration:none;padding:8px 12px;border:1px solid var(--color-divider);color:var(--color-text);border-left:0">Social</a>
-        <a href="{{ hBrands }}" style="font:inherit;font-family:var(--font-heading);font-weight:700;font-size:11px;letter-spacing:.1em;text-transform:uppercase;text-decoration:none;padding:8px 12px;border:1px solid var(--color-divider);color:var(--color-text);border-left:0">Brand rules</a>
-        <a href="{{ hScrapes }}" style="font:inherit;font-family:var(--font-heading);font-weight:700;font-size:11px;letter-spacing:.1em;text-transform:uppercase;text-decoration:none;padding:8px 12px;border:1px solid var(--color-divider);color:var(--color-text);border-left:0">Scrape log</a>
+        <a href="{{ hBrands }}" onClick="{{ markBrands }}" style="font:inherit;font-family:var(--font-heading);font-weight:700;font-size:11px;letter-spacing:.1em;text-transform:uppercase;text-decoration:none;padding:8px 12px;border:1px solid var(--color-divider);color:var(--color-text);border-left:0">Brand rules</a>
+        <a href="{{ hScrapes }}" onClick="{{ markScrapes }}" style="font:inherit;font-family:var(--font-heading);font-weight:700;font-size:11px;letter-spacing:.1em;text-transform:uppercase;text-decoration:none;padding:8px 12px;border:1px solid var(--color-divider);color:var(--color-text);border-left:0">Scrape log</a>
         <a href="{{ hReddit }}" style="font:inherit;font-family:var(--font-heading);font-weight:700;font-size:11px;letter-spacing:.1em;text-transform:uppercase;text-decoration:none;padding:8px 12px;border:1px solid var(--color-divider);color:var(--color-text);border-left:0">Reddit poster</a>
         <a href="{{ hGuides }}" style="font:inherit;font-family:var(--font-heading);font-weight:700;font-size:11px;letter-spacing:.1em;text-transform:uppercase;text-decoration:none;padding:8px 12px;border:1px solid var(--color-divider);color:var(--color-text);border-left:0">Buying guides</a>
       </div>
@@ -118,6 +119,7 @@
       <div class="m-wrap" style="margin-left:auto;display:flex;align-items:center;gap:10px">
         <span style="font-size:12px;color:var(--color-neutral-700)">{{ savedNote }}</span>
         <span style="font-size:12px;color:var(--color-neutral-700)">{{ userEmail }}</span>
+        <a href="{{ hSite }}" style="font:inherit;font-family:var(--font-heading);font-weight:700;font-size:11px;letter-spacing:.1em;text-transform:uppercase;text-decoration:none;padding:8px 12px;border:1px solid var(--color-divider);color:var(--color-text)">View site</a>
         <button onClick="{{ refresh }}" class="btn btn-secondary" style="font-size:12px;padding:8px 12px">Refresh</button>
         <button onClick="{{ signOut }}" class="btn btn-ghost" style="font-size:12px;padding:8px 12px">Sign out</button>
         <button onClick="{{ toggleDark }}" title="{{ darkTitle }}" style="{{ tDark }}">{{ darkGlyph }}</button>
@@ -149,7 +151,7 @@
 
         <div style="display:flex;flex-direction:column;padding:8px 0;border-bottom:1px solid var(--color-divider)">
           <sc-for list="{{ menuNav }}" as="m" hint-placeholder-count="5">
-            <a href="{{ m.href }}" style="{{ m.style }}">{{ m.label }}</a>
+            <a href="{{ m.href }}" onClick="{{ m.pick }}" style="{{ m.style }}">{{ m.label }}</a>
           </sc-for>
         </div>
 
@@ -471,7 +473,9 @@
                 <div style="display:flex;flex-wrap:wrap;gap:10px;margin-top:6px;font-family:var(--font-heading);font-weight:700;font-size:10px;letter-spacing:.08em;text-transform:uppercase">
                   <a href="{{ r.url }}" target="_blank" rel="noopener" title="Plain Amazon link — no affiliate tag, so admin clicks stay out of your metrics">View</a>
                   <button onClick="{{ r.sync }}" title="Re-check this product's price now" style="font:inherit;font-family:var(--font-heading);font-weight:700;font-size:10px;letter-spacing:.08em;text-transform:uppercase;background:none;border:0;padding:0;cursor:pointer;color:var(--color-accent-700)">{{ r.syncLabel }}</button>
+                  <button onClick="{{ r.history }}" title="Every price the pipeline has recorded for this ASIN" style="font:inherit;font-family:var(--font-heading);font-weight:700;font-size:10px;letter-spacing:.08em;text-transform:uppercase;background:none;border:0;padding:0;cursor:pointer;color:var(--color-accent-700)">History</button>
                   <button onClick="{{ r.edit }}" title="Edit title, category and prices" style="font:inherit;font-family:var(--font-heading);font-weight:700;font-size:10px;letter-spacing:.08em;text-transform:uppercase;background:none;border:0;padding:0;cursor:pointer;color:var(--color-accent-700)">Edit</button>
+                  <button onClick="{{ r.reel }}" title="Render this deal as a 1080×1920 reel overlay and download the PNG" style="{{ r.reelStyle }}">{{ r.reelLabel }}</button>
                   <button onClick="{{ r.remove }}" title="Delete this product permanently" style="font:inherit;font-family:var(--font-heading);font-weight:700;font-size:10px;letter-spacing:.08em;text-transform:uppercase;background:none;border:0;padding:0;cursor:pointer;color:var(--color-neutral-700)">Delete</button>
                 </div>
               </div>
@@ -618,6 +622,128 @@
       </div>
     </div>
   </sc-if>
+  <sc-if value="{{ histOpen }}" hint-placeholder-val="{{ false }}">
+    <div onClick="{{ histClose }}" style="position:fixed;inset:0;background:color-mix(in srgb, var(--color-neutral-900) 55%, transparent);display:grid;place-items:center;padding:24px;z-index:90">
+      <div onClick="{{ histStop }}" style="background:var(--color-bg);border:2px solid var(--color-text);max-width:720px;width:100%;max-height:86vh;overflow:auto;padding:24px">
+        <div class="m-wrap" style="display:flex;align-items:flex-start;gap:16px;border-bottom:2px solid var(--color-divider);padding-bottom:14px">
+          <div style="min-width:0">
+            <div style="font-family:var(--font-heading);font-weight:700;font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--color-neutral-700)">Price history</div>
+            <h2 style="margin:6px 0 0;font-size:20px;line-height:1.2;letter-spacing:-.01em">{{ histTitle }}</h2>
+            <div style="font-size:11px;letter-spacing:.04em;color:var(--color-neutral-600);margin-top:4px">{{ histAsin }}</div>
+          </div>
+          <button onClick="{{ histClose }}" aria-label="Close" style="font:inherit;font-size:18px;line-height:1;flex:none;margin-left:auto;width:36px;height:36px;display:flex;align-items:center;justify-content:center;cursor:pointer;background:transparent;border:1px solid var(--color-divider);color:var(--color-text)">&#215;</button>
+        </div>
+
+        <sc-if value="{{ histErr }}" hint-placeholder-val="{{ false }}">
+          <div style="border-left:3px solid var(--color-accent);padding:12px 14px;margin-top:18px;font-size:13px;line-height:1.45;color:var(--color-accent-700)">{{ histErr }}</div>
+        </sc-if>
+        <sc-if value="{{ histLoading }}" hint-placeholder-val="{{ true }}">
+          <div style="padding:44px;text-align:center;font-size:13px;color:var(--color-neutral-700)">Reading the pipeline&#8230;</div>
+        </sc-if>
+
+        <sc-if value="{{ histReady }}" hint-placeholder-val="{{ false }}">
+          <div style="padding:18px 0 4px">
+            <div style="{{ histVerdictStyle }}">{{ histVerdict }}</div>
+          </div>
+
+          <sc-if value="{{ histHasChart }}" hint-placeholder-val="{{ false }}">
+            <div style="padding:20px 0 0">
+              <div style="position:relative">
+                <svg viewBox="{{ chart.viewBox }}" preserveAspectRatio="none" width="100%" height="240" role="img" style="display:block">
+                  <sc-for list="{{ chart.yTicks }}" as="t" hint-placeholder-count="4">
+                    <line x1="{{ chart.axisX }}" y1="{{ t.y }}" x2="{{ chart.axisW }}" y2="{{ t.y }}" vector-effect="non-scaling-stroke" style="stroke:var(--color-divider);stroke-width:1;opacity:.55"></line>
+                  </sc-for>
+                  <line x1="{{ chart.axisX }}" y1="{{ chart.axisTop }}" x2="{{ chart.axisX }}" y2="{{ chart.axisY }}" vector-effect="non-scaling-stroke" style="stroke:var(--color-divider);stroke-width:1"></line>
+                  <line x1="{{ chart.axisX }}" y1="{{ chart.axisY }}" x2="{{ chart.axisW }}" y2="{{ chart.axisY }}" vector-effect="non-scaling-stroke" style="stroke:var(--color-text);stroke-width:1"></line>
+                  <sc-if value="{{ chart.hasLow }}" hint-placeholder-val="{{ false }}">
+                    <line x1="{{ chart.axisX }}" y1="{{ chart.lowY }}" x2="{{ chart.axisW }}" y2="{{ chart.lowY }}" vector-effect="non-scaling-stroke" style="{{ chart.lowLineStyle }}"></line>
+                  </sc-if>
+                  <sc-if value="{{ chart.hasReg }}" hint-placeholder-val="{{ false }}">
+                    <path d="{{ chart.regPath }}" vector-effect="non-scaling-stroke" style="{{ chart.regStyle }}"></path>
+                  </sc-if>
+                  <sc-if value="{{ chart.hasCoupon }}" hint-placeholder-val="{{ false }}">
+                    <path d="{{ chart.couponPath }}" vector-effect="non-scaling-stroke" style="{{ chart.couponStyle }}"></path>
+                  </sc-if>
+                  <sc-if value="{{ chart.hasPrice }}" hint-placeholder-val="{{ true }}">
+                    <path d="{{ chart.pricePath }}" vector-effect="non-scaling-stroke" style="{{ chart.priceStyle }}"></path>
+                  </sc-if>
+                  <sc-for list="{{ chart.regDots }}" as="d" hint-placeholder-count="6">
+                    <circle cx="{{ d.cx }}" cy="{{ d.cy }}" r="3" fill="var(--color-bg)" stroke="var(--color-neutral-500)" stroke-width="1.5" vector-effect="non-scaling-stroke"></circle>
+                  </sc-for>
+                  <sc-for list="{{ chart.priceDots }}" as="d" hint-placeholder-count="8">
+                    <circle cx="{{ d.cx }}" cy="{{ d.cy }}" r="{{ d.r }}" fill="{{ d.fill }}"><title>{{ d.tip }}</title></circle>
+                  </sc-for>
+                  <sc-for list="{{ chart.couponDots }}" as="d" hint-placeholder-count="3">
+                    <circle cx="{{ d.cx }}" cy="{{ d.cy }}" r="3.5" fill="var(--color-bg)" stroke="var(--color-text)" stroke-width="1.5" vector-effect="non-scaling-stroke"><title>{{ d.tip }}</title></circle>
+                  </sc-for>
+                  <sc-if value="{{ chart.hasLow }}" hint-placeholder-val="{{ false }}">
+                    <circle cx="{{ chart.lowX }}" cy="{{ chart.lowY }}" r="5" fill="var(--color-accent-700)"></circle>
+                  </sc-if>
+                  <sc-for list="{{ chart.hoverDots }}" as="d" hint-placeholder-count="8">
+                    <circle cx="{{ d.cx }}" cy="{{ d.cy }}" r="9" fill="transparent" onMouseEnter="{{ d.enter }}" onMouseLeave="{{ d.leave }}" style="cursor:crosshair"><title>{{ d.tip }}</title></circle>
+                  </sc-for>
+                </svg>
+                <sc-for list="{{ chart.yTicks }}" as="t" hint-placeholder-count="4">
+                  <div style="position:absolute;left:0;top:{{ t.top }};transform:translateY(-50%);font-size:11px;line-height:1;color:var(--color-neutral-600);pointer-events:none;white-space:nowrap">{{ t.label }}</div>
+                </sc-for>
+                <sc-if value="{{ chart.hasLow }}" hint-placeholder-val="{{ false }}">
+                  <div style="position:absolute;right:0;top:{{ chart.lowLabelTop }};max-width:38%;overflow:hidden;text-overflow:ellipsis;font-family:var(--font-heading);font-weight:800;font-size:12px;line-height:1.2;color:var(--color-accent-700);pointer-events:none;white-space:nowrap">{{ chart.lowLabel }}</div>
+                </sc-if>
+                <sc-if value="{{ histTipOn }}" hint-placeholder-val="{{ false }}">
+                  <div style="position:absolute;left:{{ histTipLeft }};top:{{ histTipTop }};transform:translate(-50%,-160%);background:var(--color-text);color:var(--color-bg);font-family:var(--font-heading);font-weight:700;font-size:11px;padding:5px 8px;white-space:nowrap;pointer-events:none;z-index:2">{{ histTipText }}</div>
+                </sc-if>
+              </div>
+              <div style="position:relative;height:16px;margin-top:2px">
+                <sc-for list="{{ chart.xTicks }}" as="t" hint-placeholder-count="4">
+                  <div style="position:absolute;left:{{ t.left }};transform:{{ t.align }};font-size:11px;line-height:1;color:var(--color-neutral-600);white-space:nowrap">{{ t.label }}</div>
+                </sc-for>
+              </div>
+              <div style="{{ keyGridStyle }}">
+                <sc-for list="{{ chart.keyRows }}" as="l" hint-placeholder-count="4">
+                  <div style="{{ keyCellStyle }}">
+                    <span style="{{ l.swatch }}"></span>
+                    <div style="min-width:0">
+                      <div style="{{ keyLabelStyle }}">{{ l.label }}</div>
+                      <div style="{{ keyFigStyle }}">
+                        <span style="{{ keyValueStyle }}">{{ l.value }}</span>
+                        <span style="{{ keyNoteStyle }}">{{ l.note }}</span>
+                      </div>
+                    </div>
+                  </div>
+                </sc-for>
+              </div>
+              <sc-if value="{{ chart.statLine }}" hint-placeholder-val="{{ false }}">
+                <div style="font-size:11.5px;color:var(--color-neutral-600);padding:10px 0 0">{{ chart.statLine }}</div>
+              </sc-if>
+
+            </div>
+          </sc-if>
+
+          <sc-if value="{{ isWide }}" hint-placeholder-val="{{ true }}">
+          <div style="margin-top:20px">
+            <div style="display:grid;grid-template-columns:110px 1fr 96px 1fr;gap:10px;padding:8px 0;border-bottom:2px solid var(--color-divider);font-family:var(--font-heading);font-weight:700;font-size:9.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--color-neutral-700)">
+              <span>Seen</span><span>Price</span><span>Status</span><span>Source</span>
+            </div>
+            <sc-for list="{{ histRows }}" as="h" hint-placeholder-count="6">
+              <div style="display:grid;grid-template-columns:110px 1fr 96px 1fr;gap:10px;padding:9px 0;border-bottom:1px solid var(--color-divider);align-items:baseline">
+                <div style="font-size:12.5px;line-height:1.3" title="{{ h.exact }}">{{ h.when }}</div>
+                <div style="font-size:13px;line-height:1.3">
+                  <span style="font-family:var(--font-heading);font-weight:800">{{ h.price }}</span>
+                  <span style="font-size:11.5px;color:var(--color-neutral-600);margin-left:6px">{{ h.was }}</span>
+                </div>
+                <div style="{{ h.statusStyle }}">{{ h.status }}</div>
+                <div style="font-size:11.5px;color:var(--color-neutral-700);line-height:1.3;overflow-wrap:break-word">{{ h.source }}</div>
+              </div>
+            </sc-for>
+            <sc-if value="{{ histNoRows }}" hint-placeholder-val="{{ false }}">
+              <div style="padding:26px 0;text-align:center;font-size:13px;color:var(--color-neutral-700)">Nothing in <code style="font-size:12px">product_pipeline</code> for this ASIN yet.</div>
+            </sc-if>
+          </div>
+          </sc-if>
+        </sc-if>
+      </div>
+    </div>
+  </sc-if>
 </div>
 </sc-if>
 </x-dc>
@@ -631,8 +757,9 @@ class Component extends DCLogic {
     dens: "roomy", dark: false, darkTouched: false, wide: true, syncing: false, syncingId: null, hoverSlot: null, editId: null, draft: {}, savingEdit: false, editError: "", editLoading: false, confirmBox: null,
     products: null, pQuery: "", pFlag: "all", pCat: "All categories", pLimit: 50, pTotal: null, pSort: "synced", pError: "", sError: "", pendingIds: null,
     colw: null, sortCol: null, sortDir: "desc", menuOpen: false, pFilterOpen: false,
+    histBox: null, hist: null, histRuns: null, histErr: "", histTip: null,
     posts: null, sFilter: "all", sLimit: 50, sTotal: null, postState: null, today: null, slidesOpen: {},
-    saved: "", verifying: true
+    saved: "", verifying: true, reelBusy: ""
   };
 
   componentWillUnmount() { window.removeEventListener("resize", this.onResize); }
@@ -1602,6 +1729,263 @@ class Component extends DCLogic {
     setTimeout(() => this.setState({ saved: "" }), 2600);
   }
 
+  // product_pipeline is the source of truth for prices — it holds every time a
+  // scraper saw the ASIN. price_history is read too, but only to draw the
+  // chart's older tail; the lowest-ever verdict comes from the pipeline alone.
+  openHistory(p) {
+    if (!p) return;
+    this.setState({
+      histBox: {
+        asin: String(p.asin || "").trim().toUpperCase(),
+        productId: p.id,
+        title: this.decode(p.display_title || p.title || "") || String(p.asin || ""),
+        price: p.price
+      },
+      hist: null, histRuns: null, histErr: ""
+    }, () => this.loadHistory());
+  }
+
+  closeHistory() { this.setState({ histBox: null, hist: null, histRuns: null, histErr: "", histTip: null }); }
+
+  async loadHistory() {
+    const box = this.state.histBox;
+    if (!box) return;
+    try {
+      if (!box.asin) throw new Error("This product has no ASIN, so the pipeline cannot be searched for it.");
+      const runs = await this.req(BASE + "/rest/v1/product_pipeline?select=*&asin=eq." +
+        encodeURIComponent(box.asin) + "&order=created_at.desc&limit=60", { headers: this.headers() });
+      if (!runs.ok) throw new Error("Could not read product_pipeline (HTTP " + runs.status + ")");
+      const histRuns = await runs.json();
+      let hist = [];
+      if (box.productId) {
+        const h = await this.req(BASE + "/rest/v1/price_history?select=price,recorded_at&product_id=eq." +
+          encodeURIComponent(box.productId) + "&order=recorded_at.asc&limit=200", { headers: this.headers() });
+        if (h.ok) hist = await h.json();
+      }
+      this.setState({ hist: hist, histRuns: histRuns });
+    } catch (e) { this.setState({ histErr: String(e.message || e) }); }
+  }
+
+  // every price point for the ASIN, oldest first. kind marks the origin: only
+  // "scrape" (product_pipeline) points count towards the lowest-ever verdict.
+  histPoints() {
+    const out = [];
+    (this.state.hist || []).forEach(h => {
+      const v = Number(h.price);
+      if (v > 0) out.push({ price: v, at: h.recorded_at, kind: "sync" });
+    });
+    (this.state.histRuns || []).forEach(r => {
+      const v = Number(r.price);
+      if (v > 0) out.push({ price: v, at: r.created_at, kind: "scrape", status: r.status });
+    });
+    out.sort((a, b) => Date.parse(a.at) - Date.parse(b.at));
+    // a price check written the same minute as a scrape is one observation
+    return out.filter((p, i) => i === 0 || !(p.price === out[i - 1].price &&
+      Math.abs(Date.parse(p.at) - Date.parse(out[i - 1].at)) < 120000));
+  }
+
+  // rejected scrapes are excluded everywhere the price is judged: that price was
+  // never one the site offered, so it should not set a low or draw a line
+  pipelinePoints() { return this.histPoints().filter(p => p.kind === "scrape" && p.status !== "rejected"); }
+
+  // product_pipeline column names for coupons vary by scraper generation, so the
+  // coupon series is resolved by shape: any numeric "*coupon*price*" field, and
+  // any "*coupon*code*" string that marks a row as couponed.
+  couponOf(r) {
+    let price = null, code = "";
+    Object.keys(r || {}).forEach(k => {
+      if (!/coupon/i.test(k)) return;
+      const v = r[k];
+      if (/price|amount|value/i.test(k) && v != null && !isNaN(Number(v)) && Number(v) > 0) price = Number(v);
+      else if (/code/i.test(k) && v) code = String(v);
+    });
+    return price == null && !code ? null : { price: price, code: code };
+  }
+
+  // The four series the modal draws, projected into one 720x240 viewBox on a
+  // shared time axis so the reader compares them by height alone.
+  chartData() {
+    const runs = this.state.histRuns;
+    if (!runs) return null;
+    const box = this.state.histBox || {};
+    const t = at => Date.parse(at) || 0;
+
+    const paid = this.histPoints().filter(p => t(p.at) && p.status !== "rejected");
+    const kept = runs.filter(r => r.status !== "rejected");
+    const reg = kept.filter(r => t(r.created_at) && Number(r.original_price) > 0)
+      .map(r => ({ at: r.created_at, price: Number(r.original_price) }))
+      .sort((a, b) => t(a.at) - t(b.at));
+    const coup = kept.map(r => {
+      const c = this.couponOf(r);
+      if (!c || c.price == null || !t(r.created_at)) return null;
+      return { at: r.created_at, price: c.price, code: c.code };
+    }).filter(Boolean).sort((a, b) => t(a.at) - t(b.at));
+
+    const all = paid.concat(reg, coup);
+    // every series needs two points to be a line — one scrape and one list price
+    // used to pass this guard and draw an empty 240px canvas
+    if (paid.length < 2 && reg.length < 2 && coup.length < 2) return null;
+
+    const W = 720, H = 240, L = 62, R = 104, T = 18, B = 34;
+    const times = all.map(p => t(p.at));
+    const t0 = Math.min.apply(null, times), t1 = Math.max.apply(null, times);
+    const tSpan = t1 - t0 || 1;
+    const vals = all.map(p => p.price);
+    const rawLo = Math.min.apply(null, vals), rawHi = Math.max.apply(null, vals);
+    // axis ticks land on round money: a step chosen from the 1/2/5 family scaled
+    // to the regular-to-discount delta, with the bounds snapped out to it
+    const niceStep = (range) => {
+      const raw = (range || 1) / 4;
+      const mag = Math.pow(10, Math.floor(Math.log10(raw)));
+      const n = raw / mag;
+      return (n <= 1 ? 1 : n <= 2 ? 2 : n <= 5 ? 5 : 10) * mag;
+    };
+    const step = niceStep((rawHi - rawLo) * 1.25);
+    let vLo = Math.floor(rawLo / step) * step;
+    let vHi = Math.ceil(rawHi / step) * step;
+    if (vHi - vLo < step) vHi = vLo + step;
+    const x = at => L + ((t(at) - t0) / tSpan) * (W - L - R);
+    const y = v => T + (1 - (v - vLo) / ((vHi - vLo) || 1)) * (H - T - B);
+    const path = arr => arr.map((p, i) => (i ? "L" : "M") + x(p.at).toFixed(1) + " " + y(p.price).toFixed(1)).join(" ");
+    const day = at => new Date(t(at)).toLocaleDateString("en-US", { day: "numeric", month: "short" });
+
+    // lowest ever is judged on pipeline scrapes alone (see openHistory)
+    const scrapes = paid.filter(p => p.kind === "scrape");    const lowSet = scrapes.length ? scrapes : paid;
+    let low = null;
+    // ties go to the most recent sighting — "lowest ever" should read as the last
+    // time that price was seen, not the first
+    lowSet.forEach(p => { if (!low || p.price <= low.price) low = p; });
+
+    const cur = Number(box.price) > 0 ? Number(box.price) : null;
+    const line = (color, dash, w) => "fill:none;stroke:var(--color-" + color + ");stroke-width:" + w +
+      (dash ? ";stroke-dasharray:" + dash : "") + ";stroke-linejoin:round;stroke-linecap:round";
+
+    // four price ticks on a whole-cent step, and up to five date ticks across
+    // the observed span — both drawn as HTML over the chart, since a template
+    // hole inside an SVG <text> renders as a <span> and paints nothing
+    const yTicks = [];
+    const tickText = v => step >= 1 ? "$" + Math.round(v) : "$" + v.toFixed(2);
+    for (let v = vLo; v <= vHi + step / 1000; v += step) {
+      yTicks.push({ y: y(v).toFixed(1), top: (y(v) / H * 100).toFixed(2) + "%", label: tickText(v) });
+    }
+    const nx = Math.min(5, Math.max(2, Math.round((W - L - R) / 130)));
+    const xTicks = [];
+    for (let i = 0; i < nx; i++) {
+      const at = t0 + (tSpan * i) / (nx - 1);
+      const px = L + ((at - t0) / tSpan) * (W - L - R);
+      xTicks.push({
+        left: (px / W * 100).toFixed(2) + "%",
+        label: new Date(at).toLocaleDateString("en-US", { day: "numeric", month: "short" }),
+        align: i === 0 ? "translateX(0)" : i === nx - 1 ? "translateX(-100%)" : "translateX(-50%)"
+      });
+    }
+
+    return {
+      // the chart's key doubles as the figure readout: one row per drawn series,
+      // carrying its own colour, name and latest value, so the numbers are not
+      // repeated in a separate block above the chart
+      keyRows: (() => {
+        const last = arr => (arr.length ? arr[arr.length - 1] : null);
+        const nar = !!this.state.narrow;
+        const sw = fill => fill + ";display:block;flex:none;width:" + (nar ? "18px" : "26px");
+        const rows = [];
+        const lp = last(paid);
+        if (paid.length > 1) rows.push({
+          label: "Sale price",
+          value: this.money(cur != null ? cur : (lp ? lp.price : null)),
+          note: cur != null ? "now" : (lp ? day(lp.at) : ""),
+          swatch: sw("background:var(--color-accent);height:3px")
+        });
+        const lr = last(reg);
+        if (reg.length) rows.push({
+          label: "Regular price",
+          value: this.money(lr.price),
+          note: reg.length > 1 || nar ? day(lr.at) : day(lr.at) + ", one reading",
+          swatch: sw("background:repeating-linear-gradient(90deg,var(--color-neutral-500) 0 7px,transparent 7px 12px);height:2px")
+        });
+        const lc = last(coup);
+        if (coup.length) rows.push({
+          label: lc.code ? "With " + lc.code : "With coupon",
+          value: this.money(lc.price),
+          note: day(lc.at),
+          swatch: sw("background:repeating-linear-gradient(90deg,var(--color-text) 0 2px,transparent 2px 6px);height:2px")
+        });
+        if (low) rows.push({
+          label: "Lowest ever",
+          value: this.money(low.price),
+          note: day(low.at),
+          swatch: sw("background:repeating-linear-gradient(90deg,var(--color-accent-700) 0 4px,transparent 4px 8px);height:2px")
+        });
+        return rows;
+      })(),
+      statLine: (() => {
+        const vals = scrapes.map(p => p.price);
+        if (vals.length < 2) return vals.length === 1 ? "1 scrape on record" : "";
+        const avg = vals.reduce((a, b) => a + b, 0) / vals.length;
+        return this.money(Math.max.apply(null, vals)) + " highest \u00b7 " + this.money(avg) +
+          " average \u00b7 " + vals.length + " scrapes on record";
+      })(),
+      viewBox: "0 0 " + W + " " + H,
+      axisY: (H - B).toFixed(1),
+      axisX: L.toFixed(1),
+      axisTop: T.toFixed(1),
+      axisW: W,
+      plotLeft: (L / W * 100).toFixed(2) + "%",
+      yTicks: yTicks,
+      xTicks: xTicks,
+      pricePath: paid.length > 1 ? path(paid) : "",
+      priceStyle: line("accent", "", 2.5),
+      hasPrice: paid.length > 1,
+      regPath: reg.length > 1 ? path(reg) : "",
+      regStyle: line("neutral-500", "7 5", 1.5),
+      hasReg: reg.length > 1,
+      // a marked point per list-price reading, so the line reads as hoverable
+      regDots: reg.map(p => ({ cx: x(p.at).toFixed(1), cy: y(p.price).toFixed(1) })),
+      couponPath: coup.length > 1 ? path(coup) : "",
+      couponStyle: line("text", "2 4", 1.75),
+      hasCoupon: coup.length > 1,
+      couponDots: coup.map(p => ({
+        cx: x(p.at).toFixed(1), cy: y(p.price).toFixed(1),
+        tip: this.money(p.price) + (p.code ? " with " + p.code : " with coupon") + " \u00b7 " + day(p.at)
+      })),
+      priceDots: paid.map(p => ({
+        cx: x(p.at).toFixed(1), cy: y(p.price).toFixed(1),
+        r: p.kind === "scrape" ? "3" : "2",
+        fill: "var(--color-" + (p.kind === "scrape" ? "accent" : "neutral-500") + ")",
+        tip: this.money(p.price) + " \u00b7 " + (p.kind === "scrape" ? "scraped" : "price check") + " \u00b7 " + day(p.at)
+      })),
+      hasLow: !!low,
+      // a generous transparent target over every plotted point, so the price
+      // tooltip is reachable without hitting a 3px dot exactly
+      hoverDots: paid.map(p => ({
+        cx: x(p.at).toFixed(1), cy: y(p.price).toFixed(1),
+        tip: this.money(p.price) + " \u00b7 " + (p.kind === "scrape" ? "scraped" : "price check") + " \u00b7 " + day(p.at)
+      })).concat(
+        reg.map(p => ({ cx: x(p.at).toFixed(1), cy: y(p.price).toFixed(1), tip: this.money(p.price) + " \u00b7 regular price \u00b7 " + day(p.at) })),
+        coup.map(p => ({ cx: x(p.at).toFixed(1), cy: y(p.price).toFixed(1), tip: this.money(p.price) + (p.code ? " with " + p.code : " with coupon") + " \u00b7 " + day(p.at) }))
+      ).map(d => Object.assign(d, {
+        enter: () => this.setState({ histTip: { text: d.tip, left: (Number(d.cx) / W * 100).toFixed(2) + "%", top: (Number(d.cy) / H * 100).toFixed(2) + "%" } }),
+        leave: () => this.setState({ histTip: null })
+      })),
+      lowY: low ? y(low.price).toFixed(1) : "0",
+      lowX: low ? x(low.at).toFixed(1) : "0",
+      // pinned to the wrapper's right edge, not to a percentage of the viewBox:
+      // a nowrap label at 86% of a 360px modal overflowed its own border
+      lowLabelTop: low ? (Math.max(T + 2, y(low.price) - 20) / H * 100).toFixed(2) + "%" : "0",
+      lowLineStyle: "stroke:var(--color-accent-700);stroke-width:1.25;stroke-dasharray:4 4",
+      lowLabel: low ? this.money(low.price) + " \u00b7 " + day(low.at) : "",
+      lowLabelY: low ? Math.max(T + 9, y(low.price) - 7).toFixed(1) : "0",
+      lowCaption: low ? "Lowest ever " + this.money(low.price) + ", recorded " + day(low.at) + " (" + this.since(low.at) + ")" : "",
+      curLabel: cur == null ? "" : this.money(cur),
+      curY: cur == null ? "0" : Math.min(H - B - 4, Math.max(T + 9, y(cur) + 4)).toFixed(1),
+      labelX: (W - R + 10).toFixed(1),
+      startLabel: day(all.slice().sort((a, b) => t(a.at) - t(b.at))[0].at),
+      endLabel: day(all.slice().sort((a, b) => t(b.at) - t(a.at))[0].at)
+    };
+  }
+
+  money(v) { return v == null || v === "" || isNaN(Number(v)) ? "\u2014" : "$" + Number(v).toFixed(2); }
+
   since(iso) {
     if (!iso) return "\u2014";
     const t = Date.parse(iso);
@@ -1679,6 +2063,43 @@ class Component extends DCLogic {
 
   // deployed, the admin sections are real paths (/dealqueue, /brandrules,
   // /scrapelog); opened as a local file they are the sibling DC + a hash
+  // The host preview can swallow a "#brands" hash on navigation, so the wanted
+  // tab is also left in sessionStorage for the deal-queue page to pick up.
+  markTab(label) {
+    const tab = label === "Brand rules" ? "brands" : label === "Scrape log" ? "scrapes" : "";
+    if (!tab) return null;
+    return () => { try { sessionStorage.setItem("md-admin-tab", tab); } catch (e) {} };
+  }
+
+  // reel-download returns the PNG bytes rather than writing to storage, so an
+  // on-demand reel never clobbers the pipeline's social/{slug}-reel.png
+  async downloadReel(p) {
+    if (this.state.reelBusy) return;
+    this.setState({ reelBusy: p.id, saved: "Rendering the reel\u2026" });
+    try {
+      const res = await this.req(BASE + "/functions/v1/reel-download", {
+        method: "POST",
+        headers: this.headers({ "Content-Type": "application/json" }),
+        body: JSON.stringify({ productId: p.id, slug: p.slug || null, layout: "safe" })
+      });
+      if (!res.ok) {
+        const t = await res.text().catch(() => "");
+        this.setState({ reelBusy: "", saved: "Reel failed \u2014 " + (t ? t.slice(0, 120) : res.status) });
+        return;
+      }
+      const blob = await res.blob();
+      const name = (p.slug || p.asin || "reel") + "-reel.png";
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url; a.download = name;
+      document.body.appendChild(a); a.click(); a.remove();
+      setTimeout(() => URL.revokeObjectURL(url), 4000);
+      this.setState({ reelBusy: "", saved: name + " downloaded" });
+    } catch (e) {
+      this.setState({ reelBusy: "", saved: "Reel failed \u2014 " + (e && e.message ? e.message : "network error") });
+    }
+  }
+
   adminHref(page) {
     const deployed = { catalogue: "/catalogue", dealqueue: "/dealqueue", carousel: "/carousel", brands: "/brandrules", scrapes: "/scrapelog", reddit: "/redditposter", guides: "/buyingguides" };
     if (/^\/(catalogue|dealqueue|carousel|brandrules|scrapelog|redditposter|buyingguides)/.test(location.pathname) || location.pathname.indexOf("/admin/") !== -1) return deployed[page] || "/catalogue";
@@ -1722,6 +2143,9 @@ class Component extends DCLogic {
     all.forEach(p => { if (p.category) cats[p.category] = 1; });
 
     return {
+      markBrands: () => { try { sessionStorage.setItem("md-admin-tab", "brands"); } catch (e) {} },
+      markScrapes: () => { try { sessionStorage.setItem("md-admin-tab", "scrapes"); } catch (e) {} },
+      hSite: /^\/(catalogue|dealqueue|carousel|brandrules|scrapelog|redditposter|buyingguides)/.test(location.pathname) || location.pathname.indexOf("/admin/") !== -1 ? "/" : "MistryDeals Site.dc.html",
       signedIn: !!this.state.token,
       signedOut: !this.state.token && !this.state.verifying,
       verifying: !this.state.token && this.state.verifying,
@@ -1749,10 +2173,12 @@ class Component extends DCLogic {
         { label: "Brand rules", href: this.adminHref("brands") },
         { label: "Scrape log", href: this.adminHref("scrapes") },
         { label: "Reddit poster", href: this.adminHref("reddit") },
-        { label: "Buying guides", href: this.adminHref("guides") }
+        { label: "Buying guides", href: this.adminHref("guides") },
+        { label: "View site", href: /^\/(catalogue|dealqueue|carousel|brandrules|scrapelog|redditposter|buyingguides)/.test(location.pathname) || location.pathname.indexOf("/admin/") !== -1 ? "/" : "MistryDeals Site.dc.html" }
       ].map(m => ({
         label: m.label,
         href: m.href,
+        pick: this.markTab(m.label),
         style: "font:inherit;font-family:var(--font-heading);font-weight:700;font-size:12.5px;letter-spacing:.06em;text-transform:uppercase;text-decoration:none;display:flex;align-items:center;min-height:48px;padding:0 16px;color:var(--color-" +
           (m.here ? "accent-700" : "text") + ")"
       })),
@@ -1948,6 +2374,73 @@ class Component extends DCLogic {
         return opts.concat(list.map(c => ({ value: c, label: c })));
       })(),
       confirmOpen: !!this.state.confirmBox,
+      histOpen: !!this.state.histBox,
+      histTitle: (this.state.histBox || {}).title || "",
+      histAsin: (this.state.histBox || {}).asin ? "ASIN " + this.state.histBox.asin : "no ASIN",
+      histErr: this.state.histErr,
+      histClose: () => this.closeHistory(),
+      histStop: e => e.stopPropagation(),
+      histLoading: !!this.state.histBox && !this.state.histErr && this.state.histRuns === null,
+      histReady: !!this.state.histBox && !this.state.histErr && this.state.histRuns !== null,
+      histNoRows: !!this.state.histBox && this.state.histRuns !== null && this.state.histRuns.filter(r => r.status !== "rejected").length === 0,
+      histVerdict: (() => {
+        const box = this.state.histBox;
+        if (!box || this.state.histRuns === null) return "";
+        const prior = this.pipelinePoints().map(p => p.price);
+        const cur = Number(box.price) > 0 ? Number(box.price) : null;
+        if (cur == null && !prior.length) return "No scraped price on record for this ASIN yet.";
+        if (!prior.length) return "No scrape on record \u2014 " + this.money(cur) + " is the catalogue price, with nothing in the pipeline to judge it against.";
+        const low = Math.min.apply(null, prior);
+        if (cur == null) return "This product carries no price, so it cannot be judged.";
+        if (cur < low) return "Beats every scraped price on record \u2014 previous best " + this.money(low) + ".";
+        if (cur === low) return "Matches the lowest scraped price on record.";
+        const pct = Math.round(((cur - low) / low) * 100);
+        return pct <= 5 ? "Within " + pct + "% of the lowest on record (" + this.money(low) + ")."
+          : pct + "% above the lowest on record (" + this.money(low) + ").";
+      })(),
+      histVerdictStyle: (() => {
+        const box = this.state.histBox;
+        const quiet = "font-size:13.5px;line-height:1.45;color:var(--color-neutral-700)";
+        if (!box || this.state.histRuns === null) return quiet;
+        const prior = this.pipelinePoints().map(p => p.price);
+        const cur = Number(box.price) > 0 ? Number(box.price) : null;
+        if (cur == null || !prior.length) return quiet;
+        const low = Math.min.apply(null, prior);
+        const good = cur <= low || Math.round(((cur - low) / low) * 100) <= 5;
+        return "font-family:var(--font-heading);font-weight:800;font-size:15px;line-height:1.3;color:var(--color-" + (good ? "accent" : "text") + ")";
+      })(),
+      histHasChart: !!this.state.histBox && this.state.histRuns !== null && !!this.chartData(),
+      histTipOn: !!this.state.histTip,
+      histTipText: (this.state.histTip || {}).text || "",
+      histTipLeft: (this.state.histTip || {}).left || "0",
+      histTipTop: (this.state.histTip || {}).top || "0",
+      // on a phone all four series sit in one row of equal columns at reduced
+      // type, so the key fits a 360px screen without scrolling
+      keyGridStyle: this.state.narrow
+        ? "display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:9px;padding:14px 0 4px;border-top:1px solid var(--color-divider);margin-top:12px"
+        : "display:grid;grid-template-columns:repeat(auto-fit,minmax(128px,1fr));gap:2px 18px;padding:14px 0 0;border-top:1px solid var(--color-divider);margin-top:12px",
+      keyCellStyle: this.state.narrow
+        ? "display:flex;flex-direction:column;align-items:flex-start;gap:5px;min-width:0"
+        : "display:flex;flex-direction:column;align-items:flex-start;gap:7px;padding:6px 0",
+      keyLabelStyle: "font-family:var(--font-heading);font-weight:700;text-transform:uppercase;color:var(--color-neutral-600);font-size:" +
+        (this.state.narrow ? "7.5px;letter-spacing:.05em;line-height:1.25" : "9px;letter-spacing:.12em;white-space:nowrap"),
+      keyFigStyle: this.state.narrow ? "display:block" : "display:flex;align-items:baseline;gap:6px;margin-top:2px",
+      keyValueStyle: "font-family:var(--font-heading);font-weight:800;font-size:" +
+        (this.state.narrow ? "12.5px" : "17px") + ";line-height:1.15;white-space:nowrap",
+      keyNoteStyle: "color:var(--color-neutral-600);font-size:" +
+        (this.state.narrow ? "9px;display:block;line-height:1.3" : "11px;white-space:nowrap"),
+      chart: this.chartData() || {},
+      histRows: (this.state.histRuns || []).filter(r => r.status !== "rejected").map(r => ({
+        when: this.since(r.created_at),
+        exact: r.created_at ? new Date(r.created_at).toLocaleString("en-US", { day: "numeric", month: "short", hour: "numeric", minute: "2-digit" }) : "",
+        price: this.money(r.price),
+        was: r.original_price ? "was " + this.money(r.original_price) : "",
+        status: String(r.status || "\u2014").replace(/_/g, " "),
+        statusStyle: "font-family:var(--font-heading);font-weight:700;font-size:9.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--color-" +
+          (r.status === "rejected" ? "accent-700" : "neutral-700") + ")",
+        source: String(r.source || "\u2014")
+      })),
+
       confirmTitle: (this.state.confirmBox || {}).title || "",
       confirmBody: (this.state.confirmBox || {}).body || "",
       confirmDetail: (this.state.confirmBox || {}).detail || "",
@@ -2162,6 +2655,7 @@ class Component extends DCLogic {
           ratingLine: p.rating ? p.rating + (count ? " (" + Number(count).toLocaleString() + ")" : "") : "no rating",
           catLine: (this.state.catNameById || {})[p.category_id_v2] || this.decode(p.category || "Uncategorized"),
           synced: this.since(p.last_price_sync),
+          history: () => this.openHistory(p),
           syncedAt: p.last_price_sync
             ? new Date(p.last_price_sync).toLocaleString("en-US", { day: "numeric", month: "short", hour: "numeric", minute: "2-digit" })
             : "never synced",
@@ -2230,6 +2724,10 @@ class Component extends DCLogic {
           remove: () => this.deleteProduct(p),
           sync: () => this.syncNow(p),
           edit: () => this.startEdit(p),
+          reel: () => this.downloadReel(p),
+          reelLabel: this.state.reelBusy === p.id ? "Rendering\u2026" : "Reel",
+          reelStyle: "font:inherit;font-family:var(--font-heading);font-weight:700;font-size:10px;letter-spacing:.08em;text-transform:uppercase;background:none;border:0;padding:0;cursor:pointer;color:" +
+            (this.state.reelBusy === p.id ? "var(--color-neutral-600)" : "var(--color-accent-700)"),
           editing: this.state.editId === p.id,
           save: () => this.saveEdit(p),
           syncLabel: this.state.syncingId === p.id ? "Syncing\u2026" : "Sync",

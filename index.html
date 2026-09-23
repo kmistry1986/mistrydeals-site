@@ -616,30 +616,45 @@
       </sc-if></div></div>
   </div>
   <div style="max-width:1280px;margin:0 auto;padding:0 16px 56px">
-    <sc-if value="{{ guideNavShow }}" hint-placeholder-val="{{ true }}">
-      <div style="padding:28px 0 0">
-        <div style="font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--color-neutral-700);margin-bottom:14px">All buying guides</div>
-        <div class="m-stack" style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:20px">
-          <sc-for list="{{ guideNav }}" as="g" hint-placeholder-count="3">
-            <a href="{{ g.href }}" onClick="{{ g.open }}" style="{{ g.style }}">
-              <span style="{{ g.kickerStyle }}">{{ g.kicker }}</span>
-              <span style="{{ g.titleStyle }}">{{ g.title }}</span>
-            </a>
-          </sc-for>
-        </div>
+    <sc-if value="{{ guideIndexView }}" hint-placeholder-val="{{ false }}">
+      <div style="padding:40px 0 28px;display:flex;flex-direction:column;gap:12px">
+        <div style="font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--color-accent-700)">MistryDeals research desk</div>
+        <h1 class="m-fs-xl" style="font-size:64px;line-height:1;letter-spacing:-.03em;margin:0">Buying guides</h1>
+        <p style="font-size:19px;margin:4px 0 0;align-self:flex-start;max-width:56ch;border-top:2px solid var(--color-divider);padding-top:16px">What actually matters before you buy, with picks checked against what they have really been selling for.</p>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,320px),1fr));gap:32px 24px">
+        <sc-for list="{{ guideCards }}" as="g" hint-placeholder-count="3">
+          <a href="{{ g.href }}" onClick="{{ g.open }}" style="text-decoration:none;color:inherit;display:flex;flex-direction:column;gap:10px;border-top:2px solid var(--color-text);padding-top:14px">
+            <div style="height:220px;border:1px solid var(--color-divider);background:#ffffff;position:relative;overflow:hidden">
+              <sc-if value="{{ g.img }}" hint-placeholder-val="{{ false }}">
+                <dc-import name="ProductImage" src="{{ g.img }}" alt="" pad="18px" hint-size="100%,100%"></dc-import>
+              </sc-if>
+            </div>
+            <span style="font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--color-accent-700)">{{ g.kicker }}</span>
+            <span style="font-family:var(--font-heading);font-weight:800;font-size:24px;line-height:1.1;letter-spacing:-.01em;text-wrap:balance">{{ g.title }}</span>
+            <span style="font-size:15px;line-height:1.45;color:var(--color-neutral-700);text-wrap:pretty">{{ g.caption }}</span>
+            <span style="font-size:12px;color:var(--color-neutral-700)">{{ g.meta }}</span>
+          </a>
+        </sc-for>
       </div>
     </sc-if>
-    <div class="m-stack" style="display:grid;grid-template-columns:1.5fr 1fr;gap:48px;padding:40px 0 28px;align-items:end">
-      <div>
-        <div style="font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--color-accent-700);margin-bottom:16px">{{ guide.kicker }}</div>
-        <h1 class="m-fs-xl" style="font-size:64px;line-height:1;letter-spacing:-.03em;margin:0 0 16px">{{ guide.title }}</h1>
-        <p style="font-size:19px;max-width:56ch;margin:0">{{ guide.caption }}</p>
+    <sc-if value="{{ guideDetailView }}" hint-placeholder-val="{{ true }}">
+    <div style="padding:24px 0 0">
+      <a href="{{ hGuide }}" onClick="{{ goGuide }}" style="font-family:var(--font-heading);font-weight:700;font-size:12px;letter-spacing:.08em;text-transform:uppercase;text-decoration:none;color:var(--color-accent-700)">&#8592; All buying guides</a>
+    </div>
+    <div style="display:flex;flex-direction:column;padding:40px 0 28px">
+      <div style="display:flex;flex-wrap:wrap;align-items:baseline;justify-content:space-between;gap:10px 32px;margin-bottom:16px">
+        <div style="font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--color-accent-700)">{{ guide.kicker }}</div>
+        <div style="font-size:13px;color:var(--color-neutral-700);display:flex;flex-wrap:wrap;justify-content:flex-end;align-items:baseline;text-align:right;gap:6px 10px">
+          <span>MistryDeals research desk</span>
+          <span>&#183;</span>
+          <span>{{ guide.date }}</span>
+          <span>&#183;</span>
+          <span>{{ guide.count }}</span>
+        </div>
       </div>
-      <div style="border-top:2px solid var(--color-divider);padding-top:12px;font-size:13px;color:var(--color-neutral-700);display:flex;flex-direction:column;gap:6px">
-        <span>MistryDeals research desk</span>
-        <span>{{ guide.date }}</span>
-        <span>{{ guide.count }}</span>
-      </div>
+      <h1 class="m-fs-xl" style="font-size:64px;line-height:1;letter-spacing:-.03em;margin:0 0 20px;text-wrap:balance">{{ guide.title }}</h1>
+      <p style="font-size:19px;margin:0;align-self:flex-start;max-width:56ch;border-top:2px solid var(--color-divider);padding-top:16px">{{ guide.caption }}</p>
     </div>
     <sc-if value="{{ guideHero }}" hint-placeholder-val="{{ false }}">
       <div style="height:380px;border:1px solid var(--color-divider);background:#ffffff;position:relative;margin-bottom:40px;overflow:hidden">
@@ -726,6 +741,7 @@
         </sc-if>
       </div>
     </div>
+    </sc-if>
   </div>
 </div>
 </sc-if>
@@ -1372,6 +1388,7 @@ class Component extends DCLogic {
     if (screen === "category" && parts[1]) { patch.cat = decodeURIComponent(parts[1]); patch.catShown = 9; }
     if (screen === "guide") {
       const key = decodeURIComponent(parts[1] || "");
+      patch.guideIndex = !key;
       const idx = key ? this.guideIndexOf(key) : 0;
       // rows not loaded yet: remember the slug and resolve it in loadGuides
       if (idx < 0) { patch.pendingGuide = key; patch.guideIdx = 0; } else { patch.pendingGuide = null; patch.guideIdx = idx; }
@@ -1640,6 +1657,20 @@ class Component extends DCLogic {
       asin: p.amazon_asin || "",
       atLowest: this.atLowest(p.amazon_asin, price)
     };
+  }
+  // hero = the most expensive live pick that has an image (live price first, saved price as fallback)
+  heroPick(g) {
+    const active = this.state.activeAsins, ls = this.state.liveStats || {};
+    const n = v => { const x = parseFloat(v); return isNaN(x) ? null : x; };
+    const list = ((g && g.content && g.content.products) || [])
+      .filter(p => p && p.image_url && (!active || !p.amazon_asin || active.indexOf(p.amazon_asin) > -1));
+    let best = null, top = -1;
+    list.forEach(p => {
+      const lv = ls[p.amazon_asin];
+      const price = lv ? (n(lv.scraped_coupon_price) > 0 ? n(lv.scraped_coupon_price) : n(lv.price)) : n(p.price);
+      if (price != null && price > top) { top = price; best = p; }
+    });
+    return best || list[0] || null;
   }
   buildGuide(g) {
     if (!g) return { kicker: "Buying guide", title: "", caption: "", date: "", count: "", priceAsOf: "", priceStamp: "", intro: [], sections: [], faq: [], hasFaq: false, howto: [], hasHowto: false, picks: [] };
@@ -2339,7 +2370,7 @@ class Component extends DCLogic {
         return rows.slice(0, 3).map((g, i) => {
           const c = g.content || {};
           const list = (c.products || []).filter(x => !active || !x.amazon_asin || active.indexOf(x.amazon_asin) > -1);
-          const p = list[0] || {};
+          const p = self.heroPick(g) || list[0] || {};
           const n = list.length;
           return {
             kicker: g.event_name || "Buying guide",
@@ -2367,14 +2398,31 @@ class Component extends DCLogic {
           titleStyle: "font-size:14px;font-weight:" + (on ? "600" : "400"),
           open: (e) => { if (e && e.preventDefault) e.preventDefault(); this.go("guide", String(i)); this.setState({ guideIdx: i }); }
         };
+      }).filter((_, i) => this.state.allGuides || i < 3),
+      // rows arrive newest first, so the collapsed strip is the three most recent
+      guideMore: (this.state.guideRows || []).length > 3,
+      guideMoreLabel: this.state.allGuides ? "Show fewer guides" : "Show all " + (this.state.guideRows || []).length + " guides",
+      toggleAllGuides: () => this.setState({ allGuides: !this.state.allGuides }),
+      guideIndexView: s === "guide" && !!this.state.guideIndex,
+      guideDetailView: s === "guide" && !this.state.guideIndex,
+      guideCards: (this.state.guideRows || []).map((g, i) => {
+        const active = this.state.activeAsins;
+        const n = ((g.content || {}).products || []).filter(x => !active || !x.amazon_asin || active.indexOf(x.amazon_asin) > -1).length;
+        const hp = this.heroPick(g);
+        return {
+          kicker: g.event_name || "Buying guide", title: g.title || "", caption: g.caption || (g.content || {}).subtitle || "",
+          img: (hp && hp.image_url) || "",
+          meta: n + (n === 1 ? " pick" : " picks") + (g.published_at ? " \u00b7 " + new Date(g.published_at).toLocaleDateString("en-US", { day: "numeric", month: "long", year: "numeric" }) : ""),
+          href: this.path("guide", String(i)),
+          open: (e) => { if (e && e.preventDefault) e.preventDefault(); this.go("guide", String(i)); }
+        };
       }),
       guideNavShow: (this.state.guideRows || []).length > 1,
       guide: this.buildGuide((this.state.guideRows || [])[this.state.guideIdx || 0]),
       guideHero: (function (rows, idx) {
-        const g = (rows || [])[idx || 0];
-        const p = g && g.content && (g.content.products || [])[0];
+        const p = this.heroPick((rows || [])[idx || 0]);
         return (p && p.image_url) || "";
-      })(this.state.guideRows, this.state.guideIdx),
+      }).call(this, this.state.guideRows, this.state.guideIdx),
       // Counted from the rows themselves, not a count query: the grid's test is
       // `was > price`, and PostgREST cannot compare two columns — so any SQL
       // count would include equal-price and bad-sync rows the grid drops.

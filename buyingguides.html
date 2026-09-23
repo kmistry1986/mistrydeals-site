@@ -132,10 +132,12 @@
         <span style="font-size:12px;color:var(--color-neutral-700)">{{ userEmail }}</span>
         <a href="{{ hSite }}" style="{{ navRest }}">View site</a>
         <button onClick="{{ signOut }}" class="btn btn-ghost" style="font-size:12px;padding:8px 12px">Sign out</button>
+        <button onClick="{{ toggleDark }}" title="{{ darkTitle }}" style="{{ tDark }}">{{ darkGlyph }}</button>
       </div>
       </sc-if>
       <sc-if value="{{ isNarrow }}" hint-placeholder-val="{{ false }}">
       <div style="margin-left:auto;display:flex;align-items:center;gap:10px;flex:none">
+        <button onClick="{{ toggleDark }}" title="{{ darkTitle }}" style="{{ tDark }}">{{ darkGlyph }}</button>
         <button onClick="{{ openMenu }}" title="Menu" style="font:inherit;flex:none;width:42px;height:42px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;background:transparent;border:1px solid var(--color-divider);cursor:pointer;padding:0">
           <span style="display:block;width:18px;height:2px;background:var(--color-text)"></span>
           <span style="display:block;width:18px;height:2px;background:var(--color-text)"></span>
@@ -588,7 +590,55 @@ class Component extends DCLogic {
   }
 
   // ---- session: the same shared admin session every other admin page uses ----
+
+  // shared admin theme: same md-admin-dark key and palette as Catalogue / Deal Queue / Social
+  isDark() {
+    if (this._storedDark === undefined) {
+      try { this._storedDark = JSON.parse(localStorage.getItem("md-admin-dark") || "null"); } catch (e) { this._storedDark = null; }
+    }
+    return this._storedDark === true;
+  }
+  paint() {
+    const r = document.documentElement.style;
+    const dark = this.isDark();
+    const NEUT = ["#faf8f4", "#f2efe9", "#e3dfd5", "#c9c4b7", "#9aa2b0", "#7b8698", "#5c6474", "#2f3c55", "#16233a"];
+    r.setProperty("--color-bg", dark ? "#11151d" : "#f2efe9");
+    r.setProperty("--color-surface", dark ? "#1a202c" : "#faf8f4");
+    r.setProperty("--color-text", dark ? "#eef0f4" : "#16233a");
+    r.setProperty("--color-divider", dark ? "color-mix(in srgb, #eef0f4 26%, transparent)" : "#cfc9bb");
+    NEUT.forEach((hex, i) => r.setProperty("--color-neutral-" + ((i + 1) * 100), dark ? NEUT[8 - i] : hex));
+    r.setProperty("--color-verify", dark ? "#45a179" : "#1c6b4a");
+    r.setProperty("--color-verify-ink", dark ? "#7fc9a4" : "#155a3e");
+    const base = "#d98014";
+    const mix = (w, p) => "color-mix(in oklch, " + base + ", " + w + " " + p + "%)";
+    const toward = dark ? "#11151d" : "white", away = dark ? "#eef0f4" : "black";
+    r.setProperty("--color-accent", base);
+    [[100, toward, 88], [200, toward, 74], [300, toward, 56], [400, toward, 28], [600, away, 16], [700, away, 30], [800, away, 46], [900, away, 62]]
+      .forEach(s => r.setProperty("--color-accent-" + s[0], mix(s[1], s[2])));
+    r.setProperty("--color-accent-500", base);
+    r.colorScheme = dark ? "dark" : "light";
+    document.body.style.background = "var(--color-bg)";
+    document.body.style.color = "var(--color-text)";
+  }
+  darkVals() {
+    return {
+      darkGlyph: this.isDark() ? "\u2600" : "\u263e",
+      darkTitle: this.isDark() ? "Switch to the light theme" : "Switch to the dark theme",
+      darkRowLabel: this.isDark() ? "Light mode" : "Dark mode",
+      tDark: "font:inherit;font-size:13px;line-height:1;width:42px;height:42px;flex:none;display:grid;place-items:center;cursor:pointer;border:1px solid var(--color-divider);background:transparent;color:var(--color-text)",
+      toggleDark: () => {
+        const next = !this.isDark();
+        this._storedDark = next;
+        try { localStorage.setItem("md-admin-dark", JSON.stringify(next)); } catch (e) {}
+        this.forceUpdate(() => this.paint());
+      }
+    };
+  }
+
+  componentDidUpdate() { this.paint(); }
+
   componentDidMount() {
+    this.paint();
     this.state.narrow = window.innerWidth <= 980;
     window.addEventListener("resize", this.onResize);
     let stored = null;
@@ -1967,6 +2017,9 @@ class Component extends DCLogic {
   }
 
   renderVals() {
+    return Object.assign(this.renderVals2(), this.darkVals());
+  }
+  renderVals2() {
     const navBase = "font:inherit;font-family:var(--font-heading);font-weight:700;font-size:11px;letter-spacing:.1em;" +
       "text-transform:uppercase;text-decoration:none;padding:8px 12px;";
     const menuBase = "font:inherit;font-family:var(--font-heading);font-weight:700;font-size:12px;letter-spacing:.08em;" +
