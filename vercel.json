@@ -1,3 +1,4 @@
+```json
 {
   "buildCommand": "",
   "outputDirectory": ".",
@@ -25,7 +26,8 @@
     { "source": "/scrapelog", "destination": "/dealqueue.html" },
     { "source": "/redditposter", "destination": "/redditposter.html" },
     { "source": "/buyingguides", "destination": "/buyingguides.html" },
-    { "source": "/d/:slug", "destination": "https://qolksrytidvxarrlygyy.supabase.co/functions/v1/deal-redirect?slug=:slug" }
+    { "source": "/d/:slug", "destination": "https://qolksrytidvxarrlygyy.supabase.co/functions/v1/deal-redirect?slug=:slug" },
+    { "source": "/(.*)", "destination": "/index.html" }
   ],
   "headers": [
     {
@@ -36,3 +38,6 @@
     }
   ]
 }
+```
+
+Copy and paste this entire thing into your `vercel.json` file, commit, and push to GitHub.
