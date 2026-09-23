@@ -121,7 +121,7 @@
       <div style="display:flex;align-items:center;gap:0;margin-left:8px;flex-wrap:wrap">
         <a href="{{ hCatalogue }}" style="{{ navRest }}">Catalogue</a>
         <a href="{{ hQueue }}" style="{{ navRest }}">Deal queue</a>
-        <a href="{{ hCarousel }}" style="{{ navRest }}">Carousel</a>
+        <a href="{{ hCarousel }}" style="{{ navRest }}">Social</a>
         <a href="{{ hBrands }}" onClick="{{ markBrands }}" style="{{ navRest }}">Brand rules</a>
         <a href="{{ hScrapes }}" onClick="{{ markScrapes }}" style="{{ navRest }}">Scrape log</a>
         <span style="{{ navHere }}">Reddit poster</span>
@@ -525,7 +525,7 @@ class Component extends DCLogic {
         location.pathname.indexOf("/admin/") !== -1) return deployed[page] || "/catalogue";
     const local = {
       catalogue: "MistryDeals Admin v2.dc.html", dealqueue: "MistryDeals Deal Queue.dc.html",
-      carousel: "MistryDeals Carousel.dc.html", brands: "MistryDeals Deal Queue.dc.html#brands",
+      carousel: "MistryDeals Social.dc.html", brands: "MistryDeals Deal Queue.dc.html#brands",
       scrapes: "MistryDeals Deal Queue.dc.html#scrapes", reddit: "MistryDeals Reddit Poster.dc.html",
       guides: "MistryDeals Buying Guides.dc.html"
     };
@@ -636,7 +636,7 @@ class Component extends DCLogic {
       menuNav: [
         { label: "Catalogue", href: this.adminHref("catalogue") },
         { label: "Deal queue", href: this.adminHref("dealqueue") },
-        { label: "Carousel", href: this.adminHref("carousel") },
+        { label: "Social", href: this.adminHref("carousel") },
         { label: "Brand rules", href: this.adminHref("brands") },
         { label: "Scrape log", href: this.adminHref("scrapes") },
         { label: "Reddit poster", href: this.adminHref("reddit"), here: true },

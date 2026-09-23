@@ -107,7 +107,7 @@
       <div class="m-wrap" style="display:flex;align-items:center;gap:0;margin-left:8px">
         <span style="font:inherit;font-family:var(--font-heading);font-weight:700;font-size:11px;letter-spacing:.1em;text-transform:uppercase;padding:8px 12px;border:1px solid var(--color-text);background:var(--color-text);color:var(--color-bg)">Catalogue</span>
         <a href="{{ hQueue }}" style="font:inherit;font-family:var(--font-heading);font-weight:700;font-size:11px;letter-spacing:.1em;text-transform:uppercase;text-decoration:none;padding:8px 12px;border:1px solid var(--color-divider);color:var(--color-text);border-left:0">Deal queue</a>
-        <a href="{{ hCarousel }}" style="font:inherit;font-family:var(--font-heading);font-weight:700;font-size:11px;letter-spacing:.1em;text-transform:uppercase;text-decoration:none;padding:8px 12px;border:1px solid var(--color-divider);color:var(--color-text);border-left:0">Carousel</a>
+        <a href="{{ hCarousel }}" style="font:inherit;font-family:var(--font-heading);font-weight:700;font-size:11px;letter-spacing:.1em;text-transform:uppercase;text-decoration:none;padding:8px 12px;border:1px solid var(--color-divider);color:var(--color-text);border-left:0">Social</a>
         <a href="{{ hBrands }}" style="font:inherit;font-family:var(--font-heading);font-weight:700;font-size:11px;letter-spacing:.1em;text-transform:uppercase;text-decoration:none;padding:8px 12px;border:1px solid var(--color-divider);color:var(--color-text);border-left:0">Brand rules</a>
         <a href="{{ hScrapes }}" style="font:inherit;font-family:var(--font-heading);font-weight:700;font-size:11px;letter-spacing:.1em;text-transform:uppercase;text-decoration:none;padding:8px 12px;border:1px solid var(--color-divider);color:var(--color-text);border-left:0">Scrape log</a>
         <a href="{{ hReddit }}" style="font:inherit;font-family:var(--font-heading);font-weight:700;font-size:11px;letter-spacing:.1em;text-transform:uppercase;text-decoration:none;padding:8px 12px;border:1px solid var(--color-divider);color:var(--color-text);border-left:0">Reddit poster</a>
@@ -910,8 +910,16 @@ class Component extends DCLogic {
       if (ids.length) parts.push("id=not.in.(" + ids.join(",") + ")");
     }
     if (q) {
-      const safe = encodeURIComponent("*" + q.replace(/[(),*]/g, " ").trim() + "*");
-      parts.push("or=(title.ilike." + safe + ",display_title.ilike." + safe + ",asin.ilike." + safe + ")");
+      // every word has to appear somewhere in the row, in any order — one
+      // substring meant the words had to be typed consecutively, so "airpods 3"
+      // missed "AirPods Pro 3"
+      const toks = q.replace(/[(),*]/g, " ").split(/\s+/).filter(Boolean);
+      if (toks.length) {
+        const cols = ["title","display_title","asin"];
+        parts.push("and=(" + toks.map(t =>
+          "or(" + cols.map(c => c + ".ilike." + encodeURIComponent("*" + t + "*")).join(",") + ")"
+        ).join(",") + ")");
+      }
     }
     if (flag === "live") parts.push("is_active=eq.true");
     if (flag === "hidden") parts.push("is_active=eq.false");
@@ -1676,7 +1684,7 @@ class Component extends DCLogic {
     if (/^\/(catalogue|dealqueue|carousel|brandrules|scrapelog|redditposter|buyingguides)/.test(location.pathname) || location.pathname.indexOf("/admin/") !== -1) return deployed[page] || "/catalogue";
     const local = {
       catalogue: "MistryDeals Admin v2.dc.html",
-      carousel: "MistryDeals Carousel.dc.html",
+      carousel: "MistryDeals Social.dc.html",
       dealqueue: "MistryDeals Deal Queue.dc.html",
       brands: "MistryDeals Deal Queue.dc.html#brands",
       scrapes: "MistryDeals Deal Queue.dc.html#scrapes",
@@ -1737,7 +1745,7 @@ class Component extends DCLogic {
       menuNav: [
         { label: "Catalogue", href: this.adminHref("catalogue"), here: true },
         { label: "Deal queue", href: this.adminHref("dealqueue") },
-        { label: "Carousel", href: this.adminHref("carousel") },
+        { label: "Social", href: this.adminHref("carousel") },
         { label: "Brand rules", href: this.adminHref("brands") },
         { label: "Scrape log", href: this.adminHref("scrapes") },
         { label: "Reddit poster", href: this.adminHref("reddit") },

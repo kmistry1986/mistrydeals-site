@@ -1,0 +1,664 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="/support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="/_ds/modernist-424462e2-4060-4771-92af-91bbc246b8fd/styles.css">
+<script src="/_ds/modernist-424462e2-4060-4771-92af-91bbc246b8fd/_ds_bundle.js"></script>
+<style>
+  :root { --color-bg:#f2efe9; --color-surface:#faf8f4; --color-text:#16233a; --color-divider:#cfc9bb;
+    --color-neutral-600:#7b8698; --color-neutral-700:#5c6474; --color-neutral-800:#2f3c55; --color-neutral-900:#16233a;
+    --color-accent:#d98014; --color-accent-100:color-mix(in oklch,#d98014,white 88%); --color-accent-700:color-mix(in oklch,#d98014,black 30%); }
+  body { margin:0; background:var(--color-bg); color:var(--color-text); font-family:var(--font-body); }
+  a { color:var(--color-accent-700); } a:hover { color:#16233a; }
+  input, textarea, select { font:inherit; }
+</style>
+</helmet>
+
+<div style="max-width:1320px;margin:0 auto;padding:28px 24px 80px">
+  <div style="display:flex;align-items:baseline;gap:16px;flex-wrap:wrap;padding-bottom:14px;border-bottom:2px solid var(--color-text)">
+    <h1 style="margin:0;font-family:var(--font-heading);font-weight:800;font-size:30px;letter-spacing:-.02em">Guide carousel</h1>
+    <span style="font-size:13px;color:var(--color-neutral-700)">Instagram &#183; 1080&#215;1350 &#183; hook + tips + CTA</span>
+    <a href="{{ guidesHref }}" style="margin-left:auto;font-family:var(--font-heading);font-weight:700;font-size:11px;letter-spacing:.08em;text-transform:uppercase">&#8592; Buying guides</a>
+  </div>
+
+  <div style="margin-top:20px;display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:16px;align-items:end">
+    <div class="field" style="margin:0">
+      <label>1 &#183; Guide</label>
+      <select class="input" value="{{ guideId }}" onChange="{{ onGuide }}">
+        <sc-for list="{{ guideOpts }}" as="o" hint-placeholder-count="1">
+          <option value="{{ o.id }}">{{ o.label }}</option>
+        </sc-for>
+      </select>
+    </div>
+    <div style="display:flex;gap:8px;flex-wrap:wrap">
+      <button onClick="{{ togglePaste }}" class="btn btn-secondary" style="font-size:12px;min-height:44px;white-space:nowrap;justify-content:flex-start">{{ pasteLabel }}</button>
+      <button onClick="{{ rebuild }}" class="btn btn-secondary" style="font-size:12px;min-height:44px;white-space:nowrap;justify-content:flex-start">Auto-build from guide</button>
+      <sc-if value="{{ hasSlides }}" hint-placeholder-val="{{ false }}">
+        
+        <button onClick="{{ downloadAll }}" class="btn btn-secondary" style="font-size:12px;min-height:44px;white-space:nowrap;justify-content:flex-start">{{ dlAllLabel }}</button>
+        <button onClick="{{ queueIg }}" class="btn btn-primary" style="font-size:12px;min-height:44px;white-space:nowrap;justify-content:flex-start">{{ igLabel }}</button>
+      </sc-if>
+    </div>
+  </div>
+  <sc-if value="{{ igPrev }}" hint-placeholder-val="{{ false }}">
+    <div style="margin-top:10px;font-size:12px;color:var(--color-neutral-700)">{{ igPrev }}</div>
+  </sc-if>
+  <sc-if value="{{ igDone }}" hint-placeholder-val="{{ false }}">
+    <div style="margin-top:14px;border-left:3px solid var(--color-accent);padding:10px 14px;font-size:13px;line-height:1.45;color:var(--color-neutral-800)">{{ igDone }}</div>
+  </sc-if>
+  <sc-if value="{{ igError }}" hint-placeholder-val="{{ false }}">
+    <div style="margin-top:14px;border-left:3px solid var(--color-accent-700);padding:10px 14px;font-size:13px;line-height:1.45;color:var(--color-accent-700)">{{ igError }}</div>
+  </sc-if>
+  <sc-if value="{{ note }}" hint-placeholder-val="{{ false }}">
+    <div style="margin-top:14px;border-left:3px solid var(--color-accent);padding:10px 14px;font-size:13px;line-height:1.45;color:var(--color-neutral-800)">{{ note }}</div>
+  </sc-if>
+
+  <sc-if value="{{ pasteOpen }}" hint-placeholder-val="{{ false }}">
+    <div style="margin-top:20px;border:2px solid var(--color-text);padding:18px;display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:20px;background:var(--color-surface)">
+      <div style="display:flex;flex-direction:column;gap:10px;min-width:0">
+        <div style="font-family:var(--font-heading);font-weight:700;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--color-neutral-700)">Paste slides &#183; replaces all slides + caption</div>
+        <textarea class="input" rows="18" value="{{ pasteText }}" onChange="{{ onPaste }}" placeholder="HOOK&#10;LABEL: ...&#10;HEADLINE: ...&#10;SUBHEADLINE: ...&#10;&#10;TIP&#10;HEADLINE: ...&#10;BODY: ..." style="width:100%;box-sizing:border-box;font-family:ui-monospace,Menlo,monospace;font-size:12px;line-height:1.5;resize:vertical"></textarea>
+        <sc-if value="{{ pasteErr }}" hint-placeholder-val="{{ false }}">
+          <div style="font-size:12px;line-height:1.45;color:var(--color-accent-700);white-space:pre-line">{{ pasteErr }}</div>
+        </sc-if>
+        <div style="display:flex;gap:8px;flex-wrap:wrap">
+          <button onClick="{{ applyPaste }}" class="btn btn-primary" style="font-size:12px;min-height:44px;white-space:nowrap;justify-content:flex-start">Import slides</button>
+          <button onClick="{{ copyTemplate }}" class="btn btn-ghost" style="font-size:12px;min-height:44px;white-space:nowrap;justify-content:flex-start">{{ tplLabel }}</button>
+        </div>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:8px;font-size:12px;line-height:1.5;color:var(--color-neutral-800);min-width:0">
+        <div style="font-family:var(--font-heading);font-weight:700;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--color-neutral-700)">Format</div>
+        <div><strong>HOOK</strong> &#8212; LABEL (small caps line), HEADLINE (&#8804;6 words), SUBHEADLINE (&#8804;15 words)</div>
+        <div><strong>TIP</strong> &#215; 1&#8211;6 &#8212; HEADLINE (&#8804;6 words), BODY (&#8804;30 words), optional LABEL (default &#8220;Tip 1 of 4&#8221;), optional ICON</div>
+        <div><strong>CTA</strong> &#8212; HEADLINE, BODY, optional LINK (default mistrydeals.com). Leave out the block to use the default CTA.</div>
+        <div><strong>CAPTION</strong> &#8212; optional, last. Everything below it is the Instagram caption as-is. Leave out to auto-generate.</div>
+        <div style="color:var(--color-neutral-700)">Icons: {{ iconList }}. Missing or unknown icons are picked from the headline.</div>
+        <div style="color:var(--color-neutral-700)">One block per slide, in order. Values can run onto following lines.</div>
+      </div>
+    </div>
+  </sc-if>
+
+  <button onClick="{{ clearSlides }}" class="btn btn-ghost" style="font-size:12px;min-height:44px;white-space:nowrap;justify-content:flex-start">Clear</button><div style="margin-top:30px;display:flex;align-items:baseline;gap:12px;padding-bottom:8px;border-bottom:2px solid var(--color-divider)">
+    <div style="font-family:var(--font-heading);font-weight:700;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--color-neutral-700);white-space:nowrap;flex:none">2 &#183; Slides</div>
+    <span style="font-size:12px;color:var(--color-neutral-700)">Built from the guide&#8217;s title, caption and &#8220;How to buy well&#8221; tips. Edits save automatically.</span>
+  </div>
+
+  <sc-if value="{{ isEmpty }}" hint-placeholder-val="{{ false }}">
+    <div style="padding:28px 0;font-size:14px;line-height:1.5;color:var(--color-neutral-700);text-wrap:pretty">No slides yet. Paste your slides above, or click <strong>Auto-build from guide</strong> to fill them from the guide&#8217;s title and tips.</div>
+  </sc-if>
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,600px),1fr));column-gap:32px">
+    <sc-for list="{{ slides }}" as="s" hint-placeholder-count="6">
+      <div style="display:grid;grid-template-columns:auto minmax(0,1fr);gap:24px;padding:20px 0;border-bottom:1px solid var(--color-divider);align-items:start">
+        <div style="width:324px;height:405px;overflow:hidden;border:1px solid var(--color-divider);flex:none">
+          <div style="width:1080px;height:1350px;transform:scale(.3);transform-origin:top left">
+            <div ref="{{ s.ref }}" style="width:1080px;height:1350px;box-sizing:border-box;padding:88px 96px 80px;background:#f2efe9;color:#16233a;display:flex;flex-direction:column;font-family:var(--font-heading)">
+              <sc-if value="{{ s.isHook }}" hint-placeholder-val="{{ false }}">
+                <div style="margin-top:190px;display:flex;flex-direction:column;gap:44px">
+                  <div style="display:flex;align-items:center;gap:20px">
+                    <span style="width:72px;height:10px;background:#d98014;flex:none"></span>
+                    <span style="font-weight:800;font-size:32px;letter-spacing:.14em;text-transform:uppercase;white-space:nowrap">{{ s.kicker }}</span>
+                  </div>
+                  <div style="{{ s.headStyle }}">{{ s.head }}</div>
+                  <div style="font-family:var(--font-body);font-weight:400;font-size:50px;line-height:1.3;max-width:820px;text-wrap:pretty">{{ s.body }}</div>
+                </div>
+              </sc-if>
+
+              <sc-if value="{{ s.isTip }}" hint-placeholder-val="{{ false }}">
+                <div style="margin-top:110px;display:flex;flex-direction:column;gap:48px">
+                  <div style="width:176px;height:176px;background:#d98014;display:grid;place-items:center">
+                    <div style="{{ s.iconStyle }}"></div>
+                  </div>
+                  <div style="font-weight:800;font-size:32px;letter-spacing:.14em;text-transform:uppercase;white-space:nowrap">{{ s.kicker }}</div>
+                  <div style="{{ s.headStyle }}">{{ s.head }}</div>
+                  <div style="width:100%;height:4px;background:#16233a"></div>
+                  <div style="{{ s.bodyStyle }}">{{ s.body }}</div>
+                </div>
+              </sc-if>
+
+              <sc-if value="{{ s.isCta }}" hint-placeholder-val="{{ false }}">
+                <div style="margin-top:210px;display:flex;flex-direction:column;gap:56px">
+                  <div style="{{ s.headStyle }}">{{ s.head }}</div>
+                  <div style="display:flex;align-items:center;gap:28px;background:#d98014;padding:40px 48px;align-self:flex-start">
+                    <span style="font-weight:800;font-size:68px;letter-spacing:-.03em;line-height:1;white-space:nowrap">{{ s.link }}</span>
+                    <div style="{{ s.iconStyle }}"></div>
+                  </div>
+                  <div style="font-family:var(--font-body);font-size:46px;line-height:1.3;max-width:820px;text-wrap:pretty">{{ s.body }}</div>
+                </div>
+              </sc-if>
+
+              <div style="margin-top:auto;flex:none;border-top:4px solid #16233a;padding-top:26px;display:flex;align-items:center;font-weight:800;font-size:30px;letter-spacing:.04em">
+                <span style="white-space:nowrap">mistrydeals.com</span>
+                <span style="margin-left:auto;white-space:nowrap">{{ s.footRight }}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div style="min-width:0;display:flex;flex-direction:column;gap:12px">
+          <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
+            <span style="font-family:var(--font-heading);font-weight:800;font-size:15px;white-space:nowrap">{{ s.label }}</span>
+            <button onClick="{{ s.download }}" style="margin-left:auto;font-family:var(--font-heading);font-weight:700;font-size:10px;letter-spacing:.08em;text-transform:uppercase;padding:7px 10px;background:none;border:1px solid var(--color-divider);cursor:pointer;color:var(--color-text)">{{ s.dlLabel }}</button>
+          </div>
+          <sc-if value="{{ s.hasKicker }}" hint-placeholder-val="{{ false }}">
+            <div class="field" style="margin:0">
+              <label style="font-size:11px">Label</label>
+              <input class="input" value="{{ s.kicker }}" onChange="{{ s.onKicker }}" style="font-size:13px;padding:8px 10px" />
+            </div>
+          </sc-if>
+          <div class="field" style="margin:0">
+            <label style="font-size:11px;display:flex;gap:8px">Headline<span style="{{ s.headCountStyle }}">{{ s.headCount }}</span></label>
+            <input class="input" value="{{ s.head }}" onChange="{{ s.onHead }}" style="font-size:13px;padding:8px 10px" />
+          </div>
+          <div class="field" style="margin:0">
+            <label style="font-size:11px;display:flex;gap:8px">{{ s.bodyLabel }}<span style="{{ s.bodyCountStyle }}">{{ s.bodyCount }}</span></label>
+            <textarea class="input" rows="3" value="{{ s.body }}" onChange="{{ s.onBody }}" style="font-size:13px;padding:8px 10px;line-height:1.45;resize:vertical"></textarea>
+          </div>
+          <sc-if value="{{ s.isTip }}" hint-placeholder-val="{{ false }}">
+            <div class="field" style="margin:0;max-width:240px">
+              <label style="font-size:11px">Icon</label>
+              <select class="input" value="{{ s.iconKey }}" onChange="{{ s.onIcon }}" style="font-size:13px;padding:8px 10px">
+                <sc-for list="{{ iconOpts }}" as="o" hint-placeholder-count="0">
+                  <option value="{{ o }}">{{ o }}</option>
+                </sc-for>
+              </select>
+            </div>
+          </sc-if>
+          <sc-if value="{{ s.isCta }}" hint-placeholder-val="{{ false }}">
+            <div class="field" style="margin:0;max-width:320px">
+              <label style="font-size:11px">Link text</label>
+              <input class="input" value="{{ s.link }}" onChange="{{ s.onLink }}" style="font-size:13px;padding:8px 10px" />
+            </div>
+          </sc-if>
+        </div>
+      </div>
+    </sc-for>
+  </div>
+
+  <div style="margin-top:30px;display:flex;align-items:baseline;gap:12px;padding-bottom:8px;border-bottom:2px solid var(--color-divider);flex-wrap:wrap">
+    <div style="font-family:var(--font-heading);font-weight:700;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--color-neutral-700);white-space:nowrap;flex:none">3 &#183; Caption</div>
+    <span style="{{ hookCountStyle }}">{{ hookCount }}</span>
+    <div style="margin-left:auto;display:flex;gap:8px">
+      <button onClick="{{ regenCaption }}" class="btn btn-ghost" style="font-size:12px;min-height:40px;white-space:nowrap;justify-content:flex-start">Regenerate</button>
+      <button onClick="{{ copyCaption }}" class="btn btn-secondary" style="font-size:12px;min-height:40px;white-space:nowrap;justify-content:flex-start">{{ copyLabel }}</button>
+    </div>
+  </div>
+  <textarea class="input" rows="14" value="{{ caption }}" onChange="{{ onCaption }}" style="margin-top:12px;width:100%;box-sizing:border-box;font-size:14px;line-height:1.55;resize:vertical"></textarea>
+  <div style="margin-top:8px;font-size:12px;line-height:1.45;color:var(--color-neutral-700);text-wrap:pretty">Hook under 125 characters with no emoji, keyword-rich body with every tip written out (150&#8211;300 words), a comment question, four emoji as anchors before the CTAs, and five hashtags: four niche, rotated per guide, plus #mistrydeals. Click Regenerate to apply to an existing carousel.</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:1320,&quot;height&quot;:1000}}">
+const BASE = "https://qolksrytidvxarrlygyy.supabase.co";
+const KEY = "sb_publishable_UX38KeF1XAKtzvS01yfx7w_8s5NkOH3";
+const NAVY = "#16233a";
+const PUBLIC_IMG = BASE + "/storage/v1/object/public/social-images";
+const ICONS = {
+  bolt: '<path d="M4 14a1 1 0 0 1-.78-1.63l9.9-10.2a.5.5 0 0 1 .86.46l-1.92 6.02A1 1 0 0 0 13 10h7a1 1 0 0 1 .78 1.63l-9.9 10.2a.5.5 0 0 1-.86-.46l1.92-6.02A1 1 0 0 0 11 14z"/>',
+  tag: '<path d="M12.586 2.586A2 2 0 0 0 11.172 2H4a2 2 0 0 0-2 2v7.172a2 2 0 0 0 .586 1.414l8.704 8.704a2.426 2.426 0 0 0 3.42 0l6.58-6.58a2.426 2.426 0 0 0 0-3.42z"/><circle cx="7.5" cy="7.5" r="1"/>',
+  target: '<circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/>',
+  magnet: '<path d="m6 15-4-4 6.75-6.77a7.79 7.79 0 0 1 11 11L13 22l-4-4 6.39-6.36a2.14 2.14 0 0 0-3-3L6 15"/><path d="m5 8 4 4"/><path d="m12 15 4 4"/>',
+  battery: '<path d="m11 7-3 5h4l-3 5"/><path d="M14.856 6H16a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2h-2.935"/><path d="M5.14 18H4a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h2.936"/><path d="M22 14v-4"/>',
+  plug: '<path d="M12 22v-5"/><path d="M9 8V2"/><path d="M15 8V2"/><path d="M18 8v5a4 4 0 0 1-4 4h-4a4 4 0 0 1-4-4V8Z"/>',
+  shield: '<path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"/><path d="m9 12 2 2 4-4"/>',
+  ruler: '<path d="M21.3 15.3a2.4 2.4 0 0 1 0 3.4l-2.6 2.6a2.4 2.4 0 0 1-3.4 0L2.7 8.7a2.41 2.41 0 0 1 0-3.4l2.6-2.6a2.41 2.41 0 0 1 3.4 0Z"/><path d="m14.5 12.5 2-2"/><path d="m11.5 9.5 2-2"/><path d="m8.5 6.5 2-2"/><path d="m17.5 15.5 2-2"/>',
+  clock: '<circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/>',
+  check: '<circle cx="12" cy="12" r="10"/><path d="m9 12 2 2 4-4"/>',
+  arrow: '<path d="M5 12h14"/><path d="m12 5 7 7-7 7"/>'
+};
+const ICON_RULES = [
+  [/magsafe|magnet|wireless|qi\b/i, "magnet"], [/battery|power ?bank|mah|capacity/i, "battery"],
+  [/discount|price|deal|fake|sale|markup/i, "tag"], [/watt|fast|speed|power deliver|\bw\b/i, "bolt"],
+  [/use case|choose|pick|need|which/i, "target"], [/plug|outlet|port|cable/i, "plug"],
+  [/warrant|safe|certif|return/i, "shield"], [/size|fit|measure|dimension/i, "ruler"], [/time|hour|last|life/i, "clock"]
+];
+const TOPICS = [
+  { re: /charg|power ?bank|magsafe|usb-?c|wall plug/i, one: "another charger", plural: "chargers", emoji: "\u{1F50C}",
+    send: "Send it to someone with a drawer full of dead cables.", tags: ["#usbccharger", "#magsafecharger", "#powerbank", "#gancharger", "#chargingstation", "#iphoneaccessories", "#desksetup"] },
+  { re: /headphone|earbud|airpod|speaker/i, one: "new headphones", plural: "headphones", emoji: "\u{1F3A7}",
+    send: "Send it to the friend who keeps losing earbuds.", tags: ["#wirelessearbuds", "#noisecancelling", "#headphones", "#bluetoothspeaker", "#audiogear", "#earbudsreview"] },
+  { re: /camera|doorbell|security/i, one: "a security camera", plural: "cameras", emoji: "\u{1F3E0}",
+    send: "Send it to someone setting up a new place.", tags: ["#securitycamera", "#videodoorbell", "#homesecurity", "#smarthomesecurity", "#homesafety"] },
+  { re: /smart home|smart plug|bulb|alexa/i, one: "smart home gear", plural: "smart home picks", emoji: "\u{1F3E0}",
+    send: "Send it to whoever runs the house Wi-Fi.", tags: ["#smartplug", "#homeautomation", "#smartlighting", "#smarthome", "#alexahome"] },
+  { re: /kitchen|air fryer|coffee|blender/i, one: "kitchen gear", plural: "kitchen picks", emoji: "\u{1F373}",
+    send: "Send it to the cook in your life.", tags: ["#kitchengadgets", "#airfryer", "#kitchenessentials", "#coffeeathome", "#kitchenfinds"] }
+];
+const TOPIC_DEFAULT = { one: "anything on sale", plural: "picks", emoji: "\u{1F6D2}",
+  send: "Send it to someone who is about to buy one.", tags: ["#buyingguide", "#smartshopping", "#shoppingtips", "#amazonfinds", "#dealsoftheday"] };
+
+class Component extends DCLogic {
+  state = { guides: null, guideId: "", slides: null, caption: "", note: "", busy: null, copied: false };
+  _refs = []; _refFns = [];
+
+  componentDidMount() { this.load(); this.loadSchedCols(); }
+
+  token() {
+    try { const s = JSON.parse(localStorage.getItem("md-admin-session") || "null"); return s && s.token; } catch (e) { return null; }
+  }
+  headers(extra) { const t = this.token(); return Object.assign({ apikey: KEY, Authorization: "Bearer " + (t || KEY) }, extra || {}); }
+
+  // same column sniffing as the Social page: scheduled_posts may or may not carry a caption column
+  async loadSchedCols() {
+    let cols = [];
+    try {
+      const res = await fetch(BASE + "/rest/v1/", { headers: this.headers() });
+      if (res.ok) { const d = ((await res.json()).definitions || {}).scheduled_posts; if (d && d.properties) cols = Object.keys(d.properties); }
+    } catch (e) {}
+    if (!cols.length) {
+      try {
+        const res = await fetch(BASE + "/rest/v1/scheduled_posts?select=*&limit=1", { headers: this.headers() });
+        if (res.ok) { const rows = await res.json(); if (rows && rows[0]) cols = Object.keys(rows[0]); }
+      } catch (e) {}
+    }
+    const cap = ["caption", "post_text", "message", "post_message", "text", "content", "body"].find(c => cols.indexOf(c) !== -1) || null;
+    this.setState({ schedCols: cols, captionCol: cols.length ? cap : undefined });
+  }
+
+  probeImage(url) {
+    return new Promise(resolve => {
+      const img = new Image();
+      const done = ok => { img.onload = img.onerror = null; resolve(ok); };
+      img.onload = () => done(true); img.onerror = () => done(false);
+      setTimeout(() => done(false), 9000);
+      img.src = url + "?probe=" + Date.now();
+    });
+  }
+
+  // scheduled_posts rows are keyed to a product; use the guide's first pick
+  async coverProductId(g) {
+    const ps = (g.content || {}).products || [];
+    for (const p of ps) { if (p && (p.id || p.product_id)) return p.id || p.product_id; }
+    const asin = ps.map(p => p && p.asin).find(Boolean);
+    if (!asin) return null;
+    try {
+      const r = await fetch(BASE + "/rest/v1/products?select=id&asin=eq." + encodeURIComponent(asin) + "&limit=1", { headers: this.headers() });
+      if (r.ok) { const rows = await r.json(); return rows[0] ? rows[0].id : null; }
+    } catch (e) {}
+    return null;
+  }
+
+  async queueIg() {
+    const slides = this.state.slides || [], g = this.guide(this.state.guideId);
+    if (!g || slides.length < 2) return;
+    if (!this.token()) { this.setState({ igError: "Sign in on Buying guides first \u2014 queueing needs an admin session." }); return; }
+    if (!confirm("Queue this " + slides.length + "-slide carousel to Instagram? The scheduler posts it in its next carousel slot.")) return;
+    this.setState({ igBusy: "Rendering slides\u2026", igError: "", igDone: "" });
+    try {
+      const lib = await import("https://esm.sh/html-to-image@1.11.11");
+      const stamp = new Date().toISOString().slice(0, 10) + "-" + Date.now();
+      const urls = [];
+      for (let i = 0; i < slides.length; i++) {
+        const node = this._refs[i];
+        if (!node) throw new Error("slide " + (i + 1) + " is not on screen");
+        this.setState({ igBusy: "Uploading slide " + (i + 1) + " of " + slides.length + "\u2026" });
+        const blob = await lib.toBlob(node, { width: 1080, height: 1350, pixelRatio: 1, cacheBust: true });
+        if (!blob) throw new Error("slide " + (i + 1) + " could not be rendered");
+        const path = "guide-carousels/" + g.id + "-" + stamp + "-" + String(i + 1).padStart(2, "0") + ".png";
+        const up = await fetch(BASE + "/storage/v1/object/social-images/" + path, {
+          method: "POST", headers: this.headers({ "Content-Type": "image/png", "x-upsert": "true" }), body: blob
+        });
+        if (!up.ok) {
+          const t = (await up.text()).slice(0, 200);
+          throw new Error("upload failed (HTTP " + up.status + "). " + (up.status === 400 || up.status === 403 ? "The social-images bucket needs an insert policy for the guide-carousels/ prefix. " : "") + t);
+        }
+        urls.push(PUBLIC_IMG + "/" + path);
+      }
+      this.setState({ igBusy: "Checking the images\u2026" });
+      const ok = await Promise.all(urls.map(u => this.probeImage(u)));
+      const bad = ok.map((v, i) => v ? null : i + 1).filter(Boolean);
+      if (bad.length) throw new Error("slide " + bad.join(", ") + " is not publicly readable, so Instagram could not fetch it");
+
+      this.setState({ igBusy: "Queueing\u2026" });
+      const cols = this.state.schedCols || [];
+      const row = { platform: "instagram", status: "pending", scheduled_at: new Date().toISOString(), carousel_image_urls: urls };
+      const pid = await this.coverProductId(g);
+      if (pid) row.product_id = pid;
+      if (this.state.captionCol) row[this.state.captionCol] = this.state.caption;
+      if (cols.indexOf("post_source") !== -1) row.post_source = "guide_carousel";
+      const res = await fetch(BASE + "/rest/v1/scheduled_posts", {
+        method: "POST", headers: this.headers({ "Content-Type": "application/json", Prefer: "return=minimal" }), body: JSON.stringify(row)
+      });
+      if (!res.ok) throw new Error("queue failed (HTTP " + res.status + "). " + (await res.text()).slice(0, 220));
+      const when = new Date().toLocaleString("en-US", { day: "numeric", month: "short", hour: "numeric", minute: "2-digit" });
+      try { localStorage.setItem("md-guide-carousel-queued-" + g.id, when); } catch (e) {}
+      this.setState({ igBusy: "", igDone: slides.length + " slides queued for Instagram (" + when + "). The scheduler picks the slot." +
+        (this.state.captionCol ? " Caption included." : " scheduled_posts has no caption column, so the publisher writes its own \u2014 copy the caption below if you want this one.") });
+    } catch (e) {
+      this.setState({ igBusy: "", igError: "Not queued \u2014 " + ((e && e.message) || "something went wrong") + "." });
+    }
+  }
+
+  async load() {
+    try {
+      const res = await fetch(BASE + "/rest/v1/guide_calendar?select=id,title,caption,event_name,published,published_at,content&order=published_at.desc.nullslast", { headers: this.headers() });
+      if (!res.ok) throw new Error("HTTP " + res.status);
+      const rows = (await res.json()).filter(g => ((g.content || {}).howto || []).length);
+      const want = new URLSearchParams(location.search).get("guide");
+      const pick = rows.find(g => String(g.id) === want) || rows.find(g => /charg/i.test(g.title || "")) || rows[0];
+      this.setState({ guides: rows, note: rows.length ? (this.token() ? "" : "Not signed in \u2014 only published guides are listed. Sign in on Buying guides to see drafts.") : "No guides with \u201cHow to buy well\u201d tips yet." });
+      if (pick) this.selectGuide(pick.id, rows);
+    } catch (e) {
+      this.setState({ guides: [], note: "Could not load guides \u2014 " + e.message + ". Sign in on Buying guides first." });
+    }
+  }
+
+  decode(s) { const t = document.createElement("textarea"); t.innerHTML = String(s || ""); return t.value; }
+  words(s) { return String(s || "").trim().split(/\s+/).filter(Boolean).length; }
+  guide(id, rows) { return (rows || this.state.guides || []).find(g => String(g.id) === String(id)); }
+  topic(g) {
+    const hay = this.decode(g.title) + " " + (g.event_name || "") + " " + ((g.content || {}).products || []).map(p => p.category + " " + p.title).join(" ");
+    return TOPICS.find(t => t.re.test(hay)) || TOPIC_DEFAULT;
+  }
+
+  selectGuide(id, rows) {
+    const g = this.guide(id, rows);
+    if (!g) return;
+    let saved = null;
+    try { saved = JSON.parse(localStorage.getItem("md-guide-carousel-" + g.id) || "null"); } catch (e) {}
+    const has = saved && saved.slides && saved.slides.length;
+    this.setState({ guideId: String(g.id), slides: has ? saved.slides : [], caption: has ? (saved.caption || "") : "", pasteOpen: !has, pasteErr: "" });
+  }
+
+  persist(patch) {
+    this.setState(patch, () => {
+      try { localStorage.setItem("md-guide-carousel-" + this.state.guideId, JSON.stringify({ slides: this.state.slides, caption: this.state.caption })); } catch (e) {}
+    });
+  }
+
+  // tip line: "Headline sentence. Supporting copy…" → headline + body capped near 30 words
+  splitTip(line) {
+    const t = String(line || "").trim();
+    const m = t.match(/^(.+?[.!?:])\s+(?=[A-Z0-9"\u201c])/);
+    const head = (m ? m[1] : t).replace(/[.:]$/, "");
+    const rest = m ? t.slice(m[0].length) : "";
+    const sents = rest.match(/[^.!?]+[.!?]+(\s|$)/g) || (rest ? [rest] : []);
+    let body = "";
+    for (const s of sents) {
+      const next = (body + " " + s.trim()).trim();
+      if (this.words(next) > 30) break;
+      body = next;
+    }
+    if (!body && rest) body = rest.split(/\s+/).slice(0, 28).join(" ").replace(/[,;:\-\u2014]+$/, "") + "\u2026";
+    return { head: head, body: body };
+  }
+
+  template() {
+    return [
+      "HOOK", "LABEL: Buying guide", "HEADLINE: Before you buy a charger", "SUBHEADLINE: Four quick checks that save you money. Swipe before you spend.", "",
+      "TIP", "HEADLINE: Match watts to your device", "BODY: A phone needs 20–30W. A laptop needs 65W or more. Paying for 140W you never use is the most common overspend.", "ICON: bolt", "",
+      "TIP", "HEADLINE: ...", "BODY: ...", "",
+      "TIP", "HEADLINE: ...", "BODY: ...", "",
+      "TIP", "HEADLINE: ...", "BODY: ...", "",
+      "CTA", "HEADLINE: See all chargers + prices", "BODY: Every pick, live prices. Link in bio.", "LINK: mistrydeals.com", "",
+      "CAPTION", "(optional — paste the full Instagram caption here, or delete this block to auto-generate)"
+    ].join("\n");
+  }
+
+  parsePaste(text) {
+    const blocks = []; let cur = null, key = null, errs = [];
+    const lines = String(text || "").replace(/\r/g, "").split("\n");
+    for (let n = 0; n < lines.length; n++) {
+      const raw = lines[n], line = raw.trim();
+      if (cur && cur.kind === "caption") { cur.caption.push(raw); continue; }
+      const h = line.match(/^[#\-=*\s]*(HOOK|TIP|CTA|CAPTION)\b[^:]*$/i);
+      if (h) { cur = { kind: h[1].toLowerCase(), f: {}, caption: [] }; blocks.push(cur); key = null; continue; }
+      const f = line.match(/^(LABEL|HEADLINE|SUBHEADLINE|BODY|ICON|LINK)\s*:\s*(.*)$/i);
+      if (f) {
+        if (!cur) { errs.push("Line " + (n + 1) + ": field before any HOOK / TIP / CTA header."); continue; }
+        key = f[1].toUpperCase() === "SUBHEADLINE" ? "BODY" : f[1].toUpperCase();
+        cur.f[key] = f[2].trim(); continue;
+      }
+      if (line && cur && key) cur.f[key] = (cur.f[key] + " " + line).trim();
+      else if (line) errs.push("Line " + (n + 1) + ": not a header or field \u2014 \u201c" + line.slice(0, 40) + "\u201d");
+    }
+    const hooks = blocks.filter(b => b.kind === "hook"), tips = blocks.filter(b => b.kind === "tip"), ctas = blocks.filter(b => b.kind === "cta"), caps = blocks.filter(b => b.kind === "caption");
+    if (hooks.length !== 1) errs.push("Need exactly one HOOK block (found " + hooks.length + ").");
+    if (!tips.length || tips.length > 6) errs.push("Need 1\u20136 TIP blocks (found " + tips.length + ").");
+    if (ctas.length > 1) errs.push("Only one CTA block allowed.");
+    blocks.forEach(b => { if (b.kind !== "caption" && !b.f.HEADLINE) errs.push(b.kind.toUpperCase() + " block is missing HEADLINE."); });
+    if (errs.length) return { errs };
+    const hk = hooks[0].f, slides = [{ kind: "hook", kicker: hk.LABEL || "Buying guide", head: hk.HEADLINE, body: hk.BODY || "" }];
+    tips.forEach((b, i) => {
+      const ic = (b.f.ICON || "").toLowerCase();
+      slides.push({ kind: "tip", kicker: b.f.LABEL || "Tip " + (i + 1) + " of " + tips.length, head: b.f.HEADLINE, body: b.f.BODY || "",
+        icon: ICONS[ic] && ic !== "arrow" ? ic : (this.iconFor(b.f.HEADLINE) || this.iconFor(b.f.BODY || "") || "check") });
+    });
+    const c = ctas[0] ? ctas[0].f : {};
+    slides.push({ kind: "cta", head: c.HEADLINE || "See all " + (this.guide(this.state.guideId) ? this.topic(this.guide(this.state.guideId)).plural : "picks") + " + prices", body: c.BODY || "Every pick, live prices. Link in bio.", link: c.LINK || "mistrydeals.com" });
+    const caption = caps[0] ? caps[0].caption.join("\n").trim() : "";
+    return { slides, caption: /^\(optional/.test(caption) ? "" : caption };
+  }
+
+  applyPaste() {
+    const g = this.guide(this.state.guideId);
+    const r = this.parsePaste(this.state.pasteText);
+    if (r.errs) { this.setState({ pasteErr: r.errs.join("\n") }); return; }
+    this.persist({ slides: r.slides, caption: r.caption || (g ? this.captionFor(g, r.slides) : ""), pasteOpen: false, pasteText: "", pasteErr: "",
+      note: "Imported " + r.slides.length + " slides" + (r.caption ? " and caption." : "; caption auto-generated.") });
+  }
+
+  iconFor(text) { const hit = ICON_RULES.find(r => r[0].test(text)); return hit ? hit[1] : null; }
+
+  build(g) {
+    const c = g.content || {};
+    const tp = this.topic(g);
+    const tips = (c.howto || []).slice(0, 4);
+    const cap = this.decode(g.caption || c.subtitle || "");
+    const sub = cap && this.words(cap) <= 15 ? cap
+      : tips.length + " quick checks that save you money \u2014 swipe before you spend.";
+    const slides = [{ kind: "hook", kicker: this.decode(g.event_name) || "Buying guide", head: "Before you buy " + tp.one, body: sub }];
+    tips.forEach((line, i) => {
+      const t = this.splitTip(line);
+      slides.push({ kind: "tip", kicker: "Tip " + (i + 1) + " of " + tips.length, head: t.head, body: t.body, icon: this.iconFor(t.head) || this.iconFor(line) || "check" });
+    });
+    slides.push({ kind: "cta", head: "See all " + tp.plural + " + prices", body: "Every pick, live prices. Link in bio.", link: "mistrydeals.com" });
+    return slides;
+  }
+
+  captionFor(g, slides) {
+    const tp = this.topic(g);
+    // Instagram 2026 rules (same as the Social page): hook is the first line, under 125
+    // chars, no emoji; plain searchable keywords; hook / value / CTA split by white space;
+    // three emoji only, as anchors on CTA lines; five hashtags max, niche before generic.
+    const hook = slides.find(s => s.kind === "hook") || { head: "", body: "" };
+    const tips = slides.filter(s => s.kind === "tip");
+    const n = tips.length;
+    const head = String(hook.head || "").replace(/[.!?]$/, "");
+    const strip = s => String(s || "").replace(/[\u{1F300}-\u{1FAFF}\u2600-\u27BF]\uFE0F?/gu, "").trim();
+    let first = strip(head + ". " + hook.body);
+    if (first.length > 124) first = strip(head + ". " + n + " checks to make before you spend.");
+    if (first.length > 124) first = first.slice(0, 121).replace(/\s+\S*$/, "") + "\u2026";
+    // captions are indexed for Instagram search, so the body names the guide, its
+    // product types and price range in plain words and writes each tip out in full
+    const c = g.content || {};
+    const prods = c.products || [];
+    const picks = prods.length;
+    const title = strip(this.decode(g.title));
+    const cats = [];
+    const BROAD = /^(electronics?|home( & kitchen| and kitchen)?|kitchen|misc(ellaneous)?|other|general|accessories|tech|computers?|appliances?|tools?|toys?( & games)?|beauty|health|sports?|office( products)?|garden|automotive|baby|pets?|clothing|fashion)$/;
+    prods.forEach(p => { const k = strip(p && p.category).toLowerCase(); if (k && !BROAD.test(k) && tp.plural.toLowerCase().indexOf(k) === -1 && cats.indexOf(k) === -1) cats.push(k); });
+    const prices = prods.map(p => parseFloat(p && p.price)).filter(v => !isNaN(v) && v > 0).sort((a, b) => a - b);
+    const money = v => "$" + (v % 1 ? v.toFixed(2) : v.toFixed(0));
+    const howto = (c.howto || []).map(x => strip(x));
+    const sub = strip(this.decode(g.caption || c.subtitle || ""));
+    const lines = [first, ""];
+    lines.push((title ? title + ": " : "") + "a buying guide to " + tp.plural + (cats.length ? ", covering " + cats.slice(0, 4).join(", ") : "") + "." +
+      (sub && sub !== strip(hook.body) ? " " + sub.replace(/([^.!?])$/, "$1.") : ""));
+    lines.push("");
+    lines.push("Most of what gets advertised on " + tp.plural + " is marketing. These are the " + n + " things that actually decide whether you get a good one or overpay for the wrong one:");
+    lines.push("");
+    tips.forEach((t, i) => {
+      const h = strip(t.head);
+      const full = howto[i] && howto[i].toLowerCase().indexOf(h.toLowerCase().slice(0, 14)) === 0 ? howto[i] : "";
+      lines.push((i + 1) + ". " + h);
+      const rest = full ? full.slice(h.length).replace(/^[.:!?\s\u2014-]+/, "") : strip(t.body);
+      if (rest) lines.push(rest);
+      lines.push("");
+    });
+    if (this.words(lines.join(" ")) > 230) {
+      for (let i = lines.length - 1; i >= 0; i--) {
+        const m = tips.findIndex((t, k) => lines[i - 1] === (k + 1) + ". " + strip(t.head));
+        if (m !== -1 && lines[i] && tips[m].body) lines[i] = strip(tips[m].body);
+      }
+    }
+    lines.push((picks ? "The full guide has " + picks + " pick" + (picks === 1 ? "" : "s") + " we would actually buy" : "The full guide has the picks we would actually buy") +
+      (prices.length > 1 ? ", from " + money(prices[0]) + " to " + money(prices[prices.length - 1]) : prices.length ? ", starting at " + money(prices[0]) : "") +
+      ", with every price checked against what the product has really been selling for, not the inflated list price. Each pick says who it is for and why it made the cut.");
+    lines.push("");
+    lines.push("\u{1F914} Which of these did you not know?");
+    lines.push("");
+    lines.push("\u{1F516} Save this for the next time you shop for " + tp.plural + ".");
+    lines.push("\u{1F4E4} " + tp.send);
+    lines.push("\u{1F449} Every pick with live prices: link in bio \u00b7 mistrydeals.com");
+    lines.push("");
+    // five max: four topic tags, niche before generic, then #mistrydeals
+    const pool = tp.tags.slice();
+    // research: 3-5 niche tags, rotate sets so every post isn't the same block.
+    // The two most niche tags stay; the other two rotate per guide.
+    const clean = pool.filter(t => t !== "#mistrydeals");
+    const rest = clean.slice(2);
+    const seed = String(g.id).split("").reduce((a, ch) => (a * 31 + ch.charCodeAt(0)) >>> 0, 7);
+    const rot = rest.length ? rest.map((_, i) => rest[(i + seed) % rest.length]) : [];
+    const tags = clean.slice(0, 2).concat(rot).slice(0, 4).concat("#mistrydeals");
+    lines.push(tags.join(" "));
+    return lines.join("\n");
+  }
+
+  iconUrl(key, stroke) {
+    const svg = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="' + stroke + '" stroke-width="2" stroke-linecap="square" stroke-linejoin="miter">' + (ICONS[key] || ICONS.check) + "</svg>";
+    return "data:image/svg+xml," + encodeURIComponent(svg);
+  }
+
+  setSlide(i, k, v) {
+    const slides = this.state.slides.slice();
+    slides[i] = Object.assign({}, slides[i], { [k]: v });
+    this.persist({ slides: slides });
+  }
+
+  refFor(i) {
+    if (!this._refFns[i]) this._refFns[i] = el => { this._refs[i] = el; };
+    return this._refFns[i];
+  }
+
+  fileBase() {
+    const g = this.guide(this.state.guideId);
+    return (this.decode(g && g.title) || "guide").toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "").slice(0, 48) + "-carousel";
+  }
+
+  async png(i) {
+    const node = this._refs[i];
+    if (!node) throw new Error("slide " + (i + 1) + " is not on screen");
+    const lib = await import("https://esm.sh/html-to-image@1.11.11");
+    const url = await lib.toPng(node, { width: 1080, height: 1350, pixelRatio: 1, cacheBust: true });
+    const a = document.createElement("a");
+    a.href = url; a.download = this.fileBase() + "-" + String(i + 1).padStart(2, "0") + ".png";
+    document.body.appendChild(a); a.click(); a.remove();
+  }
+
+  async download(i) {
+    if (this.state.busy != null) return;
+    this.setState({ busy: i });
+    try { await this.png(i); this.setState({ busy: null }); }
+    catch (e) { this.setState({ busy: null, note: "Export failed \u2014 " + e.message }); }
+  }
+
+  async downloadAll() {
+    if (this.state.busy != null || !this.state.slides || !this.state.slides.length) return;
+    this.setState({ busy: "all" });
+    try {
+      for (let i = 0; i < this.state.slides.length; i++) { await this.png(i); await new Promise(r => setTimeout(r, 350)); }
+      this.setState({ busy: null, note: "Downloaded " + this.state.slides.length + " slides. Post them in order as one carousel." });
+    } catch (e) { this.setState({ busy: null, note: "Export failed \u2014 " + e.message }); }
+  }
+
+  copy(text, flag) {
+    const k = flag || "copied";
+    const done = () => { this.setState({ [k]: true }); setTimeout(() => this.setState({ [k]: false }), 1600); };
+    const fb = () => { const t = document.createElement("textarea"); t.value = text; t.style.position = "fixed"; t.style.opacity = "0"; document.body.appendChild(t); t.select(); try { document.execCommand("copy"); } catch (e) {} t.remove(); done(); };
+    if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(text).then(done, fb); else fb();
+  }
+
+  count(n, max, unit) {
+    return { text: n + " / ~" + max + " " + unit, style: "font-weight:400;text-transform:none;letter-spacing:0;color:var(--color-" + (n > max ? "accent-700" : "neutral-600") + ")" };
+  }
+
+  renderVals() {
+    const slides = this.state.slides || [];
+    const total = slides.length;
+    const g = this.guide(this.state.guideId);
+    const firstLine = (this.state.caption || "").split("\n")[0] || "";
+    return {
+      guidesHref: /mistrydeals|vercel/.test(location.host) ? "/buyingguides" : "MistryDeals Buying Guides.dc.html",
+      guideId: this.state.guideId,
+      guideOpts: (this.state.guides || []).map(x => ({ id: String(x.id), label: (x.published ? "" : "[Draft] ") + (this.decode(x.title) || "(untitled)") })),
+      onGuide: e => this.selectGuide(e.target.value),
+      rebuild: () => { if (!g) return; const s = this.build(g); this.persist({ slides: s, caption: this.captionFor(g, s), pasteOpen: false }); },
+      queueIg: () => this.queueIg(),
+      igLabel: this.state.igBusy || "Queue to Instagram",
+      igDone: this.state.igDone || "",
+      igError: this.state.igError || "",
+      igPrev: (() => { let q = null; try { q = g && localStorage.getItem("md-guide-carousel-queued-" + g.id); } catch (e) {} return q && !this.state.igDone ? "Last queued " + q : ""; })(),
+      isEmpty: !total,
+      hasSlides: total > 0,
+      clearSlides: () => { if (confirm("Clear all slides and the caption for this guide?")) this.persist({ slides: [], caption: "", pasteOpen: true }); },
+      downloadAll: () => this.downloadAll(),
+      pasteOpen: !!this.state.pasteOpen,
+      pasteLabel: this.state.pasteOpen ? "Close paste" : "Paste slides",
+      togglePaste: () => this.setState({ pasteOpen: !this.state.pasteOpen, pasteErr: "" }),
+      pasteText: this.state.pasteText || "",
+      onPaste: e => this.setState({ pasteText: e.target.value, pasteErr: "" }),
+      pasteErr: this.state.pasteErr || "",
+      applyPaste: () => this.applyPaste(),
+      copyTemplate: () => this.copy(this.template(), "tplCopied"),
+      tplLabel: this.state.tplCopied ? "Copied" : "Copy blank template",
+      iconList: Object.keys(ICONS).filter(k => k !== "arrow").join(", "),
+      dlAllLabel: this.state.busy === "all" ? "Rendering\u2026" : "Download all " + (total || "") + " PNGs",
+      note: this.state.note,
+      iconOpts: Object.keys(ICONS).filter(k => k !== "arrow"),
+      slides: slides.map((s, i) => {
+        const isHook = s.kind === "hook", isTip = s.kind === "tip", isCta = s.kind === "cta";
+        const hl = (s.head || "").length;
+        const headPx = isTip ? (hl <= 24 ? 78 : hl <= 36 ? 68 : 60) : (hl <= 26 ? 128 : hl <= 40 ? 112 : 96);
+        const bw = this.words(s.body);
+        const hc = this.count(this.words(s.head), 6, "words");
+        const bc = this.count(bw, isTip ? 30 : 15, "words");
+        return {
+          ref: this.refFor(i), isHook, isTip, isCta,
+          counter: String(i + 1).padStart(2, "0") + " / " + String(total).padStart(2, "0"),
+          footRight: i === total - 1 ? "Link in bio" : "Swipe \u2192",
+          label: isHook ? "Slide 1 \u00b7 Hook" : isCta ? "Slide " + (i + 1) + " \u00b7 CTA" : "Slide " + (i + 1) + " \u00b7 Tip",
+          kicker: s.kicker || "", hasKicker: !isCta, head: s.head || "", body: s.body || "", link: s.link || "",
+          headStyle: "font-weight:800;font-size:" + headPx + "px;line-height:1.02;letter-spacing:-.035em;text-wrap:balance;max-width:" + (isTip ? "888px" : "860px"),
+          bodyStyle: "font-family:var(--font-body);font-weight:400;font-size:" + (bw <= 22 ? 48 : bw <= 30 ? 44 : 40) + "px;line-height:1.38;text-wrap:pretty",
+          iconStyle: "width:" + (isCta ? 64 : 104) + "px;height:" + (isCta ? 64 : 104) + "px;flex:none;background:url(\"" + (isCta ? this.iconUrl("arrow", NAVY) : this.iconUrl(s.icon, NAVY)) + "\") center/contain no-repeat",
+          iconKey: s.icon || "check",
+          bodyLabel: isTip ? "Supporting copy" : isHook ? "Subheadline" : "Line under the link",
+          headCount: hc.text, headCountStyle: hc.style, bodyCount: bc.text, bodyCountStyle: bc.style,
+          onKicker: e => this.setSlide(i, "kicker", e.target.value),
+          onHead: e => this.setSlide(i, "head", e.target.value),
+          onBody: e => this.setSlide(i, "body", e.target.value),
+          onIcon: e => this.setSlide(i, "icon", e.target.value),
+          onLink: e => this.setSlide(i, "link", e.target.value),
+          download: () => this.download(i),
+          dlLabel: this.state.busy === i ? "Rendering\u2026" : "PNG"
+        };
+      }),
+      caption: this.state.caption,
+      onCaption: e => this.persist({ caption: e.target.value }),
+      regenCaption: () => { if (g) this.persist({ caption: this.captionFor(g, slides) }); },
+      copyCaption: () => this.copy(this.state.caption),
+      copyLabel: this.state.copied ? "Copied" : "Copy caption",
+      hookCount: "Hook " + firstLine.length + " / 125 chars \u00b7 " + this.words(this.state.caption) + " words (150\u2013300 for carousels) \u00b7 " + (this.state.caption || "").length + " / 2,200 chars",
+      hookCountStyle: "font-size:12px;color:var(--color-" + (firstLine.length > 125 || this.words(this.state.caption) > 300 || (this.state.caption || "").length > 2200 ? "accent-700" : "neutral-700") + ")"
+    };
+  }
+}
+</script>
+</body>
+</html>

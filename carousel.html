@@ -83,13 +83,13 @@
     <div style="max-width:1720px;margin:0 auto;padding:18px 16px;display:flex;align-items:flex-end;gap:24px;flex-wrap:wrap">
       <div>
         <div style="font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--color-accent-700);margin-bottom:8px">MistryDeals &#183; internal</div>
-        <h1 class="m-fs-md" style="margin:0;font-size:38px;line-height:1;letter-spacing:-.02em">Carousel</h1>
+        <h1 class="m-fs-md" style="margin:0;font-size:38px;line-height:1;letter-spacing:-.02em">Social</h1>
       </div>
       <sc-if value="{{ isWide }}" hint-placeholder-val="{{ true }}">
       <div class="m-wrap" style="display:flex;align-items:center;gap:0;margin-left:8px">
         <a href="{{ hCatalogue }}" style="{{ navRest }}">Catalogue</a>
         <a href="{{ hQueue }}" style="{{ navRest }}">Deal queue</a>
-        <span style="{{ navHere }}">Carousel</span>
+        <span style="{{ navHere }}">Social</span>
         <a href="{{ hBrands }}" onClick="{{ markBrands }}" style="{{ navRest }}">Brand rules</a>
         <a href="{{ hScrapes }}" onClick="{{ markScrapes }}" style="{{ navRest }}">Scrape log</a>
         <a href="{{ hReddit }}" style="{{ navRest }}">Reddit poster</a>
@@ -168,32 +168,70 @@
         <sc-if value="{{ pEmpty }}" hint-placeholder-val="{{ false }}">
           <div style="padding:32px 0;font-size:13px;color:var(--color-neutral-700)">No products match.</div>
         </sc-if>
-        <div>
-          <sc-for list="{{ picks }}" as="p" hint-placeholder-count="8">
-            <div style="{{ p.rowStyle }}">
-              <div style="position:relative;width:48px;height:48px;border:1px solid var(--color-divider);background:#ffffff;flex:none;overflow:hidden">
-                <dc-import name="ProductImage" src="{{ p.img }}" alt="" pad="3px" hint-size="100%,100%"></dc-import>
-              </div>
-              <div style="min-width:0;flex:1 1 auto">
-                <div style="font-weight:600;font-size:13px;line-height:1.35;overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical">{{ p.title }}</div>
-                <div style="font-size:11px;color:var(--color-neutral-600);margin-top:3px">{{ p.meta }}</div>
-              </div>
-              <button onClick="{{ p.add }}" title="{{ p.addTitle }}" style="{{ p.addStyle }}">{{ p.addLabel }}</button>
-            </div>
-          </sc-for>
-        </div>
+        <table class="table" style="width:100%;border-collapse:collapse;table-layout:fixed">
+          <thead>
+            <tr>
+              <th style="text-align:left">Product</th>
+              <sc-for list="{{ numCols }}" as="c" hint-placeholder-count="4">
+                <th style="{{ c.thStyle }}">
+                  <span>{{ c.label }}</span>
+                  <i onMouseDown="{{ c.grab }}" onDoubleClick="{{ c.reset }}" title="Drag to resize · double-click to reset" style="position:absolute;top:0;bottom:0;left:-3px;width:7px;cursor:col-resize;user-select:none"></i>
+                </th>
+              </sc-for>
+              <th style="width:84px"></th>
+            </tr>
+          </thead>
+          <tbody>
+            <sc-for list="{{ picks }}" as="p" hint-placeholder-count="8">
+              <tr style="{{ p.rowStyle }}">
+                <td style="padding:10px 10px 10px 0">
+                  <div style="display:flex;align-items:center;gap:12px;min-width:0">
+                    <a href="{{ p.amazon }}" target="_blank" rel="noopener noreferrer" title="Open on Amazon (no affiliate tag)" style="position:relative;display:block;width:48px;height:48px;border:1px solid var(--color-divider);background:#ffffff;flex:none;overflow:hidden" style-hover="border-color:var(--color-accent)">
+                      <dc-import name="ProductImage" src="{{ p.img }}" alt="" pad="3px" hint-size="100%,100%"></dc-import>
+                    </a>
+                    <div style="min-width:0">
+                      <a href="{{ p.amazon }}" target="_blank" rel="noopener noreferrer" title="Open on Amazon (no affiliate tag)" style="display:-webkit-box;font-weight:600;font-size:13px;line-height:1.35;overflow:hidden;-webkit-line-clamp:2;-webkit-box-orient:vertical;color:var(--color-text);text-decoration:none" style-hover="text-decoration:underline;text-decoration-thickness:1px;text-underline-offset:2px;color:var(--color-accent-700)">{{ p.title }}</a>
+                      <div style="font-family:var(--font-heading);font-size:10.5px;letter-spacing:.06em;color:var(--color-neutral-600);margin-top:3px">{{ p.asinLabel }}</div>
+                    </div>
+                  </div>
+                </td>
+                <td style="padding:10px 0;text-align:right;font-family:var(--font-heading);font-weight:700;font-size:12.5px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ p.nowLabel }}</td>
+                <td style="padding:10px 0;text-align:right;font-size:11.5px;color:var(--color-neutral-700);text-decoration:line-through;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ p.wasLabel }}</td>
+                <td style="padding:10px 0;text-align:right;font-family:var(--font-heading);font-weight:700;font-size:11.5px;color:var(--color-accent-700);overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ p.offLabel }}</td>
+                <td style="padding:10px 0;text-align:right;font-size:11px;color:var(--color-neutral-600);overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ p.ageLabel }}</td>
+                <td style="padding:10px 0 10px 12px;text-align:right"><button onClick="{{ p.add }}" title="{{ p.addTitle }}" style="{{ p.addStyle }}">{{ p.addLabel }}</button></td>
+              </tr>
+            </sc-for>
+          </tbody>
+        </table>
         <sc-if value="{{ canLoadMore }}" hint-placeholder-val="{{ false }}">
           <button onClick="{{ loadMore }}" class="btn btn-ghost" style="margin-top:14px;font-size:12px;padding:9px 12px">{{ loadMoreLabel }}</button>
         </sc-if>
       </div>
 
       <div class="c-right" style="border-left:2px solid var(--color-divider);padding-left:32px">
-        <div class="c-static" style="position:sticky;top:0;background:var(--color-bg);padding:20px 0 12px;border-bottom:2px solid var(--color-divider);display:flex;align-items:baseline;gap:10px;flex-wrap:wrap">
-          <h2 style="margin:0;font-size:20px;letter-spacing:-.01em">The carousel</h2>
-          <span style="{{ countStyle }}">{{ countLabel }}</span>
-          <span style="font-size:12px;color:var(--color-neutral-700);margin-left:auto">{{ formatNote }}</span>
+        <div class="c-static" style="position:sticky;top:0;background:var(--color-bg);padding:20px 0 12px;border-bottom:2px solid var(--color-divider);z-index:20">
+          <div style="display:flex;align-items:center;gap:0;margin-bottom:12px">
+            <button onClick="{{ pickVideo }}" style="{{ segVideo }}">Video prompts</button>
+            <button onClick="{{ pickSlides }}" style="{{ segSlides }}">Carousel slides</button>
+            <button onClick="{{ pickCollage }}" style="{{ segCollage }}">Collage</button>
+          </div>
+          <div style="display:flex;align-items:baseline;gap:10px;flex-wrap:wrap">
+            <sc-if value="{{ slidesMode }}" hint-placeholder-val="{{ false }}">
+              <h2 style="margin:0;font-size:20px;letter-spacing:-.01em">The carousel</h2>
+            </sc-if>
+            <sc-if value="{{ videoMode }}" hint-placeholder-val="{{ true }}">
+              <h2 style="margin:0;font-size:20px;letter-spacing:-.01em">The video</h2>
+            </sc-if>
+            <sc-if value="{{ collageMode }}" hint-placeholder-val="{{ false }}">
+              <h2 style="margin:0;font-size:20px;letter-spacing:-.01em">The collage</h2>
+            </sc-if>
+            <span style="{{ countStyle }}">{{ countLabel }}</span>
+            <span style="font-size:12px;color:var(--color-neutral-700);margin-left:auto">{{ rightNote }}</span>
+          </div>
         </div>
 
+        <sc-if value="{{ slidesMode }}" hint-placeholder-val="{{ false }}">
         <sc-if value="{{ noSlides }}" hint-placeholder-val="{{ true }}">
           <div style="border:1px dashed var(--color-divider);padding:28px 20px;margin-top:16px;font-size:13px;line-height:1.55;color:var(--color-neutral-700);text-wrap:pretty">Add at least two products from the left. Instagram allows two to ten slides &#8212; five is the target for a roundup. Each slide gets its own branded creative and its own line of copy.</div>
         </sc-if>
@@ -233,12 +271,40 @@
 
         <sc-if value="{{ hasSlides }}" hint-placeholder-val="{{ false }}">
           <div style="margin-top:24px;border-top:2px solid var(--color-divider);padding-top:16px">
-            <div style="display:flex;align-items:baseline;gap:10px;margin-bottom:8px">
-              <div style="font-family:var(--font-heading);font-weight:700;font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--color-neutral-700)">Post caption &#183; generated</div>
-              <button onClick="{{ copyCaption }}" style="font:inherit;font-family:var(--font-heading);font-weight:700;font-size:10px;letter-spacing:.08em;text-transform:uppercase;margin-left:auto;background:none;border:0;padding:0;cursor:pointer;color:var(--color-accent-700)">Copy</button>
+            <div style="display:flex;align-items:baseline;gap:10px;margin-bottom:10px">
+              <div style="font-family:var(--font-heading);font-weight:700;font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--color-neutral-700)">Post copy &#183; generated</div>
+              <div style="display:flex;align-items:center;gap:0;margin-left:auto">
+                <button onClick="{{ pickIg }}" style="{{ capSegIg }}">Instagram</button>
+                <button onClick="{{ pickFb }}" style="{{ capSegFb }}">Facebook</button>
+              </div>
             </div>
-            <div style="border:1px solid var(--color-divider);padding:14px;font-size:12.5px;line-height:1.6;white-space:pre-wrap;overflow-wrap:anywhere;color:var(--color-text)">{{ caption }}</div>
-            <div style="font-size:11px;color:var(--color-neutral-600);margin-top:6px">{{ captionMeta }}</div>
+
+            <sc-if value="{{ capIg }}" hint-placeholder-val="{{ true }}">
+              <div style="display:flex;align-items:baseline;gap:10px;margin-bottom:6px">
+                <div style="font-family:var(--font-heading);font-weight:700;font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:var(--color-neutral-700)">Caption</div>
+                <button onClick="{{ copyCaption }}" style="{{ copyLink }}">Copy</button>
+              </div>
+              <div style="border:1px solid var(--color-divider);padding:14px;font-size:12.5px;line-height:1.6;white-space:pre-wrap;overflow-wrap:anywhere;color:var(--color-text)">{{ caption }}</div>
+              <div style="font-size:11px;color:var(--color-neutral-600);margin-top:6px">{{ captionMeta }}</div>
+            </sc-if>
+
+            <sc-if value="{{ capFb }}" hint-placeholder-val="{{ false }}">
+              <div style="display:flex;align-items:baseline;gap:10px;margin-bottom:6px">
+                <div style="font-family:var(--font-heading);font-weight:700;font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:var(--color-neutral-700)">Title</div>
+                <button onClick="{{ copyFbTitle }}" style="{{ copyLink }}">Copy</button>
+              </div>
+              <div style="border:1px solid var(--color-divider);padding:12px 14px;font-family:var(--font-heading);font-weight:700;font-size:15px;line-height:1.3;overflow-wrap:anywhere;color:var(--color-text)">{{ fbTitle }}</div>
+              <div style="font-size:11px;color:var(--color-neutral-600);margin-top:6px">{{ fbTitleMeta }}</div>
+
+              <div style="display:flex;align-items:baseline;gap:10px;margin:14px 0 6px">
+                <div style="font-family:var(--font-heading);font-weight:700;font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:var(--color-neutral-700)">Caption</div>
+                <button onClick="{{ copyFbCaption }}" style="{{ copyLink }}">Copy</button>
+              </div>
+              <div style="border:1px solid var(--color-divider);padding:14px;font-size:12.5px;line-height:1.6;white-space:pre-wrap;overflow-wrap:anywhere;color:var(--color-text)">{{ fbCaption }}</div>
+              <div style="font-size:11px;color:var(--color-neutral-600);margin-top:6px">{{ fbCaptionMeta }}</div>
+
+              <button onClick="{{ copyFbBoth }}" style="{{ copyLink }};margin-top:12px">Copy title and caption together</button>
+            </sc-if>
           </div>
 
           <div style="margin-top:24px;border-top:2px solid var(--color-divider);padding-top:16px">
@@ -272,10 +338,371 @@
           </div>
           <div style="font-size:11px;line-height:1.5;color:var(--color-neutral-600);margin-top:10px;text-wrap:pretty">{{ queueHint }}</div>
         </sc-if>
+        </sc-if>
+
+        <sc-if value="{{ collageMode }}" hint-placeholder-val="{{ false }}">
+        <div style="display:flex;align-items:center;gap:0;margin-top:16px;flex-wrap:wrap">
+          <button onClick="{{ cfPortrait }}" style="{{ cfSegPortrait }}">IG portrait</button>
+          <button onClick="{{ cfStory }}" style="{{ cfSegStory }}">Story</button>
+          <button onClick="{{ cfFb }}" style="{{ cfSegFb }}">Facebook</button>
+          <span style="margin-left:auto;font-size:11px;color:var(--color-neutral-600)">{{ cfSize }}</span>
+        </div>
+
+        <sc-if value="{{ collageWarn }}" hint-placeholder-val="{{ true }}">
+          <div style="border:1px dashed var(--color-divider);padding:14px 16px;margin-top:14px;font-size:12.5px;line-height:1.55;color:var(--color-neutral-700);text-wrap:pretty">{{ collageWarn }}</div>
+        </sc-if>
+
+        <div style="margin-top:14px">
+          <sc-for list="{{ collageRows }}" as="r" hint-placeholder-count="0">
+            <div draggable="true" onDragStart="{{ r.onDragStart }}" onDragOver="{{ r.onDragOver }}" onDrop="{{ r.onDrop }}" onDragEnd="{{ r.onDragEnd }}" style="{{ r.rowStyle }}">
+              <span title="Drag to reorder" style="font-family:var(--font-heading);font-weight:800;font-size:14px;display:flex;align-items:center;gap:6px;cursor:grab"><span style="font-size:11px;color:var(--color-neutral-600)">&#8942;&#8942;</span>{{ r.n }}</span>
+              <span style="font-size:12.5px;line-height:1.35;overflow:hidden;white-space:nowrap;text-overflow:ellipsis">{{ r.title }}</span>
+              <div style="display:flex;align-items:center;gap:4px">
+                <button onClick="{{ r.up }}" title="Move up" style="{{ r.btn }}">&#9650;</button>
+                <button onClick="{{ r.down }}" title="Move down" style="{{ r.btn }}">&#9660;</button>
+                <button onClick="{{ r.remove }}" title="Remove" style="{{ r.btn }}">&#10005;</button>
+              </div>
+            </div>
+          </sc-for>
+        </div>
+
+        <sc-if value="{{ hasCollage }}" hint-placeholder-val="{{ false }}">
+        <div style="{{ cPrevStyle }}">
+          <div ref="{{ collageRef }}" style="{{ cCanvasStyle }}">
+            <div style="{{ cHeadWrap }}">
+              <div style="font-family:var(--font-heading);font-weight:800;font-size:22px;letter-spacing:.14em;text-transform:uppercase;color:#d98014">{{ cKicker }}</div>
+              <div style="{{ cHeadline }}">{{ cTitle }}</div>
+            </div>
+            <div style="{{ cGridStyle }}">
+              <sc-for list="{{ collageTiles }}" as="t" hint-placeholder-count="0">
+                <div draggable="true" onDragStart="{{ t.onDragStart }}" onDragOver="{{ t.onDragOver }}" onDrop="{{ t.onDrop }}" onDragEnd="{{ t.onDragEnd }}" style="{{ t.cell }}">
+                  <div style="{{ t.plate }}">
+                    {{ t.imgEl }}
+                    <span style="{{ t.badge }}">{{ t.n }}</span>
+                  </div>
+                  <div style="{{ t.info }}">
+                    <div style="{{ t.nameStyle }}">{{ t.name }}</div>
+                    <div style="display:flex;align-items:baseline;gap:10px;flex-wrap:nowrap;margin-top:auto;min-width:0">
+                      <span style="{{ t.priceStyle }}">{{ t.price }}</span>
+                      <span style="{{ t.wasStyle }}">{{ t.was }}</span>
+                      <span style="{{ t.chipStyle }}">{{ t.off }}</span>
+                    </div>
+                  </div>
+                </div>
+              </sc-for>
+            </div>
+            <div style="{{ cFootStyle }}">
+              <span>Links in bio and at mistrydeals.com</span>
+            </div>
+          </div>
+        </div>
+        <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:14px">
+          <button onClick="{{ queueCollage }}" class="btn btn-primary" style="font-size:13px;padding:12px 16px;justify-content:space-between;min-width:220px">{{ cQueueLabel }} <span>&#8594;</span></button>
+          <button onClick="{{ downloadCollage }}" class="btn btn-secondary" style="font-size:13px;padding:12px 16px;justify-content:space-between;min-width:180px">{{ cDlLabel }} <span>&#8595;</span></button>
+        </div>
+        <sc-if value="{{ cQueueError }}" hint-placeholder-val="{{ false }}">
+          <div style="border-left:3px solid var(--color-accent);padding:10px 12px;margin-top:12px;font-size:12.5px;line-height:1.5;color:var(--color-accent-700)">{{ cQueueError }}</div>
+        </sc-if>
+        <sc-if value="{{ cQueueDone }}" hint-placeholder-val="{{ false }}">
+          <div style="border-left:3px solid var(--color-text);padding:10px 12px;margin-top:12px;font-size:12.5px;line-height:1.5">{{ cQueueDone }}</div>
+        </sc-if>
+        <div style="font-size:11px;line-height:1.5;color:var(--color-neutral-600);margin-top:8px;text-wrap:pretty">Exports at full size ({{ cfSize }}). Reorder above to change which product takes the large tile.</div>
+        </sc-if>
+
+        <sc-if value="{{ hasCollage }}" hint-placeholder-val="{{ false }}">
+        <div style="margin-top:24px;border-top:2px solid var(--color-divider);padding-top:16px">
+          <div style="display:flex;align-items:baseline;gap:10px;margin-bottom:10px">
+            <div style="font-family:var(--font-heading);font-weight:700;font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--color-neutral-700)">Collage copy &#183; generated</div>
+            <div style="display:flex;align-items:center;gap:0;margin-left:auto">
+              <button onClick="{{ pickIg }}" style="{{ capSegIg }}">Instagram</button>
+              <button onClick="{{ pickFb }}" style="{{ capSegFb }}">Facebook</button>
+            </div>
+          </div>
+
+          <sc-if value="{{ capIg }}" hint-placeholder-val="{{ true }}">
+            <div style="display:flex;align-items:baseline;gap:10px;margin-bottom:6px">
+              <div style="font-family:var(--font-heading);font-weight:700;font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:var(--color-neutral-700)">Caption</div>
+              <button onClick="{{ copyCollageCaption }}" style="{{ copyLink }}">Copy</button>
+            </div>
+            <div style="border:1px solid var(--color-divider);padding:14px;font-size:12.5px;line-height:1.6;white-space:pre-wrap;overflow-wrap:anywhere;color:var(--color-text)">{{ collageCaption }}</div>
+            <div style="font-size:11px;color:var(--color-neutral-600);margin-top:6px">{{ collageCaptionMeta }}</div>
+          </sc-if>
+
+          <sc-if value="{{ capFb }}" hint-placeholder-val="{{ false }}">
+            <div style="display:flex;align-items:baseline;gap:10px;margin-bottom:6px">
+              <div style="font-family:var(--font-heading);font-weight:700;font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:var(--color-neutral-700)">Title</div>
+              <button onClick="{{ copyFbCollageTitle }}" style="{{ copyLink }}">Copy</button>
+            </div>
+            <div style="border:1px solid var(--color-divider);padding:12px 14px;font-family:var(--font-heading);font-weight:700;font-size:15px;line-height:1.3;overflow-wrap:anywhere;color:var(--color-text)">{{ fbCollageTitle }}</div>
+            <div style="font-size:11px;color:var(--color-neutral-600);margin-top:6px">{{ fbCollageTitleMeta }}</div>
+
+            <div style="display:flex;align-items:baseline;gap:10px;margin:14px 0 6px">
+              <div style="font-family:var(--font-heading);font-weight:700;font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:var(--color-neutral-700)">Caption</div>
+              <button onClick="{{ copyFbCollage }}" style="{{ copyLink }}">Copy</button>
+            </div>
+            <div style="border:1px solid var(--color-divider);padding:14px;font-size:12.5px;line-height:1.6;white-space:pre-wrap;overflow-wrap:anywhere;color:var(--color-text)">{{ fbCollageCaption }}</div>
+            <div style="font-size:11px;color:var(--color-neutral-600);margin-top:6px">{{ fbCaptionMeta }}</div>
+          </sc-if>
+        </div>
+        </sc-if>
+        </sc-if>
+
+        <sc-if value="{{ videoMode }}" hint-placeholder-val="{{ true }}">
+        <div style="border:1px dashed var(--color-divider);padding:14px 16px;margin-top:16px;font-size:12.5px;line-height:1.6;color:var(--color-neutral-700);text-wrap:pretty">Two Anita clips top and tail the video; every product in between is a still with a voiceover over it. Nothing is generated here &#8212; this writes the exact prompts to paste into Google Flow and Google AI Studio.</div>
+
+        <div style="margin-top:22px;border-top:2px solid var(--color-divider);padding-top:16px">
+          <div style="display:flex;align-items:baseline;gap:10px;margin-bottom:12px">
+            <div style="font-family:var(--font-heading);font-weight:700;font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--color-neutral-700)">Shoot setup</div>
+            <div style="display:flex;align-items:baseline;gap:14px;margin-left:auto">
+              <button onClick="{{ shuffleLook }}" title="Re-roll location, hair styling and wardrobe together" style="font:inherit;font-family:var(--font-heading);font-weight:700;font-size:10px;letter-spacing:.08em;text-transform:uppercase;background:none;border:0;padding:0;cursor:pointer;color:var(--color-accent-700)">Shuffle look</button>
+              <button onClick="{{ resetPersona }}" style="font:inherit;font-family:var(--font-heading);font-weight:700;font-size:10px;letter-spacing:.08em;text-transform:uppercase;background:none;border:0;padding:0;cursor:pointer;color:var(--color-accent-700)">Reset</button>
+            </div>
+          </div>
+          <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px">
+            <div class="field">
+              <label style="display:flex;align-items:baseline;gap:10px">Location<span style="margin-left:auto"><button onClick="{{ randLoc }}" title="Randomize" style="{{ rndStyle }}">Random</button></span></label>
+              <select class="input" style="padding:8px 10px;font-size:13px" value="{{ pLoc }}" onChange="{{ onLoc }}">
+                <sc-for list="{{ locGroups }}" as="grp" hint-placeholder-count="4">
+                  <optgroup label="{{ grp.label }}">
+                    <sc-for list="{{ grp.items }}" as="o" hint-placeholder-count="3">
+                      <option value="{{ o.value }}">{{ o.label }}</option>
+                    </sc-for>
+                  </optgroup>
+                </sc-for>
+              </select>
+            </div>
+            <div class="field">
+              <label style="display:flex;align-items:baseline;gap:10px">Hair styling<span style="margin-left:auto"><button onClick="{{ randHair }}" title="Randomize" style="{{ rndStyle }}">Random</button></span></label>
+              <select class="input" style="padding:8px 10px;font-size:13px" value="{{ pHair }}" onChange="{{ onHair }}">
+                <sc-for list="{{ hairOptions }}" as="o" hint-placeholder-count="6">
+                  <option value="{{ o.value }}">{{ o.label }}</option>
+                </sc-for>
+              </select>
+            </div>
+            <div class="field">
+              <label>Clip length</label>
+              <select class="input" style="padding:8px 10px;font-size:13px" value="{{ pClip }}" onChange="{{ onClip }}">
+                <sc-for list="{{ clipOptions }}" as="o" hint-placeholder-count="5">
+                  <option value="{{ o.value }}">{{ o.label }}</option>
+                </sc-for>
+              </select>
+            </div>
+            <div class="field">
+              <label>Voiceover ceiling</label>
+              <select class="input" style="padding:8px 10px;font-size:13px" value="{{ pVoCap }}" onChange="{{ onVoCap }}">
+                <sc-for list="{{ capOptions }}" as="o" hint-placeholder-count="3">
+                  <option value="{{ o.value }}">{{ o.label }}</option>
+                </sc-for>
+              </select>
+            </div>
+          </div>
+          <div class="field" style="margin-top:12px">
+            <label style="display:flex;align-items:baseline;gap:10px">Wardrobe &#183; exact garments and colours<span style="margin-left:auto"><button onClick="{{ randWardrobe }}" title="Randomize" style="{{ rndStyle }}">Random</button></span></label>
+            <input class="input" style="padding:8px 10px;font-size:13px" placeholder="tailored dark navy trousers, fitted warm-cream knit sweater&#8230;" value="{{ pWardrobe }}" onChange="{{ onWardrobe }}" />
+          </div>
+          <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px;margin-top:12px">
+            <div class="field">
+              <label style="display:flex;align-items:baseline;gap:10px">Opening line<span style="margin-left:auto"><button onClick="{{ randIntro }}" title="Randomize" style="{{ rndStyle }}">Random</button></span></label>
+              <textarea class="input" rows="3" style="padding:8px 10px;font-size:13px;line-height:1.5;resize:vertical;min-height:76px" placeholder="{{ introPlaceholder }}" value="{{ pIntro }}" onChange="{{ onIntro }}"></textarea>
+            </div>
+            <div class="field">
+              <label style="display:flex;align-items:baseline;gap:10px">Closing line<span style="margin-left:auto"><button onClick="{{ randOutro }}" title="Randomize" style="{{ rndStyle }}">Random</button></span></label>
+              <textarea class="input" rows="3" style="padding:8px 10px;font-size:13px;line-height:1.5;resize:vertical;min-height:76px" placeholder="{{ outroPlaceholder }}" value="{{ pOutro }}" onChange="{{ onOutro }}"></textarea>
+            </div>
+          </div>
+        </div>
+
+        <div style="margin-top:22px;border-top:2px solid var(--color-divider);padding-top:16px">
+          <div style="display:flex;align-items:baseline;gap:10px;margin-bottom:10px">
+            <div style="font-family:var(--font-heading);font-weight:700;font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--color-neutral-700)">Runtime</div>
+            <span style="font-size:12px;color:var(--color-neutral-700);margin-left:auto">{{ structureLabel }}</span>
+          </div>
+          <div style="font-family:var(--font-heading);font-weight:800;font-size:24px;letter-spacing:-.01em">{{ runtimeLabel }}</div>
+          <sc-if value="{{ vOk }}" hint-placeholder-val="{{ false }}">
+            <div style="border-left:3px solid var(--color-text);padding:8px 12px;margin-top:12px;font-size:12.5px;line-height:1.5">Every check passes &#8212; the prompts below are ready to paste.</div>
+          </sc-if>
+          <sc-for list="{{ vIssues }}" as="i" hint-placeholder-count="0">
+            <div style="border-left:3px solid var(--color-accent);padding:8px 12px;margin-top:8px;font-size:12.5px;line-height:1.5;color:var(--color-accent-700);text-wrap:pretty">{{ i }}</div>
+          </sc-for>
+        </div>
+
+        <sc-if value="{{ hasVideoRows }}" hint-placeholder-val="{{ false }}">
+        <div style="margin-top:22px;border-top:2px solid var(--color-divider);padding-top:16px">
+          <div style="font-family:var(--font-heading);font-weight:700;font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--color-neutral-700);margin-bottom:6px">Sequence &#183; one still and one voiceover each</div>
+          <sc-for list="{{ vRows }}" as="r" hint-placeholder-count="0">
+            <div class="c-slide" style="display:grid;grid-template-columns:26px 62px minmax(0,1fr) auto;gap:12px;align-items:start;padding:14px 0;border-bottom:1px solid var(--color-divider)">
+              <div style="display:flex;flex-direction:column;align-items:center;gap:6px">
+                <span style="font-family:var(--font-heading);font-weight:800;font-size:15px;line-height:1">{{ r.n }}</span>
+                <button onClick="{{ r.up }}" title="Move earlier" style="{{ r.upStyle }}">&#9650;</button>
+                <button onClick="{{ r.down }}" title="Move later" style="{{ r.downStyle }}">&#9660;</button>
+              </div>
+              <div class="c-prev" style="position:relative;width:62px;height:110px;border:1px solid var(--color-divider);background:#ffffff;overflow:hidden">
+                <sc-if value="{{ r.hasStill }}" hint-placeholder-val="{{ false }}">
+                  <dc-import name="ProductImage" src="{{ r.still }}" alt="" pad="0px" hint-size="100%,100%"></dc-import>
+                </sc-if>
+                <sc-if value="{{ r.noStill }}" hint-placeholder-val="{{ true }}">
+                  <div style="position:absolute;inset:0;display:grid;place-items:center;background:repeating-linear-gradient(45deg, var(--color-surface) 0 6px, transparent 6px 12px);font-family:var(--font-heading);font-weight:700;font-size:8px;letter-spacing:.06em;text-transform:uppercase;color:var(--color-neutral-700);text-align:center;padding:4px">9:16 still</div>
+                </sc-if>
+              </div>
+              <div style="min-width:0">
+                <div style="font-weight:600;font-size:13px;line-height:1.35;overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical">{{ r.title }}</div>
+                <div style="font-size:11px;color:var(--color-neutral-600);margin-top:3px">{{ r.meta }}</div>
+                <textarea class="input" rows="2" placeholder="What Anita says over this still" style="margin-top:7px;width:100%;padding:6px 8px;font-size:12px;line-height:1.5;resize:vertical" value="{{ r.script }}" onChange="{{ r.onScript }}"></textarea>
+                <div style="display:flex;align-items:center;gap:8px;margin-top:6px;flex-wrap:wrap">
+                  <span style="{{ r.wordStyle }}">{{ r.wordLabel }}</span>
+                  <button onClick="{{ r.copyVo }}" style="font:inherit;font-family:var(--font-heading);font-weight:700;font-size:10px;letter-spacing:.08em;text-transform:uppercase;background:none;border:0;padding:0;cursor:pointer;color:var(--color-accent-700)">Copy voiceover prompt</button>
+                  <sc-if value="{{ r.hasStill }}" hint-placeholder-val="{{ false }}">
+                    <a href="{{ r.still }}" download="{{ r.stillName }}" style="font-family:var(--font-heading);font-weight:700;font-size:10px;letter-spacing:.08em;text-transform:uppercase">Download still</a>
+                  </sc-if>
+                </div>
+              </div>
+              <button onClick="{{ r.remove }}" title="Take this product out" style="font:inherit;font-family:var(--font-heading);font-weight:700;font-size:10px;letter-spacing:.08em;text-transform:uppercase;align-self:start;background:none;border:0;padding:2px 0;cursor:pointer;color:var(--color-accent-700)">Remove</button>
+            </div>
+          </sc-for>
+        </div>
+
+        <div style="margin-top:22px;border-top:2px solid var(--color-divider);padding-top:16px">
+          <div style="display:flex;align-items:baseline;gap:10px;margin-bottom:8px">
+            <div style="font-family:var(--font-heading);font-weight:700;font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--color-neutral-700)">Google Flow &#183; clip 1, opening</div>
+            <button onClick="{{ copyIntro }}" style="font:inherit;font-family:var(--font-heading);font-weight:700;font-size:10px;letter-spacing:.08em;text-transform:uppercase;margin-left:auto;background:none;border:0;padding:0;cursor:pointer;color:var(--color-accent-700)">Copy</button>
+          </div>
+          <div style="border:1px solid var(--color-divider);padding:14px;font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:11.5px;line-height:1.6;white-space:pre-wrap;overflow-wrap:anywhere;max-height:300px;overflow:auto">{{ introPrompt }}</div>
+        </div>
+
+        <div style="margin-top:22px;border-top:2px solid var(--color-divider);padding-top:16px">
+          <div style="display:flex;align-items:baseline;gap:10px;margin-bottom:8px">
+            <div style="font-family:var(--font-heading);font-weight:700;font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--color-neutral-700)">Google Flow &#183; clip 2, closing</div>
+            <button onClick="{{ copyOutro }}" style="font:inherit;font-family:var(--font-heading);font-weight:700;font-size:10px;letter-spacing:.08em;text-transform:uppercase;margin-left:auto;background:none;border:0;padding:0;cursor:pointer;color:var(--color-accent-700)">Copy</button>
+          </div>
+          <div style="border:1px solid var(--color-divider);padding:14px;font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:11.5px;line-height:1.6;white-space:pre-wrap;overflow-wrap:anywhere;max-height:300px;overflow:auto">{{ outroPrompt }}</div>
+        </div>
+
+        <sc-if value="{{ vError }}" hint-placeholder-val="{{ false }}">
+          <div style="border-left:3px solid var(--color-accent);padding:12px 14px;margin-top:18px;font-size:13px;line-height:1.5;color:var(--color-accent-700);overflow-wrap:anywhere">{{ vError }}</div>
+        </sc-if>
+        <sc-if value="{{ vDone }}" hint-placeholder-val="{{ false }}">
+          <div style="border-left:3px solid var(--color-text);padding:12px 14px;margin-top:18px;font-size:13px;line-height:1.5">{{ vDone }}</div>
+        </sc-if>
+
+        <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:20px">
+          <button onClick="{{ copyAllVo }}" class="btn btn-primary" style="font-size:13px;padding:12px 16px;justify-content:space-between">Copy all voiceover prompts <span>&#8594;</span></button>
+          <button onClick="{{ copyPackage }}" class="btn btn-secondary" style="font-size:13px;padding:12px 16px;justify-content:space-between">Copy whole package <span>&#8594;</span></button>
+          <sc-if value="{{ anyStills }}" hint-placeholder-val="{{ false }}">
+            <button onClick="{{ downloadStills }}" class="btn btn-secondary" style="font-size:13px;padding:12px 16px;justify-content:space-between">{{ downloadAllLabel }} <span>&#8595;</span></button>
+          </sc-if>
+          <button onClick="{{ makeStills }}" class="btn btn-secondary" style="{{ stillStyle }}">{{ stillLabel }}</button>
+          <button onClick="{{ saveVideo }}" class="btn btn-secondary" style="{{ saveStyle }}">{{ saveLabel }}</button>
+        </div>
+        <div style="font-size:11px;line-height:1.5;color:var(--color-neutral-600);margin-top:10px;text-wrap:pretty">{{ videoHint }}</div>
+        </sc-if>
+
+        <sc-if value="{{ hasVideoRows }}" hint-placeholder-val="{{ false }}">
+        <div style="margin-top:24px;border-top:2px solid var(--color-divider);padding-top:16px">
+          <div style="display:flex;align-items:baseline;gap:10px;margin-bottom:10px">
+            <div style="font-family:var(--font-heading);font-weight:700;font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--color-neutral-700)">Reel copy &#183; generated</div>
+            <div style="display:flex;align-items:center;gap:0;margin-left:auto">
+              <button onClick="{{ pickIg }}" style="{{ capSegIg }}">Instagram</button>
+              <button onClick="{{ pickFb }}" style="{{ capSegFb }}">Facebook</button>
+            </div>
+          </div>
+
+          <sc-if value="{{ capIg }}" hint-placeholder-val="{{ true }}">
+            <div style="display:flex;align-items:baseline;gap:10px;margin-bottom:6px">
+              <div style="font-family:var(--font-heading);font-weight:700;font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:var(--color-neutral-700)">Reel caption</div>
+              <button onClick="{{ copyReelCaption }}" style="{{ copyLink }}">Copy</button>
+            </div>
+            <div style="border:1px solid var(--color-divider);padding:14px;font-size:12.5px;line-height:1.6;white-space:pre-wrap;overflow-wrap:anywhere;color:var(--color-text)">{{ reelCaption }}</div>
+            <div style="font-size:11px;color:var(--color-neutral-600);margin-top:6px">{{ reelCaptionMeta }}</div>
+          </sc-if>
+
+          <sc-if value="{{ capFb }}" hint-placeholder-val="{{ false }}">
+            <div style="display:flex;align-items:baseline;gap:10px;margin-bottom:6px">
+              <div style="font-family:var(--font-heading);font-weight:700;font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:var(--color-neutral-700)">Title</div>
+              <button onClick="{{ copyFbTitle }}" style="{{ copyLink }}">Copy</button>
+            </div>
+            <div style="border:1px solid var(--color-divider);padding:12px 14px;font-family:var(--font-heading);font-weight:700;font-size:15px;line-height:1.3;overflow-wrap:anywhere;color:var(--color-text)">{{ fbTitle }}</div>
+            <div style="font-size:11px;color:var(--color-neutral-600);margin-top:6px">{{ fbTitleMeta }}</div>
+
+            <div style="display:flex;align-items:baseline;gap:10px;margin:14px 0 6px">
+              <div style="font-family:var(--font-heading);font-weight:700;font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:var(--color-neutral-700)">Caption</div>
+              <button onClick="{{ copyFbReel }}" style="{{ copyLink }}">Copy</button>
+            </div>
+            <div style="border:1px solid var(--color-divider);padding:14px;font-size:12.5px;line-height:1.6;white-space:pre-wrap;overflow-wrap:anywhere;color:var(--color-text)">{{ fbReelCaption }}</div>
+            <div style="font-size:11px;color:var(--color-neutral-600);margin-top:6px">{{ fbReelMeta }}</div>
+          </sc-if>
+        </div>
+        </sc-if>
+
+        <div style="margin-top:26px;border-top:2px solid var(--color-divider);padding-top:16px">
+          <button onClick="{{ toggleHist }}" style="font:inherit;font-family:var(--font-heading);font-weight:700;font-size:10px;letter-spacing:.1em;text-transform:uppercase;background:none;border:0;padding:0;cursor:pointer;color:var(--color-text);display:flex;align-items:center;gap:8px;width:100%">
+            <span>Prompt history</span>
+            <span style="font-size:12px;color:var(--color-neutral-700);font-weight:400;letter-spacing:0;text-transform:none;margin-left:auto">{{ histNote }}</span>
+            <span style="font-size:9px">{{ histGlyph }}</span>
+          </button>
+          <sc-if value="{{ histOpen }}" hint-placeholder-val="{{ false }}">
+            <div style="margin-top:12px">
+              <sc-for list="{{ historyRows }}" as="h" hint-placeholder-count="0">
+                <div style="display:grid;grid-template-columns:minmax(0,1fr) auto;gap:12px;align-items:center;padding:11px 0;border-bottom:1px solid var(--color-divider)">
+                  <div style="min-width:0">
+                    <div style="font-weight:600;font-size:13px;line-height:1.35">{{ h.title }}</div>
+                    <div style="font-size:11px;color:var(--color-neutral-600);margin-top:3px">{{ h.meta }}</div>
+                  </div>
+                  <div style="display:flex;gap:10px;flex:none">
+                    <button onClick="{{ h.copy }}" style="font:inherit;font-family:var(--font-heading);font-weight:700;font-size:10px;letter-spacing:.08em;text-transform:uppercase;background:none;border:0;padding:0;cursor:pointer;color:var(--color-accent-700)">Copy</button>
+                    <button onClick="{{ h.reopen }}" style="font:inherit;font-family:var(--font-heading);font-weight:700;font-size:10px;letter-spacing:.08em;text-transform:uppercase;background:none;border:0;padding:0;cursor:pointer;color:var(--color-accent-700)">Reopen</button>
+                  </div>
+                </div>
+              </sc-for>
+              <sc-if value="{{ histEmpty }}" hint-placeholder-val="{{ false }}">
+                <div style="padding:20px 0;font-size:12.5px;line-height:1.55;color:var(--color-neutral-700);text-wrap:pretty">{{ histEmptyNote }}</div>
+              </sc-if>
+            </div>
+          </sc-if>
+        </div>
+
+        <div style="margin-top:20px;border-top:2px solid var(--color-divider);padding-top:16px">
+          <button onClick="{{ toggleGuides }}" style="font:inherit;font-family:var(--font-heading);font-weight:700;font-size:10px;letter-spacing:.1em;text-transform:uppercase;background:none;border:0;padding:0;cursor:pointer;color:var(--color-text);display:flex;align-items:center;gap:8px;width:100%">
+            <span>Prompt guidelines</span>
+            <span style="font-size:12px;color:var(--color-neutral-700);font-weight:400;letter-spacing:0;text-transform:none;margin-left:auto">What every prompt above must carry</span>
+            <span style="font-size:9px">{{ guideGlyph }}</span>
+          </button>
+          <sc-if value="{{ guidesOpen }}" hint-placeholder-val="{{ false }}">
+            <div style="display:flex;align-items:baseline;gap:14px;margin-top:12px">
+              <button onClick="{{ toggleGuideEdit }}" style="{{ copyLink }}">{{ guideEditLabel }}</button>
+              <sc-if value="{{ guidesCustom }}" hint-placeholder-val="{{ false }}">
+                <button onClick="{{ resetGuides }}" style="{{ copyLink }}">Restore house version</button>
+              </sc-if>
+              <span style="font-size:11px;color:var(--color-neutral-600);margin-left:auto">{{ guideOrigin }}</span>
+            </div>
+
+            <sc-if value="{{ guidesEditing }}" hint-placeholder-val="{{ false }}">
+              <div style="font-size:11.5px;line-height:1.55;color:var(--color-neutral-700);margin-top:10px;text-wrap:pretty">One rule per line. A line starting with <code>##</code> begins a new heading. <code>{WORDCAP}</code>, <code>{VOCAP}</code>, <code>{WPM}</code> and <code>{CLIP}</code> are filled in from the shoot setup when displayed.</div>
+              <textarea class="input" style="margin-top:8px;width:100%;min-height:340px;font-size:12px;line-height:1.6;font-family:ui-monospace,monospace;padding:12px;resize:vertical" value="{{ guideText }}" onChange="{{ onGuideText }}"></textarea>
+            </sc-if>
+
+            <sc-if value="{{ guidesReading }}" hint-placeholder-val="{{ true }}">
+              <sc-for list="{{ guideSections }}" as="g" hint-placeholder-count="0">
+                <div style="margin-top:16px">
+                  <div style="font-family:var(--font-heading);font-weight:800;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--color-accent-700);margin-bottom:7px">{{ g.h }}</div>
+                  <sc-for list="{{ g.items }}" as="it" hint-placeholder-count="0">
+                    <div style="font-size:12.5px;line-height:1.6;color:var(--color-neutral-700);padding-left:12px;border-left:1px solid var(--color-divider);margin-top:6px;text-wrap:pretty">{{ it }}</div>
+                  </sc-for>
+                </div>
+              </sc-for>
+            </sc-if>
+          </sc-if>
+        </div>
+        </sc-if>
       </div>
     </div>
   </div>
 </div>
+</sc-if>
+
+<sc-if value="{{ hasToast }}" hint-placeholder-val="{{ false }}">
+  <div style="position:fixed;left:50%;bottom:28px;transform:translateX(-50%);z-index:200;display:flex;align-items:center;gap:10px;background:var(--color-text);color:var(--color-bg);padding:12px 18px;border:2px solid var(--color-text);box-shadow:var(--shadow-md);pointer-events:none">
+    <span style="font-family:var(--font-heading);font-weight:800;font-size:13px;letter-spacing:.06em;text-transform:uppercase">{{ toastText }}</span>
+  </div>
 </sc-if>
 </x-dc>
 <script type="text/x-dc" data-dc-script data-props="{&quot;dark&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:false,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Theme&quot;},&quot;creativeFormat&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;instagram&quot;,&quot;story&quot;],&quot;default&quot;:&quot;instagram&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Creative&quot;},&quot;renderFunction&quot;:{&quot;editor&quot;:&quot;text&quot;,&quot;default&quot;:&quot;carousel-render&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Creative&quot;},&quot;writeIgCaption&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:false,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Creative&quot;},&quot;targetSlides&quot;:{&quot;editor&quot;:&quot;int&quot;,&quot;default&quot;:5,&quot;min&quot;:2,&quot;max&quot;:10,&quot;tsType&quot;:&quot;number&quot;,&quot;section&quot;:&quot;Carousel&quot;}}">
@@ -284,6 +711,164 @@ const KEY = "sb_publishable_UX38KeF1XAKtzvS01yfx7w_8s5NkOH3";
 const PUBLIC_IMG = BASE + "/storage/v1/object/public/social-images";
 const CAPTION_CANDIDATES = ["caption", "post_text", "message", "post_message", "text", "content", "body"];
 
+// Google Flow needs one location held for the whole video, described the same
+// way every time — so the locations are a fixed set with fixed wording rather
+// than a free text field.
+const VIDEO_LOCATIONS = [
+  { value: "home-office", group: "Home", label: "Modern home office", desc: "bright, minimalist home office with a floor-to-ceiling window, natural daylight streaming in, light oak desk, soft blue accent wall lighting, white walls, hardwood flooring" },
+  { value: "living-room", group: "Home", label: "Contemporary living room", desc: "bright living room with large windows, light grey couch, wooden coffee table, neutral beige walls, natural warm lighting, modern minimalist decor" },
+  { value: "kitchen", group: "Home", label: "Kitchen / dining area", desc: "bright, modern kitchen with white cabinetry, light marble countertops, large kitchen island, natural window light, stainless steel appliances" },
+  { value: "bedroom-nook", group: "Home", label: "Bedroom study nook", desc: "calm bedroom setting with a large window, soft natural light, neutral wall colour, minimal decor, a comfortable chair and desk area" },
+
+  { value: "corporate-office", group: "Office", label: "Modern corporate office", desc: "bright contemporary office with glass walls, modern furniture, large windows, natural light, professional but warm aesthetic, light grey and white colour scheme" },
+  { value: "startup-office", group: "Office", label: "Startup / creative office", desc: "bright, open office environment with exposed brick and light wood walls, natural window light, modern minimalist furniture, collaborative workspace feel" },
+  { value: "showroom", group: "Office", label: "Professional showroom", desc: "bright, clean showroom space with modern display fixtures, natural window light, light wood and white finishes, professional aesthetic" },
+
+  { value: "urban-street", group: "Outdoor", label: "Urban street", desc: "bright daytime outdoor setting on a clean urban street, modern building backdrop, natural sunlight, contemporary architecture, minimal foot traffic in the background" },
+  { value: "park", group: "Outdoor", label: "Park / garden", desc: "bright outdoor park setting, natural daylight, green vegetation blurred in the background, clear sky, open space" },
+  { value: "cafe-exterior", group: "Outdoor", label: "Cafe exterior", desc: "bright outdoor cafe seating area with natural light, modern cafe backdrop, clean aesthetic, minimal background activity" },
+
+  { value: "tech-store", group: "Retail", label: "Tech / electronics store", desc: "bright retail environment with clean displays, modern lighting, white and light grey walls, contemporary product shelving, professional retail aesthetic" },
+  { value: "boutique", group: "Retail", label: "Boutique retail space", desc: "bright, upscale retail environment with a clean aesthetic, warm lighting, light wood and white finishes, minimalist display setup" },
+  { value: "shopping-district", group: "Retail", label: "Shopping district", desc: "bright indoor shopping area with modern architecture, clean flooring, contemporary storefronts blurred in the background, bright even lighting" }
+];
+// hair LENGTH and colour are fixed by the character sheet; only the styling varies
+const HAIR_STYLES = ["loose waves", "straight and sleek", "soft curls", "low bun", "half-up, rest down", "high ponytail"];
+// The closing sentence says who the product is FOR, not that the price is good —
+// the price is already the sentence before it, and "worth grabbing at that
+// price" five times in a row is what makes a roundup sound machine-written.
+// Matched on the product's title and category; first match wins, so the more
+// specific patterns are listed first.
+const VO_CLOSERS_BY_KIND = [
+  { re: /robot vacuum|robovac/, noun: "robot vacuum", lines: ["It saves a real chore every week.", "Worth it for pet hair alone."] },
+  { re: /\bvacuum\b|\bmop\b|floor cleaner|carpet cleaner/, noun: "vacuum", lines: ["It saves a real chore every week.", "Worth it for pet hair alone."] },
+  { re: /monitor|ultrawide|\bdisplay\b/, noun: "monitor", lines: ["Perfect for any home office setup.", "It gives you more room to work."] },
+  { re: /webcam|web cam/, noun: "webcam", lines: ["Ideal if your laptop camera disappoints.", "A quick fix for poor meeting video."] },
+  { re: /doorbell/, noun: "video doorbell", lines: ["You will always know who called round.", "A simple way to check on deliveries."] },
+  { re: /security cam|\bcctv\b|surveillance|solocam|\bcamera\b/, noun: "security camera", lines: ["Ideal for watching the front door.", "A simple way to check on deliveries."] },
+  { re: /earbud|\bairpod|\bbuds\b/, noun: "earbuds", plural: true, lines: ["Great for commuting or focused work.", "They block out a noisy office well."] },
+  { re: /headphone|\bheadset\b/, noun: "headphones", plural: true, lines: ["Great for commuting or properly focused work.", "They block out a noisy office well."] },
+  { re: /soundbar|sound bar/, noun: "soundbar", lines: ["A real lift for a living room.", "Good for film nights and streaming."] },
+  { re: /\bspeaker/, noun: "speaker", lines: ["Good for the kitchen or the garden.", "A nice lift for a small room."] },
+  { re: /keyboard/, noun: "keyboard", lines: ["A cheap upgrade you feel every day.", "It makes long work days much easier."] },
+  { re: /\bmouse\b|trackpad/, noun: "mouse", lines: ["A cheap upgrade you feel every day.", "It makes long work days much easier."] },
+  { re: /power bank|powerbank|portable charger/, noun: "power bank", lines: ["Handy to keep in your bag.", "Useful on any day out or trip."] },
+  { re: /charger|charging|\bgan\b|\badapter\b/, noun: "charger", lines: ["Handy to keep in your bag.", "One charger for your phone and laptop."] },
+  { re: /\bcable\b|\bcables\b|\bcord\b|\bhdmi\b/, noun: "cable", lines: ["Worth keeping a spare in the drawer.", "Cheap enough to buy two of them."] },
+  { re: /\brouter\b|\bmesh\b|\bwifi\b|wi-fi|extender/, noun: "router", lines: ["It fixes the dead spot upstairs properly.", "Worth it if your wifi keeps dropping."] },
+  { re: /\bssd\b|\bnvme\b|hard drive|external drive/, noun: "drive", lines: ["Useful the moment your drive fills up.", "Good insurance for photos, files, and backups."] },
+  { re: /microsd|\bsd card\b|flash drive|memory card/, noun: "memory card", lines: ["Useful the moment your storage fills up.", "Good insurance for photos and video."] },
+  { re: /air fryer/, noun: "air fryer", lines: ["It will earn its counter space quickly.", "Good for quick dinners on a weeknight."] },
+  { re: /coffee|espresso|\bnespresso\b/, noun: "coffee machine", lines: ["A genuinely nice upgrade to your mornings.", "It pays for itself against takeaway coffee."] },
+  { re: /instant pot|blender|toaster|\bkettle\b|microwave/, noun: "kitchen gadget", lines: ["It will earn its counter space quickly.", "A nice small upgrade to a kitchen."] },
+  { re: /\bmug\b|tumbler|\bflask\b|water bottle/, noun: "travel mug", lines: ["Good for the commute or the office.", "It keeps a drink hot for hours."] },
+  { re: /purifier/, noun: "air purifier", lines: ["Useful for the months you need it.", "It makes a stuffy room much better."] },
+  { re: /humidifier|dehumidifier|\bheater\b|\bfan\b/, noun: "unit", lines: ["Useful for the months you need it.", "It makes a stuffy room much better."] },
+  { re: /smart plug|smart bulb|smart light|smart home/, noun: "smart light", lines: ["An easy first smart home step.", "Set your lights once and forget them."] },
+  { re: /\balexa\b|echo dot|echo show|\becho\b|google nest/, noun: "smart speaker", lines: ["An easy first smart home step.", "Handy for timers, music, and the weather."] },
+  { re: /projector/, noun: "projector", lines: ["Good for film nights in the garden.", "A big screen without a big television."] },
+  { re: /fire stick|fire tv stick|\broku\b|streaming stick/, noun: "streaming stick", lines: ["It makes an older television feel new.", "Good for film nights and streaming."] },
+  { re: /\btv\b|television|\bqled\b|\boled\b/, noun: "television", lines: ["A solid pick for the living room.", "Good for film nights and streaming."] },
+  { re: /\bkindle\b|e-reader|ereader/, noun: "e-reader", lines: ["Great for reading in bed at night.", "Ideal for travelling light on holiday."] },
+  { re: /\btablet\b|\bipad\b/, noun: "tablet", lines: ["Great for films and reading in bed.", "Ideal for travelling light on holiday."] },
+  { re: /\blaptop\b|chromebook|macbook/, noun: "laptop", lines: ["Plenty of machine for work and study.", "A sensible choice for everyday computing."] },
+  { re: /fitness tracker|fitbit|smartwatch|smart watch|\bwatch\b/, noun: "watch", lines: ["A good nudge if you are training.", "Useful for staying honest about your steps."] },
+  { re: /gaming pc|gaming desktop|desktop pc|desktop computer|\bpc\b.*\b(rtx|ryzen|intel core)|tower pc/, noun: "gaming PC", lines: ["Plenty of power for gaming and streaming.", "A proper upgrade for serious gaming."] },
+  { re: /magsafe|battery pack|portable battery/, noun: "MagSafe battery", lines: ["Handy to snap on for a long day.", "Keeps your phone going on the move."] },
+  { re: /chainsaw|hedge trimmer|leaf blower|lawn mower|strimmer|string trimmer/, noun: "garden tool", lines: ["It makes weekend garden jobs much quicker.", "Good to have before the next big clear-out."] },
+  { re: /sneaker|trainer|running shoe|\bshoes?\b|\bboots?\b|slipper|sandal/, noun: "shoes", plural: true, lines: ["Comfortable enough for all-day wear.", "A solid everyday pair at this price."] },
+  { re: /controller|\bgaming\b|playstation|\bxbox\b|\bconsole\b|nintendo/, noun: "controller", lines: ["A proper treat for evening gaming sessions.", "It fits the setup you already own."] },
+  { re: /standing desk|\bdesk\b/, noun: "desk", lines: ["Your back will notice within a week.", "Good for anyone sitting down all day."] },
+  { re: /office chair|\bchair\b|monitor arm/, noun: "chair", lines: ["Your back will notice within a week.", "Good for anyone sitting down all day."] },
+  { re: /printer|\bink\b|\btoner\b/, noun: "printer", lines: ["Handy for the odd form or ticket.", "One less trip to the print shop."] },
+  { re: /\bdrill\b|screwdriver|\bwrench\b|\bsaw\b|\btool\b|\btools\b/, noun: "tool set", lines: ["Handy for the jobs that keep waiting.", "Good to own before you need it."] },
+  { re: /\blego\b/, noun: "LEGO set", lines: ["An easy win for a birthday list.", "Good for keeping the kids busy indoors."] },
+  { re: /\btoy\b|\btoys\b|\bkids\b|children|\bpuzzle\b/, noun: "toy set", lines: ["An easy win for a birthday list.", "Good for keeping the kids busy indoors."] },
+  { re: /mattress|\bpillow\b|\bduvet\b|bedding|\bblanket\b|\bsheets\b/, noun: "bedding", lines: ["It makes a real difference to sleep.", "Worth it for the spare room too."] },
+  { re: /backpack|luggage|suitcase|\bbag\b/, noun: "bag", lines: ["Good for travel and the daily commute.", "Sturdy enough for everyday use."] }
+];
+// Umbrella categories that say nothing when spoken aloud — a product falling
+// through to one of these is better off with no noun than with "electronics".
+const CAT_NOUN_SKIP = ["electronics", "home", "kitchen", "general", "other", "misc", "deals", "tech", "gadgets", "accessories", "amazon", "featured"];
+// when nothing matches, still say something about using it rather than buying it
+const VO_CLOSERS_GENERIC = [
+  "A genuinely useful bit of kit.",
+  "A small upgrade you notice every day.",
+  "It does its one job well.",
+  "Worth it if you need one."
+];
+// Wardrobe has to be stated as exact garments and colours, so the shuffle picks
+// from written-out outfits rather than assembling one from parts. All sit in the
+// character sheet's casual-to-professional, relatable range.
+const WARDROBES = [
+  "tailored dark navy trousers, fitted warm-cream knit sweater, thin gold necklace and a slim gold watch",
+  "straight-leg mid-wash jeans, fitted rust-terracotta fine-knit jumper, small gold hoop earrings",
+  "charcoal tailored trousers, crisp white cotton shirt worn open at the collar, thin gold necklace",
+  "soft oatmeal wide-leg trousers, fitted sage-green long-sleeve top, slim gold watch",
+  "dark olive chinos, fitted cream ribbed long-sleeve top, thin gold chain and small studs",
+  "black tapered trousers, fitted dusty-rose knit sweater, slim gold watch and one thin bangle",
+  "indigo straight-leg jeans, fitted soft-camel roll-neck jumper, small gold hoop earrings",
+  "stone-grey tailored trousers, fitted deep-teal fine-knit top, thin gold necklace"
+];
+// The guidelines as editable text rather than a fixed structure: the house rules
+// change, and a rule that cannot be corrected on the page gets ignored instead.
+// "## " opens a heading; every other non-empty line is one rule. The {TOKENS}
+// are substituted at display time so an edited copy still reflects the live
+// shoot setup instead of freezing yesterday's numbers.
+const GUIDE_DEFAULT = [
+  "## Video prompt \u00b7 non-negotiable",
+  "Exact location description, and one location type for the whole video \u2014 if it starts in a home, every clip stays in that home.",
+  "Format stated as 9:16 vertical, 360p. Duration stated in seconds, never over 10 per clip.",
+  "Talent block identical in every clip: hair length and colour, makeup colours, skin tone, age, exact garments and colours, energy.",
+  "Action timed to the second \u2014 who is where at 0\u20132 sec, what moves, what exits.",
+  "Dialogue word for word. No paraphrase, no summary.",
+  "Camera framing varies between back-to-back clips \u2014 waist-up then full body, or a tighter push. Optional only when a voiceover separates them.",
+  "Lighting named and held constant across clips.",
+  "",
+  "## Voiceover prompt \u00b7 non-negotiable",
+  "Voice type, tone, pace in words per minute, and accent, all stated explicitly.",
+  "Script word for word, with emphasis marked in CAPITALS and pauses as [pause: 0.3 sec].",
+  "Audio spec: clear, professional, no background noise, no reverb. File format and bitrate named.",
+  "Duration matched to the clip it plays under, and stated as a hard ceiling.",
+  "Context: the exact product, its price, the audience, and the on-camera delivery the read has to match.",
+  "",
+  "## How this page applies them",
+  "Location is a fixed list, not a free field, so the wording never drifts between clips.",
+  "Hair length, makeup palette, skin tone and age come from Anita's character sheet and cannot be edited here \u2014 only styling and wardrobe vary.",
+  "The closing clip is generated from reference images, so its prompt asks for a match to the second reference image rather than restating the look in words.",
+  "Voiceover length is enforced as a word count: {WORDCAP} words is the ceiling at {VOCAP} seconds and {WPM} words per minute.",
+  "Clip length is clamped to 6\u201310 seconds; anything outside that is flagged before you can copy."
+].join("\n");
+
+const HELLOS = [
+  "Hey, it is Anita here.",
+  "Hey, Anita here.",
+  "Hi, it is Anita, back again."
+];
+// a hand-off line, so the clip ends on momentum rather than on a list
+const OFFS = ["Let us check them out.", "Let us dive in.", "Let us take a look.", "Let us get into it."];
+const OFFS_ONE = ["Let us check it out.", "Let us dive in.", "Let us take a look.", "Let us get into it."];
+// index-matched singular set, so a randomized outroPick still resolves to the
+// same variant when only one product is selected
+const OUTRO_LINES_ONE = [
+  "That deal is in the link in our bio and on mistrydeals.com. I will see you again soon.",
+  "It is linked in our bio and over on mistrydeals.com. See you again tomorrow.",
+  "You will find it through the link in our bio, or at mistrydeals.com. See you soon.",
+  "The link is in our bio and on mistrydeals.com. Thanks for watching, and see you tomorrow."
+];
+const OUTRO_LINES = [
+  "All of those deals are in the link in our bio and on mistrydeals.com. I will see you again soon.",
+  "Every one of those is linked in our bio and over on mistrydeals.com. See you again tomorrow.",
+  "You will find all of them through the link in our bio, or at mistrydeals.com. See you soon.",
+  "Links to everything are in our bio and on mistrydeals.com. Thanks for watching, and see you tomorrow."
+];
+const PERSONA_DEFAULT = {
+  loc: "home-office",
+  hair: "loose waves",
+  wardrobe: "tailored dark navy trousers, fitted warm-cream knit sweater, thin gold necklace and a slim gold watch",
+  clip: 10, voCap: 10, intro: "", outro: "", introPick: null, outroPick: null
+};
+
 class Component extends DCLogic {
   state = {
     token: null, user: null, refresh: null, email: "", password: "", authError: "", signingIn: false,
@@ -291,7 +876,10 @@ class Component extends DCLogic {
     products: null, query: "", flag: "live", limit: 40, total: null, pError: "",
     slides: [], lines: {}, dragFrom: null, creativeState: {},
     igQueue: null, queueing: false, queueError: "", queueDone: "", overlays: null, rendererUp: undefined, rendered: {}, previewing: false, formatIgnored: false, svgReturned: false,
-    schedCols: null, captionCol: undefined
+    schedCols: null, captionCol: undefined,
+    mode: "video", scripts: {}, stills: {}, stilling: false, vError: "", vDone: "", vSaving: false,
+    guidesOpen: false, histOpen: false, history: null, videoTableUp: undefined,
+    capTab: "ig", guidesEditing: false, toast: "", cFmt: "portrait", cExporting: false, cQueueing: false, cQueueError: "", cQueueDone: ""
   };
 
   componentWillUnmount() { window.removeEventListener("resize", this.onResize); }
@@ -442,7 +1030,7 @@ class Component extends DCLogic {
     this.setState({ token: null, user: null, refresh: null, products: null, password: "", verifying: false });
   }
 
-  loadAll() { this.loadProducts(); this.loadIgQueue(); this.probeSchedule(); this.loadOverlayIndex(); this.probeRenderer(); }
+  loadAll() { this.loadProducts(); this.loadIgQueue(); this.probeSchedule(); this.loadOverlayIndex(); this.probeRenderer(); this.loadHistory(); }
 
   // Whether carousel-render is deployed decides what the warnings should say:
   // with it up, no slide needs a pre-existing overlay. An empty productIds is a
@@ -495,8 +1083,16 @@ class Component extends DCLogic {
     const parts = [];
     const q = (this.state.query || "").trim();
     if (q) {
-      const safe = "*" + q.replace(/[(),]/g, " ") + "*";
-      parts.push("or=(title.ilike." + safe + ",display_title.ilike." + safe + ",asin.ilike." + safe + ")");
+      // every word has to appear somewhere in the row, in any order — one
+      // substring meant the words had to be typed consecutively, so "airpods 3"
+      // missed "AirPods Pro 3"
+      const toks = q.replace(/[(),*]/g, " ").split(/\s+/).filter(Boolean);
+      if (toks.length) {
+        const cols = ["title","display_title","asin"];
+        parts.push("and=(" + toks.map(t =>
+          "or(" + cols.map(c => c + ".ilike." + encodeURIComponent("*" + t + "*")).join(",") + ")"
+        ).join(",") + ")");
+      }
     }
     const f = this.state.flag;
     if (f === "branded") {
@@ -505,6 +1101,7 @@ class Component extends DCLogic {
       parts.push("id=in.(" + (ids.length ? ids.join(",") : "00000000-0000-0000-0000-000000000000") + ")");
     }
     if (f === "live") parts.push("is_active=eq.true");
+    if (f === "recent") parts.push("is_active=eq.true", "last_price_sync=gte." + new Date(Date.now() - 12 * 3600e3).toISOString());
     if (f === "top") parts.push("is_active=eq.true", "is_top_deal=eq.true");
     if (f === "coupon") parts.push("is_active=eq.true", "scraped_coupon_price=not.is.null");
     if (f === "discount") parts.push("is_active=eq.true", "original_price=not.is.null");
@@ -558,6 +1155,60 @@ class Component extends DCLogic {
     const now = this.priceOf(p);
     if (!was || now == null || was <= now) return null;
     return Math.round((1 - now / was) * 100);
+  }
+  // Column widths are the user's, not mine — a long price or a "yesterday" reads
+  // differently per account, so the four numeric tracks are draggable and the
+  // Product column absorbs the difference. Persisted per browser.
+  colMin(key) { return { now: 74, was: 70, off: 58, age: 78 }[key] || 58; }
+  colW() {
+    if (!this._colW) {
+      let saved = null;
+      try { saved = JSON.parse(localStorage.getItem("md-pick-cols") || "null"); } catch (e) {}
+      const w = Object.assign({ now: 82, was: 78, off: 70, age: 92 }, saved || {});
+      // a width saved under an older, smaller floor must be re-clamped on read,
+      // or the stored value outlives the fix
+      Object.keys(w).forEach(k => { w[k] = Math.max(this.colMin(k), Math.min(220, Math.round(w[k]))); });
+      this._colW = w;
+    }
+    return this._colW;
+  }
+  setColW(key, px) {
+    const w = this.colW();
+    w[key] = Math.max(this.colMin(key), Math.min(220, Math.round(px)));
+    try { localStorage.setItem("md-pick-cols", JSON.stringify(w)); } catch (e) {}
+    this.forceUpdate();
+  }
+  startColDrag(key, e) {
+    e.preventDefault();
+    const startX = e.clientX;
+    const startW = this.colW()[key];
+    // dragging the left edge widens leftward, which is what the grip position implies
+    const move = ev => this.setColW(key, startW - (ev.clientX - startX));
+    const up = () => {
+      window.removeEventListener("mousemove", move);
+      window.removeEventListener("mouseup", up);
+      document.body.style.cursor = "";
+    };
+    document.body.style.cursor = "col-resize";
+    window.addEventListener("mousemove", move);
+    window.addEventListener("mouseup", up);
+  }
+  resetColW() {
+    this._colW = null;
+    try { localStorage.removeItem("md-pick-cols"); } catch (e) {}
+    this.forceUpdate();
+  }
+  priceAge(p) {
+    const t = Date.parse(p.last_price_sync || p.price_updated_at || p.synced_at ||
+      p.updated_at || p.created_at || "");
+    // an unknown timestamp has to look different from a bug
+    if (!t) return "no date";
+    const mins = Math.round((Date.now() - t) / 60000);
+    if (mins < 60) return mins <= 1 ? "just now" : mins + "m ago";
+    const hrs = Math.round(mins / 60);
+    if (hrs < 24) return hrs + "h ago";
+    const days = Math.round(hrs / 24);
+    return days === 1 ? "yesterday" : days + "d ago";
   }
   money(v) { return v == null ? "" : "$" + Number(v).toFixed(2); }
 
@@ -669,21 +1320,148 @@ class Component extends DCLogic {
     this.setState({ slides: slides });
   }
 
+  // same 2026 rules as the reel caption: keyword hook inside the 125-character
+  // fold with no emoji, then value, one specific CTA, and five tags at most
   buildCaption() {
     const slides = this.state.slides || [];
     if (!slides.length) return "";
-    const lines = [];
-    lines.push(slides.length + " deals worth a look today");
-    lines.push("");
+    const lines = [this.reelHook(), ""];
     slides.forEach((p, i) => {
       const line = (this.state.lines[p.id] || "").trim();
-      lines.push((i + 1) + " \u00b7 " + this.titleOf(p) + (line ? " \u2014 " + line : ""));
+      lines.push((i + 1) + ". " + this.titleOf(p) + (line ? " \u2014 " + line : ""));
     });
     lines.push("");
-    lines.push("Swipe through. Every price is measured against what the product actually sold for, not the list price.");
-    lines.push("Links in bio \u00b7 mistrydeals.com");
+    lines.push("Every discount here is measured against what the product has actually been selling for, not the list price.");
     lines.push("");
-    lines.push("#mistrydeals #amazondeals #dealsoftheday #pricedrop");
+    lines.push("\u{1F4AC} Which one would you actually buy?");
+    lines.push("\u{1F516} Save this if you are shopping this week \u2014 prices move fast.");
+    lines.push("\u{1F517} Links in bio \u00b7 mistrydeals.com");
+    lines.push("");
+    lines.push(this.reelTags());
+    return lines.join("\n");
+  }
+
+  // Facebook is a different surface, not the same caption reflowed: the feed
+  // shows a headline, links are clickable so the URL replaces "link in bio",
+  // and hashtag stacks read as spam there — so the copy is composed separately
+  // rather than shared with Instagram.
+  // Written to Instagram's 2026 rules rather than as a description:
+  // - the first line is the whole hook and must land inside 125 characters,
+  //   since that is all that shows before "...more" — and carries no emoji,
+  //   which cost readability exactly where it matters most
+  // - the caption is read as searchable text now, so the hook names the product
+  //   kinds in plain language instead of relying on tags
+  // - Hook / value / one specific CTA, broken up with white space
+  // - three emoji, used as anchors before the CTA lines, never mid-sentence
+  //   (screen readers read them aloud)
+  // - five hashtags maximum, the cap since December 2025, niche before generic
+  reelHook() {
+    const slides = this.state.slides || [];
+    const n = slides.length;
+    const kinds = this.kindList();
+    const d = " Amazon " + this.dealWord(n) + " worth buying today";
+    const fallback = n + d + ", at " + (n === 1 ? "its" : "their") + " real lowest price" + (n === 1 ? "" : "s") + ".";
+    // naming one kind out of five reads as if the post is about that one thing,
+    // so kinds are only listed when at least half the products have one
+    const named = slides.filter(p => this.kindFor(p) || this.catNoun(p)).length;
+    if (!kinds.length || named * 2 < n) return fallback;
+    const long = n + d + ": " + this.joinList(kinds.slice(0, 3)) +
+      (kinds.length > 3 ? ", plus more" : "") + ".";
+    // 125 characters is the fold; anything past it is invisible on first view
+    return long.length <= 125 ? long : fallback;
+  }
+  dealWord(n) { return n === 1 ? "deal" : "deals"; }
+  reelTags() {
+    const map = { "security camera": "homesecurity", "robot vacuum": "robotvacuum", "air fryer": "airfryer",
+      "coffee machine": "coffeelover", earbuds: "earbuds", headphones: "headphones", monitor: "desksetup",
+      desk: "desksetup", chair: "homeoffice", laptop: "techdeals", tablet: "techdeals", television: "hometheater",
+      "LEGO set": "legofan", "toy set": "kidsgifts",
+      soundbar: "hometheater", projector: "hometheater", charger: "techdeals", cable: "techdeals",
+      router: "smarthome", "smart light": "smarthome", "smart speaker": "smarthome", set: "legofan",
+      bedding: "homefinds", bag: "travelgear", printer: "homeoffice", "tool set": "diyhome" };
+    const tags = ["mistrydeals", "amazonfinds"];
+    this.kindList().forEach(k => {
+      const noun = k.replace(/^(a|an)\s+/, "");
+      const t = map[noun] || noun.replace(/[^a-z0-9]+/gi, "");
+      if (t && tags.indexOf(t) === -1 && tags.length < 5) tags.push(t);
+    });
+    if (tags.length < 5) tags.push("dealsoftheday");
+    return tags.slice(0, 5).map(t => "#" + t).join(" ");
+  }
+  reelCaption() {
+    const slides = this.state.slides || [];
+    if (!slides.length) return "";
+    const lines = [this.reelHook(), ""];
+    slides.forEach((p, i) => {
+      const now = this.priceOf(p);
+      const pct = this.pctOf(p);
+      const rawWas = parseFloat(p.original_price);
+      const was = !isNaN(rawWas) && rawWas > 0 && (now == null || rawWas > now) ? rawWas : null;
+      const tail = [was != null ? "was " + this.money(was) : "", pct ? pct + "% off" : ""].filter(Boolean).join(", ");
+      lines.push((i + 1) + ". " + this.titleOf(p) + (now != null ? " \u2014 " + this.money(now) : "") + (tail ? " (" + tail + ")" : ""));
+    });
+    lines.push("");
+    lines.push("Every discount here is measured against what the product has actually been selling for, not the list price.");
+    lines.push("");
+    lines.push("\u{1F4AC} Which one would you actually buy?");
+    lines.push("\u{1F516} Save this if you are shopping this week \u2014 prices move fast.");
+    lines.push("\u{1F517} Links in bio \u00b7 mistrydeals.com");
+    lines.push("");
+    lines.push(this.reelTags());
+    return lines.join("\n");
+  }
+  fbReelCaption() {
+    const slides = this.state.slides || [];
+    if (!slides.length) return "";
+    const lines = [];
+    lines.push("Today's round-up in one short video \u2014 " + slides.length + " Amazon " + this.dealWord(slides.length) +
+      " we think " + (slides.length === 1 ? "is" : "are") + " actually worth it.");
+    lines.push("");
+    slides.forEach(p => {
+      const now = this.priceOf(p);
+      const pct = this.pctOf(p);
+      const bits = [now != null ? this.money(now) : "", pct ? pct + "% off" : ""].filter(Boolean).join(", ");
+      lines.push("\u2022 " + this.titleOf(p) + (bits ? " \u2014 " + bits : ""));
+    });
+    lines.push("");
+    lines.push("Every discount is measured against what the product has actually been selling for, not the list price.");
+    lines.push("");
+    lines.push((slides.length === 1 ? "Link: " : "Full list and links: ") + "https://mistrydeals.com");
+    return lines.join("\n");
+  }
+
+  fbTitle() {
+    const slides = this.state.slides || [];
+    if (!slides.length) return "";
+    const pcts = slides.map(p => this.pctOf(p)).filter(Boolean);
+    const top = pcts.length ? Math.max.apply(null, pcts) : 0;
+    const n = slides.length;
+    // headline is truncated hard by Facebook around 60 characters, so the deal
+    // count and the strongest number come first and nothing else is promised
+    return top >= 20
+      ? n + " Amazon " + this.dealWord(n) + " today — up to " + top + "% off"
+      : n + " Amazon " + this.dealWord(n) + " worth a look today";
+  }
+  fbCaption() {
+    const slides = this.state.slides || [];
+    if (!slides.length) return "";
+    const lines = [];
+    lines.push("Today's round-up — " + slides.length + " deals we think are actually worth it.");
+    lines.push("");
+    slides.forEach(p => {
+      const written = (this.state.lines[p.id] || "").trim();
+      // the slide line is seeded with the same price and discount this bullet
+      // already prints, so it is only appended once it is genuinely hand-written
+      const line = written && written !== this.defaultLine(p).trim() ? written : "";
+      const now = this.priceOf(p);
+      const pct = this.pctOf(p);
+      const bits = [now != null ? this.money(now) : "", pct ? pct + "% off" : ""].filter(Boolean).join(", ");
+      lines.push("• " + this.titleOf(p) + (bits ? " — " + bits : "") + (line ? ". " + line : ""));
+    });
+    lines.push("");
+    lines.push("Every discount is measured against what the product has actually been selling for, not the list price.");
+    lines.push("");
+    lines.push((slides.length === 1 ? "Link: " : "Full list and links: ") + "https://mistrydeals.com");
     return lines.join("\n");
   }
 
@@ -859,7 +1637,7 @@ class Component extends DCLogic {
     const local = {
       catalogue: "MistryDeals Admin v2.dc.html",
       dealqueue: "MistryDeals Deal Queue.dc.html",
-      carousel: "MistryDeals Carousel.dc.html",
+      carousel: "MistryDeals Social.dc.html",
       brands: "MistryDeals Deal Queue.dc.html#brands",
       scrapes: "MistryDeals Deal Queue.dc.html#scrapes",
       reddit: "MistryDeals Reddit Poster.dc.html",
@@ -868,11 +1646,871 @@ class Component extends DCLogic {
     return local[page] || local.catalogue;
   }
 
+  // ---- video prompts -------------------------------------------------------
+  // Nothing here calls Flow or AI Studio. The whole job is to emit prompts that
+  // already satisfy the house guidelines, so a paste needs no editing.
+
+  persona() {
+    if (!this._persona) {
+      let saved = null;
+      try { saved = JSON.parse(localStorage.getItem("md-video-persona-v3") || "null"); } catch (e) {}
+      this._persona = Object.assign({}, PERSONA_DEFAULT, saved || {});
+    }
+    return this._persona;
+  }
+  setPersona(patch) {
+    this._persona = Object.assign({}, this.persona(), patch);
+    try { localStorage.setItem("md-video-persona-v3", JSON.stringify(this._persona)); } catch (e) {}
+    this.setState({ vDone: "", vError: "" });
+  }
+  // One button rather than three: the guidelines tie location, hair and wardrobe
+  // together as the continuity set, so they are re-rolled as a set. Each field
+  // avoids repeating its current value so a press always visibly changes.
+  pickOther(list, current) {
+    const opts = list.filter(v => v !== current);
+    return opts.length ? opts[Math.floor(Math.random() * opts.length)] : current;
+  }
+  randomizeField(key) {
+    const p = this.persona();
+    if (key === "loc") this.setPersona({ loc: this.pickOther(VIDEO_LOCATIONS.map(l => l.value), p.loc) });
+    else if (key === "hair") this.setPersona({ hair: this.pickOther(HAIR_STYLES, p.hair) });
+    else if (key === "wardrobe") this.setPersona({ wardrobe: this.pickOther(WARDROBES, (p.wardrobe || "").trim()) });
+    else if (key === "intro") {
+      const cur = p.introPick || {};
+      const hi = this.pickOther([0, 1, 2], cur.hi);
+      const oi = this.pickOther([0, 1, 2, 3], cur.oi);
+      // the free-text field stays the manual override, so a randomize clears it
+      this.setPersona({ introPick: { hi: hi, oi: oi }, intro: "" });
+    }
+    else if (key === "outro") this.setPersona({ outroPick: this.pickOther([0, 1, 2, 3], p.outroPick), outro: "" });
+    this.forceUpdate();
+  }
+  shufflePersona() {
+    const p = this.persona();
+    this.setPersona({
+      loc: this.pickOther(VIDEO_LOCATIONS.map(l => l.value), p.loc),
+      hair: this.pickOther(HAIR_STYLES, p.hair),
+      wardrobe: this.pickOther(WARDROBES, (p.wardrobe || "").trim())
+    });
+    this.forceUpdate();
+  }
+
+  // ---- prompt guidelines ---------------------------------------------------
+  guideText() {
+    if (this._guides == null) {
+      let saved = null;
+      try { saved = localStorage.getItem("md-video-guides"); } catch (e) {}
+      this._guides = saved != null && saved.trim() !== "" ? saved : GUIDE_DEFAULT;
+    }
+    return this._guides;
+  }
+  setGuideText(t) {
+    this._guides = t;
+    try { localStorage.setItem("md-video-guides", t); } catch (e) {}
+    this.forceUpdate();
+  }
+  resetGuides() {
+    this._guides = GUIDE_DEFAULT;
+    try { localStorage.removeItem("md-video-guides"); } catch (e) {}
+    this.forceUpdate();
+  }
+  guidesCustom() { return this.guideText().trim() !== GUIDE_DEFAULT.trim(); }
+  parseGuides() {
+    const p = this.persona();
+    const fill = s => String(s)
+      .split("{WORDCAP}").join(this.wordCap())
+      .split("{VOCAP}").join(p.voCap)
+      .split("{WPM}").join(this.wpm())
+      .split("{CLIP}").join(this.clipSecs());
+    const out = [];
+    this.guideText().split(/\r?\n/).forEach(raw => {
+      const line = raw.trim();
+      if (!line) return;
+      if (line.indexOf("##") === 0) out.push({ h: fill(line.replace(/^#+\s*/, "")), items: [] });
+      else {
+        // a rule written before any heading still has to show up
+        if (!out.length) out.push({ h: "Guidelines", items: [] });
+        out[out.length - 1].items.push(fill(line.replace(/^[-*\u2022]\s*/, "")));
+      }
+    });
+    return out;
+  }
+
+  videoLoc() {
+    const want = this.persona().loc;
+    return VIDEO_LOCATIONS.filter(l => l.value === want)[0] || VIDEO_LOCATIONS[0];
+  }
+  wpm() {
+    const v = Number(this.props.voiceWpm != null ? this.props.voiceWpm : 135);
+    return Math.max(100, Math.min(180, isNaN(v) ? 135 : v));
+  }
+  clipSecs() { return Math.max(6, Math.min(10, Number(this.persona().clip) || 10)); }
+  words(t) { return String(t || "").trim().split(/\s+/).filter(Boolean).length; }
+  scriptSecs(t) { return this.words(t) / (this.wpm() / 60); }
+  // the ceiling that keeps a segment under the voiceover cap at the set pace
+  wordCap() { return Math.floor(Number(this.persona().voCap || 10) * this.wpm() / 60); }
+
+  // Anita's fixed description. Length, colour, makeup palette, skin tone and age
+  // come from the character sheet and never vary; styling and wardrobe do.
+  // The closing clip is generated against reference images rather than against
+  // the opening prompt, so it asks for a match to the image instead of
+  // restating the continuity in words.
+  talentBlock(open) {
+    const p = this.persona();
+    return [
+      open
+        ? "TALENT — Anita Deol:"
+        : "TALENT — Anita Deol (match appearance and clothing to second reference image):",
+      "- Hair: shoulder-length caramel-highlighted, styled in " + p.hair,
+      "- Makeup: defined brows, subtle taupe eyeshadow, warm neutral lip tone",
+      "- Skin tone: medium",
+      "- Age appearance: 30s",
+      "- Clothing: " + ((p.wardrobe || "").trim() || "[WARDROBE NOT SET — fill this in before generating]"),
+      "- Energy: confident, professional, knowledgeable, conversational"
+    ].join("\n");
+  }
+
+  // "a lego set, a security camera and a charging cable" — the kinds already
+  // derived for the voiceovers, reused so the opener tells a viewer what is
+  // coming instead of only how many.
+  kindList() {
+    const out = [];
+    (this.state.slides || []).forEach(p => {
+      const k = this.kindFor(p);
+      const noun = k ? k.noun : this.catNoun(p);
+      if (!noun) return;
+      const article = (k && k.plural) || /s$/.test(noun) ? "" : (/^[aeiou]/.test(noun) ? "an " : "a ");
+      const phrase = article + noun;
+      if (out.indexOf(phrase) === -1) out.push(phrase);
+    });
+    return out;
+  }
+  unnamedCount() {
+    return (this.state.slides || []).filter(p => !(this.kindFor(p) ? this.kindFor(p).noun : this.catNoun(p))).length;
+  }
+  joinList(items) {
+    if (items.length < 2) return items[0] || "";
+    return items.slice(0, -1).join(", ") + " and " + items[items.length - 1];
+  }
+  // every hello x hand-off pairing, so a per-field randomize has real choices
+  // and the default stays the day-rotated one
+  composeIntro(hi, oi) {
+    const n = (this.state.slides || []).length;
+    const hello = HELLOS[hi % HELLOS.length];
+    const off = " " + (n === 1 ? OFFS_ONE : OFFS)[oi % OFFS.length];
+    const kinds = this.kindList();
+    const count = ["no", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine", "ten"][n] || String(n);
+    const left = this.unnamedCount();
+    return (kinds.length
+      ? hello + " Today we have " + count + " " + this.dealWord(n) + ": " + this.joinList(kinds) + "." + (left ? " Plus a few more." : "")
+      : hello + " I am back with " + count + " Amazon " + this.dealWord(n) + " actually worth your money.") + off;
+  }
+  introLine() {
+    const p = this.persona();
+    if ((p.intro || "").trim()) return p.intro.trim();
+    const pick = p.introPick;
+    if (pick && pick.hi != null) return this.composeIntro(pick.hi, pick.oi);
+    const d = new Date().getDate();
+    return this.composeIntro(d, d);
+  }
+  outroLine() {
+    const p = this.persona();
+    if ((p.outro || "").trim()) return p.outro.trim();
+    // the closer is the only moment she is not reading numbers, so it is written
+    // to sound like a person signing off rather than a call to action
+    const set = (this.state.slides || []).length === 1 ? OUTRO_LINES_ONE : OUTRO_LINES;
+    if (p.outroPick != null) return set[p.outroPick % set.length];
+    return set[new Date().getDate() % set.length];
+  }
+
+  introSecs() {
+    const need = Math.ceil(this.words(this.introLine()) / this.wpm() * 60) + 1;
+    return Math.max(this.clipSecs(), Math.min(20, need));
+  }
+  clipPrompt(which) {
+    const open = which === "open";
+    const secs = open ? this.introSecs() : this.clipSecs();
+    const loc = this.videoLoc();
+    const line = open ? this.introLine() : this.outroLine();
+    const frame = open
+      ? "medium, waist-up, lens at chest height, static."
+      : "full body, wide, lens at chest height, static.";
+    const action = open
+      ? ["- 0–0.5 sec: already centre-frame, facing camera, slight smile, settled",
+         "- 0.5–" + (secs - 1) + " sec: speaks straight to camera, one natural right-hand gesture on the number",
+         "- " + (secs - 1) + "–" + secs + " sec: holds frame, small nod. Does not walk out."]
+      : ["- 0–0.5 sec: centre-frame, facing camera, relaxed",
+         "- 0.5–" + (secs - 1) + " sec: speaks straight to camera, one open-handed gesture, gestures down toward the bio link on the final clause",
+         "- " + (secs - 1) + "–" + secs + " sec: holds, smiles, small nod"];
+    return [
+      "FORMAT: 9:16 vertical, 360p",
+      "DURATION: " + secs + " seconds" + (open ? " — this clip runs long on purpose, to name the whole line-up" : " (hard maximum 10)"),
+      "",
+      open
+        ? "LOCATION: " + loc.desc
+        : "LOCATION: " + loc.desc + "\nLOCATION AESTHETIC: match location aesthetic to second reference image.",
+      "",
+      this.talentBlock(open),
+      "",
+      (open && this.kindList().length
+        ? "PRODUCTS IN THIS VIDEO (context only — she says only what the dialogue says): " + this.joinList(this.kindList()) + ".\n\n"
+        : "") + "CAMERA FRAMING: " + frame,
+      "",
+      "ACTION:",
+      action.join("\n"),
+      "",
+      "DIALOGUE (word for word, no paraphrase):",
+      "\"" + line + "\"",
+      "",
+      "LIGHTING: natural window light from camera left plus a soft studio fill" + (open ? "." : " — match the lighting of the second reference image."),
+      "CLOSING NOTE: " + (open
+        ? "warm, assured, unhurried — she is pleased to be sharing this, not selling it."
+        : "friendly sign-off, no hard sell, no raised voice.") +
+        " Clean audio, no background music, no on-screen text, no captions burned in."
+    ].join("\n");
+  }
+
+  // The name as a person would SAY it. Amazon titles are spec strings: a listener
+  // hears "Tapo 2K Dual Lens" and still has no idea what the thing is. So the
+  // spoken name is the brand and model words plus the CATEGORY NOUN from the
+  // matched kind — "Tapo 2K security camera" — and spec tokens, slashes and
+  // severed prepositional phrases are dropped, since a voice reads them
+  // literally ("Pan/Tilt" becomes "pan slash tilt").
+  kindFor(p) {
+    const hay = (this.titleOf(p) + " " + (p.catRaw || "")).toLowerCase();
+    for (const k of VO_CLOSERS_BY_KIND) if (k.re.test(hay)) return k;
+    return null;
+  }
+  // when no kind matches, the product's own category still names the thing
+  // better than silence does
+  catNoun(p) {
+    const cat = String(p.catRaw || "").toLowerCase().replace(/[^a-z\s]/g, " ").trim();
+    if (!cat) return "";
+    const last = cat.split(/\s+/).pop();
+    if (!last || last.length < 3 || CAT_NOUN_SKIP.indexOf(last) !== -1) return "";
+    return last;
+  }
+  shortName(p) {
+    const STOP = ["with", "and", "for", "in", "of", "to", "the", "a", "an", "plus", "or", "by", "w/"];
+    const first = this.titleOf(p).split(/[,\u2013\u2014|(\[]/)[0].trim();
+    let words = first.replace(/(\d)\s*[\u2033\u201d"]/g, "$1 inch").split(/\s+/).filter(Boolean);
+    const cutAt = words.findIndex(w => STOP.indexOf(w.toLowerCase().replace(/[^a-z\/]/g, "")) !== -1);
+    if (cutAt > 1) words = words.slice(0, cutAt);
+    const spec = w => w.indexOf("/") !== -1 || /^[A-Z0-9][A-Z0-9\-]*$/.test(w);
+
+    const kind = this.kindFor(p);
+    const noun = (kind ? kind.noun : this.catNoun(p)).split(" ").filter(Boolean);
+    const lead = Math.max(2, 4 - noun.length);
+    let head = words.slice(0, lead);
+    while (head.length > 2 && spec(head[head.length - 1])) head.pop();
+    while (head.length > 1 && STOP.indexOf(head[head.length - 1].toLowerCase()) !== -1) head.pop();
+
+    const said = head.join(" ").toLowerCase();
+    const already = noun.length && said.indexOf(noun[noun.length - 1].toLowerCase()) !== -1;
+    return (already || !noun.length ? head : head.concat(noun)).join(" ");
+  }
+  // "earbuds is down to" is the kind of thing a voice reads straight out
+  spokenPlural(name) {
+    const last = String(name).split(/\s+/).pop().toLowerCase();
+    return /s$/.test(last) && !/(ss|us|is)$/.test(last);
+  }
+  // Spoken money is written out in words, because a voice model reading "$150"
+  // is at the mercy of its own number handling — "one hundred and fifty dollars"
+  // is unambiguous. Rounded to whole dollars: "and seventy-five cents" costs a
+  // second of an eight-second segment and is harder to hear than the round figure.
+  numberWords(n) {
+    const ones = ["zero", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine", "ten",
+      "eleven", "twelve", "thirteen", "fourteen", "fifteen", "sixteen", "seventeen", "eighteen", "nineteen"];
+    const tens = ["", "", "twenty", "thirty", "forty", "fifty", "sixty", "seventy", "eighty", "ninety"];
+    const under100 = v => v < 20 ? ones[v] : tens[Math.floor(v / 10)] + (v % 10 ? "-" + ones[v % 10] : "");
+    const under1000 = v => {
+      if (v < 100) return under100(v);
+      const h = ones[Math.floor(v / 100)] + " hundred";
+      return v % 100 ? h + " and " + under100(v % 100) : h;
+    };
+    n = Math.round(Number(n));
+    if (!isFinite(n) || n < 0) return "";
+    if (n < 1000) return under1000(n);
+    const th = Math.floor(n / 1000);
+    const rest = n % 1000;
+    const head = under1000(th) + " thousand";
+    if (!rest) return head;
+    // "two thousand and fifty", "two thousand one hundred and fifty"
+    return head + (rest < 100 ? " and " : " ") + under1000(rest);
+  }
+  spokenMoney(v) {
+    if (v == null) return "";
+    const n = Math.round(Number(v));
+    return this.numberWords(n) + (n === 1 ? " dollar" : " dollars");
+  }
+  defaultScript(p, i) {
+    const now = this.priceOf(p);
+    const rawWas = parseFloat(p.original_price);
+    // the discount is spoken as the two prices, not a percentage — a shopper
+    // judges "down to $63 from $149" faster than "58 percent off"
+    const was = !isNaN(rawWas) && rawWas > 0 && (now == null || rawWas > now) ? rawWas : null;
+    const name = this.shortName(p);
+    const plural = this.spokenPlural(name);
+    const verb = plural ? " are down to " : " is down to ";
+    // sequence adverbs, so a listener knows where they are in the run-up
+    const total = (this.state.slides || []).length;
+    const mids = ["Next, ", "After that, ", "Then, "];
+    const adverb = total < 2 ? ""
+      : i === 0 ? "First up, "
+      : i === total - 1 ? (i % 2 ? "Lastly, " : "Finally, ")
+      : mids[(i - 1) % mids.length];
+    const pronoun = plural ? "these " : "this ";
+    const lead = adverb + (adverb ? pronoun : pronoun.charAt(0).toUpperCase() + pronoun.slice(1)) + name + verb;
+    const closer = this.closerFor(p, i);
+    const cap = this.wordCap();
+    const nowWords = now != null ? this.spokenMoney(now) : (plural ? "their" : "its") + " lowest price yet";
+    const full = lead + nowWords + (was != null ? " from " + this.numberWords(was) + " dollars" : "") + ". " + closer;
+    if (was == null || this.words(full) <= cap) return full;
+    // the previous price is the first thing to go when the words do not fit
+    const short = lead + nowWords + ". " + closer;
+    if (this.words(short) <= cap) return short;
+    return lead + nowWords + ".";
+  }
+  closerFor(p, i) {
+    const k = this.kindFor(p);
+    return k ? k.lines[i % k.lines.length] : VO_CLOSERS_GENERIC[i % VO_CLOSERS_GENERIC.length];
+  }
+  scriptOf(p, i) {
+    const v = (this.state.scripts || {})[p.id];
+    return v != null ? v : this.defaultScript(p, i);
+  }
+
+  voPrompt(p, i, n) {
+    const cap = this.persona().voCap;
+    const script = this.scriptOf(p, i);
+    const rawWas = parseFloat(p.original_price);
+    const nowCtx = this.priceOf(p);
+    const wasCtx = !isNaN(rawWas) && rawWas > 0 && (nowCtx == null || rawWas > nowCtx) ? rawWas : null;
+    const w = this.wpm();
+    return [
+      "GOOGLE AI STUDIO — VOICEOVER " + (i + 1) + " of " + n,
+      "",
+      "SPEAKER: warm mid-range female voice, lightly conversational.",
+      "TONE: informative but friendly — never robotic, never announcer-ish, no hype.",
+      "PACE: natural conversational speed, approximately " + (w - 5) + "–" + (w + 5) + " words per minute.",
+      "ACCENT: neutral British English.",
+      "MATCHING: must sit beside Anita Deol's on-camera delivery — same warmth, same unhurried confidence.",
+      "",
+      "SCRIPT (word for word, no paraphrase):",
+      "\"" + script + "\"",
+      "",
+      "EMPHASIS: stress the current price, and let the previous price fall away slightly. [pause: 0.3 sec] at each full stop.",
+      "",
+      "TECHNICAL: clear and professional, no background noise, no reverb, no music bed.",
+      "DURATION: target " + this.scriptSecs(script).toFixed(1) + " seconds — must not exceed " + cap + " seconds.",
+      "FILE: MP3, 128 kbps.",
+      "",
+      "CONTEXT",
+      "Product: " + this.titleOf(p) + (p.asin ? " (ASIN " + p.asin + ")" : ""),
+      "Price: " + (this.priceOf(p) != null ? this.money(this.priceOf(p)) : "unknown") + (wasCtx != null ? ", previously " + this.money(wasCtx) : ""),
+      "Use: segment " + (i + 1) + " of a MistryDeals Amazon deal roundup, played over this product's 9:16 still.",
+      "Audience: deal-hunting shoppers, 25–45, price-aware and sceptical of hype."
+    ].join("\n");
+  }
+
+  totalSecs() {
+    const slides = this.state.slides || [];
+    return this.introSecs() + this.clipSecs() + slides.reduce((a, p, i) => a + this.scriptSecs(this.scriptOf(p, i)), 0);
+  }
+  structureNote() {
+    const n = (this.state.slides || []).length;
+    return "2 clips + " + n + " voiceover" + (n === 1 ? "" : "s");
+  }
+
+  // Everything the guidelines make mandatory, checked before the copy button
+  // rather than discovered in Flow.
+  videoIssues() {
+    const p = this.persona();
+    const slides = this.state.slides || [];
+    const out = [];
+    if (!slides.length) out.push("No products picked — add at least one from the left.");
+    if (!(p.wardrobe || "").trim()) out.push("Wardrobe is empty. Flow needs exact garments and colours, or the two clips will not match.");
+    const clip = Number(p.clip) || 0;
+    if (clip < 6 || clip > 10) out.push("Clip length must be between 6 and 10 seconds.");
+    const cap = this.wordCap();
+    slides.forEach((s, i) => {
+      const w = this.words(this.scriptOf(s, i));
+      if (w > cap) out.push("Voiceover " + (i + 1) + " runs " + w + " words — " + cap + " is the ceiling at " + p.voCap + " seconds.");
+      else if (w < 6) out.push("Voiceover " + (i + 1) + " is only " + w + " words — too thin to carry a still.");
+    });
+    return out;
+  }
+
+  // one paste for AI Studio: all the voiceover prompts in sequence, separated
+  // clearly enough to split back apart
+  allVoPrompts() {
+    const slides = this.state.slides || [];
+    const n = slides.length;
+    if (!n) return "";
+    const head = [
+      "MISTRYDEALS — VOICEOVER PROMPTS",
+      n + " segment" + (n === 1 ? "" : "s") + " · read in this order · generated " + new Date().toLocaleString("en-GB"),
+      "Generate each segment as a separate audio file.",
+      ""
+    ];
+    const body = slides.map((p, i) => [
+      "————— SEGMENT " + (i + 1) + " of " + n + " —————",
+      "",
+      this.voPrompt(p, i, n),
+      ""
+    ].join("\n"));
+    return head.concat(body).join("\n");
+  }
+  // browsers throttle simultaneous programmatic downloads, so they are spaced
+  async downloadAllStills() {
+    const slides = this.state.slides || [];
+    const rows = slides.map((p, i) => ({ url: this.state.stills[p.id], name: (i + 1) + "-" + (p.slug || p.asin || p.id) + "-reel.png" })).filter(r => r.url);
+    if (!rows.length) { this.flash("No stills generated yet"); return; }
+    this.setState({ dling: true });
+    for (let i = 0; i < rows.length; i++) {
+      const a = document.createElement("a");
+      a.href = rows[i].url;
+      a.download = rows[i].name;
+      a.rel = "noopener";
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      await new Promise(r => setTimeout(r, 450));
+    }
+    this.setState({ dling: false });
+    this.flash(rows.length + " still" + (rows.length === 1 ? "" : "s") + " downloaded");
+  }
+  // ---- collage ------------------------------------------------------------
+  // Each count gets an explicit arrangement rather than an auto-fill grid: the
+  // first product always takes the large tile, and nothing is left as an empty
+  // cell, which reads as a missing product on a post.
+  collageDims() {
+    const f = this.state.cFmt;
+    return f === "story" ? { w: 1080, h: 1920 } : f === "fb" ? { w: 1200, h: 630 } : { w: 1080, h: 1350 };
+  }
+  collageLayout(fmt, n) {
+    const L = "abcdefg".split("").slice(0, n);
+    if (n < 4) {
+      if (fmt === "fb") return { cols: L.map(() => "1fr").join(" "), rows: "1fr", areas: [L.join(" ")], horiz: [] };
+      if (n === 3) return { cols: "1fr 1fr", rows: "1.2fr 1fr", areas: ["a a", "b c"], horiz: ["a"] };
+      return { cols: "1fr", rows: L.map(() => "1fr").join(" "), areas: L, horiz: L };
+    }
+    const P = {
+      4: { cols: "1fr 1fr 1fr", rows: "1.25fr 1fr", areas: ["a a a", "b c d"], horiz: ["a"] },
+      5: { cols: "1fr 1fr", rows: "1.2fr 1fr 1fr", areas: ["a a", "b c", "d e"], horiz: L },
+      6: { cols: "1fr 1fr 1fr", rows: "1fr 1fr 1fr", areas: ["a a b", "a a c", "d e f"], horiz: [] },
+      7: { cols: "1fr 1fr 1fr", rows: "1.1fr 1fr 1fr", areas: ["a a a", "b c d", "e f g"], horiz: ["a"] }
+    };
+    const F = {
+      4: { cols: "1.4fr 1fr 1fr 1fr", rows: "1fr", areas: ["a b c d"], horiz: [] },
+      5: { cols: "1.4fr 1fr 1fr", rows: "1fr 1fr", areas: ["a b c", "a d e"], horiz: ["b", "c", "d", "e"] },
+      6: { cols: "1fr 1fr 1fr", rows: "1fr 1fr", areas: ["a b c", "d e f"], horiz: L },
+      7: { cols: "1.3fr 1fr 1fr 1fr", rows: "1fr 1fr", areas: ["a b c d", "a e f g"], horiz: [] }
+    };
+    return (fmt === "fb" ? F : P)[Math.min(7, n)];
+  }
+  collageTier(fmt, n, i) {
+    if (fmt === "fb") return i === 0 ? "M" : "S";
+    if (i === 0) return "L";
+    return n <= 5 ? "M" : "S";
+  }
+  bigImage(url) {
+    return String(url || "").replace(/\._[^.\/]+_\.(jpg|jpeg|png|webp)$/i, "._SL800_.$1");
+  }
+  collageName(p) {
+    const shown = this.decode(p.display_title || "").trim();
+    if (shown) return shown;
+    let t = this.titleOf(p).split(/[,\u2013\u2014|]/)[0];
+    t = t.replace(/\s*[(\[]([^)\]]*)[)\]]/g, (m, inner) => inner.length <= 12 ? " (" + inner.trim() + ")" : "");
+    t = t.replace(/\s*[(\[].*$/, "").replace(/\s+/g, " ").trim();
+    return t.length > 70 ? t.slice(0, 68).replace(/\s+\S*$/, "") + "\u2026" : t;
+  }
+  async downloadCollage() {
+    const node = this._collageEl;
+    if (!node) return;
+    const { w, h } = this.collageDims();
+    this.setState({ cExporting: true });
+    try {
+      const lib = await import("https://esm.sh/html-to-image@1.11.11");
+      const url = await lib.toPng(node, { width: w, height: h, pixelRatio: 1, cacheBust: true, style: { transform: "none" } });
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = "mistrydeals-collage-" + this.state.cFmt + "-" + new Date().toISOString().slice(0, 10) + ".png";
+      document.body.appendChild(a); a.click(); document.body.removeChild(a);
+      this.flash("Collage downloaded");
+    } catch (e) {
+      this.flash("Could not export the collage \u2014 " + (e && e.message ? e.message : "an image failed to load"));
+    }
+    this.setState({ cExporting: false });
+  }
+  collageCaption() {
+    const all = this.state.slides;
+    this.state.slides = (all || []).slice(0, 7);
+    try { return this.reelCaption(); } finally { this.state.slides = all; }
+  }
+  fbCollageTitle() {
+    const all = this.state.slides;
+    this.state.slides = (all || []).slice(0, 7);
+    try { return this.fbTitle(); } finally { this.state.slides = all; }
+  }
+  fbCollageCaption() {
+    const all = this.state.slides;
+    this.state.slides = (all || []).slice(0, 7);
+    try { return this.fbCaption(); } finally { this.state.slides = all; }
+  }
+  // Instagram fetches the image itself, so the PNG has to exist at a public
+  // URL before the row is written. Always the 4:5 portrait canvas — Story and
+  // Facebook sizes are not valid Instagram feed images.
+  async queueCollage() {
+    const picks = (this.state.slides || []).slice(0, 7);
+    if (picks.length < 4) { this.flash("A collage needs at least four products"); return; }
+    const prevFmt = this.state.cFmt;
+    this.setState({ cQueueing: true, cQueueError: "", cQueueDone: "" });
+    try {
+      if (prevFmt !== "portrait") {
+        await new Promise(r => this.setState({ cFmt: "portrait" }, r));
+        await new Promise(r => setTimeout(r, 400));
+      }
+      const node = this._collageEl;
+      if (!node) throw new Error("the collage preview is not on screen");
+      const lib = await import("https://esm.sh/html-to-image@1.11.11");
+      const blob = await lib.toBlob(node, { width: 1080, height: 1350, pixelRatio: 1, cacheBust: true, style: { transform: "none" } });
+      if (!blob) throw new Error("the image could not be rendered");
+
+      const path = "collages/" + new Date().toISOString().slice(0, 10) + "-" + Date.now() + ".png";
+      const up = await this.req(BASE + "/storage/v1/object/social-images/" + path, {
+        method: "POST",
+        headers: this.headers({ "Content-Type": "image/png", "x-upsert": "true" }),
+        body: blob
+      });
+      if (!up.ok) {
+        const t = (await up.text()).slice(0, 200);
+        throw new Error("upload to storage failed (HTTP " + up.status + "). " +
+          (up.status === 400 || up.status === 403 ? "The social-images bucket does not accept uploads from a signed-in admin \u2014 it needs an insert policy for the collages/ prefix. " : "") + t);
+      }
+      const url = PUBLIC_IMG + "/" + path;
+      const bad = await this.checkCreatives([url]);
+      if (bad.length) throw new Error("the uploaded image is not publicly readable, so Instagram could not fetch it");
+
+      const cols = this.state.schedCols || [];
+      const row = {
+        product_id: picks[0].id,
+        platform: "instagram",
+        status: "pending",
+        scheduled_at: new Date().toISOString(),
+        image_url: url
+      };
+      if (this.state.captionCol) row[this.state.captionCol] = this.collageCaption();
+      if (cols.indexOf("post_source") !== -1) row.post_source = "collage";
+      const res = await this.req(BASE + "/rest/v1/scheduled_posts", {
+        method: "POST", headers: this.headers({ Prefer: "return=representation" }), body: JSON.stringify(row)
+      });
+      const text = await res.text();
+      if (!res.ok) throw new Error("queue failed (HTTP " + res.status + "). " + text.slice(0, 220));
+      this.setState({
+        cQueueing: false,
+        cQueueDone: "Collage of " + picks.length + " queued for Instagram as a single 1080\u00d71350 post." +
+          (this.state.captionCol ? " Caption included." : " No caption column on scheduled_posts \u2014 copy the caption below."),
+        cFmt: prevFmt
+      }, () => this.loadIgQueue());
+      this.flash("Collage queued for Instagram");
+    } catch (e) {
+      this.setState({ cQueueing: false, cFmt: prevFmt, cQueueError: "Not queued \u2014 " + ((e && e.message) || "something went wrong") + "." });
+    }
+  }
+  collageVals(segBase, segOn, segOff) {
+    const fmt = this.state.cFmt;
+    const all = this.state.slides || [];
+    const picks = all.slice(0, 7);
+    const n = picks.length;
+    const { w, h } = this.collageDims();
+    const lay = this.collageLayout(fmt, Math.max(1, n));
+    const letters = "abcdefg";
+    const drag = i => ({
+      onDragStart: e => { try { e.dataTransfer.effectAllowed = "move"; e.dataTransfer.setData("text/plain", String(i)); } catch (x) {} this.setState({ dragFrom: i }); },
+      onDragOver: e => { e.preventDefault(); if (this.state.dragOver !== i) this.setState({ dragOver: i }); },
+      onDrop: e => { e.preventDefault(); const from = this.state.dragFrom; if (from != null && from !== i) this.move(from, i); this.setState({ dragFrom: null, dragOver: null }); },
+      onDragEnd: () => this.setState({ dragFrom: null, dragOver: null })
+    });
+    const SZ = {
+      L: { name: 32, price: 72, was: 30, chip: 32, badge: 44, pad: 24, lines: 3 },
+      M: { name: 24, price: 52, was: 24, chip: 24, badge: 34, pad: 18, lines: 3 },
+      S: { name: 19, price: 40, was: 19, chip: 19, badge: 28, pad: 14, lines: 3 }
+    };
+    const tiles = picks.map((p, i) => {
+      const z = SZ[this.collageTier(fmt, n, i)];
+      const L = letters[i];
+      const horiz = lay.horiz.indexOf(L) !== -1;
+      const now = this.priceOf(p);
+      const rawWas = parseFloat(p.original_price);
+      const was = !isNaN(rawWas) && rawWas > 0 && (now == null || rawWas > now) ? rawWas : null;
+      const pct = this.pctOf(p);
+      return {
+        n: String(i + 1),
+        // built as an element, not a template hole in src: the browser would
+        // otherwise request the literal "{{ t.img }}" before the value lands
+        imgEl: React.createElement("img", {
+          src: this.bigImage(p.image_url), alt: "", crossOrigin: "anonymous",
+          style: { position: "absolute", top: "7%", left: "7%", width: "86%", height: "86%", objectFit: "contain", display: "block" }
+        }),
+        name: this.collageName(p),
+        price: now != null ? "$" + Math.round(now).toLocaleString("en-US") : "",
+        was: was != null ? "$" + Math.round(was).toLocaleString("en-US") : "",
+        off: pct ? "\u2212" + pct + "%" : "",
+        ...drag(i),
+        cell: "grid-area:" + L + ";display:flex;flex-direction:" + (horiz ? "row" : "column") + ";background:#f2efe9;min-width:0;min-height:0;overflow:hidden;cursor:grab;" +
+          (this.state.dragFrom === i ? "opacity:.45" : this.state.dragOver === i && this.state.dragFrom != null ? "outline:6px solid #d98014;outline-offset:-6px" : ""),
+        plate: "position:relative;background:#ffffff;min-width:0;min-height:0;" + (horiz ? "width:42%;flex:none" : "flex:1 1 0"),
+        badge: "position:absolute;left:0;top:0;width:" + z.badge + "px;height:" + z.badge + "px;display:grid;place-items:center;background:#16233a;color:#f2efe9;font-family:var(--font-heading);font-weight:800;font-size:" + Math.round(z.badge * .55) + "px;line-height:1",
+        info: "display:flex;flex-direction:column;gap:" + Math.round(z.pad * .5) + "px;padding:" + z.pad + "px;min-width:0;" + (horiz ? "flex:1 1 0" : "flex:none"),
+        nameStyle: "font-family:var(--font-heading);font-weight:700;font-size:" + z.name + "px;line-height:1.12;letter-spacing:-.01em;color:#16233a;display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:3;overflow:hidden;flex:none;height:" + Math.ceil(z.name * 1.12 * 3) + "px;text-wrap:pretty",
+        priceStyle: "font-family:var(--font-heading);font-weight:800;font-size:" + z.price + "px;line-height:1;letter-spacing:-.03em;color:#16233a;white-space:nowrap",
+        wasStyle: was != null ? "font-size:" + z.was + "px;line-height:1;text-decoration:line-through;color:#5c6474;white-space:nowrap;min-width:0;overflow:hidden" : "display:none",
+        chipStyle: pct ? "margin-left:auto;flex:none;background:#d98014;color:#16233a;font-family:var(--font-heading);font-weight:800;font-size:" + z.chip + "px;line-height:1;padding:" + Math.round(z.chip * .28) + "px " + Math.round(z.chip * .38) + "px;white-space:nowrap" : "display:none"
+      };
+    });
+    const prevW = fmt === "story" ? 340 : 560;
+    const scale = prevW / w;
+    const pad = fmt === "story" ? "220px 56px 320px" : fmt === "fb" ? "30px 36px 26px" : "48px 48px 40px";
+    const btn = "font:inherit;font-size:9px;line-height:1;width:24px;height:22px;display:grid;place-items:center;cursor:pointer;border:1px solid var(--color-divider);background:transparent;color:var(--color-text)";
+    const warn = n === 0
+      ? "Pick four to seven products from the list on the left \u2014 it is filtered to products synced in the last 12 hours. The first one takes the large tile."
+      : n < 4 ? "Add " + (4 - n) + " more \u2014 a collage needs at least four products."
+      : all.length > 7 ? "Only the first seven are used \u2014 remove " + (all.length - 7) + " or reorder to choose." : "";
+    return {
+      collageMode: this.state.mode === "collage",
+      pickCollage: () => this.setState({ mode: "collage", flag: "recent", limit: 40 }, () => this.loadProducts()),
+      segCollage: segBase + (this.state.mode === "collage" ? segOn : segOff) + ";border-left:0",
+      cfPortrait: () => this.setState({ cFmt: "portrait" }),
+      cfStory: () => this.setState({ cFmt: "story" }),
+      cfFb: () => this.setState({ cFmt: "fb" }),
+      cfSegPortrait: segBase + (fmt === "portrait" ? segOn : segOff),
+      cfSegStory: segBase + (fmt === "story" ? segOn : segOff) + ";border-left:0",
+      cfSegFb: segBase + (fmt === "fb" ? segOn : segOff) + ";border-left:0",
+      cfSize: w + "\u00d7" + h,
+      collageWarn: warn,
+      hasCollage: n >= 1,
+      collageRows: picks.map((p, i) => ({
+        n: String(i + 1), title: this.titleOf(p), btn: btn,
+        rowStyle: "display:grid;grid-template-columns:40px minmax(0,1fr) auto;gap:10px;align-items:center;padding:8px 0;border-bottom:1px solid var(--color-divider);background:" +
+          (this.state.dragFrom === i ? "var(--color-surface)" : this.state.dragOver === i && this.state.dragFrom != null ? "color-mix(in srgb, var(--color-accent) 14%, transparent)" : "transparent"),
+        ...drag(i),
+        up: () => this.move(i, i - 1), down: () => this.move(i, i + 1), remove: () => this.removeSlide(p.id)
+      })),
+      collageTiles: tiles,
+      collageRef: this._collageRef || (this._collageRef = el => { this._collageEl = el; }),
+      cPrevStyle: "margin-top:16px;width:" + Math.round(w * scale) + "px;max-width:100%;height:" + Math.round(h * scale) + "px;overflow:hidden;border:1px solid var(--color-divider)",
+      cCanvasStyle: "width:" + w + "px;height:" + h + "px;transform:scale(" + scale + ");transform-origin:top left;background:#16233a;display:flex;flex-direction:column;padding:" + pad + ";box-sizing:border-box",
+      cHeadWrap: fmt === "fb" ? "display:flex;align-items:baseline;gap:18px;margin:0 0 16px;flex:none" : "margin:0 0 " + (fmt === "story" ? "36px" : "28px") + ";flex:none",
+      cHeadline: "font-family:var(--font-heading);font-weight:800;font-size:" + (fmt === "story" ? 84 : fmt === "fb" ? 40 : 66) + "px;line-height:1;letter-spacing:-.03em;color:#f2efe9;margin-top:" + (fmt === "fb" ? 0 : 10) + "px",
+      cKicker: "Price drops \u00b7 " + (() => {
+        const d = new Date();
+        const m = ["Jan", "Feb", "Mar", "Apr", "May", "June", "July", "Aug", "Sept", "Oct", "Nov", "Dec"][d.getMonth()];
+        return m + " " + d.getDate();
+      })(),
+      cTitle: n + " " + (n === 1 ? "deal" : "deals") + " worth buying today",
+      cDate: new Date().toLocaleDateString("en-GB", { day: "numeric", month: "short" }).toUpperCase(),
+      cGridStyle: "flex:1 1 0;min-height:0;display:grid;gap:" + (fmt === "fb" ? 12 : 16) + "px;grid-template-columns:" + lay.cols + ";grid-template-rows:" + lay.rows + ";grid-template-areas:" + lay.areas.map(a => '"' + a + '"').join(" "),
+      cFootStyle: "flex:none;display:flex;align-items:center;gap:12px;border-top:3px solid #d98014;margin-top:" + (fmt === "fb" ? 14 : 24) + "px;padding-top:" + (fmt === "fb" ? 10 : 18) + "px;font-family:var(--font-heading);font-weight:700;font-size:" + (fmt === "fb" ? 18 : 26) + "px;letter-spacing:.08em;text-transform:uppercase;color:#f2efe9",
+      cDlLabel: this.state.cExporting ? "Exporting\u2026" : "Download PNG",
+      cQueueLabel: this.state.cQueueing ? "Rendering and queueing\u2026" : "Render and queue for Instagram",
+      queueCollage: () => this.queueCollage(),
+      cQueueError: this.state.cQueueError || "",
+      cQueueDone: this.state.cQueueDone || "",
+      collageCaption: this.collageCaption(),
+      fbCollageCaption: this.fbCollageCaption(),
+      fbCollageTitle: this.fbCollageTitle(),
+      fbCollageTitleMeta: (() => {
+        const n = this.fbCollageTitle().length;
+        return n + " characters" + (n > 60 ? " \u2014 Facebook truncates headlines past about 60" : " \u00b7 fits the feed headline");
+      })(),
+      copyFbCollageTitle: () => this.copyText(this.fbCollageTitle(), "Facebook title copied"),
+      collageCaptionMeta: (() => {
+        const c = this.collageCaption();
+        return c.length + " characters \u00b7 hook " + this.reelHook().length + "/125 before the fold \u00b7 " + this.reelTags().split(" ").length + " hashtags";
+      })(),
+      copyCollageCaption: () => this.copyText(this.collageCaption(), "Collage caption copied"),
+      copyFbCollage: () => this.copyText(this.fbCollageCaption(), "Facebook caption copied"),
+      downloadCollage: () => this.downloadCollage()
+    };
+  }
+
+  videoPackage() {
+    const slides = this.state.slides || [];
+    const n = slides.length;
+    const rule = "============================================================";
+    const parts = [
+      "MISTRYDEALS — DEAL ROUNDUP VIDEO",
+      "Generated " + new Date().toLocaleString("en-GB"),
+      n + " product" + (n === 1 ? "" : "s") + " · estimated total " + Math.round(this.totalSecs()) + " seconds",
+      "Structure: Anita clip 1 → " + n + " product still" + (n === 1 ? "" : "s") + " with voiceover → Anita clip 2",
+      "Location held throughout: " + this.videoLoc().desc,
+      "",
+      rule,
+      "",
+      this.clipPrompt("open"),
+      "",
+      rule,
+      "",
+      this.clipPrompt("close")
+    ];
+    slides.forEach((p, i) => { parts.push("", rule, "", this.voPrompt(p, i, n)); });
+    return parts.join("\n");
+  }
+
+  // The header note was the only confirmation, which is nowhere near the button
+  // that was clicked — so a copy looked like nothing happened. This is a real
+  // acknowledgement, and it clears itself.
+  flash(note) {
+    if (this._toastTimer) clearTimeout(this._toastTimer);
+    this.setState({ toast: note, saved: note });
+    this._toastTimer = setTimeout(() => this.setState({ toast: "" }), 2200);
+  }
+  componentWillUnmount() { if (this._toastTimer) clearTimeout(this._toastTimer); }
+
+  // navigator.clipboard is unavailable in an insecure or embedded context, and
+  // its promise also rejects when the click is not treated as a user gesture —
+  // in both cases the old code just reported failure. The textarea + execCommand
+  // path still works there, so it is used as the fallback rather than a message.
+  async copyText(text, note) {
+    const legacy = () => {
+      try {
+        const ta = document.createElement("textarea");
+        ta.value = text;
+        ta.setAttribute("readonly", "");
+        ta.style.cssText = "position:fixed;top:0;left:0;opacity:0;pointer-events:none";
+        document.body.appendChild(ta);
+        ta.select();
+        ta.setSelectionRange(0, text.length);
+        const ok = document.execCommand("copy");
+        document.body.removeChild(ta);
+        return ok;
+      } catch (e) { return false; }
+    };
+    try {
+      if (navigator.clipboard && window.isSecureContext) {
+        await navigator.clipboard.writeText(text);
+        this.flash(note || "Copied");
+        return;
+      }
+      throw new Error("no clipboard api");
+    } catch (e) {
+      if (legacy()) this.flash(note || "Copied");
+      else this.flash("Could not copy — select the text instead");
+    }
+  }
+
+  // The per-product visual is the same 9:16 creative the catalogue's REEL button
+  // produces, so the video and the site never disagree about a price.
+  async makeStills() {
+    const slides = this.state.slides || [];
+    if (!slides.length) return;
+    this.setState({ stilling: true, vError: "", vDone: "", saved: "Rendering stills…" });
+    const out = Object.assign({}, this.state.stills || {});
+    const failed = [];
+    for (const p of slides) {
+      try {
+        const res = await this.req(BASE + "/functions/v1/reel-download", {
+          method: "POST", headers: this.headers({ "Content-Type": "application/json" }),
+          body: JSON.stringify({ productId: p.id, slug: p.slug || "", layout: this.props.videoStillLayout === "full" ? "full" : "safe" })
+        });
+        if (!res.ok) { failed.push(this.titleOf(p)); continue; }
+        const blob = await res.blob();
+        if (!blob || String(blob.type).indexOf("image") !== 0) { failed.push(this.titleOf(p)); continue; }
+        out[p.id] = URL.createObjectURL(blob);
+      } catch (e) { failed.push(this.titleOf(p)); }
+    }
+    this.setState({
+      stills: out, stilling: false,
+      saved: failed.length ? "" : "Stills ready",
+      vError: failed.length
+        ? failed.length + " of " + slides.length + " stills could not be rendered — reel-download may not be deployed yet. (" + failed.slice(0, 3).join("; ") + ")"
+        : "",
+      vDone: failed.length ? "" : slides.length + " stills rendered at 1080×1920. Download each one beside its script."
+    });
+  }
+
+  async loadHistory() {
+    try {
+      const res = await fetch(BASE + "/rest/v1/video_scripts?select=id,created_at,title,product_count,total_seconds,persona,intro_prompt,outro_prompt,voiceovers,product_ids&order=created_at.desc&limit=25",
+        { headers: this.headers() });
+      if (!res.ok) { this.setState({ videoTableUp: false, history: [] }); return; }
+      this.setState({ videoTableUp: true, history: await res.json() });
+    } catch (e) { this.setState({ videoTableUp: false, history: [] }); }
+  }
+
+  async saveVideo() {
+    const slides = this.state.slides || [];
+    if (!slides.length) return;
+    const n = slides.length;
+    this.setState({ vSaving: true, vError: "", vDone: "", saved: "Saving…" });
+    const row = {
+      title: n + " deal" + (n === 1 ? "" : "s") + " · " + new Date().toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric" }),
+      product_ids: slides.map(p => p.id),
+      product_count: n,
+      total_seconds: Math.round(this.totalSecs()),
+      persona: this.persona(),
+      intro_prompt: this.clipPrompt("open"),
+      outro_prompt: this.clipPrompt("close"),
+      voiceovers: slides.map((p, i) => ({
+        product_id: p.id, asin: p.asin || "", title: this.titleOf(p),
+        script: this.scriptOf(p, i), prompt: this.voPrompt(p, i, n),
+        seconds: Number(this.scriptSecs(this.scriptOf(p, i)).toFixed(1))
+      }))
+    };
+    try {
+      const res = await this.req(BASE + "/rest/v1/video_scripts", {
+        method: "POST", headers: this.headers({ Prefer: "return=minimal" }), body: JSON.stringify(row)
+      });
+      if (!res.ok) {
+        const t = await res.text();
+        throw new Error(res.status === 404 || res.status === 400
+          ? "video_scripts does not exist yet — hand handoff/CLAUDE-CODE-PROMPT-14-video-scripts.md to Claude Code to create it."
+          : "Save failed (HTTP " + res.status + "). " + t.slice(0, 200));
+      }
+      this.setState({ vSaving: false, vDone: "Saved to prompt history.", saved: "Saved" }, () => this.loadHistory());
+    } catch (e) {
+      this.setState({ vSaving: false, saved: "", vError: (e && e.message) || "Save failed." });
+    }
+  }
+
+  // Reopening re-fetches the products by id so prices are today's, not the
+  // prices the row was written with — a stale number in a voiceover is the one
+  // mistake that cannot be corrected after the audio is cut.
+  async reopen(row) {
+    const ids = (row.product_ids || []).slice();
+    if (!ids.length) return;
+    this._persona = Object.assign({}, PERSONA_DEFAULT, row.persona || {});
+    const scripts = {};
+    (row.voiceovers || []).forEach(v => { if (v && v.product_id) scripts[v.product_id] = v.script || ""; });
+    this.setState({ saved: "Reopening…" });
+    try {
+      const cols = "id,asin,slug,title,display_title,price,original_price,scraped_coupon_price,image_url,is_active,is_top_deal,last_price_sync";
+      const res = await this.req(BASE + "/rest/v1/products?select=" + cols + "&id=in.(" + ids.join(",") + ")", { headers: this.headers() });
+      if (!res.ok) throw new Error("Could not reload those products (HTTP " + res.status + ").");
+      const rows = await res.json();
+      const byId = {};
+      rows.forEach(r => { byId[r.id] = r; });
+      const ordered = ids.map(id => byId[id]).filter(Boolean);
+      const lost = ids.length - ordered.length;
+      this.setState({
+        slides: ordered, scripts: scripts, stills: {}, mode: "video", histOpen: false, vError: "", saved: "",
+        vDone: "Reopened at today's prices." + (lost ? " " + lost + " product" + (lost === 1 ? " is" : "s are") + " no longer in the catalogue and was dropped." : "") +
+          " Check every price in the scripts before you cut audio."
+      });
+    } catch (e) { this.setState({ saved: "", vError: (e && e.message) || "Reopen failed." }); }
+  }
+
   renderVals() {
     const signedIn = !!this.state.token && !this.state.verifying;
     const slides = this.state.slides || [];
     const target = Math.max(2, Math.min(10, Number(this.props.targetSlides != null ? this.props.targetSlides : 5)));
     const navBase = "font:inherit;font-family:var(--font-heading);font-weight:700;font-size:11px;letter-spacing:.1em;text-transform:uppercase;text-decoration:none;padding:8px 12px;";
+    const pers = this.persona();
+    const vIssues = this.videoIssues();
+    const segBase = "font:inherit;font-family:var(--font-heading);font-weight:700;font-size:11px;letter-spacing:.1em;text-transform:uppercase;padding:9px 14px;min-height:40px;cursor:pointer;";
+    const segOn = "border:1px solid var(--color-text);background:var(--color-text);color:var(--color-bg)";
+    const segOff = "border:1px solid var(--color-divider);background:transparent;color:var(--color-neutral-700)";
 
     return {
       markBrands: () => { try { sessionStorage.setItem("md-admin-tab", "brands"); } catch (e) {} },
@@ -894,6 +2532,8 @@ class Component extends DCLogic {
       refresh: () => { this.setState({ menuOpen: false }); this.loadAll(); },
       userEmail: this.state.user || "",
       savedNote: this.state.saved || "",
+      hasToast: !!this.state.toast,
+      toastText: this.state.toast || "",
       stop: e => e.stopPropagation(),
       menuOpen: !!this.state.menuOpen,
       openMenu: () => this.setState({ menuOpen: true }),
@@ -919,7 +2559,7 @@ class Component extends DCLogic {
       menuNav: [
         { label: "Catalogue", href: this.adminHref("catalogue") },
         { label: "Deal queue", href: this.adminHref("dealqueue") },
-        { label: "Carousel", href: this.adminHref("carousel"), here: true },
+        { label: "Social", href: this.adminHref("carousel"), here: true },
         { label: "Brand rules", href: this.adminHref("brands") },
         { label: "Scrape log", href: this.adminHref("scrapes") },
         { label: "Reddit poster", href: this.adminHref("reddit") },
@@ -936,6 +2576,7 @@ class Component extends DCLogic {
       flag: this.state.flag,
       onFlag: e => this.setState({ flag: e.target.value, limit: 40 }, () => this.loadProducts()),
       flagOptions: [
+        { value: "recent", label: "Synced in the last 12 hours" },
         { value: "branded", label: "Has a branded overlay" },
         { value: "live", label: "Live products" },
         { value: "top", label: "Top deals" },
@@ -951,15 +2592,36 @@ class Component extends DCLogic {
       loadMoreLabel: "Load 40 more",
       loadMore: () => this.setState({ limit: (this.state.limit || 40) + 40 }, () => this.loadProducts()),
 
+      numCols: (() => {
+        const w = this.colW();
+        const defs = [["now", "Price"], ["was", "Was"], ["off", "Off"], ["age", "Updated"]];
+        return defs.map(([key, label]) => ({
+          label,
+          thStyle: "position:relative;text-align:right;width:" + w[key] + "px",
+          grab: e => this.startColDrag(key, e),
+          reset: () => this.resetColW()
+        }));
+      })(),
       picks: (this.state.products || []).map(p => {
         const inSet = slides.some(s => s.id === p.id);
         const pct = this.pctOf(p);
+        const rawWas = parseFloat(p.original_price);
+        const nowP = this.priceOf(p);
+        const was = !isNaN(rawWas) && rawWas > 0 && (nowP == null || rawWas > nowP) ? rawWas : null;
         return {
           img: p.image_url || "",
           title: this.titleOf(p),
-          meta: [this.money(this.priceOf(p)), pct ? pct + "% off" : "", p.slug ? "" : "no slug"].filter(Boolean).join(" \u00b7 "),
-          rowStyle: "display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid var(--color-divider)" +
-            (inSet ? ";opacity:.5" : ""),
+          amazon: p.asin ? "https://www.amazon.com/dp/" + p.asin : "",
+          asinLabel: p.asin || "no ASIN",
+          nowLabel: nowP != null ? this.money(nowP) : "\u2014",
+          // the pre-discount price, struck through, so a picker can judge the
+          // saving in dollars and not just the percentage
+          wasLabel: was != null ? this.money(was) : "",
+          offLabel: pct ? pct + "% off" : "",
+          // how stale the price is — a five-day-old figure is worth checking
+          // before it goes into a video read as fact
+          ageLabel: this.priceAge(p) + (p.slug ? "" : " \u00b7 no slug"),
+          rowStyle: inSet ? "opacity:.5" : "",
           add: () => (inSet ? this.removeSlide(p.id) : this.addSlide(p)),
           addLabel: inSet ? "Added" : "Add",
           addTitle: inSet ? "Click to take this slide out again" : "Add as a carousel slide",
@@ -970,12 +2632,12 @@ class Component extends DCLogic {
 
       noSlides: !slides.length,
       hasSlides: slides.length > 0,
-      countLabel: slides.length + " of 10" + (slides.length === target ? " \u00b7 on target" : ""),
+      countLabel: this.state.mode === "collage" ? Math.min(slides.length, 7) + " of 4\u20137" : this.state.mode === "video" ? slides.length + (slides.length === 1 ? " product" : " products") : slides.length + " of 10" + (slides.length === target ? " \u00b7 on target" : ""),
       countStyle: "font-family:var(--font-heading);font-weight:800;font-size:11px;letter-spacing:.08em;text-transform:uppercase;padding:4px 7px;border:1px solid " +
-        (slides.length >= 2 && slides.length <= 10
+        ((this.state.mode === "video" ? slides.length >= 1 : slides.length >= 2) && slides.length <= 10
           ? "var(--color-text);background:var(--color-text);color:var(--color-bg)"
           : "var(--color-accent);color:var(--color-accent-700)"),
-      formatNote: (() => {
+      rightNote: this.state.mode === "collage" ? "Pick from products synced in the last 12 hours" : this.state.mode === "video" ? this.structureNote() : (() => {
         const fmt = this.props.creativeFormat || "instagram";
         const size = fmt === "story" ? "1080\u00d71920" : "1080\u00d71080";
         if (this.state.rendererUp === undefined) return "Checking the renderer\u2026";
@@ -1046,16 +2708,52 @@ class Component extends DCLogic {
             ? "Caption will be written to products.ig_caption on the cover product \u2014 but only if that product has none of its own. ig_caption is a single-product caption, so an existing one is never overwritten: a later solo post of that product would publish this roundup copy."
             : "scheduled_posts has no caption column, so the publisher composes the caption itself and the one above is not sent. Copy it if you want this exact copy, or switch on \u201cWrite ig caption\u201d in Tweaks to put it on the cover product.")
         : "",
-      copyCaption: async () => {
-        try { await navigator.clipboard.writeText(this.buildCaption()); this.setState({ saved: "Caption copied" }); }
-        catch (e) { this.setState({ saved: "Could not copy \u2014 select the text instead" }); }
-      },
+      copyCaption: () => this.copyText(this.buildCaption(), "Caption copied"),
+
+      capIg: this.state.capTab !== "fb",
+      capFb: this.state.capTab === "fb",
+      pickIg: () => this.setState({ capTab: "ig" }),
+      pickFb: () => this.setState({ capTab: "fb" }),
+      capSegIg: segBase + (this.state.capTab !== "fb" ? segOn : segOff),
+      capSegFb: segBase + (this.state.capTab === "fb" ? segOn : segOff) + ";border-left:0",
+      copyLink: "font:inherit;font-family:var(--font-heading);font-weight:700;font-size:10px;letter-spacing:.08em;text-transform:uppercase;background:none;border:0;padding:0;cursor:pointer;color:var(--color-accent-700);text-align:left",
+
+      fbTitle: this.fbTitle(),
+      fbCaption: this.fbCaption(),
+      fbTitleMeta: (() => {
+        const n = this.fbTitle().length;
+        return n + " characters" + (n > 60 ? " \u2014 Facebook truncates headlines past about 60" : " \u00b7 fits the feed headline");
+      })(),
+      fbCaptionMeta: (() => {
+        const n = this.fbCaption().length;
+        return n + " characters \u00b7 link is clickable on Facebook, so no \u201clink in bio\u201d";
+      })(),
+      copyFbTitle: () => this.copyText(this.fbTitle(), "Facebook title copied"),
+      copyFbCaption: () => this.copyText(this.fbCaption(), "Facebook caption copied"),
+      copyFbBoth: () => this.copyText(this.fbTitle() + "\n\n" + this.fbCaption(), "Facebook title and caption copied"),
+
+      reelCaption: this.reelCaption(),
+      fbReelCaption: this.fbReelCaption(),
+      reelCaptionMeta: (() => {
+        const hook = this.reelHook().length;
+        const n = this.reelCaption().length;
+        const tags = this.reelTags().split(" ").length;
+        return n + " characters \u00b7 hook " + hook + "/125 before the fold \u00b7 " + tags + " hashtags" +
+          (n > 2200 ? " \u00b7 over Instagram's 2,200 limit" : "");
+      })(),
+      fbReelMeta: (() => {
+        const n = this.fbReelCaption().length;
+        return n + " characters \u00b7 link is clickable on Facebook, so no \u201clink in bio\u201d";
+      })(),
+      copyReelCaption: () => this.copyText(this.reelCaption(), "Reel caption copied"),
+      copyFbReel: () => this.copyText(this.fbReelCaption(), "Facebook caption copied"),
 
       caption: this.buildCaption(),
       captionMeta: (() => {
+        const hook = this.reelHook().length;
         const n = this.buildCaption().length;
         const col = this.state.captionCol;
-        return n + " characters" + (n > 2200 ? " \u2014 over Instagram's 2,200 limit" : "") +
+        return n + " characters \u00b7 hook " + hook + "/125" + (n > 2200 ? " \u00b7 over Instagram's 2,200 limit" : "") +
           (col === undefined ? "" : col ? " \u00b7 writes to scheduled_posts." + col
             : this.props.writeIgCaption === false ? " \u00b7 not written anywhere" : " \u00b7 writes to products.ig_caption on the cover product");
       })(),
@@ -1079,7 +2777,160 @@ class Component extends DCLogic {
       previewLabel: this.state.previewing ? "Generating\u2026" : "Generate slides",
       previewStyle: "font-size:13px;padding:12px 16px;justify-content:flex-start" + (slides.length < 2 || this.state.previewing ? ";opacity:.45;cursor:not-allowed" : ""),
       clearAll: () => this.setState({ slides: [], lines: {}, rendered: {}, queueError: "", queueDone: "" }),
-      queueHint: "Generate slides renders them without posting \u2014 click any preview to open the full-size image. Queueing regenerates, verifies every image loads, then writes one scheduled_posts row with carousel_image_urls in this order. Slide one is the cover."
+      queueHint: "Generate slides renders them without posting \u2014 click any preview to open the full-size image. Queueing regenerates, verifies every image loads, then writes one scheduled_posts row with carousel_image_urls in this order. Slide one is the cover.",
+
+      ...this.collageVals(segBase, segOn, segOff),
+      slidesMode: this.state.mode === "slides",
+      videoMode: this.state.mode === "video",
+      pickSlides: () => this.setState({ mode: "slides" }),
+      pickVideo: () => this.setState({ mode: "video" }),
+      segVideo: segBase + (this.state.mode === "video" ? segOn : segOff),
+      segSlides: segBase + (this.state.mode === "slides" ? segOn : segOff) + ";border-left:0",
+
+      // grouped so the four setting families read as families — the guidelines
+      // only forbid switching type mid-video, not choosing any of them
+      locGroups: (() => {
+        const order = [];
+        const by = {};
+        VIDEO_LOCATIONS.forEach(l => {
+          if (!by[l.group]) { by[l.group] = []; order.push(l.group); }
+          by[l.group].push({ value: l.value, label: l.label });
+        });
+        return order.map(g => ({ label: g, items: by[g] }));
+      })(),
+      hairOptions: HAIR_STYLES.map(h => ({ value: h, label: h })),
+      clipOptions: [6, 7, 8, 9, 10].map(n => ({ value: String(n), label: n + " seconds" })),
+      capOptions: [6, 7, 8, 9, 10, 12].map(n => ({ value: String(n), label: n + " seconds max" })),
+      pLoc: pers.loc,
+      pHair: pers.hair,
+      pClip: String(pers.clip),
+      pVoCap: String(pers.voCap),
+      pWardrobe: pers.wardrobe || "",
+      pIntro: pers.intro || "",
+      pOutro: pers.outro || "",
+      introPlaceholder: this.introLine(),
+      outroPlaceholder: this.outroLine(),
+      onLoc: e => this.setPersona({ loc: e.target.value }),
+      onHair: e => this.setPersona({ hair: e.target.value }),
+      onClip: e => this.setPersona({ clip: Number(e.target.value) }),
+      onVoCap: e => this.setPersona({ voCap: Number(e.target.value) }),
+      onWardrobe: e => this.setPersona({ wardrobe: e.target.value }),
+      onIntro: e => this.setPersona({ intro: e.target.value }),
+      onOutro: e => this.setPersona({ outro: e.target.value }),
+      rndStyle: "font:inherit;font-family:var(--font-heading);font-weight:700;font-size:9.5px;letter-spacing:.07em;text-transform:uppercase;background:none;border:0;padding:0;cursor:pointer;color:var(--color-accent-700)",
+      randLoc: () => this.randomizeField("loc"),
+      randHair: () => this.randomizeField("hair"),
+      randWardrobe: () => this.randomizeField("wardrobe"),
+      randIntro: () => this.randomizeField("intro"),
+      randOutro: () => this.randomizeField("outro"),
+      shuffleLook: () => this.shufflePersona(),
+      resetPersona: () => {
+        this._persona = Object.assign({}, PERSONA_DEFAULT);
+        try { localStorage.setItem("md-video-persona-v3", JSON.stringify(this._persona)); } catch (e) {}
+        this.setState({ scripts: {}, vDone: "", vError: "", saved: "Setup reset" });
+      },
+
+      structureLabel: this.structureNote(),
+      runtimeLabel: Math.round(this.totalSecs()) + " seconds",
+      vIssues: vIssues,
+      vOk: slides.length > 0 && !vIssues.length,
+
+      hasVideoRows: slides.length > 0,
+      vRows: slides.map((p, i) => {
+        const script = this.scriptOf(p, i);
+        const w = this.words(script);
+        const cap = this.wordCap();
+        const still = (this.state.stills || {})[p.id] || "";
+        return {
+          n: i + 1,
+          title: this.titleOf(p),
+          meta: [this.money(this.priceOf(p)), this.pctOf(p) ? this.pctOf(p) + "% off" : "", p.asin || ""].filter(Boolean).join(" · "),
+          still: still,
+          hasStill: !!still,
+          noStill: !still,
+          stillName: (p.slug || p.asin || p.id) + "-reel.png",
+          script: script,
+          onScript: e => {
+            const next = Object.assign({}, this.state.scripts || {});
+            next[p.id] = e.target.value;
+            this.setState({ scripts: next, vDone: "" });
+          },
+          wordLabel: w + " words · " + this.scriptSecs(script).toFixed(1) + "s",
+          wordStyle: "font-family:var(--font-heading);font-weight:700;font-size:8.5px;letter-spacing:.07em;text-transform:uppercase;padding:2px 5px;border:1px solid " +
+            (w > cap || w < 6 ? "var(--color-accent);color:var(--color-accent-700)" : "var(--color-divider);color:var(--color-neutral-700)"),
+          copyVo: () => this.copyText(this.voPrompt(p, i, slides.length), "Voiceover " + (i + 1) + " copied"),
+          remove: () => this.removeSlide(p.id),
+          up: () => this.move(i, i - 1),
+          down: () => this.move(i, i + 1),
+          upStyle: "font:inherit;font-size:8px;line-height:1;width:20px;height:18px;display:grid;place-items:center;cursor:pointer;border:1px solid var(--color-divider);background:transparent;color:var(--color-" + (i === 0 ? "neutral-500" : "text") + ")",
+          downStyle: "font:inherit;font-size:8px;line-height:1;width:20px;height:18px;display:grid;place-items:center;cursor:pointer;border:1px solid var(--color-divider);background:transparent;color:var(--color-" + (i === slides.length - 1 ? "neutral-500" : "text") + ")"
+        };
+      }),
+
+      introPrompt: this.clipPrompt("open"),
+      outroPrompt: this.clipPrompt("close"),
+      copyIntro: () => this.copyText(this.clipPrompt("open"), "Opening clip prompt copied"),
+      copyOutro: () => this.copyText(this.clipPrompt("close"), "Closing clip prompt copied"),
+      copyAllVo: () => this.copyText(this.allVoPrompts(), "All voiceover prompts copied"),
+      anyStills: (this.state.slides || []).some(p => this.state.stills[p.id]),
+      downloadAllLabel: this.state.dling ? "Downloading…" : "Download all stills",
+      downloadStills: () => this.downloadAllStills(),
+      copyPackage: () => this.copyText(this.videoPackage(), "Whole package copied"),
+
+      vError: this.state.vError,
+      vDone: this.state.vDone,
+      makeStills: () => this.makeStills(),
+      stillLabel: this.state.stilling ? "Rendering…" : "Generate reel stills",
+      stillStyle: "font-size:13px;padding:12px 16px;justify-content:flex-start" + (this.state.stilling || !slides.length ? ";opacity:.45;cursor:not-allowed" : ""),
+      saveVideo: () => this.saveVideo(),
+      saveLabel: this.state.vSaving ? "Saving…" : "Save to history",
+      saveStyle: "font-size:13px;padding:12px 16px;justify-content:flex-start" + (this.state.vSaving || !slides.length ? ";opacity:.45;cursor:not-allowed" : ""),
+      videoHint: "Copy whole package gives you both Flow clip prompts and every voiceover prompt in one paste, separated by rules. Reel stills come from the same reel-download function the catalogue uses, so the prices on screen match the site. Saving writes one video_scripts row — reopening it re-fetches the products so the scripts are re-checked against today's prices.",
+
+      toggleHist: () => {
+        const open = !this.state.histOpen;
+        this.setState({ histOpen: open });
+        if (open) this.loadHistory();
+      },
+      histOpen: !!this.state.histOpen,
+      histGlyph: this.state.histOpen ? "▲" : "▼",
+      histNote: this.state.videoTableUp === false
+        ? "table not created yet"
+        : this.state.history == null ? "" : this.state.history.length + " saved",
+      historyRows: (this.state.history || []).map(h => ({
+        title: h.title || (h.product_count || 0) + " products",
+        meta: [
+          h.created_at ? new Date(h.created_at).toLocaleString("en-GB", { day: "numeric", month: "short", hour: "2-digit", minute: "2-digit" }) : "",
+          (h.product_count || (h.voiceovers || []).length) + " products",
+          h.total_seconds ? h.total_seconds + "s" : "",
+          ((h.persona || {}).loc || "")
+        ].filter(Boolean).join(" · "),
+        copy: () => {
+          const rule = "============================================================";
+          const parts = [h.title || "Saved package", "", rule, "", h.intro_prompt || "", "", rule, "", h.outro_prompt || ""];
+          (h.voiceovers || []).forEach(v => { parts.push("", rule, "", v.prompt || ""); });
+          this.copyText(parts.join("\n"), "Saved package copied");
+        },
+        reopen: () => this.reopen(h)
+      })),
+      histEmpty: this.state.videoTableUp === false || !!(this.state.history && !this.state.history.length),
+      histEmptyNote: this.state.videoTableUp === false
+        ? "The video_scripts table has not been created yet, so nothing can be saved or listed. Hand handoff/CLAUDE-CODE-PROMPT-14-video-scripts.md to Claude Code — it has the migration and the row shape this page writes."
+        : "Nothing saved yet. Build a package above and press Save to history.",
+
+      toggleGuides: () => this.setState({ guidesOpen: !this.state.guidesOpen }),
+      guidesOpen: !!this.state.guidesOpen,
+      guideGlyph: this.state.guidesOpen ? "▲" : "▼",
+      guideSections: this.parseGuides(),
+      guidesEditing: !!this.state.guidesEditing,
+      guidesReading: !this.state.guidesEditing,
+      guidesCustom: this.guidesCustom(),
+      guideText: this.guideText(),
+      guideEditLabel: this.state.guidesEditing ? "Done editing" : "Edit guidelines",
+      guideOrigin: this.guidesCustom() ? "Edited on this browser" : "House version",
+      toggleGuideEdit: () => this.setState({ guidesEditing: !this.state.guidesEditing }),
+      resetGuides: () => this.resetGuides(),
+      onGuideText: e => this.setGuideText(e.target.value),
     };
   }
 }

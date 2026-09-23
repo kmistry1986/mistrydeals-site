@@ -202,7 +202,7 @@
       <div class="m-wrap" style="display:flex;align-items:center;gap:0;margin-left:8px">
         <a href="{{ hCatalogue }}" style="font:inherit;font-family:var(--font-heading);font-weight:700;font-size:11px;letter-spacing:.1em;text-transform:uppercase;text-decoration:none;padding:8px 12px;border:1px solid var(--color-divider);color:var(--color-text)">Catalogue</a>
         <a href="{{ hQueue }}" onClick="{{ goQueue }}" style="{{ queueTabStyle }}">Deal queue</a>
-        <a href="{{ hCarousel }}" style="{{ carouselTabStyle }}">Carousel</a>
+        <a href="{{ hCarousel }}" style="{{ carouselTabStyle }}">Social</a>
         <a href="{{ hBrands }}" onClick="{{ goBrands }}" style="{{ brandTabStyle }}">Brand rules</a>
         <a href="{{ hScrapes }}" onClick="{{ goScrapes }}" style="{{ scrapeTabStyle }}">Scrape log</a>
         <a href="{{ hReddit }}" style="{{ redditTabStyle }}">Reddit poster</a>
@@ -1388,8 +1388,16 @@ class Component extends DCLogic {
     if (this.state.source !== "All sources") parts.push("source=eq." + encodeURIComponent(this.state.source));
     const q = (this.state.query || "").trim();
     if (q) {
-      const safe = encodeURIComponent("*" + q.replace(/[(),*]/g, " ").trim() + "*");
-      parts.push("or=(title.ilike." + safe + ",asin.ilike." + safe + ")");
+      // every word has to appear somewhere in the row, in any order — one
+      // substring meant the words had to be typed consecutively, so "airpods 3"
+      // missed "AirPods Pro 3"
+      const toks = q.replace(/[(),*]/g, " ").split(/\s+/).filter(Boolean);
+      if (toks.length) {
+        const cols = ["title","asin"];
+        parts.push("and=(" + toks.map(t =>
+          "or(" + cols.map(c => c + ".ilike." + encodeURIComponent("*" + t + "*")).join(",") + ")"
+        ).join(",") + ")");
+      }
     }
     return parts.join("&");
   }
@@ -3015,7 +3023,7 @@ class Component extends DCLogic {
     const deployed = { catalogue: "/catalogue", dealqueue: "/dealqueue", carousel: "/carousel", brands: "/brandrules", scrapes: "/scrapelog", reddit: "/redditposter", guides: "/buyingguides" };
     if (this.onAdmin()) return deployed[page] || "/catalogue";
     const local = {
-      carousel: "MistryDeals Carousel.dc.html",
+      carousel: "MistryDeals Social.dc.html",
       catalogue: "MistryDeals Admin v2.dc.html",
       dealqueue: "MistryDeals Deal Queue.dc.html",
       brands: "MistryDeals Deal Queue.dc.html#brands",
@@ -3342,7 +3350,7 @@ class Component extends DCLogic {
       menuNav: [
         { label: "Catalogue", href: this.adminHref("catalogue"), tab: null },
         { label: "Deal queue", href: this.adminHref("dealqueue"), tab: "queue" },
-        { label: "Carousel", href: this.adminHref("carousel"), tab: null },
+        { label: "Social", href: this.adminHref("carousel"), tab: null },
         { label: "Brand rules", href: this.adminHref("brands"), tab: "brands" },
         { label: "Scrape log", href: this.adminHref("scrapes"), tab: "scrapes" },
         { label: "Buying guides", href: this.adminHref("guides"), tab: null },

@@ -120,7 +120,7 @@
       <div style="display:flex;align-items:center;gap:0;margin-left:8px;flex-wrap:wrap">
         <a href="{{ hCatalogue }}" style="{{ navRest }}">Catalogue</a>
         <a href="{{ hQueue }}" style="{{ navRest }}">Deal queue</a>
-        <a href="{{ hCarousel }}" style="{{ navRest }}">Carousel</a>
+        <a href="{{ hCarousel }}" style="{{ navRest }}">Social</a>
         <a href="{{ hBrands }}" onClick="{{ markBrands }}" style="{{ navRest }}">Brand rules</a>
         <a href="{{ hScrapes }}" onClick="{{ markScrapes }}" style="{{ navRest }}">Scrape log</a>
         <a href="{{ hReddit }}" style="{{ navRest }}">Reddit poster</a>
@@ -219,7 +219,19 @@
           <div style="display:flex;align-items:baseline;gap:14px;padding-bottom:10px;border-bottom:2px solid var(--color-divider);flex-wrap:wrap">
             <div style="font-family:var(--font-heading);font-weight:700;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--color-neutral-700)">{{ editHeading }}</div>
             <span style="{{ dirtyStyle }}">{{ dirtyLabel }}</span>
-            <div style="margin-left:auto;display:flex;gap:8px;flex-wrap:wrap">
+            <div style="margin-left:auto;display:flex;gap:8px;flex-wrap:wrap;align-items:center">
+              <div title="{{ pubNote }}" style="display:flex;gap:0;border:1px solid var(--color-divider)">
+                <sc-for list="{{ pubTabs }}" as="t" hint-placeholder-count="2">
+                  <button onClick="{{ t.pick }}" style="{{ t.topStyle }}">{{ t.label }}</button>
+                </sc-for>
+              </div>
+              <label title="{{ dateNote }}" style="display:flex;align-items:center;gap:8px;min-height:44px;border:1px solid var(--color-divider);padding:0 4px 0 10px">
+                <span style="font-family:var(--font-heading);font-weight:700;font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:var(--color-neutral-700);white-space:nowrap">Publish date</span>
+                <input type="date" value="{{ fDate }}" onChange="{{ onDate }}" style="font:inherit;font-size:13px;border:0;background:none;color:var(--color-text);padding:8px 4px;min-height:40px" />
+              </label>
+              <sc-if value="{{ carouselHref }}" hint-placeholder-val="{{ false }}">
+                <a href="{{ carouselHref }}" target="_blank" rel="noopener" class="btn btn-ghost" style="font-size:12px;padding:10px 14px;min-height:44px;white-space:nowrap;justify-content:flex-start;text-decoration:none">Carousel &#8599;</a>
+              </sc-if>
               <button onClick="{{ openPreview }}" class="btn btn-secondary" style="font-size:12px;padding:10px 14px;min-height:44px;white-space:nowrap;justify-content:flex-start">Preview</button>
               <button onClick="{{ save }}" class="btn btn-primary" disabled="{{ saving }}" style="font-size:12px;padding:10px 16px;min-height:44px;white-space:nowrap;justify-content:flex-start">{{ saveLabel }}</button>
               <button onClick="{{ closeDraft }}" class="btn btn-ghost" style="font-size:12px;padding:10px 14px;min-height:44px;white-space:nowrap;justify-content:flex-start">Close</button>
@@ -235,19 +247,46 @@
             </div>
           </sc-if>
 
+          <div style="margin-top:22px;border:1px solid var(--color-divider)">
+            <button onClick="{{ toggleImport }}" style="font:inherit;width:100%;display:flex;align-items:center;gap:10px;padding:12px 14px;background:none;border:0;cursor:pointer;color:var(--color-text);text-align:left">
+              <span style="font-family:var(--font-heading);font-weight:700;font-size:10px;letter-spacing:.1em;text-transform:uppercase">Import from document</span>
+              <span style="font-size:12px;color:var(--color-neutral-700);flex:1;min-width:0">Paste a formatted guide &#8212; fills every field. No AI, no credits.</span>
+              <span style="font-size:12px">{{ importCaret }}</span>
+            </button>
+            <sc-if value="{{ importOpen }}" hint-placeholder-val="{{ false }}">
+              <div style="padding:0 14px 16px;border-top:1px solid var(--color-divider)">
+                <div style="margin-top:12px;display:flex;align-items:center;gap:12px;flex-wrap:wrap">
+                  <button onClick="{{ copyTemplate }}" style="font:inherit;font-family:var(--font-heading);font-weight:700;font-size:10px;letter-spacing:.08em;text-transform:uppercase;padding:8px 12px;border:2px solid var(--color-text);white-space:nowrap;cursor:pointer;background:none;color:var(--color-text)">{{ copyTplLabel }}</button>
+                  <button onClick="{{ insertTemplate }}" style="font:inherit;font-family:var(--font-heading);font-weight:700;font-size:10px;letter-spacing:.08em;text-transform:uppercase;padding:8px 12px;border:2px solid var(--color-text);white-space:nowrap;cursor:pointer;background:none;color:var(--color-text);border-width:1px">Paste template into box</button>
+                  <span style="font-size:12px;color:var(--color-neutral-700);text-wrap:pretty">Each ASIN: line starts a new pick &#8212; that&#8217;s how the count is made (PRODUCT lines are optional separators). Only ASIN and WHY are needed; product title, category and prices come from the catalogue.</span>
+                </div>
+                <textarea class="input" rows="12" placeholder="GUIDE TITLE: &#8230;&#10;KICKER: &#8230;&#10;CAPTION: &#8230;&#10;INTRO:&#10;&#8230;&#10;HOW TO BUY WELL:&#10;- &#8230;&#10;&#10;PRODUCT&#10;ASIN: B0&#8230;&#10;WHY: &#8230;" value="{{ importText }}" onChange="{{ onImportText }}" style="margin-top:12px;font-family:ui-monospace,Menlo,monospace;font-size:12px;line-height:1.5;resize:vertical;width:100%;box-sizing:border-box"></textarea>
+                <div style="margin-top:10px;display:flex;align-items:center;gap:12px;flex-wrap:wrap">
+                  <button onClick="{{ runImport }}" style="{{ importBtnStyle }}">{{ importBtnLabel }}</button>
+                  <span style="font-size:12px;color:var(--color-neutral-700)">{{ importNote }}</span>
+                </div>
+              </div>
+            </sc-if>
+          </div>
+
           <div class="bg-two" style="margin-top:22px;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:20px">
             <div class="field" style="margin:0;grid-column:1 / -1">
-              <label>Title</label>
-              <input class="input" placeholder="The Best Cheap Smart Home Devices in 2026" value="{{ fTitle }}" onChange="{{ onTitle }}" style="{{ titleStyle }}" />
+              <label style="display:flex;align-items:center;gap:8px">Guide title<button onClick="{{ aiTitle }}" title="{{ aiTitleBtn.hint }}" style="{{ aiTitleBtn.style }}">{{ aiTitleBtn.label }}</button></label>
+              <input class="input" placeholder="Add picks, then draft a title from them" value="{{ fTitle }}" onChange="{{ onTitle }}" style="{{ titleStyle }}" />
             </div>
             <div class="field" style="margin:0">
-              <label>Kicker</label>
+              <label style="display:flex;align-items:center;gap:8px">Kicker<button onClick="{{ aiKicker }}" title="{{ aiKickerBtn.hint }}" style="{{ aiKickerBtn.style }}">{{ aiKickerBtn.label }}</button></label>
               <input class="input" placeholder="Buying guide" value="{{ fEvent }}" onChange="{{ onEvent }}" />
               <div style="font-size:11px;line-height:1.35;margin-top:4px;color:var(--color-neutral-600)">Small label above the title. Blank reads &#8220;Buying guide&#8221;.</div>
             </div>
             <div class="field" style="margin:0">
               <label style="display:flex;align-items:center;gap:8px">Caption<button onClick="{{ aiCaption }}" style="{{ aiCaptionBtn.style }}">{{ aiCaptionBtn.label }}</button></label>
               <input class="input" placeholder="One line under the title" value="{{ fCaption }}" onChange="{{ onCaption }}" />
+            </div>
+            <div class="field" style="margin:0;grid-column:1 / -1">
+              <label style="display:flex;align-items:baseline;gap:8px;flex-wrap:wrap">Guide brief<span style="font-weight:400;text-transform:none;letter-spacing:0;font-size:11px;color:var(--color-neutral-600)">Private &#183; never shown on the site</span></label>
+              <textarea class="input" rows="4" placeholder="What this guide is about and any rules for drafting it. e.g. Aimed at renters &#8212; no hard-wired installs. Lead with value, not specs. Mention if a pick needs a hub. Avoid the word &#8216;game-changer&#8217;." value="{{ fBrief }}" onChange="{{ onBrief }}" style="font-family:inherit;resize:vertical;line-height:1.45;width:100%;box-sizing:border-box"></textarea>
+              <div style="font-size:11px;line-height:1.35;margin-top:4px;color:var(--color-neutral-600)">Every Draft button (title, kicker, caption, intro, tips, write-ups) follows this.</div>
             </div>
           </div>
 
@@ -268,150 +307,10 @@
           </div>
 
           <div style="margin-top:34px;display:flex;align-items:baseline;gap:14px;padding-bottom:10px;border-bottom:2px solid var(--color-divider);flex-wrap:wrap">
-            <div style="font-family:var(--font-heading);font-weight:700;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--color-neutral-700)">Publishing</div>
-          </div>
-          <div class="bg-two" style="margin-top:18px;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:20px;align-items:start">
-            <div>
-              <div style="font-family:var(--font-heading);font-weight:700;font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--color-neutral-700);margin-bottom:8px">Live on the site</div>
-              <div style="display:flex;gap:6px">
-                <sc-for list="{{ pubTabs }}" as="t" hint-placeholder-count="2">
-                  <button onClick="{{ t.pick }}" style="{{ t.style }}">{{ t.label }}</button>
-                </sc-for>
-              </div>
-              <div style="font-size:11px;line-height:1.4;margin-top:8px;color:var(--color-neutral-600);max-width:40ch;text-wrap:pretty">{{ pubNote }}</div>
-            </div>
-            <div class="field" style="margin:0">
-              <label>Publish date</label>
-              <input class="input" type="date" value="{{ fDate }}" onChange="{{ onDate }}" />
-              <div style="font-size:11px;line-height:1.35;margin-top:4px;color:var(--color-neutral-600)">{{ dateNote }}</div>
-            </div>
-          </div>
-
-          <div style="margin-top:34px;display:flex;align-items:baseline;gap:14px;padding-bottom:10px;border-bottom:2px solid var(--color-divider);flex-wrap:wrap">
             <div style="font-family:var(--font-heading);font-weight:700;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--color-neutral-700)">Picks</div>
             <span style="font-size:12px;color:var(--color-neutral-700)">{{ pickCountLabel }}</span>
             <button onClick="{{ refreshPrices }}" style="{{ refreshStyle }}">{{ refreshLabel }}</button>
             <button onClick="{{ aiAllPicks }}" style="{{ aiAllBtn.style }}">{{ aiAllBtn.label }}</button>
-          </div>
-
-          <div style="margin-top:18px;border:2px solid var(--color-text);padding:16px">
-            <div style="display:flex;align-items:baseline;gap:12px;flex-wrap:wrap;margin-bottom:12px">
-              <div style="font-family:var(--font-heading);font-weight:700;font-size:10px;letter-spacing:.1em;text-transform:uppercase">Suggest picks</div>
-              <div style="font-size:11px;color:var(--color-neutral-700)">Scores every live product on discount, sync recency, category coverage and price spread</div>
-            </div>
-            <div style="display:grid;grid-template-columns:minmax(0,2fr) minmax(0,1fr) minmax(0,1fr) minmax(0,1fr) auto;gap:12px;align-items:end" class="bg-two">
-              <div class="field" style="margin:0">
-                <label style="font-size:11px">Topic</label>
-                <input class="input" placeholder="e.g. Prime Day headphones under $150" value="{{ sgTopic }}" onChange="{{ onSgTopic }}" />
-              </div>
-              <div class="field" style="margin:0">
-                <label style="font-size:11px">Category</label>
-                <select class="input" value="{{ sgCat }}" onChange="{{ onSgCat }}">
-                  <sc-for list="{{ catOptions }}" as="o" hint-placeholder-count="6">
-                    <option value="{{ o.value }}">{{ o.label }}</option>
-                  </sc-for>
-                </select>
-              </div>
-              <div class="field" style="margin:0">
-                <label style="font-size:11px">Max price</label>
-                <input class="input" inputmode="decimal" placeholder="any" value="{{ sgMax }}" onChange="{{ onSgMax }}" />
-              </div>
-              <div class="field" style="margin:0">
-                <label style="font-size:11px">Shortlist</label>
-                <input class="input" inputmode="numeric" placeholder="20" value="{{ sgCount }}" onChange="{{ onSgCount }}" />
-              </div>
-              <button onClick="{{ suggestPicks }}" class="btn btn-primary" style="font-size:12px;padding:10px 14px;min-height:44px;white-space:nowrap;justify-content:flex-start">{{ suggestLabel }}</button>
-            </div>
-            <sc-if value="{{ sgErr }}" hint-placeholder-val="{{ false }}">
-              <div style="border-left:3px solid var(--color-accent);padding:10px 14px;margin-top:12px;font-size:13px;color:var(--color-accent-700)">{{ sgErr }}</div>
-            </sc-if>
-            <sc-if value="{{ sgNote }}" hint-placeholder-val="{{ false }}">
-              <div style="font-size:11px;line-height:1.4;margin-top:10px;color:var(--color-neutral-600);max-width:66ch;text-wrap:pretty">{{ sgNote }}</div>
-            </sc-if>
-            <sc-if value="{{ sgHasRows }}" hint-placeholder-val="{{ false }}">
-              <div style="margin-top:14px;max-height:420px;overflow:auto;border-top:2px solid var(--color-divider)">
-                <table class="table" style="width:100%;border-collapse:collapse;table-layout:auto">
-                  <thead>
-                    <tr style="position:sticky;top:0;z-index:1;background:var(--color-bg)">
-                      <sc-for list="{{ sortCols }}" as="h" hint-placeholder-count="9">
-                        <th style="{{ h.style }}"><button onClick="{{ h.sort }}" style="{{ h.btnStyle }}">{{ h.label }}</button></th>
-                      </sc-for>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <sc-for list="{{ suggestRows }}" as="s" hint-placeholder-count="0">
-                      <tr onClick="{{ s.toggle }}" title="{{ s.why }}" style="{{ s.rowStyle }}">
-                        <td style="{{ s.boxCell }}"><span style="{{ s.boxStyle }}">{{ s.mark }}</span></td>
-                        <td style="{{ s.scoreCell }}">{{ s.score }}</td>
-                        <td style="{{ s.titleCell }}">{{ s.title }}</td>
-                        <td style="{{ s.numCell }}">{{ s.price }}</td>
-                        <td style="{{ s.numCell }}">{{ s.was }}</td>
-                        <td style="{{ s.offCell }}">{{ s.off }}</td>
-                        <td style="{{ s.catCell }}">{{ s.cat }}</td>
-                        <td style="{{ s.asinCell }}">{{ s.asin }}</td>
-                        <td style="{{ s.syncCell }}">{{ s.synced }}</td>
-                      </tr>
-                    </sc-for>
-                  </tbody>
-                </table>
-              </div>
-              <div style="margin-top:12px;display:flex;gap:10px;flex-wrap:wrap">
-                <button onClick="{{ addSuggested }}" class="btn btn-primary" style="font-size:12px;padding:10px 16px;min-height:44px;justify-content:flex-start">{{ addSuggestedLabel }}</button>
-                <button onClick="{{ toggleAll }}" class="btn btn-secondary" style="font-size:12px;padding:10px 14px;min-height:44px;justify-content:flex-start">{{ allLabel }}</button>
-                <button onClick="{{ clearSuggest }}" class="btn btn-ghost" style="font-size:12px;padding:10px 14px;min-height:44px;justify-content:flex-start">Discard shortlist</button>
-              </div>
-            </sc-if>
-          </div>
-
-          <div style="margin-top:18px;border:1px solid var(--color-divider);padding:16px">
-            <div style="font-family:var(--font-heading);font-weight:700;font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--color-neutral-700);margin-bottom:12px">Fill from the catalogue</div>
-            <div style="display:grid;grid-template-columns:minmax(0,1.3fr) minmax(0,1fr) minmax(0,1fr) minmax(0,1fr) auto;gap:12px;align-items:end" class="bg-two">
-              <div class="field" style="margin:0">
-                <label style="font-size:11px">Category</label>
-                <select class="input" value="{{ afCat }}" onChange="{{ onAfCat }}">
-                  <sc-for list="{{ catOptions }}" as="o" hint-placeholder-count="6">
-                    <option value="{{ o.value }}">{{ o.label }}</option>
-                  </sc-for>
-                </select>
-              </div>
-              <div class="field" style="margin:0">
-                <label style="font-size:11px">Min discount %</label>
-                <input class="input" inputmode="numeric" value="{{ afDisc }}" onChange="{{ onAfDisc }}" />
-              </div>
-              <div class="field" style="margin:0">
-                <label style="font-size:11px">Max price</label>
-                <input class="input" inputmode="decimal" placeholder="any" value="{{ afMax }}" onChange="{{ onAfMax }}" />
-              </div>
-              <div class="field" style="margin:0">
-                <label style="font-size:11px">How many</label>
-                <input class="input" inputmode="numeric" value="{{ afCount }}" onChange="{{ onAfCount }}" />
-              </div>
-              <button onClick="{{ autoFill }}" class="btn btn-secondary" style="font-size:12px;padding:10px 14px;min-height:44px;white-space:nowrap;justify-content:flex-start">{{ autoFillLabel }}</button>
-            </div>
-            <div style="font-size:11px;line-height:1.4;margin-top:10px;color:var(--color-neutral-600);max-width:66ch;text-wrap:pretty">{{ autoFillNote }}</div>
-          </div>
-
-          <div style="margin-top:16px;border:1px solid var(--color-divider);padding:16px">
-            <div style="font-family:var(--font-heading);font-weight:700;font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--color-neutral-700);margin-bottom:12px">Add one product</div>
-            <input class="input" placeholder="Search the catalogue by title, ASIN or category" value="{{ prodQuery }}" onChange="{{ onProdQuery }}" style="font-size:13px;padding:9px 11px" />
-            <sc-if value="{{ prodErr }}" hint-placeholder-val="{{ false }}">
-              <div style="border-left:3px solid var(--color-accent);padding:10px 14px;margin-top:12px;font-size:13px;color:var(--color-accent-700)">{{ prodErr }}</div>
-            </sc-if>
-            <sc-if value="{{ searchHint }}" hint-placeholder-val="{{ true }}">
-              <div style="padding:12px 0 0;font-size:12px;color:var(--color-neutral-700)">{{ searchHint }}</div>
-            </sc-if>
-            <div style="margin-top:6px;max-height:260px;overflow-y:auto">
-              <sc-for list="{{ prodRows }}" as="p" hint-placeholder-count="0">
-                <button onClick="{{ p.add }}" style="{{ p.rowStyle }}">
-                  <span style="min-width:0">
-                    <span style="display:block;font-size:13px;line-height:1.35;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ p.title }}</span>
-                    <span style="display:block;margin-top:3px;font-size:11px;color:var(--color-neutral-700)">{{ p.meta }}</span>
-                  </span>
-                  <span style="{{ p.syncedStyle }}">{{ p.synced }}</span>
-                  <span style="font-family:var(--font-heading);font-weight:700;font-size:10px;letter-spacing:.08em;text-transform:uppercase;white-space:nowrap">{{ p.addLabel }}</span>
-                </button>
-              </sc-for>
-            </div>
           </div>
 
           <sc-if value="{{ noPicks }}" hint-placeholder-val="{{ true }}">
@@ -421,14 +320,19 @@
             <div style="margin-top:20px;border-left:3px solid var(--color-accent);padding:12px 14px;font-size:13px;line-height:1.45;color:var(--color-accent-700);text-wrap:pretty">{{ writeGap }}</div>
           </sc-if>
 
-          <div style="margin-top:20px;display:flex;flex-direction:column;gap:12px">
+          <sc-if value="{{ hasPicksList }}" hint-placeholder-val="{{ false }}">
+            <div style="margin-top:20px;display:flex;align-items:center;gap:12px;flex-wrap:wrap">
+              <button onClick="{{ syncAll }}" style="{{ syncAllBtn.style }}">{{ syncAllBtn.label }}</button>
+              <span style="font-size:12px;color:var(--color-neutral-700);text-wrap:pretty">{{ syncNote }}</span>
+            </div>
+          </sc-if>
+          <div style="margin-top:12px;display:flex;flex-direction:column;gap:12px">
             <sc-for list="{{ picks }}" as="p" hint-placeholder-count="0">
               <div style="{{ p.boxStyle }}">
                 <div style="display:grid;grid-template-columns:34px minmax(0,1fr) auto;gap:12px;align-items:center;padding:12px 14px">
                   <span style="font-family:var(--font-heading);font-weight:700;font-size:15px;color:var(--color-neutral-700)">{{ p.n }}</span>
                   <button onClick="{{ p.toggle }}" style="min-width:0;text-align:left;font:inherit;background:none;border:0;padding:0;cursor:pointer;color:var(--color-text)">
                     <span style="display:block;font-size:14px;line-height:1.35;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ p.title }}</span>
-                    <span style="display:block;margin-top:4px;font-size:11px;color:var(--color-neutral-700)">{{ p.meta }}</span>
                   </button>
                   <span style="display:flex;align-items:center;gap:6px">
                     <span style="{{ p.noWriteStyle }}">{{ p.noWrite }}</span>
@@ -438,6 +342,39 @@
                     <button onClick="{{ p.remove }}" title="Remove" style="{{ p.moveStyle }}">&#10005;</button>
                     <button onClick="{{ p.toggle }}" style="font:inherit;font-family:var(--font-heading);font-weight:700;font-size:10px;letter-spacing:.08em;text-transform:uppercase;background:none;border:1px solid var(--color-divider);padding:7px 10px;cursor:pointer;color:var(--color-text);white-space:nowrap">{{ p.toggleLabel }}</button>
                   </span>
+                </div>
+                <div style="overflow-x:auto;border-top:1px solid var(--color-divider)">
+                  <table style="width:100%;border-collapse:collapse;table-layout:fixed;min-width:700px;font-size:12px;font-variant-numeric:tabular-nums">
+                    <thead>
+                      <tr style="font-family:var(--font-heading);font-weight:700;font-size:9.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--color-neutral-700)">
+                        <th style="text-align:right;padding:7px 14px 3px;font-weight:700;width:12%">Price</th>
+                        <th style="text-align:right;padding:7px 14px 3px;font-weight:700;width:11%">Was</th>
+                        <th style="text-align:right;padding:7px 14px 3px;font-weight:700;width:8%">Off</th>
+                        <th style="text-align:left;padding:7px 14px 3px;font-weight:700">Category</th>
+                        <th style="text-align:left;padding:7px 14px 3px;font-weight:700;width:15%">ASIN</th>
+                        <th style="text-align:right;padding:7px 14px 3px;font-weight:700;width:12%">Synced</th>
+                        <th style="text-align:right;padding:7px 14px 3px;font-weight:700;width:20%">Verify</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td style="{{ p.priceCell }}">{{ p.priceTxt }}</td>
+                        <td style="text-align:right;padding:3px 14px 10px;color:var(--color-neutral-700);text-decoration:line-through">{{ p.wasTxt }}</td>
+                        <td style="text-align:right;padding:3px 14px 10px;font-weight:600">{{ p.offTxt }}</td>
+                        <td style="text-align:left;padding:3px 14px 10px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ p.catTxt }}</td>
+                        <td style="text-align:left;padding:3px 14px 10px;font-family:ui-monospace,Menlo,monospace;font-size:11.5px">{{ p.asinTxt }}</td>
+                        <td style="{{ p.syncCell }}" title="{{ p.syncFull }}">{{ p.syncTxt }}</td>
+                        <td style="text-align:right;padding:3px 14px 10px">
+                          <span style="display:inline-flex;align-items:center;gap:10px;justify-content:flex-end">
+                          <button onClick="{{ p.sync }}" title="Mark for Amazon data sync (same as the Deal Queue)" style="{{ p.syncBtnStyle }}">{{ p.syncLabel }}</button>
+                          <sc-if value="{{ p.hasCheck }}" hint-placeholder-val="{{ false }}">
+                            <a href="{{ p.checkUrl }}" target="_blank" rel="noopener noreferrer" title="Opens amazon.com/dp/ASIN with no affiliate tag" style="color:var(--color-accent-700);text-decoration:underline;text-underline-offset:2px;white-space:nowrap">Amazon &#8599;</a>
+                          </sc-if>
+                          </span>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
                 </div>
                 <sc-if value="{{ p.open }}" hint-placeholder-val="{{ false }}">
                   <div style="padding:4px 14px 16px;border-top:1px solid var(--color-divider)">
@@ -613,12 +550,12 @@ class Component extends DCLogic {
     narrow: false, menuOpen: false,
     guides: null, listErr: "", listQuery: "", listTab: "All",
     liveMap: {}, catNames: null, catalogueCount: null,
-    searchRows: null, searching: false, prodErr: "", prodQuery: "", filling: false,
+    searchRows: null, searching: false, prodErr: "", prodQuery: "", pasteText: "", pasteBusy: false, pasteNote: "", importOpen: false, importText: "", importBusy: false, importNote: "", importParsed: null, tplCopied: false, syncBusy: null, syncNote: "", syncQueued: {}, filling: false,
     draft: null, dirty: false, saving: false, openPick: null,
     statusText: "", statusKind: "", savedSlug: null,
     afCat: "", afDisc: "", afCount: "", afMax: "",
     sgTopic: "", sgCat: "", sgMax: "", sgCount: "", sgRows: null, sgSel: {},
-    sgBusy: false, sgErr: "", sgNote: "", sgSort: "score", sgDir: -1,
+    sgBusy: false, sgErr: "", sgNote: "", sgSort: "sync", sgDir: -1,
     confirm: null, busyId: null, aiBusy: null
   };
 
@@ -798,10 +735,10 @@ class Component extends DCLogic {
 
   // one row per ASIN the guides actually use, so "not live" means not live
   // rather than "outside the window I happened to load"
-  async loadLive(asins) {
+  async loadLive(asins, force) {
     const want = Array.from(new Set((asins || [])
       .map(a => String(a || "").trim().toUpperCase()).filter(Boolean)))
-      .filter(a => this.state.liveMap[a] === undefined);
+      .filter(a => force || this.state.liveMap[a] === undefined);
     if (!want.length) return;
     // chunked: a very long in.() list can exceed the URL limit
     for (let i = 0; i < want.length; i += 60) {
@@ -829,10 +766,16 @@ class Component extends DCLogic {
     if (!term) { this.setState({ searchRows: null, searching: false, prodErr: "" }); return; }
     this.setState({ searching: true, prodErr: "" });
     const esc = term.replace(/[(),*]/g, " ").trim();
-    const like = "*" + esc.split(/\s+/).join("*") + "*";
-    const url = BASE + "/rest/v1/products?select=*&is_active=eq.true" +
-      "&or=(title.ilike." + encodeURIComponent(like) + ",display_title.ilike." + encodeURIComponent(like) +
-      ",asin.ilike." + encodeURIComponent("*" + esc + "*") + ",category.ilike." + encodeURIComponent(like) + ")" +
+    // one AND group per word, each matching any column, so the words can appear
+    // in any order and anywhere in the row
+    const toks = esc.split(/\s+/).filter(Boolean);
+    const cols = ["title", "display_title", "asin", "category"];
+    const clause = toks.length
+      ? "&and=(" + toks.map(t =>
+          "or(" + cols.map(c => c + ".ilike." + encodeURIComponent("*" + t + "*")).join(",") + ")"
+        ).join(",") + ")"
+      : "";
+    const url = BASE + "/rest/v1/products?select=*&is_active=eq.true" + clause +
       "&order=last_price_sync.desc.nullslast&limit=25";
     try {
       const res = await this.req(url, { headers: this.headers() });
@@ -884,7 +827,7 @@ class Component extends DCLogic {
   blankDraft() {
     return {
       id: null, title: "", caption: "", event: "", published: false, date: "",
-      intro: "", howto: "", picks: [], content: {}
+      intro: "", howto: "", brief: "", picks: [], content: {}
     };
   }
 
@@ -900,6 +843,7 @@ class Component extends DCLogic {
       date: row.published_at ? String(row.published_at).slice(0, 10) : "",
       intro: intro.join("\n\n"),
       howto: (c.howto || []).join("\n"),
+      brief: c.brief || "",
       picks: (c.products || []).map(p => Object.assign({}, p)),
       // every other key in content (sections, faq, anything the app adds later)
       // rides along untouched so this editor cannot silently drop it
@@ -916,8 +860,9 @@ class Component extends DCLogic {
       this.setState({ confirm: { kind: "switch", row: row } });
       return;
     }
-    this.setState({ draft: this.draftFrom(row), dirty: false, openPick: null, statusText: "", savedSlug: null, openId: row.id });
-    this.loadLive(((row.content || {}).products || []).map(p => p.amazon_asin));
+    // refresh on open: stored pick prices are snapshots, so pull the catalogue's current ones
+    this.setState({ draft: this.draftFrom(row), dirty: false, openPick: null, statusText: "", savedSlug: null, openId: row.id },
+      () => { if (((row.content || {}).products || []).length) this.refreshPrices(true); });
   }
 
   newGuide() {
@@ -981,6 +926,237 @@ class Component extends DCLogic {
     if (asin) this.setState({ liveMap: Object.assign({}, this.state.liveMap, { [asin]: p }) });
     this.setState({ openPick: picks.length - 1 });
     this.setDraft({ picks: picks });
+  }
+
+  // Same as the Deal Queue's Sync (markNeedsSync): flips the newest pipeline
+  // row for each ASIN to approved_needs_amazon_data_sync; the scheduled sync
+  // job picks it up. Nothing is fetched here. only = one pick index, else all.
+  async syncPicks(only) {
+    const d = this.state.draft;
+    if (!d || this.state.syncBusy != null) return;
+    const idx = only == null ? d.picks.map((_, i) => i) : [only];
+    const asins = Array.from(new Set(idx.map(i => (d.picks[i].amazon_asin || "").toUpperCase()).filter(Boolean)));
+    if (!asins.length) return;
+    const STATUS = "approved_needs_amazon_data_sync";
+    this.setState({ syncBusy: only == null ? "all" : only, syncNote: "Marking for Amazon sync\u2026" });
+    try {
+      const res = await this.req(BASE + "/rest/v1/product_pipeline?select=*&asin=in.(" + asins.map(encodeURIComponent).join(",") + ")", { headers: this.headers() });
+      if (!res.ok) throw new Error("pipeline lookup " + res.status);
+      const at = r => Date.parse(r.scraped_at || r.created_at || r.updated_at || 0) || 0;
+      const newest = {};
+      (await res.json()).forEach(r => {
+        const a = (r.asin || "").toUpperCase();
+        if (!newest[a] || at(r) > at(newest[a])) newest[a] = r;
+      });
+      const rows = asins.map(a => newest[a]).filter(Boolean);
+      const miss = asins.length - rows.length;
+      if (rows.length) {
+        const stamp = new Date().toISOString();
+        const up = await this.req(BASE + "/rest/v1/product_pipeline?id=in.(" + rows.map(r => encodeURIComponent(r.id)).join(",") + ")", {
+          method: "PATCH", headers: this.headers({ Prefer: "return=minimal" }),
+          body: JSON.stringify({ status: STATUS, updated_at: stamp })
+        });
+        if (!up.ok) {
+          let why = ""; try { const j = await up.json(); why = j.message || ""; } catch (e) {}
+          throw new Error("could not mark for sync (" + up.status + ")" + (why ? " \u2014 " + why : ""));
+        }
+        const q = Object.assign({}, this.state.syncQueued);
+        rows.forEach(r => { q[(r.asin || "").toUpperCase()] = stamp; });
+        this.setState({ syncQueued: q });
+      }
+      this.setState({ syncBusy: null, syncNote: (rows.length ? "Queued " + rows.length + " for Amazon data sync" : "Nothing queued") +
+        (miss ? " \u00b7 " + miss + " not in the pipeline" : "") + "." });
+    } catch (e) {
+      this.setState({ syncBusy: null, syncNote: "Sync failed \u2014 " + (e && e.message ? e.message : "network error") + "." });
+    }
+  }
+
+  IMPORT_TEMPLATE = [
+    "GUIDE TITLE: The Best Cheap Smart Home Devices in 2026",
+    "KICKER: Smart home",
+    "CAPTION: Plugs, cameras and bulbs worth buying on sale",
+    "BRIEF: Optional. Private drafting notes \u2014 never shown on the site.",
+    "",
+    "INTRO:",
+    "First paragraph.",
+    "",
+    "Second paragraph.",
+    "",
+    "HOW TO BUY WELL:",
+    "- First tip",
+    "- Second tip",
+    "",
+    "PRODUCT",
+    "ASIN: B0XXXXXXXX",
+    "WHY: Two or three sentences on why it made the list.",
+    "PRICING NOTE: Optional, e.g. Clip the on-page coupon.",
+    "",
+    "PRODUCT",
+    "ASIN: B0YYYYYYYY",
+    "WHY: \u2026"
+  ].join("\n");
+
+  IMPORT_KEYS = [
+    [/^(guide\s+)?title$|^headline$/, "title"], [/^kicker$|^eyebrow$|^label$/, "kicker"],
+    [/^caption$|^subtitle$|^subhead$/, "caption"], [/^brief$|^guidelines?$|^instructions?$/, "brief"],
+    [/^intro(duction)?$/, "intro"], [/^how\s+to\s+buy(\s+well)?$|^buying\s+tips$|^tips$|^how\s*to$/, "howto"],
+    [/^asin$/, "asin"], [/^category$/, "category"], [/^(deal\s+|current\s+|sale\s+)?price$|^now$/, "price"],
+    [/^was(\s+price)?$|^original(\s+price)?$|^list(\s+price)?$|^regular(\s+price)?$/, "was"],
+    [/^why(\s+it\s+made\s+the\s+list)?$|^description$|^write-?up$/, "why"],
+    [/^pricing\s+note$|^price\s+note$|^note$/, "note"]
+  ];
+
+  parseGuideDoc(text) {
+    const lines = String(text || "").replace(/\r/g, "").split("\n");
+    const guide = {}, products = [];
+    let cur = null, key = null, buf = [];
+    const keyOf = label => {
+      const l = label.toLowerCase().replace(/[*_`]/g, "").replace(/\s+/g, " ").trim();
+      const hit = this.IMPORT_KEYS.find(k => k[0].test(l));
+      return hit ? hit[1] : null;
+    };
+    const flush = () => {
+      if (!key) return;
+      const val = buf.join("\n").replace(/^\s+|\s+$/g, "");
+      const target = cur && ["asin", "category", "price", "was", "why", "note"].indexOf(key) > -1 ? cur : guide;
+      if (val) target[key] = target[key] ? target[key] + "\n" + val : val;
+      key = null; buf = [];
+    };
+    lines.forEach(raw => {
+      const line = raw.replace(/^\s*#+\s*/, "").replace(/^\s*\*\*(.+?)\*\*\s*/, "$1 ");
+      // "PRODUCT", "Product 3", "Pick #2: Anker Nano", "## Product 1 — …", or a --- rule
+      if (/^\s*(product|pick)\s*#?\s*\d*\s*([:.)\-\u2013\u2014].*)?$/i.test(line) || /^\s*-{3,}\s*$/.test(raw)) {
+        flush(); cur = {}; products.push(cur); return;
+      }
+      const m = line.match(/^\s*(?:[-*\u2022]\s*)?([A-Za-z][A-Za-z ()\-]{1,34}?)\s*[:\uff1a]\s*(.*)$/);
+      const k = m && keyOf(m[1].replace(/\([^)]*\)/g, ""));
+      if (k) {
+        flush();
+        // an ASIN with no open product (or a second ASIN in the same one) starts a new product,
+        // so a document without PRODUCT lines still splits correctly
+        if (k === "asin" && (!cur || cur.asin)) { cur = {}; products.push(cur); }
+        // guide-level keys after the products started still go to the guide
+        // product titles always come from the catalogue: a TITLE inside a product is ignored
+        if (cur && k === "title" && !/guide/i.test(m[1])) { key = null; buf = []; return; }
+        if (cur && ["title", "intro", "howto", "kicker", "caption", "brief"].indexOf(k) > -1) cur = null;
+        key = k; buf = m[2] ? [m[2]] : []; return;
+      }
+      if (key) buf.push(raw);
+    });
+    flush();
+    const money = v => { if (v == null) return null; const n = parseFloat(String(v).replace(/[^0-9.]/g, "")); return isFinite(n) ? n : null; };
+    return {
+      title: (guide.title || "").trim(), kicker: (guide.kicker || "").trim(), caption: (guide.caption || "").trim(),
+      brief: (guide.brief || "").trim(),
+      intro: (guide.intro || "").split(/\n\s*\n/).map(p => p.replace(/\s*\n\s*/g, " ").trim()).filter(Boolean).join("\n\n"),
+      howto: (guide.howto || "").split("\n").map(l => l.replace(/^\s*(?:[-*\u2022]|\d+[.)])\s*/, "").trim()).filter(Boolean).join("\n"),
+      products: products.filter(p => Object.keys(p).length).map(p => ({
+        asin: (((p.asin || "").toUpperCase().match(/B0[A-Z0-9]{8}|\b\d{9}[\dX]\b/) || [])[0]) || "",
+        category: (p.category || "").trim(),
+        price: money(p.price), was: money(p.was),
+        why: (p.why || "").replace(/\s*\n\s*/g, " ").trim(), note: (p.note || "").replace(/\s*\n\s*/g, " ").trim()
+      }))
+    };
+  }
+
+  async runImport() {
+    if (this.state.importBusy) return;
+    const doc = this.parseGuideDoc(this.state.importText);
+    if (!doc.products.some(p => p.asin)) {
+      this.setState({ importParsed: null, importNote: "No products found \u2014 each product needs an \u201cASIN: B0\u2026\u201d line (a PRODUCT line before it is optional)." });
+      return;
+    }
+    if (!doc.title && !doc.products.length) {
+      this.setState({ importParsed: null, importNote: "Nothing recognised \u2014 use the template labels (GUIDE TITLE:, PRODUCT, ASIN: \u2026)." });
+      return;
+    }
+    this.setState({ importBusy: true, importNote: "Checking " + doc.products.length + " ASINs against the catalogue\u2026" });
+    await this.loadLive(doc.products.map(p => p.asin), true);
+    this.setState({ importBusy: false, importParsed: doc, importNote: "" });
+    this.applyImport();
+  }
+
+  importPick(p) {
+    const live = this.liveFor({ amazon_asin: p.asin });
+    const base = live ? this.pickFromProduct(live) : { amazon_asin: p.asin, image_url: "", rating: null, reviews: null, review_count: null };
+    return Object.assign({}, base, {
+      amazon_asin: p.asin,
+      title: base.title || "",
+      category: p.category || base.category || "",
+      price: live ? base.price : p.price,
+      original_price: live ? base.original_price : p.was,
+      description: p.why, pricing_note: p.note
+    });
+  }
+
+  applyImport() {
+    const doc = this.state.importParsed;
+    if (!doc || !this.state.draft) return;
+    this.setDraft({
+      title: doc.title, event: doc.kicker, caption: doc.caption, brief: doc.brief || (this.state.draft.brief || ""),
+      intro: doc.intro, howto: doc.howto,
+      picks: doc.products.filter((p, i, a) => p.asin && a.findIndex(q => q.asin === p.asin) === i).map(p => this.importPick(p))
+    });
+    const withAsin = doc.products.filter((p, i, a) => p.asin && a.findIndex(q => q.asin === p.asin) === i);
+    const notLive = withAsin.filter(p => !this.liveFor({ amazon_asin: p.asin })).length;
+    const noWhy = withAsin.filter(p => !p.why).length;
+    const gaps = [notLive ? notLive + " not live" : "", noWhy ? noWhy + " missing a write-up" : "",
+      !doc.title ? "no guide title" : ""].filter(Boolean);
+    this.setState({ importParsed: null, importText: "", importOpen: false, openPick: null, previewOpen: true,
+      statusText: "Imported " + withAsin.length + " picks" + (gaps.length ? " \u2014 " + gaps.join(", ") : "") + ". Check the preview, then save.",
+      statusKind: gaps.length ? "error" : "ok" });
+  }
+
+  copyText(t) {
+    const done = () => { this.setState({ tplCopied: true }); setTimeout(() => this.setState({ tplCopied: false }), 1600); };
+    const fallback = () => {
+      const ta = document.createElement("textarea"); ta.value = t; ta.style.position = "fixed"; ta.style.opacity = "0";
+      document.body.appendChild(ta); ta.select(); try { document.execCommand("copy"); } catch (e) {} ta.remove(); done();
+    };
+    if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(t).then(done, fallback); else fallback();
+  }
+
+  parseAsins(text) {
+    const seen = {}, out = [];
+    (String(text || "").toUpperCase().match(/\b(?:B0[A-Z0-9]{8}|\d{9}[\dX])\b/g) || []).forEach(a => {
+      if (!seen[a]) { seen[a] = 1; out.push(a); }
+    });
+    return out;
+  }
+
+  async addPasted() {
+    if (this.state.pasteBusy || !this.state.draft) return;
+    const want = this.parseAsins(this.state.pasteText);
+    if (!want.length) { this.setState({ pasteNote: "No ASINs found — they look like B0XXXXXXXX." }); return; }
+    const have = {};
+    (this.state.draft.picks || []).forEach(p => { have[(p.amazon_asin || "").toUpperCase()] = 1; });
+    const todo = want.filter(a => !have[a]);
+    const dup = want.length - todo.length;
+    if (!todo.length) { this.setState({ pasteNote: "All " + want.length + " are already in the guide." }); return; }
+    this.setState({ pasteBusy: true, pasteNote: "Looking up " + todo.length + "…" });
+    const found = {};
+    try {
+      for (let i = 0; i < todo.length; i += 60) {
+        const chunk = todo.slice(i, i + 60);
+        const res = await this.req(BASE + "/rest/v1/products?select=*&asin=in.(" +
+          chunk.map(encodeURIComponent).join(",") + ")", { headers: this.headers() });
+        if (!res.ok) throw new Error("HTTP " + res.status);
+        (await res.json()).forEach(p => { found[(p.asin || "").toUpperCase()] = p; });
+      }
+    } catch (e) {
+      this.setState({ pasteBusy: false, pasteNote: "Lookup failed — " + (e && e.message ? e.message : "network error") + "." });
+      return;
+    }
+    const hits = todo.filter(a => found[a]), miss = todo.filter(a => !found[a]);
+    const picks = (this.state.draft.picks || []).concat(hits.map(a => this.pickFromProduct(found[a])));
+    const seed = {}; hits.forEach(a => { seed[a] = found[a]; });
+    this.setState({
+      pasteBusy: false, pasteText: miss.join("\n"),
+      liveMap: Object.assign({}, this.state.liveMap, seed),
+      pasteNote: "Added " + hits.length + (dup ? " · " + dup + " already in the guide" : "") +
+        (miss.length ? " · " + miss.length + " not in the catalogue (left in the box)" : "")
+    });
+    if (hits.length) this.setDraft({ picks: picks });
   }
 
   // ---- suggest: score the catalogue, propose a shortlist, let the human choose ----
@@ -1092,7 +1268,7 @@ class Component extends DCLogic {
       if (a) sel[a] = true;
     });
     this.setState({
-      sgBusy: false, sgRows: ranked, sgSel: sel, statusText: "",
+      sgBusy: false, sgRows: this.sortRows(ranked, this.state.sgSort || "sync", this.state.sgDir || -1), sgSel: sel, statusText: "",
       sgNote: ranked.length
         ? note + (note ? " " : "") + "Top " + seedCount + " pre-ticked \u2014 change the selection, then add."
         : "Nothing in the catalogue matches that filter."
@@ -1116,8 +1292,12 @@ class Component extends DCLogic {
     if (!this.SORT_KEYS[key]) return;
     const textual = key === "title" || key === "cat" || key === "asin";
     const dir = this.state.sgSort === key ? -this.state.sgDir : (textual ? 1 : -1);
-    const get = this.SORT_KEYS[key];
-    const rows = (this.state.sgRows || []).slice().sort((a, b) => {
+    this.setState({ sgRows: this.sortRows(this.state.sgRows || [], key, dir), sgSort: key, sgDir: dir });
+  }
+
+  sortRows(list, key, dir) {
+    const get = this.SORT_KEYS[key] || this.SORT_KEYS.score;
+    return list.slice().sort((a, b) => {
       const x = get(a), y = get(b);
       // nulls last whichever way the column is pointing
       if (x == null && y == null) return 0;
@@ -1127,7 +1307,6 @@ class Component extends DCLogic {
       if (x > y) return dir;
       return b.score - a.score;
     });
-    this.setState({ sgRows: rows, sgSort: key, sgDir: dir });
   }
 
   // Renders the draft in memory, not the saved row, so unsaved edits show and a
@@ -1303,6 +1482,11 @@ class Component extends DCLogic {
       .trim();
   }
 
+  briefBlock() {
+    const b = ((this.state.draft || {}).brief || "").trim();
+    return b ? "Editor's brief for this guide \u2014 follow it; it overrides the general instructions below where they conflict:\n" + b + "\n\n" : "";
+  }
+
   // the picks are the guide's only source of truth, so every prompt carries them
   picksContext() {
     const d = this.state.draft || {};
@@ -1314,7 +1498,7 @@ class Component extends DCLogic {
         (price != null ? " \u2014 " + this.money(price) : "") +
         (was != null && off ? " (was " + this.money(was) + ", " + off + "% off)" : "");
     });
-    return "Guide title: " + (d.title || "(untitled)") + "\n" +
+    return this.briefBlock() + "Guide title: " + (d.title || "(untitled)") + "\n" +
       (d.event ? "Occasion: " + d.event + "\n" : "") +
       (lines.length ? "The picks, in order:\n" + lines.join("\n") : "No picks chosen yet.");
   }
@@ -1331,6 +1515,30 @@ class Component extends DCLogic {
     } catch (e) {
       this.setState({ aiBusy: null, statusText: "Could not draft \u2014 " + (e && e.message ? e.message : "network error") + ".", statusKind: "error" });
     }
+  }
+
+  aiTitle() {
+    const d = this.state.draft || {};
+    if (!(d.picks || []).length) { this.setState({ statusText: "Add at least one pick first — the title is drafted from them.", statusKind: "error" }); return; }
+    const prev = (d.title || "").trim();
+    this.runAi("title",
+      this.picksContext().replace(/^Guide title:.*\n/m, "") + "\n\nWrite the headline for a buying guide built from exactly these picks. " +
+      "Name the product type they share (or the occasion, if one is given) in plain search words a shopper would type, " +
+      "at most 60 characters, title case, no colon, no full stop, no prices, no brand names unless every pick is the same brand. " +
+      "End with the year " + new Date().getFullYear() + " only if it reads naturally." +
+      (prev ? " Do not repeat this title: " + prev + "." : "") + " Return the headline only.", 120,
+      t => this.setDraft({ title: t.split("\n")[0].slice(0, 90) }));
+  }
+
+  aiKicker() {
+    const d = this.state.draft || {};
+    if (!(d.picks || []).length) { this.setState({ statusText: "Add at least one pick first — the kicker is drafted from them.", statusKind: "error" }); return; }
+    const prev = (d.event || "").trim();
+    this.runAi("kicker",
+      this.picksContext() + "\n\nWrite the kicker: the small label above the guide title. Two to four words, title case, " +
+      "no punctuation, no prices, no emoji. Name the shopping moment or category these picks fit (e.g. a season, sale event, room or buyer) " +
+      "without repeating the title's words." + (prev ? " Do not repeat: " + prev + "." : "") + " Return the label only.", 60,
+      t => this.setDraft({ event: t.split("\n")[0].replace(/[.:!]+$/, "").slice(0, 40) }));
   }
 
   aiCaption() {
@@ -1362,7 +1570,7 @@ class Component extends DCLogic {
     const price = this.num(p.price), was = this.num(p.original_price);
     const off = (price != null && was != null && was > price) ? Math.round((1 - price / was) * 100) : null;
     this.runAi("pick" + i,
-      "Guide: " + (this.state.draft.title || "(untitled)") + "\n" +
+      this.briefBlock() + "Guide: " + (this.state.draft.title || "(untitled)") + "\n" +
       "This pick: " + (p.title || "untitled") + (p.category ? "\nCategory: " + p.category : "") +
       (price != null ? "\nPrice now: " + this.money(price) : "") +
       (was != null ? "\nUsual price: " + this.money(was) : "") +
@@ -1392,7 +1600,7 @@ class Component extends DCLogic {
       const off = (price != null && was != null && was > price) ? Math.round((1 - price / was) * 100) : null;
       try {
         const out = await this.askClaude(
-          "Guide: " + (this.state.draft.title || "(untitled)") + "\nThis pick: " + (p.title || "untitled") +
+          this.briefBlock() + "Guide: " + (this.state.draft.title || "(untitled)") + "\nThis pick: " + (p.title || "untitled") +
           (p.category ? "\nCategory: " + p.category : "") + (off ? "\nDiscount: " + off + "%" : "") +
           "\n\nWrite two or three sentences on why this made the list: what it is good for and who should buy it. " +
           "Work only from the product name and category \u2014 invent no specifications or reviews. Do not repeat the price.", 400);
@@ -1453,7 +1661,8 @@ class Component extends DCLogic {
     return changed ? { now: now, was: was } : null;
   }
 
-  async refreshPrices() {
+  async refreshPrices(auto) {
+    const openedId = this.state.draft && this.state.draft.id;
     // re-read the picks from the catalogue first, so a refresh reflects the
     // database now rather than whatever was cached when the guide was opened
     this.setState({ statusText: "Checking the catalogue\u2026", statusKind: "info" });
@@ -1464,6 +1673,8 @@ class Component extends DCLogic {
       return m;
     })() });
     await this.loadLive(asins);
+    // the user may have switched guides while the lookup was in flight
+    if (!this.state.draft || this.state.draft.id !== openedId) return;
     const picks = (this.state.draft.picks || []).slice();
     let moved = 0, missing = 0, meta = 0;
     const next = picks.map(p => {
@@ -1493,6 +1704,7 @@ class Component extends DCLogic {
       return;
     }
     if (!moved) {
+      if (auto && !missing) { this.setState({ statusText: "" }); return; }
       this.setState({ statusText: missing
         ? "Every price is current. " + missing + (missing === 1 ? " pick is" : " picks are") + " no longer in the live catalogue \u2014 those are flagged below."
         : "Every price already matches the catalogue.", statusKind: "info" });
@@ -1536,6 +1748,7 @@ class Component extends DCLogic {
     const iso = d.date ? new Date(d.date + "T12:00:00").toISOString() : (d.published ? new Date().toISOString() : null);
     const content = Object.assign({}, d.content || {}, {
       subtitle: (d.caption || "").trim(),
+      brief: (d.brief || "").trim(),
       intro: (d.intro || "").split(/\n\s*\n/).map(s => s.trim()).filter(Boolean),
       howto: (d.howto || "").split("\n").map(s => s.trim()).filter(Boolean),
       products: (d.picks || []).map(p => ({
@@ -1560,7 +1773,16 @@ class Component extends DCLogic {
       published_at: iso,
       content: content
     };
-    this.setState({ saving: true, statusText: "Saving\u2026", statusKind: "info" });
+    this.setState({ saving: true, statusText: d.published ? "Saving\u2026" : "Adding products to the sync queue\u2026", statusKind: "info" });
+    // a draft save queues its products first; only a clean queue stamps the
+    // guide, and that stamp is what unlocks Publish
+    let queueMsg = "";
+    if (!d.published) {
+      queueMsg = await this.queueForSync((d.picks || []).map(p => p.amazon_asin));
+      const ok = !/failed|could not/i.test(queueMsg);
+      content.sync_queued_at = ok ? new Date().toISOString() : null;
+      this.setState({ statusText: "Saving\u2026" });
+    }
     try {
       const url = d.id ? GUIDES + "?id=eq." + encodeURIComponent(d.id) : GUIDES;
       const res = await this.req(url, {
@@ -1579,13 +1801,71 @@ class Component extends DCLogic {
         saving: false, dirty: false,
         draft: row && row.id ? this.draftFrom(row) : this.state.draft,
         savedSlug: !!(d.published),
-        statusText: d.published ? "Saved and live on the site." : "Saved as a draft \u2014 not on the site yet.",
-        statusKind: "ok"
+        statusText: d.published ? "Saved and live on the site."
+          : "Saved as a draft \u2014 not on the site yet. " + queueMsg + (content.sync_queued_at ? " Publish is now unlocked." : " Publish stays locked until the queue succeeds."),
+        statusKind: d.published || content.sync_queued_at ? "ok" : "error"
       });
       this.loadGuides();
     } catch (e) {
       this.setState({ saving: false, statusText: "Save failed \u2014 network error.", statusKind: "error" });
     }
+  }
+
+  // Hands the guide's ASINs to the same queue the Deal Queue's Sync button uses:
+  // the newest pipeline row per ASIN goes to approved_needs_amazon_data_sync.
+  // Rows already waiting are left alone; ASINs with no usable row get a new one.
+  async queueForSync(asins) {
+    const want = Array.from(new Set((asins || []).map(a => String(a || "").trim().toUpperCase()).filter(Boolean)));
+    if (!want.length) return "";
+    const WAITING = ["approved", "approved_needs_amazon_data_sync"];
+    const stamp = new Date().toISOString();
+    try {
+      const newest = {};
+      for (let i = 0; i < want.length; i += 60) {
+        const q = "in.(" + want.slice(i, i + 60).map(a => '"' + a + '"').join(",") + ")";
+        const res = await this.req(BASE + "/rest/v1/product_pipeline?select=id,asin,status,created_at&order=created_at.desc&limit=2000&asin=" + encodeURIComponent(q), { headers: this.headers() });
+        if (!res.ok) throw new Error("pipeline read " + res.status);
+        (await res.json()).forEach(row => { const a = (row.asin || "").toUpperCase(); if (a && !newest[a]) newest[a] = row; });
+      }
+      const already = want.filter(a => newest[a] && WAITING.indexOf(newest[a].status) > -1);
+      const patchIds = want.filter(a => newest[a] && WAITING.indexOf(newest[a].status) === -1 && newest[a].status !== "pending").map(a => newest[a].id);
+      const insert = want.filter(a => !newest[a] || newest[a].status === "pending");
+      if (patchIds.length) {
+        const res = await this.req(BASE + "/rest/v1/product_pipeline?id=in.(" + patchIds.map(encodeURIComponent).join(",") + ")", {
+          method: "PATCH", headers: this.headers({ "Content-Type": "application/json", Prefer: "return=minimal" }),
+          body: JSON.stringify({ status: "approved_needs_amazon_data_sync", updated_at: stamp, skip_reason: null })
+        });
+        if (!res.ok) throw new Error("pipeline update " + res.status);
+      }
+      let inserted = 0, insertErr = "";
+      if (insert.length) {
+        const picks = (this.state.draft && this.state.draft.picks) || [];
+        const rows = insert.map(a => {
+          const p = picks.find(x => (x.amazon_asin || "").toUpperCase() === a) || {};
+          return { asin: a, title: p.title || null, price: this.num(p.price), original_price: this.num(p.original_price),
+            status: "approved_needs_amazon_data_sync", source: "buying-guide", created_at: stamp, updated_at: stamp };
+        });
+        const res = await this.req(BASE + "/rest/v1/product_pipeline", {
+          method: "POST", headers: this.headers({ "Content-Type": "application/json", Prefer: "return=minimal" }), body: JSON.stringify(rows)
+        });
+        if (res.ok) inserted = rows.length;
+        else { try { const j = await res.json(); insertErr = j.message || ""; } catch (e) {} insertErr = insertErr || "HTTP " + res.status; }
+      }
+      const queued = patchIds.length + inserted;
+      return (queued ? queued + " product" + (queued === 1 ? "" : "s") + " added to the sync queue" : "Nothing new to queue") +
+        (already.length ? " \u00b7 " + already.length + " already waiting" : "") +
+        (insertErr ? " \u00b7 " + insert.length + " could not be queued (" + insertErr + ")" : "") + ".";
+    } catch (e) {
+      return "Sync queue failed \u2014 " + (e && e.message ? e.message : "network error") + ".";
+    }
+  }
+
+  // Publish unlocks only after a clean draft save that queued the products,
+  // with no edits since. Already-live guides are never locked.
+  canPublish(d) {
+    if (!d) return false;
+    if (d.published) return true;
+    return !!(d.id && !this.state.dirty && (d.content || {}).sync_queued_at);
   }
 
   // One-click publish, but never past the rule save() enforces: most rows in the
@@ -1602,8 +1882,14 @@ class Component extends DCLogic {
       return;
     }
     this.setState({ busyId: row.id });
+    if (next && !((row.content || {}).sync_queued_at)) {
+      this.setState({ statusText: "\u201c" + this.decode(row.title || "this guide") + "\u201d hasn\u2019t been saved as a draft + added to the sync queue yet \u2014 open it and do that first.", statusKind: "error" });
+      if (!this.state.dirty) this.openGuide(row);
+      return;
+    }
     const body = { published: next };
-    if (next && !row.published_at) body.published_at = new Date().toISOString();
+    // the date a guide goes live is its publish date, whatever the calendar placeholder said
+    if (next) body.published_at = new Date().toISOString();
     try {
       const res = await this.req(GUIDES + "?id=eq." + encodeURIComponent(row.id), {
         method: "PATCH", headers: this.headers({ Prefer: "return=representation" }), body: JSON.stringify(body)
@@ -1651,7 +1937,7 @@ class Component extends DCLogic {
     if (onAdmin) return deployed[page] || "/catalogue";
     const local = {
       catalogue: "MistryDeals Admin v2.dc.html", dealqueue: "MistryDeals Deal Queue.dc.html",
-      carousel: "MistryDeals Carousel.dc.html", brands: "MistryDeals Deal Queue.dc.html#brands",
+      carousel: "MistryDeals Social.dc.html", brands: "MistryDeals Deal Queue.dc.html#brands",
       scrapes: "MistryDeals Deal Queue.dc.html#scrapes", reddit: "MistryDeals Reddit Poster.dc.html",
       guides: "MistryDeals Buying Guides.dc.html"
     };
@@ -1696,6 +1982,9 @@ class Component extends DCLogic {
       if (q && (this.decode(g.title || "") + " " + (g.event_name || "")).toLowerCase().indexOf(q) === -1) return false;
       return true;
     });
+    // drafts that can go live right now float to the top; everything else keeps its order
+    const ready = g => !g.published && !!((g.content || {}).sync_queued_at) && !!(((g.content || {}).products || []).length);
+    shown.sort((a, b) => (ready(b) ? 1 : 0) - (ready(a) ? 1 : 0));
     const cats = this.state.catNames || [];
     const pickCount = (d && (d.picks || []).length) || 0;
     const cf = this.state.confirm;
@@ -1728,7 +2017,7 @@ class Component extends DCLogic {
       menuNav: [
         { label: "Catalogue", href: this.adminHref("catalogue") },
         { label: "Deal queue", href: this.adminHref("dealqueue") },
-        { label: "Carousel", href: this.adminHref("carousel") },
+        { label: "Social", href: this.adminHref("carousel") },
         { label: "Brand rules", href: this.adminHref("brands") },
         { label: "Scrape log", href: this.adminHref("scrapes") },
         { label: "Reddit poster", href: this.adminHref("reddit") },
@@ -1762,13 +2051,13 @@ class Component extends DCLogic {
         const stale = gp.filter(p => this.driftOf(p)).length;
         return {
           title: this.decode(g.title || "") || "(untitled)",
-          meta: [this.when(g.published_at), n + (n === 1 ? " pick" : " picks"), g.event_name || "",
+          meta: [ready(g) ? "Publishes " + this.when(new Date().toISOString()) + " when you press Publish" : this.when(g.published_at), n + (n === 1 ? " pick" : " picks"), g.event_name || "",
             stale ? stale + " price" + (stale === 1 ? "" : "s") + " moved" : ""].filter(Boolean).join("  \u00b7  "),
-          badge: g.published ? "Live" : "Draft",
+          badge: g.published ? "Live" : ready(g) ? "Ready" : "Draft",
           badgeStyle: "font-family:var(--font-heading);font-weight:700;font-size:9px;letter-spacing:.08em;text-transform:uppercase;padding:3px 6px;" +
-            (g.published ? "background:var(--color-text);color:var(--color-bg)" : "border:1px solid var(--color-divider);color:var(--color-neutral-700)"),
+            (g.published ? "background:var(--color-text);color:var(--color-bg)" : ready(g) ? "background:var(--color-accent);color:#16233a" : "border:1px solid var(--color-divider);color:var(--color-neutral-700)"),
           toggleLabel: this.state.busyId === g.id ? "Working\u2026"
-            : g.published ? "Unpublish" : (n ? "Publish" : "Needs picks"),
+            : g.published ? "Unpublish" : (!n ? "Needs picks" : ((g.content || {}).sync_queued_at ? "Publish" : "Queue first")),
           toggleStyle: "font:inherit;font-family:var(--font-heading);font-weight:700;font-size:10px;letter-spacing:.08em;text-transform:uppercase;" +
             "background:none;padding:6px 9px;cursor:pointer;white-space:nowrap;border:1px solid var(--color-divider);color:var(--color-" +
             (!g.published && !n ? "neutral-600" : "text") + ")",
@@ -1787,9 +2076,9 @@ class Component extends DCLogic {
           const empty = all.filter(g => !g.published && !(((g.content || {}).products || []).length)).length;
           return "There are " + all.length + " guides in the calendar and " + live + " are live. " +
             (empty ? "The other " + empty + " are titles and dates only \u2014 no picks written yet, so each needs its picks filled before it can go live. " : "") +
-            "Open one and fill its picks from the catalogue, or start a new guide.";
+            "Open one and import its picks from a document, or start a new guide.";
         })()
-        : "Start a new guide, set a category and a minimum discount, and the picks fill from the live catalogue.",
+        : "Start a new guide, then paste a formatted document under Import from document.",
 
       editHeading: d ? (d.id ? "Editing guide" : "New guide") : "",
       dirtyLabel: this.state.dirty ? "Unsaved changes" : "",
@@ -1801,7 +2090,7 @@ class Component extends DCLogic {
       // a draft you can come back to, which "Create guide" did not say
       saveLabel: this.state.saving ? "Saving\u2026"
         : (d && d.published ? (d.id ? "Save changes" : "Save and publish")
-          : (d && d.id ? "Save draft" : "Save as draft")),
+          : "Save as draft + add products to sync queue"),
       closeDraft: () => this.closeDraft(),
       canDelete: !!(d && d.id),
       askDelete: () => this.setState({ confirm: { kind: "delete" } }),
@@ -1814,6 +2103,7 @@ class Component extends DCLogic {
 
       previewOpen: !!this.state.previewOpen,
       openPreview: () => this.setState({ previewOpen: true }),
+      carouselHref: d && d.id && (d.howto || "").trim() ? (this.onAdmin() ? "/guidecarousel" : "Guide Carousel.dc.html") + "?guide=" + encodeURIComponent(d.id) : "",
       closePreview: () => this.setState({ previewOpen: false }),
       pv: this.state.previewOpen ? this.buildPreview() : {},
 
@@ -1823,6 +2113,8 @@ class Component extends DCLogic {
       onTitle: e => this.setDraft({ title: e.target.value }),
       fCaption: d ? d.caption : "",
       onCaption: e => this.setDraft({ caption: e.target.value }),
+      fBrief: d ? (d.brief || "") : "",
+      onBrief: e => this.setDraft({ brief: e.target.value }),
       fEvent: d ? d.event : "",
       onEvent: e => this.setDraft({ event: e.target.value }),
       fIntro: d ? d.intro : "",
@@ -1832,9 +2124,23 @@ class Component extends DCLogic {
       onHowto: e => this.setDraft({ howto: e.target.value }),
       howtoNote: howtoLines ? howtoLines + (howtoLines === 1 ? " tip" : " tips") : "Blank hides the how-to list.",
 
-      pubTabs: [["Draft", false], ["Published", true]].map(p =>
-        this.chip(p[0], !!(d && d.published) === p[1], () => this.setDraft({ published: p[1] }))),
-      pubNote: d && d.published
+      pubTabs: [["Draft", false], ["Published", true]].map(p => {
+        const on = !!(d && d.published) === p[1];
+        const locked = p[1] && !on && !this.canPublish(d);
+        return {
+          label: p[0],
+          pick: () => {
+            if (locked) { this.setState({ statusText: "Save as draft + add products to sync queue first \u2014 then Publish unlocks.", statusKind: "error" }); return; }
+            this.setDraft(p[1] && !d.published ? { published: true, date: (() => { const t = new Date(); return t.getFullYear() + "-" + String(t.getMonth() + 1).padStart(2, "0") + "-" + String(t.getDate()).padStart(2, "0"); })() } : { published: p[1] });
+          },
+          topStyle: "font:inherit;font-family:var(--font-heading);font-weight:700;font-size:11px;letter-spacing:.08em;text-transform:uppercase;" +
+            "min-height:42px;padding:0 14px;border:0;white-space:nowrap;cursor:" + (locked ? "not-allowed" : "pointer") + ";opacity:" + (locked ? ".4" : "1") + ";" +
+            (on ? "background:var(--color-text);color:var(--color-bg)" : "background:none;color:var(--color-neutral-700)")
+        };
+      }),
+      pubNote: d && !d.published && !this.canPublish(d)
+        ? "Locked: save as draft + add products to sync queue first. Any later edit needs another draft save."
+        : d && d.published
         ? "Live: this guide appears on the site as soon as it is saved."
         : "A draft is saved but stays off the site until you publish it.",
       fDate: d ? d.date : "",
@@ -1851,6 +2157,22 @@ class Component extends DCLogic {
         return n ? n + (n === 1 ? " pick has" : " picks have") + " no write-up. Every pick needs one before the guide can be saved \u2014 draft them individually or use Draft missing write-ups." : "";
       })(),
 
+      aiTitleBtn: (() => {
+        const n = d ? (d.picks || []).length : 0;
+        const b = this.aiBtn("title", n ? ((d.title || "").trim() ? "Redraft from picks" : "Draft from picks") : "Draft from picks");
+        if (!n) b.style = b.style.replace(/opacity:[^;]*/, "opacity:.45").replace(/cursor:[^;]*/, "cursor:default");
+        b.hint = n ? "Draft a title from the " + n + " pick" + (n === 1 ? "" : "s") : "Add picks first";
+        return b;
+      })(),
+      aiTitle: () => this.aiTitle(),
+      aiKickerBtn: (() => {
+        const n = d ? (d.picks || []).length : 0;
+        const b = this.aiBtn("kicker", n && (d.event || "").trim() ? "Redraft" : "Draft");
+        if (!n) b.style = b.style.replace(/opacity:[^;]*/, "opacity:.45").replace(/cursor:[^;]*/, "cursor:default");
+        b.hint = n ? "Draft a kicker from the picks" : "Add picks first";
+        return b;
+      })(),
+      aiKicker: () => this.aiKicker(),
       aiCaptionBtn: this.aiBtn("caption", "Draft"),
       aiCaption: () => this.aiCaption(),
       aiIntroBtn: this.aiBtn("intro", "Draft with AI"),
@@ -1898,6 +2220,7 @@ class Component extends DCLogic {
       },
       sortCols: [
         { key: "", label: "", align: "left", w: "34px" },
+        { key: "", label: "", align: "left", w: "52px" },
         { key: "score", label: "Score", align: "right", w: "" },
         { key: "title", label: "Title", align: "left", w: "" },
         { key: "price", label: "Deal price", align: "right", w: "" },
@@ -1929,6 +2252,8 @@ class Component extends DCLogic {
         const numCell = cell + ";text-align:right;white-space:nowrap;font-variant-numeric:tabular-nums";
         return {
           score: c.score,
+          img: p.image_url || "",
+          hasImg: !!p.image_url,
           title: this.decode(p.display_title || p.title || "") || "(untitled)",
           price: this.money(price),
           was: (was != null && price != null && was > price) ? this.money(was) : "\u2014",
@@ -1979,6 +2304,83 @@ class Component extends DCLogic {
           : "Every live product is ranked")) +
         ", deepest discount first. Picks you already have are kept and the list is topped up to the count.",
 
+      hasPicksList: !!(d && (d.picks || []).length),
+      syncNote: this.state.syncNote || "Marks every pick for the Amazon data sync \u2014 the job runs two every five minutes.",
+      syncAll: () => this.syncPicks(null),
+      syncAllBtn: (() => {
+        const n = d ? (d.picks || []).length : 0, busy = this.state.syncBusy === "all", off = this.state.syncBusy != null && !busy;
+        return {
+          label: busy ? "Marking\u2026" : "Sync all " + n,
+          style: "font:inherit;font-family:var(--font-heading);font-weight:700;font-size:10px;letter-spacing:.08em;text-transform:uppercase;" +
+            "padding:8px 12px;border:2px solid var(--color-text);background:none;color:var(--color-text);white-space:nowrap;" +
+            "cursor:" + (off ? "default" : "pointer") + ";opacity:" + (off ? ".45" : "1")
+        };
+      })(),
+      importOpen: this.state.importOpen,
+      importCaret: this.state.importOpen ? "\u2212" : "+",
+      toggleImport: () => this.setState({ importOpen: !this.state.importOpen }),
+      copyTemplate: () => this.copyText(this.IMPORT_TEMPLATE),
+      copyTplLabel: this.state.tplCopied ? "Copied" : "Copy template",
+      insertTemplate: () => this.setState({ importText: this.IMPORT_TEMPLATE, importParsed: null, importNote: "" }),
+      importText: this.state.importText,
+      onImportText: e => this.setState({ importText: e.target.value, importParsed: null, importNote: "" }),
+      runImport: () => this.runImport(),
+      importBtnLabel: this.state.importBusy ? "Importing\u2026" : "Import, replace guide + preview",
+      importBtnStyle: "font:inherit;font-family:var(--font-heading);font-weight:700;font-size:10px;letter-spacing:.08em;text-transform:uppercase;padding:8px 12px;border:2px solid var(--color-text);white-space:nowrap;" +
+        (this.state.importText.trim() ? "background:var(--color-text);color:var(--color-bg);cursor:pointer" : "background:none;color:var(--color-text);opacity:.45;cursor:default"),
+      importNote: this.state.importNote,
+      hasImportPreview: !!this.state.importParsed,
+      ...(() => {
+        const doc = this.state.importParsed;
+        if (!doc) return { importFields: [], importRows: [], applyLabel: "" };
+        const miss = "color:var(--color-accent-700);font-style:italic";
+        const fld = (k, v) => ({ k: k, v: v || "missing", style: v ? "white-space:pre-wrap;text-wrap:pretty" : miss });
+        const introN = doc.intro ? doc.intro.split("\n\n").length : 0, tipN = doc.howto ? doc.howto.split("\n").length : 0;
+        const seen = {};
+        const rows = doc.products.map((p, i) => {
+          const live = p.asin ? this.liveFor({ amazon_asin: p.asin }) : null;
+          const pick = this.importPick(p);
+          const dup = p.asin && seen[p.asin]; if (p.asin) seen[p.asin] = 1;
+          const docP = p.price, liveP = live ? pick.price : null;
+          const status = !p.asin ? "No ASIN \u2014 skipped" : dup ? "Duplicate ASIN" : !live ? "Not live \u2014 hidden on site, doc price used"
+            : (docP != null && liveP != null && Math.abs(docP - liveP) > 0.009) ? "Live \u00b7 doc said " + this.money(docP) : "Live \u00b7 catalogue price";
+          const warn = !p.asin || dup || !live;
+          return {
+            n: String(i + 1).padStart(2, "0"), asin: p.asin || "\u2014", title: pick.title || "(not in catalogue)",
+            price: pick.price != null ? this.money(pick.price) : "\u2014", was: pick.original_price != null ? this.money(pick.original_price) : "\u2014",
+            why: p.why ? "\u2713" : "missing",
+            whyStyle: "padding:7px 8px;" + (p.why ? "" : "color:var(--color-accent-700);font-style:italic"),
+            status: status, statusStyle: "padding:7px 8px;font-size:11.5px;line-height:1.35;color:var(--color-" + (warn ? "accent-700" : "neutral-700") + ")"
+          };
+        });
+        const n = doc.products.filter(p => p.asin).length;
+        return {
+          importFields: [fld("Guide title", doc.title), fld("Kicker", doc.kicker), fld("Caption", doc.caption),
+            fld("Intro", introN ? introN + " paragraph" + (introN === 1 ? "" : "s") + " \u2014 " + doc.intro.slice(0, 140) + (doc.intro.length > 140 ? "\u2026" : "") : ""),
+            fld("How to buy", tipN ? tipN + " tip" + (tipN === 1 ? "" : "s") : "")].concat(doc.brief ? [fld("Brief", doc.brief)] : []),
+          importRows: rows,
+          applyLabel: "Replace guide with " + n + " pick" + (n === 1 ? "" : "s")
+        };
+      })(),
+      applyImport: () => this.applyImport(),
+      cancelImport: () => this.setState({ importParsed: null, importNote: "" }),
+      pasteText: this.state.pasteText,
+      onPaste: e => this.setState({ pasteText: e.target.value, pasteNote: "" }),
+      addPasted: () => this.addPasted(),
+      pasteNote: this.state.pasteNote || (() => {
+        const n = this.parseAsins(this.state.pasteText).length;
+        return n ? n + " ASIN" + (n === 1 ? "" : "s") + " detected — added in the order pasted." : "Links work too; the ASIN is pulled out of them.";
+      })(),
+      pasteBtn: (() => {
+        const n = this.parseAsins(this.state.pasteText).length, off = !n || this.state.pasteBusy;
+        return {
+          label: this.state.pasteBusy ? "Adding…" : "Add " + (n || "") + (n === 1 ? " product" : " products") + " →",
+          style: "font:inherit;font-family:var(--font-heading);font-weight:700;font-size:10px;letter-spacing:.08em;text-transform:uppercase;" +
+            "padding:8px 12px;border:2px solid var(--color-text);background:" + (off ? "none" : "var(--color-text)") +
+            ";color:" + (off ? "var(--color-text)" : "var(--color-bg)") + ";cursor:" + (off ? "default" : "pointer") +
+            ";opacity:" + (off ? ".45" : "1") + ";white-space:nowrap"
+        };
+      })(),
       prodQuery: this.state.prodQuery,
       onProdQuery: e => this.onQueryTyped(e.target.value),
       prodErr: this.state.prodErr,
@@ -2029,8 +2431,29 @@ class Component extends DCLogic {
           },
           n: String(i + 1).padStart(2, "0"),
           title: (p.title || "").trim() || "(untitled pick)",
-          meta: [this.money(price), off ? off + "% off" : "", p.category || "", asin || "no ASIN",
-            drift ? "price moved" : ""].filter(Boolean).join("  \u00b7  "),
+          priceTxt: (price != null ? this.money(price) : "\u2014") + (drift ? " \u2022 moved" : ""),
+          priceCell: "text-align:right;padding:3px 14px 10px;font-weight:600;white-space:nowrap" + (drift ? ";color:var(--color-accent-700)" : ""),
+          wasTxt: (was != null && off) ? this.money(was) : "\u2014",
+          offTxt: off ? off + "%" : "\u2014",
+          catTxt: p.category || "\u2014",
+          asinTxt: asin || "no ASIN",
+          ...(() => {
+            const live = this.liveFor(p);
+            const t = (live && live.last_price_sync) || p.last_price_sync || null;
+            return {
+              syncTxt: t ? this.when(t) : "never",
+              syncFull: t ? new Date(t).toLocaleString() : "Not synced",
+              syncCell: "text-align:right;padding:3px 14px 10px;white-space:nowrap;color:var(--color-" + (t ? "neutral-700" : "accent-700") + ")"
+            };
+          })(),
+          hasCheck: !!asin,
+          sync: () => this.syncPicks(i),
+          syncLabel: this.state.syncBusy === i ? "\u2026" : (this.state.syncQueued[asin] ? "Queued" : "Sync"),
+          syncBtnStyle: "font:inherit;font-family:var(--font-heading);font-weight:700;font-size:9.5px;letter-spacing:.08em;text-transform:uppercase;" +
+            "padding:4px 8px;border:1px solid " + (drift ? "var(--color-accent)" : "var(--color-divider)") + ";background:" + (drift ? "var(--color-accent-100)" : "none") +
+            ";color:var(--color-" + (drift ? "accent-700" : "text") + ");white-space:nowrap;cursor:" + (!asin || (this.state.syncBusy != null && this.state.syncBusy !== i) ? "default" : "pointer") +
+            ";opacity:" + (!asin || (this.state.syncBusy != null && this.state.syncBusy !== i) ? ".45" : "1"),
+          checkUrl: asin ? "https://www.amazon.com/dp/" + encodeURIComponent(asin) + "?th=1&psc=1" : "#",
           // a missing write-up blocks the save, so it is flagged as loudly as
           // a dead ASIN rather than buried in the grey meta line
           noWrite: (p.description || "").trim() ? "" : "No write-up",
