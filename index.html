@@ -136,15 +136,15 @@
 <sc-if value="{{ isHome }}" hint-placeholder-val="{{ true }}">
 <div style="background:var(--color-bg)">
   <div class="nav" style="max-width:1280px;margin:0 auto;gap:24px">
-    <a href="{{ hHome }}" onClick="{{ goHome }}" class="nav-brand m-wrap" style="display:flex;align-items:center;gap:8px;text-decoration:none">
+    <a href="/" onClick="{{ goHome }}" class="nav-brand m-wrap" style="display:flex;align-items:center;gap:8px;text-decoration:none">
       <span style="position:relative;width:19.6px;height:19.6px;flex:none;display:block"><span style="position:absolute;left:0;top:0;width:14px;height:14px;border:2.1px solid var(--color-text);border-radius:50%;box-sizing:border-box;display:block"></span><span style="position:absolute;left:11.9px;top:11.2px;width:7.7px;height:2.1px;background:var(--color-accent);transform:rotate(45deg);transform-origin:left center;display:block"></span></span>MISTRYDEALS
     </a>
     <div class="m-wrap nav-links" style="display:flex;gap:20px;align-items:center">
-      <a href="{{ hHome }}" aria-current="page" onClick="{{ goHome }}">Featured Deals</a>
-      <a href="{{ hCat }}" onClick="{{ goCat }}">Categories</a>
-      <a href="{{ hPrime }}" onClick="{{ goPrime }}">Prime Card Deals</a>
-      <a href="{{ hGuide }}" onClick="{{ goGuide }}">Buying Guides</a>
-      <a href="{{ hAbout }}" onClick="{{ goAbout }}">About</a>
+      <a href="/" aria-current="page" onClick="{{ goHome }}">Featured Deals</a>
+      <a href="/categories" onClick="{{ goCat }}">Categories</a>
+      <a href="/prime" onClick="{{ goPrime }}">Prime Card Deals</a>
+      <a href="/guides" onClick="{{ goGuide }}">Buying Guides</a>
+      <a href="/about" onClick="{{ goAbout }}">About</a>
     </div>
     <div class="m-wrap nav-search" style="display:flex;gap:8px;align-items:center;min-width:280px">
       <input class="input" placeholder="{{ searchLabel }}" value="{{ query }}" onChange="{{ onQuery }}" onKeyDown="{{ onQueryKey }}" />
@@ -187,13 +187,13 @@
 
     <sc-if value="{{ browsing }}" hint-placeholder-val="{{ true }}">
     <div class="m-stack m-teaser" style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:0;border-top:2px solid var(--color-text);border-bottom:2px solid var(--color-text);margin:0 0 44px">
-      <a href="{{ hGuide }}" onClick="{{ goGuide }}" style="display:flex;flex-direction:column;gap:8px;padding:22px 26px 24px;text-decoration:none;color:inherit;border-right:1px solid var(--color-divider)" style-hover="background:var(--color-surface)">
+      <a href="/guides" onClick="{{ goGuide }}" style="display:flex;flex-direction:column;gap:8px;padding:22px 26px 24px;text-decoration:none;color:inherit;border-right:1px solid var(--color-divider)" style-hover="background:var(--color-surface)">
         <div style="font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--color-accent-700)">Buying guides</div>
         <div style="font-family:var(--font-heading);font-weight:800;font-size:23px;line-height:1.15;letter-spacing:-.02em">{{ guideTeaseTitle }}</div>
         <div style="font-size:14px;color:var(--color-neutral-700)">{{ guideTeaseLine }}</div>
         <div style="font-family:var(--font-heading);font-weight:700;font-size:13px;letter-spacing:.04em;text-transform:uppercase;color:var(--color-accent-700);margin-top:2px">Read the guides &#8594;</div>
       </a>
-      <a href="{{ hPrime }}" onClick="{{ goPrime }}" style="display:flex;flex-direction:column;gap:8px;padding:22px 26px 24px;text-decoration:none;color:inherit" style-hover="background:var(--color-surface)">
+      <a href="/prime" onClick="{{ goPrime }}" style="display:flex;flex-direction:column;gap:8px;padding:22px 26px 24px;text-decoration:none;color:inherit" style-hover="background:var(--color-surface)">
         <div style="font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--color-accent-700)">Prime card deals</div>
         <div style="font-family:var(--font-heading);font-weight:800;font-size:23px;line-height:1.15;letter-spacing:-.02em">Another 5% off, on top of these prices.</div>
         <div style="font-size:14px;color:var(--color-neutral-700)">{{ primeTeaseLine }}</div>
@@ -386,9 +386,9 @@
 <sc-if value="{{ isCat }}" hint-placeholder-val="{{ false }}">
 <div style="background:var(--color-bg);min-height:100vh">
   <div class="nav" style="max-width:1280px;margin:0 auto;gap:24px">
-    <a href="{{ hHome }}" onClick="{{ goHome }}" class="nav-brand m-wrap" style="display:flex;align-items:center;gap:8px;text-decoration:none"><span style="position:relative;width:19.6px;height:19.6px;flex:none;display:block"><span style="position:absolute;left:0;top:0;width:14px;height:14px;border:2.1px solid var(--color-text);border-radius:50%;box-sizing:border-box;display:block"></span><span style="position:absolute;left:11.9px;top:11.2px;width:7.7px;height:2.1px;background:var(--color-accent);transform:rotate(45deg);transform-origin:left center;display:block"></span></span>MISTRYDEALS</a>
+    <a href="/" onClick="{{ goHome }}" class="nav-brand m-wrap" style="display:flex;align-items:center;gap:8px;text-decoration:none"><span style="position:relative;width:19.6px;height:19.6px;flex:none;display:block"><span style="position:absolute;left:0;top:0;width:14px;height:14px;border:2.1px solid var(--color-text);border-radius:50%;box-sizing:border-box;display:block"></span><span style="position:absolute;left:11.9px;top:11.2px;width:7.7px;height:2.1px;background:var(--color-accent);transform:rotate(45deg);transform-origin:left center;display:block"></span></span>MISTRYDEALS</a>
     <div class="m-wrap nav-links" style="display:flex;gap:20px;align-items:center">
-      <a href="{{ hHome }}" onClick="{{ goHome }}">Featured Deals</a><a href="{{ hCat }}" aria-current="page" onClick="{{ goCat }}">Categories</a><a href="{{ hPrime }}" onClick="{{ goPrime }}">Prime Card Deals</a><a href="{{ hGuide }}" onClick="{{ goGuide }}">Buying Guides</a><a href="{{ hAbout }}" onClick="{{ goAbout }}">About</a>
+      <a href="/" onClick="{{ goHome }}">Featured Deals</a><a href="/categories" aria-current="page" onClick="{{ goCat }}">Categories</a><a href="/prime" onClick="{{ goPrime }}">Prime Card Deals</a><a href="/guides" onClick="{{ goGuide }}">Buying Guides</a><a href="/about" onClick="{{ goAbout }}">About</a>
     </div>
     <div class="m-wrap nav-search" style="display:flex;gap:8px;align-items:center;min-width:280px">
       <input class="input" placeholder="{{ searchLabel }}" value="{{ query }}" onChange="{{ onQuery }}" onKeyDown="{{ onQueryKey }}" /><button onClick="{{ runSearch }}" class="btn btn-secondary">Search</button>
@@ -407,9 +407,9 @@
   </div>
   <div style="max-width:1280px;margin:0 auto;padding:0 16px">
     <div class="m-wrap" style="font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--color-neutral-600);padding:20px 0 0;display:flex;gap:8px;align-items:center">
-      <a href="{{ hHome }}" onClick="{{ goHome }}" style="color:inherit">Home</a>
+      <a href="/" onClick="{{ goHome }}" style="color:inherit">Home</a>
       <span>/</span>
-      <a href="{{ hCat }}" onClick="{{ goCat }}" style="color:inherit">Categories</a>
+      <a href="/categories" onClick="{{ goCat }}" style="color:inherit">Categories</a>
       <span>/</span>
       <span style="color:var(--color-text)">{{ catName }}</span>
     </div>
@@ -505,8 +505,8 @@
 <sc-if value="{{ isDetail }}" hint-placeholder-val="{{ false }}">
 <div style="background:var(--color-bg);min-height:100vh">
   <div class="nav" style="max-width:1280px;margin:0 auto;gap:24px">
-    <a href="{{ hHome }}" onClick="{{ goHome }}" class="nav-brand m-wrap" style="display:flex;align-items:center;gap:8px;text-decoration:none"><span style="position:relative;width:19.6px;height:19.6px;flex:none;display:block"><span style="position:absolute;left:0;top:0;width:14px;height:14px;border:2.1px solid var(--color-text);border-radius:50%;box-sizing:border-box;display:block"></span><span style="position:absolute;left:11.9px;top:11.2px;width:7.7px;height:2.1px;background:var(--color-accent);transform:rotate(45deg);transform-origin:left center;display:block"></span></span>MISTRYDEALS</a>
-    <div class="m-wrap nav-links" style="display:flex;gap:20px;align-items:center"><a href="{{ hHome }}" onClick="{{ goHome }}">Featured Deals</a><a href="{{ hCat }}" onClick="{{ goCat }}">Categories</a><a href="{{ hPrime }}" onClick="{{ goPrime }}">Prime Card Deals</a><a href="{{ hGuide }}" onClick="{{ goGuide }}">Buying Guides</a><a href="{{ hAbout }}" onClick="{{ goAbout }}">About</a></div>
+    <a href="/" onClick="{{ goHome }}" class="nav-brand m-wrap" style="display:flex;align-items:center;gap:8px;text-decoration:none"><span style="position:relative;width:19.6px;height:19.6px;flex:none;display:block"><span style="position:absolute;left:0;top:0;width:14px;height:14px;border:2.1px solid var(--color-text);border-radius:50%;box-sizing:border-box;display:block"></span><span style="position:absolute;left:11.9px;top:11.2px;width:7.7px;height:2.1px;background:var(--color-accent);transform:rotate(45deg);transform-origin:left center;display:block"></span></span>MISTRYDEALS</a>
+    <div class="m-wrap nav-links" style="display:flex;gap:20px;align-items:center"><a href="/" onClick="{{ goHome }}">Featured Deals</a><a href="/categories" onClick="{{ goCat }}">Categories</a><a href="/prime" onClick="{{ goPrime }}">Prime Card Deals</a><a href="/guides" onClick="{{ goGuide }}">Buying Guides</a><a href="/about" onClick="{{ goAbout }}">About</a></div>
     <div class="m-wrap nav-search" style="display:flex;gap:8px;align-items:center;min-width:280px"><input class="input" placeholder="{{ searchLabel }}" value="{{ query }}" onChange="{{ onQuery }}" onKeyDown="{{ onQueryKey }}" /><button onClick="{{ runSearch }}" class="btn btn-secondary">Search</button>
       <div style="position:relative;flex:none"><button onClick="{{ toggleMenu }}" title="Menu" aria-label="Menu" aria-expanded="{{ menuExpanded }}" style="{{ tMenuBtn }}"><span style="display:block;width:16px;height:2px;background:currentColor"></span><span style="display:block;width:16px;height:2px;background:currentColor"></span><span style="display:block;width:16px;height:2px;background:currentColor"></span></button>
       <sc-if value="{{ menuOpen }}" hint-placeholder-val="{{ false }}">
@@ -600,8 +600,8 @@
 <sc-if value="{{ isGuide }}" hint-placeholder-val="{{ false }}">
 <div style="background:var(--color-bg);min-height:100vh">
   <div class="nav" style="max-width:1280px;margin:0 auto;gap:24px">
-    <a href="{{ hHome }}" onClick="{{ goHome }}" class="nav-brand m-wrap" style="display:flex;align-items:center;gap:8px;text-decoration:none"><span style="position:relative;width:19.6px;height:19.6px;flex:none;display:block"><span style="position:absolute;left:0;top:0;width:14px;height:14px;border:2.1px solid var(--color-text);border-radius:50%;box-sizing:border-box;display:block"></span><span style="position:absolute;left:11.9px;top:11.2px;width:7.7px;height:2.1px;background:var(--color-accent);transform:rotate(45deg);transform-origin:left center;display:block"></span></span>MISTRYDEALS</a>
-    <div class="m-wrap nav-links" style="display:flex;gap:20px;align-items:center"><a href="{{ hHome }}" onClick="{{ goHome }}">Featured Deals</a><a href="{{ hCat }}" onClick="{{ goCat }}">Categories</a><a href="{{ hPrime }}" onClick="{{ goPrime }}">Prime Card Deals</a><a href="{{ hGuide }}" aria-current="page" onClick="{{ goGuide }}">Buying Guides</a><a href="{{ hAbout }}" onClick="{{ goAbout }}">About</a></div>
+    <a href="/" onClick="{{ goHome }}" class="nav-brand m-wrap" style="display:flex;align-items:center;gap:8px;text-decoration:none"><span style="position:relative;width:19.6px;height:19.6px;flex:none;display:block"><span style="position:absolute;left:0;top:0;width:14px;height:14px;border:2.1px solid var(--color-text);border-radius:50%;box-sizing:border-box;display:block"></span><span style="position:absolute;left:11.9px;top:11.2px;width:7.7px;height:2.1px;background:var(--color-accent);transform:rotate(45deg);transform-origin:left center;display:block"></span></span>MISTRYDEALS</a>
+    <div class="m-wrap nav-links" style="display:flex;gap:20px;align-items:center"><a href="/" onClick="{{ goHome }}">Featured Deals</a><a href="/categories" onClick="{{ goCat }}">Categories</a><a href="/prime" onClick="{{ goPrime }}">Prime Card Deals</a><a href="/guides" aria-current="page" onClick="{{ goGuide }}">Buying Guides</a><a href="/about" onClick="{{ goAbout }}">About</a></div>
     <div class="m-wrap nav-search" style="display:flex;gap:8px;align-items:center;min-width:280px"><input class="input" placeholder="{{ searchLabel }}" value="{{ query }}" onChange="{{ onQuery }}" onKeyDown="{{ onQueryKey }}" /><button onClick="{{ runSearch }}" class="btn btn-secondary">Search</button>
       <div style="position:relative;flex:none"><button onClick="{{ toggleMenu }}" title="Menu" aria-label="Menu" aria-expanded="{{ menuExpanded }}" style="{{ tMenuBtn }}"><span style="display:block;width:16px;height:2px;background:currentColor"></span><span style="display:block;width:16px;height:2px;background:currentColor"></span><span style="display:block;width:16px;height:2px;background:currentColor"></span></button>
       <sc-if value="{{ menuOpen }}" hint-placeholder-val="{{ false }}">
@@ -640,7 +640,7 @@
     </sc-if>
     <sc-if value="{{ guideDetailView }}" hint-placeholder-val="{{ true }}">
     <div style="padding:24px 0 0">
-      <a href="{{ hGuide }}" onClick="{{ goGuide }}" style="font-family:var(--font-heading);font-weight:700;font-size:12px;letter-spacing:.08em;text-transform:uppercase;text-decoration:none;color:var(--color-accent-700)">&#8592; All buying guides</a>
+      <a href="/guides" onClick="{{ goGuide }}" style="font-family:var(--font-heading);font-weight:700;font-size:12px;letter-spacing:.08em;text-transform:uppercase;text-decoration:none;color:var(--color-accent-700)">&#8592; All buying guides</a>
     </div>
     <div style="display:flex;flex-direction:column;padding:40px 0 28px">
       <div style="display:flex;flex-wrap:wrap;align-items:baseline;justify-content:space-between;gap:10px 32px;margin-bottom:16px">
@@ -749,8 +749,8 @@
 <sc-if value="{{ isPrime }}" hint-placeholder-val="{{ false }}">
 <div style="background:var(--color-bg);min-height:100vh">
   <div class="nav" style="max-width:1280px;margin:0 auto;gap:24px">
-    <a href="{{ hHome }}" onClick="{{ goHome }}" class="nav-brand m-wrap" style="display:flex;align-items:center;gap:8px;text-decoration:none"><span style="position:relative;width:19.6px;height:19.6px;flex:none;display:block"><span style="position:absolute;left:0;top:0;width:14px;height:14px;border:2.1px solid var(--color-text);border-radius:50%;box-sizing:border-box;display:block"></span><span style="position:absolute;left:11.9px;top:11.2px;width:7.7px;height:2.1px;background:var(--color-accent);transform:rotate(45deg);transform-origin:left center;display:block"></span></span>MISTRYDEALS</a>
-    <div class="m-wrap nav-links" style="display:flex;gap:20px;align-items:center"><a href="{{ hHome }}" onClick="{{ goHome }}">Featured Deals</a><a href="{{ hCat }}" onClick="{{ goCat }}">Categories</a><a href="{{ hPrime }}" aria-current="page" onClick="{{ goPrime }}">Prime Card Deals</a><a href="{{ hGuide }}" onClick="{{ goGuide }}">Buying Guides</a><a href="{{ hAbout }}" onClick="{{ goAbout }}">About</a></div>
+    <a href="/" onClick="{{ goHome }}" class="nav-brand m-wrap" style="display:flex;align-items:center;gap:8px;text-decoration:none"><span style="position:relative;width:19.6px;height:19.6px;flex:none;display:block"><span style="position:absolute;left:0;top:0;width:14px;height:14px;border:2.1px solid var(--color-text);border-radius:50%;box-sizing:border-box;display:block"></span><span style="position:absolute;left:11.9px;top:11.2px;width:7.7px;height:2.1px;background:var(--color-accent);transform:rotate(45deg);transform-origin:left center;display:block"></span></span>MISTRYDEALS</a>
+    <div class="m-wrap nav-links" style="display:flex;gap:20px;align-items:center"><a href="/" onClick="{{ goHome }}">Featured Deals</a><a href="/categories" onClick="{{ goCat }}">Categories</a><a href="/prime" aria-current="page" onClick="{{ goPrime }}">Prime Card Deals</a><a href="/guides" onClick="{{ goGuide }}">Buying Guides</a><a href="/about" onClick="{{ goAbout }}">About</a></div>
     <div class="m-wrap nav-search" style="display:flex;gap:8px;align-items:center;min-width:280px"><input class="input" placeholder="{{ searchLabel }}" value="{{ query }}" onChange="{{ onQuery }}" onKeyDown="{{ onQueryKey }}" /><button onClick="{{ runSearch }}" class="btn btn-secondary">Search</button>
       <div style="position:relative;flex:none"><button onClick="{{ toggleMenu }}" title="Menu" aria-label="Menu" aria-expanded="{{ menuExpanded }}" style="{{ tMenuBtn }}"><span style="display:block;width:16px;height:2px;background:currentColor"></span><span style="display:block;width:16px;height:2px;background:currentColor"></span><span style="display:block;width:16px;height:2px;background:currentColor"></span></button>
       <sc-if value="{{ menuOpen }}" hint-placeholder-val="{{ false }}">
@@ -849,8 +849,8 @@
 <sc-if value="{{ isAbout }}" hint-placeholder-val="{{ false }}">
 <div style="background:var(--color-bg);min-height:100vh">
   <div class="nav" style="max-width:1280px;margin:0 auto;gap:24px">
-    <a href="{{ hHome }}" onClick="{{ goHome }}" class="nav-brand m-wrap" style="display:flex;align-items:center;gap:8px;text-decoration:none"><span style="position:relative;width:19.6px;height:19.6px;flex:none;display:block"><span style="position:absolute;left:0;top:0;width:14px;height:14px;border:2.1px solid var(--color-text);border-radius:50%;box-sizing:border-box;display:block"></span><span style="position:absolute;left:11.9px;top:11.2px;width:7.7px;height:2.1px;background:var(--color-accent);transform:rotate(45deg);transform-origin:left center;display:block"></span></span>MISTRYDEALS</a>
-    <div class="m-wrap nav-links" style="display:flex;gap:20px;align-items:center"><a href="{{ hHome }}" onClick="{{ goHome }}">Featured Deals</a><a href="{{ hCat }}" onClick="{{ goCat }}">Categories</a><a href="{{ hPrime }}" onClick="{{ goPrime }}">Prime Card Deals</a><a href="{{ hGuide }}" onClick="{{ goGuide }}">Buying Guides</a><a href="{{ hAbout }}" aria-current="page" onClick="{{ goAbout }}">About</a></div>
+    <a href="/" onClick="{{ goHome }}" class="nav-brand m-wrap" style="display:flex;align-items:center;gap:8px;text-decoration:none"><span style="position:relative;width:19.6px;height:19.6px;flex:none;display:block"><span style="position:absolute;left:0;top:0;width:14px;height:14px;border:2.1px solid var(--color-text);border-radius:50%;box-sizing:border-box;display:block"></span><span style="position:absolute;left:11.9px;top:11.2px;width:7.7px;height:2.1px;background:var(--color-accent);transform:rotate(45deg);transform-origin:left center;display:block"></span></span>MISTRYDEALS</a>
+    <div class="m-wrap nav-links" style="display:flex;gap:20px;align-items:center"><a href="/" onClick="{{ goHome }}">Featured Deals</a><a href="/categories" onClick="{{ goCat }}">Categories</a><a href="/prime" onClick="{{ goPrime }}">Prime Card Deals</a><a href="/guides" onClick="{{ goGuide }}">Buying Guides</a><a href="/about" aria-current="page" onClick="{{ goAbout }}">About</a></div>
     <div class="m-wrap nav-search" style="display:flex;gap:8px;align-items:center;min-width:280px"><input class="input" placeholder="{{ searchLabel }}" value="{{ query }}" onChange="{{ onQuery }}" onKeyDown="{{ onQueryKey }}" /><button onClick="{{ runSearch }}" class="btn btn-secondary">Search</button>
       <div style="position:relative;flex:none"><button onClick="{{ toggleMenu }}" title="Menu" aria-label="Menu" aria-expanded="{{ menuExpanded }}" style="{{ tMenuBtn }}"><span style="display:block;width:16px;height:2px;background:currentColor"></span><span style="display:block;width:16px;height:2px;background:currentColor"></span><span style="display:block;width:16px;height:2px;background:currentColor"></span></button>
       <sc-if value="{{ menuOpen }}" hint-placeholder-val="{{ false }}">
@@ -1298,6 +1298,7 @@
 </div>
 </sc-if>
 </x-dc>
+<noscript><nav aria-label="Site"><ul><li><a href="/">Featured deals</a></li><li><a href="/guides">Guides</a></li><li><a href="/guides/the-best-charging-equipment-wall-chargers-power-banks-stands-and-more">The best charging equipment wall chargers power banks stands and more</a></li><li><a href="/guides/the-most-useful-kitchen-gadgets-under-150">The most useful kitchen gadgets under 150</a></li><li><a href="/guides/back-to-school-tech-under-100">Back to school tech under 100</a></li><li><a href="/guides/best-cheap-smart-home-devices">Best cheap smart home devices</a></li><li><a href="/categories">Categories</a></li><li><a href="/prime">Prime</a></li><li><a href="/about">About</a></li></ul></nav></noscript>
 <script type="text/x-dc" data-dc-script data-props="{&quot;accent&quot;:{&quot;editor&quot;:&quot;color&quot;,&quot;default&quot;:&quot;#d98014&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;options&quot;:[&quot;#d98014&quot;,&quot;#ec3013&quot;,&quot;#0f6b4f&quot;,&quot;#1b3fd8&quot;],&quot;section&quot;:&quot;Theme&quot;},&quot;dark&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:false,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Theme&quot;}}">
 const mk = (title, cat, sub, price, was, off, rating, reviews, updated, code) => ({
   title, cat, sub, price, was, off: "\u2212" + off + "%", hasOff: true, rating,
