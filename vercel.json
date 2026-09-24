@@ -67,6 +67,10 @@
       "destination": "/$2.dc.html"
     },
     {
+      "source": "/links",
+      "destination": "/links.html"
+    },
+    {
       "source": "/catalogue",
       "destination": "/catalogue.html"
     },

@@ -182,8 +182,74 @@
     </sc-for>
   </div>
 
+  <sc-if value="{{ hasCollage }}" hint-placeholder-val="{{ false }}">
+  <div style="margin-top:30px;display:flex;align-items:center;gap:12px;padding-bottom:8px;border-bottom:2px solid var(--color-divider);flex-wrap:wrap">
+    <div style="font-family:var(--font-heading);font-weight:700;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--color-neutral-700);white-space:nowrap;flex:none">3 &#183; Product collage</div>
+    <span style="font-size:12px;color:var(--color-neutral-700)">{{ cSub }}</span>
+    <div style="margin-left:auto;display:flex;align-items:center;gap:14px;flex-wrap:wrap">
+      <label style="display:flex;align-items:center;gap:8px;font-size:13px;cursor:pointer;min-height:40px"><input type="checkbox" checked="{{ cOn }}" onChange="{{ toggleCollage }}" style="width:18px;height:18px;accent-color:var(--color-accent)" />Post in the carousel, before the CTA</label>
+      <button onClick="{{ downloadCollage }}" class="btn btn-secondary" style="font-size:12px;min-height:40px;white-space:nowrap;justify-content:flex-start">{{ cDlLabel }}</button>
+    </div>
+  </div>
+  <div style="display:grid;grid-template-columns:auto minmax(0,1fr);gap:24px;padding:20px 0;align-items:start">
+    <div style="width:324px;height:405px;overflow:hidden;border:1px solid var(--color-divider);flex:none">
+      <div style="width:1080px;height:1350px;transform:scale(.3);transform-origin:top left">
+        <div ref="{{ collageRef }}" style="width:1080px;height:1350px;box-sizing:border-box;padding:48px 48px 40px;background:#16233a;display:flex;flex-direction:column;font-family:var(--font-heading)">
+          <div style="margin:0 0 28px;flex:none">
+            <div style="font-weight:800;font-size:22px;letter-spacing:.14em;text-transform:uppercase;color:#d98014">{{ cKicker }}</div>
+            <div style="{{ cHeadStyle }}">{{ cTitle }}</div>
+          </div>
+          <div style="{{ cGridStyle }}">
+            <sc-for list="{{ cHeads }}" as="h" hint-placeholder-count="0">
+              <div style="{{ h.style }}">{{ h.name }}</div>
+            </sc-for>
+            <sc-for list="{{ cTiles }}" as="t" hint-placeholder-count="0">
+              <div style="{{ t.cell }}">
+                <div style="{{ t.plate }}">
+                  {{ t.imgEl }}
+                  <span style="{{ t.badge }}">{{ t.n }}</span>
+                </div>
+                <div style="{{ t.info }}">
+                  <span style="{{ t.tagStyle }}">{{ t.tag }}</span>
+                  <div style="{{ t.nameStyle }}">{{ t.name }}</div>
+                  <div style="display:flex;align-items:baseline;gap:6px 10px;flex-wrap:wrap;margin-top:auto;min-width:0">
+                    <span style="{{ t.priceStyle }}">{{ t.price }}</span>
+                    <span style="{{ t.wasStyle }}">{{ t.was }}</span>
+                    <span style="{{ t.chipStyle }}">{{ t.off }}</span>
+                  </div>
+                </div>
+              </div>
+            </sc-for>
+          </div>
+          <div style="flex:none;display:flex;align-items:center;gap:12px;border-top:3px solid #d98014;margin-top:24px;padding-top:18px;font-weight:700;font-size:26px;letter-spacing:.08em;text-transform:uppercase;color:#f2efe9">
+            <span>Every pick at mistrydeals.com</span>
+            <span style="margin-left:auto">{{ cFootRight }}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div style="min-width:0;display:flex;flex-direction:column">
+      <div style="font-size:12px;line-height:1.45;color:var(--color-neutral-700);padding-bottom:8px;text-wrap:pretty">Tick the products to show (2&#8211;8). The first one takes the large tile. Prices are the guide&#8217;s saved prices.</div>
+      <sc-if value="{{ cWarn }}" hint-placeholder-val="{{ false }}">
+        <div style="border-left:3px solid var(--color-accent-700);padding:8px 12px;margin-bottom:8px;font-size:12.5px;color:var(--color-accent-700)">{{ cWarn }}</div>
+      </sc-if>
+      <sc-for list="{{ cRows }}" as="r" hint-placeholder-count="0">
+        <div style="{{ r.rowStyle }}">
+          <input type="checkbox" checked="{{ r.on }}" onChange="{{ r.toggle }}" style="width:18px;height:18px;accent-color:var(--color-accent);cursor:pointer" />
+          <span style="font-family:var(--font-heading);font-weight:800;font-size:14px">{{ r.n }}</span>
+          <span style="font-size:13px;line-height:1.35;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ r.title }}</span>
+          <div style="display:flex;gap:4px">
+            <button onClick="{{ r.up }}" title="Move up" style="{{ r.btn }}">&#9650;</button>
+            <button onClick="{{ r.down }}" title="Move down" style="{{ r.btn }}">&#9660;</button>
+          </div>
+        </div>
+      </sc-for>
+    </div>
+  </div>
+  </sc-if>
+
   <div style="margin-top:30px;display:flex;align-items:baseline;gap:12px;padding-bottom:8px;border-bottom:2px solid var(--color-divider);flex-wrap:wrap">
-    <div style="font-family:var(--font-heading);font-weight:700;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--color-neutral-700);white-space:nowrap;flex:none">3 &#183; Caption</div>
+    <div style="font-family:var(--font-heading);font-weight:700;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--color-neutral-700);white-space:nowrap;flex:none">4 &#183; Caption</div>
     <span style="{{ hookCountStyle }}">{{ hookCount }}</span>
     <div style="margin-left:auto;display:flex;gap:8px">
       <button onClick="{{ regenCaption }}" class="btn btn-ghost" style="font-size:12px;min-height:40px;white-space:nowrap;justify-content:flex-start">Regenerate</button>
@@ -331,7 +397,7 @@ class Component extends DCLogic {
   }
 
   async queueIg() {
-    const slides = this.state.slides || [], g = this.guide(this.state.guideId);
+    const slides = this.exportNodes(), g = this.guide(this.state.guideId);
     if (!g || slides.length < 2) return;
     if (!this.token()) { this.setState({ igError: "Sign in on Buying guides first \u2014 queueing needs an admin session." }); return; }
     if (!confirm("Queue this " + slides.length + "-slide carousel to Instagram? The scheduler posts it in its next carousel slot.")) return;
@@ -341,7 +407,7 @@ class Component extends DCLogic {
       const stamp = new Date().toISOString().slice(0, 10) + "-" + Date.now();
       const urls = [];
       for (let i = 0; i < slides.length; i++) {
-        const node = this._refs[i];
+        const node = slides[i];
         if (!node) throw new Error("slide " + (i + 1) + " is not on screen");
         this.setState({ igBusy: "Uploading slide " + (i + 1) + " of " + slides.length + "\u2026" });
         const blob = await lib.toBlob(node, { width: 1080, height: 1350, pixelRatio: 1, cacheBust: true });
@@ -409,7 +475,214 @@ class Component extends DCLogic {
     let saved = null;
     try { saved = JSON.parse(localStorage.getItem("md-guide-carousel-" + g.id) || "null"); } catch (e) {}
     const has = saved && saved.slides && saved.slides.length;
-    this.setState({ guideId: String(g.id), slides: has ? saved.slides : [], caption: has ? (saved.caption || "") : "", pasteOpen: !has, pasteErr: "" });
+    let col = null;
+    try { col = JSON.parse(localStorage.getItem("md-guide-collage-" + g.id) || "null"); } catch (e) {}
+    const np = ((g.content || {}).products || []).length;
+    const ok = col && Array.isArray(col.items) && col.items.length === np;
+    const items = ok ? col.items : Array.from({ length: np }, (_, i) => ({ i: i, on: i < 8 }));
+    this.setState({ guideId: String(g.id), slides: has ? saved.slides : [], caption: has ? (saved.caption || "") : "", pasteOpen: !has, pasteErr: "",
+      cItems: items, cOn: ok ? col.on !== false : true });
+  }
+
+  persistCollage(patch) {
+    this.setState(patch, () => {
+      try { localStorage.setItem("md-guide-collage-" + this.state.guideId, JSON.stringify({ items: this.state.cItems, on: this.state.cOn })); } catch (e) {}
+    });
+  }
+  collagePicks() {
+    const g = this.guide(this.state.guideId);
+    const ps = ((g && g.content) || {}).products || [];
+    return (this.state.cItems || []).filter(it => it.on && ps[it.i]).map(it => ps[it.i]).slice(0, this.isTiers(g) ? 12 : 8);
+  }
+  collageActive() { return this.state.cOn !== false && this.collagePicks().length >= 2; }
+  // carousel order for export: slides, with the collage dropped in before the CTA
+  exportNodes() {
+    const s = this.state.slides || [];
+    const nodes = s.map((_, i) => this._refs[i]);
+    if (this.collageActive() && this._collageEl) {
+      const k = s.length && s[s.length - 1].kind === "cta" ? s.length - 1 : s.length;
+      nodes.splice(k, 0, this._collageEl);
+    }
+    return nodes;
+  }
+  collageLayout(n) {
+    const L = "abcdefgh".split("").slice(0, n);
+    if (n < 4) {
+      if (n === 3) return { cols: "1fr 1fr", rows: "1.2fr 1fr", areas: ["a a", "b c"], horiz: ["a"] };
+      return { cols: "1fr", rows: L.map(() => "1fr").join(" "), areas: L, horiz: L };
+    }
+    return {
+      4: { cols: "1fr 1fr 1fr", rows: "1.25fr 1fr", areas: ["a a a", "b c d"], horiz: ["a"] },
+      5: { cols: "1fr 1fr", rows: "1.2fr 1fr 1fr", areas: ["a a", "b c", "d e"], horiz: L },
+      6: { cols: "1fr 1fr 1fr", rows: "1fr 1fr 1fr", areas: ["a a b", "a a c", "d e f"], horiz: [] },
+      7: { cols: "1fr 1fr 1fr", rows: "1.1fr 1fr 1fr", areas: ["a a a", "b c d", "e f g"], horiz: ["a"] },
+      8: { cols: "1fr 1fr 1fr 1fr 1fr 1fr", rows: "1.15fr 1fr 1fr", areas: ["a a a b b b", "c c d d e e", "f f g g h h"], horiz: [] }
+    }[Math.min(8, n)];
+  }
+  shortName(t) {
+    t = this.decode(t || "").split(/[,\u2013\u2014|]/)[0];
+    t = t.replace(/\s*[(\[]([^)\]]*)[)\]]/g, (m, inner) => inner.length <= 12 ? " (" + inner.trim() + ")" : "");
+    t = t.replace(/\s*[(\[].*$/, "").replace(/\s+/g, " ").trim();
+    return t.length > 70 ? t.slice(0, 68).replace(/\s+\S*$/, "") + "\u2026" : t;
+  }
+  moveItem(from, to) {
+    const items = (this.state.cItems || []).slice();
+    if (to < 0 || to >= items.length) return;
+    const [x] = items.splice(from, 1); items.splice(to, 0, x);
+    this.persistCollage({ cItems: items });
+  }
+  collageVals(g) {
+    const ps = ((g && g.content) || {}).products || [];
+    const items = this.state.cItems || [];
+    const picks = this.collagePicks();
+    const n = picks.length;
+    const lay = this.collageLayout(Math.max(1, n));
+    const letters = "abcdefgh";
+    const money = v => "$" + (Math.round(v * 100) % 100 ? v.toFixed(2) : Math.round(v).toLocaleString("en-US"));
+    const SZ = {
+      L: { name: 32, price: 72, was: 30, chip: 32, badge: 44, pad: 24 },
+      M: { name: 24, price: 52, was: 24, chip: 24, badge: 34, pad: 18 },
+      S: { name: 19, price: 40, was: 19, chip: 19, badge: 28, pad: 14 }
+    };
+    const tiles = picks.map((p, i) => {
+      const z = SZ[n === 8 ? (i < 2 ? "M" : "S") : i === 0 ? "L" : n <= 5 ? "M" : "S"];
+      const L = letters[i];
+      const horiz = lay.horiz.indexOf(L) !== -1;
+      const now = parseFloat(p.price);
+      const w0 = parseFloat(p.original_price);
+      const was = !isNaN(w0) && w0 > 0 && (isNaN(now) || w0 > now) ? w0 : null;
+      const pct = was && !isNaN(now) ? Math.round((1 - now / was) * 100) : 0;
+      return {
+        n: String(i + 1),
+        tag: "", tagStyle: "display:none",
+        imgEl: React.createElement("img", {
+          src: String(p.image_url || "").replace(/\._[^.\/]+_\.(jpg|jpeg|png|webp)$/i, "._SL800_.$1"), alt: "", crossOrigin: "anonymous",
+          style: { position: "absolute", top: "7%", left: "7%", width: "86%", height: "86%", objectFit: "contain", display: "block" }
+        }),
+        name: this.shortName(p.title),
+        price: !isNaN(now) ? money(now) : "",
+        was: was != null ? money(was) : "",
+        off: pct >= 5 ? "\u2212" + pct + "%" : "",
+        cell: "grid-area:" + L + ";display:flex;flex-direction:" + (horiz ? "row" : "column") + ";background:#f2efe9;min-width:0;min-height:0;overflow:hidden",
+        plate: "position:relative;background:#ffffff;min-width:0;min-height:0;" + (horiz ? "width:42%;flex:none" : "flex:1 1 0"),
+        badge: "position:absolute;left:0;top:0;width:" + z.badge + "px;height:" + z.badge + "px;display:grid;place-items:center;background:#16233a;color:#f2efe9;font-weight:800;font-size:" + Math.round(z.badge * .55) + "px;line-height:1",
+        info: "display:flex;flex-direction:column;gap:" + Math.round(z.pad * .5) + "px;padding:" + z.pad + "px;min-width:0;" + (horiz ? "flex:1 1 0" : "flex:none"),
+        nameStyle: "font-weight:700;font-size:" + z.name + "px;line-height:1.12;letter-spacing:-.01em;color:#16233a;display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:3;overflow:hidden;flex:none;height:" + Math.ceil(z.name * 1.12 * 3) + "px;text-wrap:pretty",
+        priceStyle: "font-weight:800;font-size:" + z.price + "px;line-height:1;letter-spacing:-.03em;color:#16233a;white-space:nowrap",
+        wasStyle: was != null ? "font-family:var(--font-body);font-size:" + z.was + "px;line-height:1;text-decoration:line-through;color:#5c6474;white-space:nowrap;min-width:0;overflow:hidden" : "display:none",
+        chipStyle: pct >= 5 ? "margin-left:auto;flex:none;background:#d98014;color:#16233a;font-weight:800;font-size:" + z.chip + "px;line-height:1;padding:" + Math.round(z.chip * .28) + "px " + Math.round(z.chip * .38) + "px;white-space:nowrap" : "display:none"
+      };
+    });
+    const title = this.decode(g && g.title) || "";
+    const tl = title.length;
+    const onCount = items.filter(it => it.on).length;
+    const btn = "font:inherit;font-size:9px;line-height:1;width:28px;height:28px;display:grid;place-items:center;cursor:pointer;border:1px solid var(--color-divider);background:transparent;color:var(--color-text)";
+    const base = {
+      hasCollage: ps.length > 0,
+      cOn: this.state.cOn !== false,
+      toggleCollage: e => this.persistCollage({ cOn: e.target.checked }),
+      cSub: this.collageActive() ? "Posts as slide " + ((this.state.slides || []).length || 1) + " of " + ((this.state.slides || []).length + 1) + " \u00b7 1080\u00d71350" : "Not in the carousel \u00b7 download it on its own",
+      cWarn: onCount < 2 ? "Tick at least two products." : onCount > 8 ? "Only the first eight ticked products fit \u2014 untick " + (onCount - 8) + "." : "",
+      cKicker: (this.decode(g && g.event_name) || "Buying guide") + " \u00b7 " + n + " pick" + (n === 1 ? "" : "s"),
+      cTitle: title,
+      cHeadStyle: "font-weight:800;font-size:" + (tl <= 34 ? 66 : tl <= 56 ? 54 : 44) + "px;line-height:1.02;letter-spacing:-.03em;color:#f2efe9;margin-top:10px;text-wrap:balance",
+      cGridStyle: "flex:1 1 0;min-height:0;display:grid;gap:16px;grid-template-columns:" + lay.cols + ";grid-template-rows:" + lay.rows + ";grid-template-areas:" + lay.areas.map(a => '"' + a + '"').join(" "),
+      cTiles: tiles,
+      cFootRight: this.collageActive() ? "Swipe \u2192" : "Link in bio",
+      collageRef: this._collageRefFn || (this._collageRefFn = el => { this._collageEl = el; }),
+      cRows: items.map((it, k) => {
+        const p = ps[it.i] || {};
+        const rank = items.slice(0, k + 1).filter(x => x.on).length;
+        return {
+          on: !!it.on, n: it.on && rank <= 8 ? String(rank) : "\u2014", btn: btn,
+          title: (this.isTiers(g) ? (p.group || "No group") + " \u00b7 " + (this.tierKeyOf(p.tier) || "no tier") + " \u2014 " : "") + this.decode(p.title || ""),
+          rowStyle: "display:grid;grid-template-columns:22px 24px minmax(0,1fr) auto;gap:10px;align-items:center;padding:6px 0;border-bottom:1px solid var(--color-divider);" + (it.on ? "" : "opacity:.5"),
+          toggle: e => { const next = items.slice(); next[k] = Object.assign({}, it, { on: e.target.checked }); this.persistCollage({ cItems: next }); },
+          up: () => this.moveItem(k, k - 1), down: () => this.moveItem(k, k + 1)
+        };
+      }),
+      downloadCollage: () => this.downloadCollage(),
+      cDlLabel: this.state.busy === "collage" ? "Rendering\u2026" : "Download collage PNG"
+    };
+    return Object.assign(base, this.isTiers(g) ? this.tierCollage(g) : { cHeads: [] });
+  }
+  isTiers(g) { return (((g && g.content) || {}).format) === "tiers"; }
+  tierKeyOf(t) {
+    const s = String(t || "").toLowerCase();
+    return /splurge|best|premium|top/.test(s) ? "splurge" : /upgrade|better|step|mid/.test(s) ? "upgrade" : /budget|good|value|saver|entry/.test(s) ? "budget" : "";
+  }
+  // tiered guides: one row per group (four max), Budget / Upgrade / Splurge side by side
+  tierCollage(g) {
+    const ps = ((g && g.content) || {}).products || [];
+    const items = (this.state.cItems || []).filter(it => it.on && ps[it.i]);
+    const rank = p => ({ budget: 0, upgrade: 1, splurge: 2 })[this.tierKeyOf(p.tier)] ?? 3;
+    const order = [], by = {};
+    items.forEach(it => {
+      const p = ps[it.i], k = String(p.group || "").trim() || "More picks";
+      if (!by[k]) { by[k] = []; order.push(k); }
+      by[k].push(p);
+    });
+    const groups = order.slice(0, 4).map(k => ({ name: k, picks: by[k].slice().sort((a, b) => rank(a) - rank(b)).slice(0, 3) }));
+    const rows = [], areas = [], heads = [], tiles = [];
+    const money = v => "$" + (Math.round(v * 100) % 100 ? v.toFixed(2) : Math.round(v).toLocaleString("en-US"));
+    const SZ = { M: { name: 22, price: 48, was: 22, chip: 22, pad: 16 }, S: { name: 18, price: 38, was: 18, chip: 18, pad: 12 } };
+    const BADGE = {
+      budget: "background:#16233a;color:#f2efe9", upgrade: "background:#d98014;color:#16233a",
+      splurge: "background:#16233a;color:#d98014;box-shadow:inset 0 0 0 3px #d98014", "": "background:#16233a;color:#f2efe9"
+    };
+    groups.forEach((gr, k) => {
+      const hA = "h" + k;
+      areas.push([hA, hA, hA, hA, hA, hA].join(" ")); rows.push("auto");
+      const span = 6 / gr.picks.length, row = [];
+      const z = SZ[gr.picks.length >= 3 ? "S" : "M"];
+      const topTier = gr.picks.map(p => this.tierKeyOf(p.tier)).filter(t => t === "upgrade" || t === "splurge").pop() || "";
+      gr.picks.forEach((p, j) => {
+        const a = "p" + k + "x" + j;
+        for (let s = 0; s < span; s++) row.push(a);
+        const tk = this.tierKeyOf(p.tier);
+        const now = parseFloat(p.price), w0 = parseFloat(p.original_price);
+        const was = !isNaN(w0) && w0 > 0 && (isNaN(now) || w0 > now) ? w0 : null;
+        const pct = was && !isNaN(now) ? Math.round((1 - now / was) * 100) : 0;
+        tiles.push({
+          n: tk ? tk.charAt(0).toUpperCase() + tk.slice(1) + " pick" : "Pick",
+          imgEl: React.createElement("img", {
+            src: String(p.image_url || "").replace(/\._[^.\/]+_\.(jpg|jpeg|png|webp)$/i, "._SL800_.$1"), alt: "", crossOrigin: "anonymous",
+            style: { position: "absolute", top: "8%", left: "8%", width: "84%", height: "84%", objectFit: "contain", display: "block" }
+          }),
+          name: this.shortName(p.title),
+          price: !isNaN(now) ? money(now) : "",
+          was: was != null ? money(was) : "",
+          off: pct >= 5 ? "\u2212" + pct + "%" : "",
+          cell: "grid-area:" + a + ";display:flex;flex-direction:row;background:#f2efe9;min-width:0;min-height:0;overflow:hidden",
+          plate: "position:relative;background:#ffffff;min-width:0;min-height:0;width:40%;flex:none",
+          tag: tk ? tk.charAt(0).toUpperCase() + tk.slice(1) + " pick" : "Pick",
+          badge: "display:none",
+          tagStyle: "align-self:flex-start;flex:none;padding:" + (gr.picks.length >= 3 ? "7px 10px" : "8px 12px") + ";font-weight:800;font-size:" + (gr.picks.length >= 3 ? 14 : 16) + "px;letter-spacing:.1em;text-transform:uppercase;line-height:1;white-space:nowrap;" + (tk && tk === topTier ? "background:#d98014;color:#16233a" : tk === "upgrade" ? "background:#ffffff;color:#16233a;box-shadow:inset 0 0 0 2px #16233a" : "background:#16233a;color:#f2efe9"),
+          info: "display:flex;flex-direction:column;gap:" + Math.round(z.pad * .5) + "px;padding:" + z.pad + "px;min-width:0;flex:1 1 0",
+          nameStyle: "font-weight:700;font-size:" + z.name + "px;line-height:1.12;letter-spacing:-.01em;color:#16233a;display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:3;overflow:hidden;flex:none;max-height:" + Math.ceil(z.name * 1.12 * 3) + "px;text-wrap:pretty",
+          priceStyle: "font-weight:800;font-size:" + z.price + "px;line-height:1;letter-spacing:-.03em;color:#16233a;white-space:nowrap",
+          wasStyle: was != null ? "font-family:var(--font-body);font-size:" + z.was + "px;line-height:1;text-decoration:line-through;color:#5c6474;white-space:nowrap" : "display:none",
+          chipStyle: pct >= 5 ? "flex:none;background:#d98014;color:#16233a;font-weight:800;font-size:" + z.chip + "px;line-height:1;padding:" + Math.round(z.chip * .28) + "px " + Math.round(z.chip * .38) + "px;white-space:nowrap" : "display:none"
+        });
+      });
+      areas.push(row.join(" ")); rows.push("1fr");
+      heads.push({ name: gr.name, style: "grid-area:" + hA + ";font-weight:800;font-size:24px;letter-spacing:.1em;text-transform:uppercase;color:#d98014;line-height:1;margin-top:" + (k ? "8px" : "0") });
+    });
+    const spl = groups.some(gr => gr.picks.some(p => this.tierKeyOf(p.tier) === "splurge"));
+    const over = order.length > 4 ? "Only the first four groups fit \u2014 untick the products in " + order.slice(4).join(", ") + "."
+      : order.some(k => by[k].length > 3) ? "A group shows three products at most." : "";
+    return {
+      cHeads: heads, cTiles: tiles,
+      cGridStyle: "flex:1 1 0;min-height:0;display:grid;gap:12px 16px;grid-template-columns:repeat(6,minmax(0,1fr));grid-template-rows:" + rows.join(" ") + ";grid-template-areas:" + areas.map(a => '"' + a + '"').join(" "),
+      cKicker: (this.decode(g && g.event_name) || "Buying guide") + " \u00b7 " + (spl ? "Budget, upgrade, splurge" : "Budget vs upgrade"),
+      cWarn: items.length < 2 ? "Tick at least two products." : over
+    };
+  }
+  async downloadCollage() {
+    if (this.state.busy != null || !this._collageEl) return;
+    this.setState({ busy: "collage" });
+    try { await this.pngNode(this._collageEl, this.fileBase().replace(/-carousel$/, "") + "-collage"); this.setState({ busy: null }); }
+    catch (e) { this.setState({ busy: null, note: "Export failed \u2014 " + ((e && e.message) || "an image failed to load") }); }
   }
 
   persist(patch) {
@@ -554,6 +827,13 @@ class Component extends DCLogic {
         if (m !== -1 && lines[i] && tips[m].body) lines[i] = strip(tips[m].body);
       }
     }
+    if (c.format === "tiers") {
+      const gs = [];
+      prods.forEach(p => { const k = strip(p && p.group); if (k && gs.indexOf(k) === -1) gs.push(k); });
+      const spl = prods.some(p => this.tierKeyOf(p && p.tier) === "splurge");
+      lines.push("Every category has a budget pick and an upgrade" + (spl ? ", plus a splurge where it is worth it" : "") + (gs.length ? ": " + gs.join(", ").toLowerCase() + "." : "."));
+      lines.push("");
+    }
     lines.push((picks ? "The full guide has " + picks + " pick" + (picks === 1 ? "" : "s") + " we would actually buy" : "The full guide has the picks we would actually buy") +
       (prices.length > 1 ? ", from " + money(prices[0]) + " to " + money(prices[prices.length - 1]) : prices.length ? ", starting at " + money(prices[0]) : "") +
       ", with every price checked against what the product has really been selling for, not the inflated list price. Each pick says who it is for and why it made the cut.");
@@ -601,10 +881,13 @@ class Component extends DCLogic {
   async png(i) {
     const node = this._refs[i];
     if (!node) throw new Error("slide " + (i + 1) + " is not on screen");
+    await this.pngNode(node, this.fileBase() + "-" + String(i + 1).padStart(2, "0"));
+  }
+  async pngNode(node, name) {
     const lib = await import("https://esm.sh/html-to-image@1.11.11");
     const url = await lib.toPng(node, { width: 1080, height: 1350, pixelRatio: 1, cacheBust: true });
     const a = document.createElement("a");
-    a.href = url; a.download = this.fileBase() + "-" + String(i + 1).padStart(2, "0") + ".png";
+    a.href = url; a.download = name + ".png";
     document.body.appendChild(a); a.click(); a.remove();
   }
 
@@ -619,8 +902,13 @@ class Component extends DCLogic {
     if (this.state.busy != null || !this.state.slides || !this.state.slides.length) return;
     this.setState({ busy: "all" });
     try {
-      for (let i = 0; i < this.state.slides.length; i++) { await this.png(i); await new Promise(r => setTimeout(r, 350)); }
-      this.setState({ busy: null, note: "Downloaded " + this.state.slides.length + " slides. Post them in order as one carousel." });
+      const nodes = this.exportNodes();
+      for (let i = 0; i < nodes.length; i++) {
+        if (!nodes[i]) throw new Error("slide " + (i + 1) + " is not on screen");
+        await this.pngNode(nodes[i], this.fileBase() + "-" + String(i + 1).padStart(2, "0"));
+        await new Promise(r => setTimeout(r, 350));
+      }
+      this.setState({ busy: null, note: "Downloaded " + nodes.length + " slides" + (this.collageActive() ? ", collage included" : "") + ". Post them in order as one carousel." });
     } catch (e) { this.setState({ busy: null, note: "Export failed \u2014 " + e.message }); }
   }
 
@@ -636,7 +924,7 @@ class Component extends DCLogic {
   }
 
   renderVals() {
-    return Object.assign(this.renderVals2(), this.darkVals());
+    return Object.assign(this.renderVals2(), this.collageVals(this.guide(this.state.guideId)), this.darkVals());
   }
   renderVals2() {
     const slides = this.state.slides || [];
@@ -668,7 +956,7 @@ class Component extends DCLogic {
       copyTemplate: () => this.copy(this.template(), "tplCopied"),
       tplLabel: this.state.tplCopied ? "Copied" : "Copy blank template",
       iconList: Object.keys(ICONS).filter(k => k !== "arrow").join(", "),
-      dlAllLabel: this.state.busy === "all" ? "Rendering\u2026" : "Download all " + (total || "") + " PNGs",
+      dlAllLabel: this.state.busy === "all" ? "Rendering\u2026" : "Download all " + ((total + (this.collageActive() ? 1 : 0)) || "") + " PNGs",
       note: this.state.note,
       iconOpts: Object.keys(ICONS).filter(k => k !== "arrow"),
       slides: slides.map((s, i) => {

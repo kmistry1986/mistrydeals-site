@@ -668,6 +668,7 @@
           <p style="font-size:19px;line-height:1.5">{{ p }}</p>
         </sc-for>
         <hr class="hr" />
+        <sc-if value="{{ guide.isPicks }}" hint-placeholder-val="{{ true }}">
         <div style="font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--color-neutral-700);margin-bottom:8px">At a glance</div>
         <p style="margin:0 0 18px;font-size:13px;line-height:1.5;color:var(--color-neutral-700);max-width:70ch;text-wrap:pretty">{{ guide.priceAsOf }}</p>
         <div class="m-2col" style="display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px;margin:0 0 36px">
@@ -708,6 +709,69 @@
             </div>
           </sc-for>
         </div>
+        </sc-if>
+        <sc-if value="{{ guide.isTiers }}" hint-placeholder-val="{{ false }}">
+          <div style="font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--color-neutral-700);margin-bottom:8px">At a glance</div>
+          <p style="margin:0 0 18px;font-size:13px;line-height:1.5;color:var(--color-neutral-700);max-width:70ch;text-wrap:pretty">{{ guide.priceAsOf }}</p>
+          <div style="border-top:2px solid var(--color-text);margin:0 0 44px">
+            <sc-for list="{{ guide.groups }}" as="g" hint-placeholder-count="4">
+              <div class="m-stack" style="display:grid;grid-template-columns:minmax(0,220px) minmax(0,1fr);gap:10px 24px;border-bottom:1px solid var(--color-divider);padding:14px 0;align-items:start">
+                <a href="{{ g.hash }}" onClick="{{ g.jump }}" style="font-family:var(--font-heading);font-weight:800;font-size:17px;line-height:1.25;color:var(--color-text);text-decoration:none" style-hover="color:var(--color-accent-700)">{{ g.name }}</a>
+                <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:12px 20px">
+                  <sc-for list="{{ g.picks }}" as="d" hint-placeholder-count="2">
+                    <a href="{{ d.hash }}" onClick="{{ d.jump }}" style="display:flex;flex-direction:column;gap:5px;text-decoration:none;color:var(--color-text);min-width:0" style-hover="color:var(--color-accent-700)">
+                      <span style="{{ d.tierStyle }}">{{ d.tierLabel }}</span>
+                      <span style="font-size:14px;line-height:1.35">{{ d.short }}</span>
+                      <span style="font-size:15px;font-weight:600">{{ d.price }}</span>
+                    </a>
+                  </sc-for>
+                </div>
+              </div>
+            </sc-for>
+          </div>
+          <sc-for list="{{ guide.groups }}" as="g" hint-placeholder-count="2">
+            <div id="{{ g.anchor }}" style="margin:0 0 44px">
+              <div style="display:flex;align-items:baseline;gap:12px;flex-wrap:wrap;border-top:2px solid var(--color-text);padding-top:14px;margin-bottom:18px">
+                <span style="font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--color-accent-700)">{{ g.n }}</span>
+                <h2 style="margin:0;font-size:30px;line-height:1.1;letter-spacing:-.02em">{{ g.name }}</h2>
+                <span style="font-size:13px;color:var(--color-neutral-700)">{{ g.count }}</span>
+              </div>
+              <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,280px),1fr));gap:20px">
+                <sc-for list="{{ g.picks }}" as="d" hint-placeholder-count="2">
+                  <div id="{{ d.anchor }}" style="display:flex;flex-direction:column;gap:12px;border:1px solid var(--color-divider);padding:16px;min-width:0">
+                    <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
+                      <span style="{{ d.tierStyle }}">{{ d.tierLabel }}</span>
+                      <span style="font-size:13px;color:var(--color-neutral-700)">{{ d.stars }}</span>
+                    </div>
+                    <a href="{{ d.url }}" target="_blank" rel="nofollow sponsored noopener" style="border:1px solid var(--color-divider);background:#ffffff;height:200px;position:relative;overflow:hidden;display:block;text-decoration:none" style-hover="border-color:var(--color-accent-700)">
+                      <dc-import name="ProductImage" src="{{ d.img }}" alt="" pad="16px" hint-size="100%,100%"></dc-import>
+                    </a>
+                    <h3 style="margin:0;font-size:20px;line-height:1.2"><a href="{{ d.url }}" target="_blank" rel="nofollow sponsored noopener" style="color:var(--color-text);text-decoration:none" style-hover="color:var(--color-accent-700)">{{ d.title }}</a></h3>
+                    <div style="display:flex;flex-wrap:wrap;align-items:baseline;gap:10px">
+                      <span style="font-size:24px;font-weight:600">{{ d.price }}</span>
+                      <span style="font-size:15px;color:var(--color-neutral-700);text-decoration:line-through">{{ d.was }}</span>
+                      <span style="font-size:13px;color:var(--color-accent-700);font-weight:600">{{ d.off }}</span>
+                      <sc-if value="{{ d.atLowest }}" hint-placeholder-val="{{ false }}">
+                        <span style="font-family:var(--font-heading);font-weight:700;font-size:10px;letter-spacing:.1em;text-transform:uppercase;background:var(--color-verify);color:var(--color-bg);padding:4px 7px;white-space:nowrap">Lowest ever</span>
+                      </sc-if>
+                    </div>
+                    <p style="margin:0;font-size:15px;line-height:1.55">{{ d.description }}</p>
+                    <sc-if value="{{ d.hasStepUp }}" hint-placeholder-val="{{ false }}">
+                      <div style="background:var(--color-surface);border-left:2px solid var(--color-accent);padding:10px 14px;font-size:14px;line-height:1.5"><span style="font-weight:600">{{ d.stepUpLead }} </span>{{ d.stepUp }}</div>
+                    </sc-if>
+                    <sc-if value="{{ d.hasNote }}" hint-placeholder-val="{{ false }}">
+                      <div style="background:var(--color-surface);border-left:2px solid var(--color-accent);padding:10px 14px;font-size:14px;line-height:1.5"><span style="font-weight:600">Price check. </span>{{ d.note }}</div>
+                    </sc-if>
+                    <div style="margin-top:auto;display:flex;flex-direction:column;gap:8px;align-items:flex-start">
+                      <div style="font-size:12px;line-height:1.4;color:var(--color-neutral-600)">{{ guide.priceStamp }}</div>
+                      <a class="btn btn-primary" href="{{ d.url }}" target="_blank" rel="nofollow sponsored noopener" style="font-size:13px;padding:9px 14px">Amazon &#8594;</a>
+                    </div>
+                  </div>
+                </sc-for>
+              </div>
+            </div>
+          </sc-for>
+        </sc-if>
         <sc-if value="{{ guide.hasHowto }}" hint-placeholder-val="{{ false }}">
           <div>
             <hr class="hr" />
@@ -1657,8 +1721,51 @@ class Component extends DCLogic {
       img: p.image_url || "", noImg: !p.image_url,
       url: amzUrl(null, p.amazon_asin),
       asin: p.amazon_asin || "",
-      atLowest: this.atLowest(p.amazon_asin, price)
+      atLowest: this.atLowest(p.amazon_asin, price),
+      ...this.tierBits(p)
     };
+  }
+  tierKeyOf(t) {
+    const s = String(t || "").toLowerCase();
+    return /splurge|best|premium|top/.test(s) ? "splurge" : /upgrade|better|step|mid/.test(s) ? "upgrade" : /budget|good|value|saver|entry/.test(s) ? "budget" : "";
+  }
+  tierBits(p) {
+    const k = this.tierKeyOf(p.tier);
+    const step = String(p.step_up || "").trim();
+    const base = "align-self:flex-start;font-family:var(--font-heading);font-weight:800;font-size:13px;letter-spacing:.1em;text-transform:uppercase;padding:7px 12px;white-space:nowrap;line-height:1.1;";
+    return {
+      tierRank: k === "budget" ? 0 : k === "upgrade" ? 1 : k === "splurge" ? 2 : 3,
+      tierLabel: k === "budget" ? "Budget pick" : k === "upgrade" ? "Upgrade pick" : k === "splurge" ? "Splurge pick" : "Pick",
+      tierStyle: base + (k === "upgrade" ? "background:var(--color-accent);color:#16233a" : k === "splurge" ? "background:var(--color-text);color:var(--color-bg)" : "border:2px solid var(--color-text);color:var(--color-text)"),
+      stepUp: step, hasStepUp: !!step && k !== "budget", stepUpLead: k === "splurge" ? "Why splurge." : "Why step up."
+    };
+  }
+  // tiered guides: products grouped in the order their group first appears, cheapest tier first
+  guideGroups(products, picks) {
+    const order = [], by = {};
+    products.forEach((p, i) => {
+      const k = String(p.group || "").trim() || "More picks";
+      if (!by[k]) { by[k] = []; order.push(k); }
+      by[k].push(picks[i]);
+    });
+    return order.map((k, gi) => ({
+      name: k, n: String(gi + 1).padStart(2, "0"),
+      anchor: "guide-group-" + (gi + 1), hash: "#guide-group-" + (gi + 1),
+      jump: (e) => {
+        if (e && e.preventDefault) e.preventDefault();
+        const el = document.getElementById("guide-group-" + (gi + 1));
+        if (el) window.scrollTo({ top: el.getBoundingClientRect().top + window.pageYOffset - 70, behavior: "smooth" });
+      },
+      count: by[k].length + (by[k].length === 1 ? " option" : " options"),
+      picks: (() => {
+        const list = by[k].slice().sort((a, b) => a.tierRank - b.tierRank);
+        const top = Math.max.apply(null, list.map(d => d.tierRank < 3 ? d.tierRank : -1));
+        const base = "align-self:flex-start;font-family:var(--font-heading);font-weight:800;font-size:13px;letter-spacing:.1em;text-transform:uppercase;padding:7px 12px;white-space:nowrap;line-height:1.1;";
+        // the top tier in the group is orange; a middle Upgrade is white; Budget is outlined
+        return list.map(d => Object.assign({}, d, { tierStyle: base + (d.tierRank > 0 && d.tierRank < 3 && d.tierRank === top ? "background:var(--color-accent);color:#16233a"
+          : d.tierRank > 0 && d.tierRank < 3 ? "background:#ffffff;color:#16233a;border:2px solid #ffffff" : "border:2px solid var(--color-text);color:var(--color-text)") }));
+      })()
+    }));
   }
   // hero = the most expensive live pick that has an image (live price first, saved price as fallback)
   heroPick(g) {
@@ -1675,7 +1782,7 @@ class Component extends DCLogic {
     return best || list[0] || null;
   }
   buildGuide(g) {
-    if (!g) return { kicker: "Buying guide", title: "", caption: "", date: "", count: "", priceAsOf: "", priceStamp: "", intro: [], sections: [], faq: [], hasFaq: false, howto: [], hasHowto: false, picks: [] };
+    if (!g) return { kicker: "Buying guide", title: "", caption: "", date: "", count: "", priceAsOf: "", priceStamp: "", intro: [], sections: [], faq: [], hasFaq: false, howto: [], hasHowto: false, picks: [], isPicks: true, isTiers: false, groups: [] };
     const c = g.content || {};
     const active = this.state.activeAsins;
     const products = (c.products || []).filter(p => !active || !p.amazon_asin || active.indexOf(p.amazon_asin) > -1);
@@ -1707,7 +1814,10 @@ class Component extends DCLogic {
       hasFaq: !!(c.faq && c.faq.length),
       howto: (c.howto || []).map((t, i) => ({ n: String(i + 1).padStart(2, "0"), text: t })),
       hasHowto: !!(c.howto && c.howto.length),
-      picks: products.map((p, i) => this.guideProduct(p, i))
+      picks: products.map((p, i) => this.guideProduct(p, i)),
+      isTiers: c.format === "tiers",
+      isPicks: c.format !== "tiers",
+      groups: c.format === "tiers" ? this.guideGroups(products, products.map((p, i) => this.guideProduct(p, i))) : []
     };
   }
   results = React.createRef();

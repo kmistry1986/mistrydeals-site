@@ -2089,7 +2089,7 @@ class Component extends DCLogic {
     return f === "story" ? { w: 1080, h: 1920 } : f === "fb" ? { w: 1200, h: 630 } : { w: 1080, h: 1350 };
   }
   collageLayout(fmt, n) {
-    const L = "abcdefg".split("").slice(0, n);
+    const L = "abcdefgh".split("").slice(0, n);
     if (n < 4) {
       if (fmt === "fb") return { cols: L.map(() => "1fr").join(" "), rows: "1fr", areas: [L.join(" ")], horiz: [] };
       if (n === 3) return { cols: "1fr 1fr", rows: "1.2fr 1fr", areas: ["a a", "b c"], horiz: ["a"] };
@@ -2099,18 +2099,21 @@ class Component extends DCLogic {
       4: { cols: "1fr 1fr 1fr", rows: "1.25fr 1fr", areas: ["a a a", "b c d"], horiz: ["a"] },
       5: { cols: "1fr 1fr", rows: "1.2fr 1fr 1fr", areas: ["a a", "b c", "d e"], horiz: L },
       6: { cols: "1fr 1fr 1fr", rows: "1fr 1fr 1fr", areas: ["a a b", "a a c", "d e f"], horiz: [] },
-      7: { cols: "1fr 1fr 1fr", rows: "1.1fr 1fr 1fr", areas: ["a a a", "b c d", "e f g"], horiz: ["a"] }
+      7: { cols: "1fr 1fr 1fr", rows: "1.1fr 1fr 1fr", areas: ["a a a", "b c d", "e f g"], horiz: ["a"] },
+      8: { cols: "1fr 1fr 1fr 1fr 1fr 1fr", rows: "1.15fr 1fr 1fr", areas: ["a a a b b b", "c c d d e e", "f f g g h h"], horiz: [] }
     };
     const F = {
       4: { cols: "1.4fr 1fr 1fr 1fr", rows: "1fr", areas: ["a b c d"], horiz: [] },
       5: { cols: "1.4fr 1fr 1fr", rows: "1fr 1fr", areas: ["a b c", "a d e"], horiz: ["b", "c", "d", "e"] },
       6: { cols: "1fr 1fr 1fr", rows: "1fr 1fr", areas: ["a b c", "d e f"], horiz: L },
-      7: { cols: "1.3fr 1fr 1fr 1fr", rows: "1fr 1fr", areas: ["a b c d", "a e f g"], horiz: [] }
+      7: { cols: "1.3fr 1fr 1fr 1fr", rows: "1fr 1fr", areas: ["a b c d", "a e f g"], horiz: [] },
+      8: { cols: "1fr 1fr 1fr 1fr", rows: "1fr 1fr", areas: ["a b c d", "e f g h"], horiz: [] }
     };
-    return (fmt === "fb" ? F : P)[Math.min(7, n)];
+    return (fmt === "fb" ? F : P)[Math.min(8, n)];
   }
   collageTier(fmt, n, i) {
     if (fmt === "fb") return i === 0 ? "M" : "S";
+    if (n === 8) return i < 2 ? "M" : "S";
     if (i === 0) return "L";
     return n <= 5 ? "M" : "S";
   }
@@ -2145,24 +2148,24 @@ class Component extends DCLogic {
   }
   collageCaption() {
     const all = this.state.slides;
-    this.state.slides = (all || []).slice(0, 7);
+    this.state.slides = (all || []).slice(0, 8);
     try { return this.reelCaption(); } finally { this.state.slides = all; }
   }
   fbCollageTitle() {
     const all = this.state.slides;
-    this.state.slides = (all || []).slice(0, 7);
+    this.state.slides = (all || []).slice(0, 8);
     try { return this.fbTitle(); } finally { this.state.slides = all; }
   }
   fbCollageCaption() {
     const all = this.state.slides;
-    this.state.slides = (all || []).slice(0, 7);
+    this.state.slides = (all || []).slice(0, 8);
     try { return this.fbCaption(); } finally { this.state.slides = all; }
   }
   // Instagram fetches the image itself, so the PNG has to exist at a public
   // URL before the row is written. Always the 4:5 portrait canvas — Story and
   // Facebook sizes are not valid Instagram feed images.
   async queueCollage() {
-    const picks = (this.state.slides || []).slice(0, 7);
+    const picks = (this.state.slides || []).slice(0, 8);
     if (picks.length < 4) { this.flash("A collage needs at least four products"); return; }
     const prevFmt = this.state.cFmt;
     this.setState({ cQueueing: true, cQueueError: "", cQueueDone: "" });
@@ -2221,11 +2224,11 @@ class Component extends DCLogic {
   collageVals(segBase, segOn, segOff) {
     const fmt = this.state.cFmt;
     const all = this.state.slides || [];
-    const picks = all.slice(0, 7);
+    const picks = all.slice(0, 8);
     const n = picks.length;
     const { w, h } = this.collageDims();
     const lay = this.collageLayout(fmt, Math.max(1, n));
-    const letters = "abcdefg";
+    const letters = "abcdefgh";
     const drag = i => ({
       onDragStart: e => { try { e.dataTransfer.effectAllowed = "move"; e.dataTransfer.setData("text/plain", String(i)); } catch (x) {} this.setState({ dragFrom: i }); },
       onDragOver: e => { e.preventDefault(); if (this.state.dragOver !== i) this.setState({ dragOver: i }); },
@@ -2274,9 +2277,9 @@ class Component extends DCLogic {
     const pad = fmt === "story" ? "220px 56px 320px" : fmt === "fb" ? "30px 36px 26px" : "48px 48px 40px";
     const btn = "font:inherit;font-size:9px;line-height:1;width:24px;height:22px;display:grid;place-items:center;cursor:pointer;border:1px solid var(--color-divider);background:transparent;color:var(--color-text)";
     const warn = n === 0
-      ? "Pick four to seven products from the list on the left \u2014 it is filtered to products synced in the last 12 hours. The first one takes the large tile."
+      ? "Pick four to eight products from the list on the left \u2014 it is filtered to products synced in the last 12 hours. The first one takes the large tile."
       : n < 4 ? "Add " + (4 - n) + " more \u2014 a collage needs at least four products."
-      : all.length > 7 ? "Only the first seven are used \u2014 remove " + (all.length - 7) + " or reorder to choose." : "";
+      : all.length > 8 ? "Only the first eight are used \u2014 remove " + (all.length - 8) + " or reorder to choose." : "";
     return {
       collageMode: this.state.mode === "collage",
       pickCollage: () => this.setState({ mode: "collage", flag: "recent", limit: 40 }, () => this.loadProducts()),

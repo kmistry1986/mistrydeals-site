@@ -232,10 +232,13 @@
                 <input type="date" value="{{ fDate }}" onChange="{{ onDate }}" style="font:inherit;font-size:13px;border:0;background:none;color:var(--color-text);padding:8px 4px;min-height:40px" />
               </label>
               <sc-if value="{{ carouselHref }}" hint-placeholder-val="{{ false }}">
-                <a href="{{ carouselHref }}" target="_blank" rel="noopener" class="btn btn-ghost" style="font-size:12px;padding:10px 14px;min-height:44px;white-space:nowrap;justify-content:flex-start;text-decoration:none">Carousel &#8599;</a>
+                <a href="{{ carouselHref }}" target="{{ carouselTarget }}" rel="noopener" class="btn btn-ghost" style="font-size:12px;padding:10px 14px;min-height:44px;white-space:nowrap;justify-content:flex-start;text-decoration:none">Carousel &#8599;</a>
               </sc-if>
               <button onClick="{{ openPreview }}" class="btn btn-secondary" style="font-size:12px;padding:10px 14px;min-height:44px;white-space:nowrap;justify-content:flex-start">Preview</button>
               <button onClick="{{ save }}" class="btn btn-primary" disabled="{{ saving }}" style="font-size:12px;padding:10px 16px;min-height:44px;white-space:nowrap;justify-content:flex-start">{{ saveLabel }}</button>
+              <sc-if value="{{ canSaveOnly }}" hint-placeholder-val="{{ false }}">
+                <button onClick="{{ saveOnly }}" class="btn btn-secondary" disabled="{{ saving }}" title="Save the draft without queueing its products for an Amazon sync" style="font-size:12px;padding:10px 14px;min-height:44px;white-space:nowrap;justify-content:flex-start">{{ saveOnlyLabel }}</button>
+              </sc-if>
               <button onClick="{{ closeDraft }}" class="btn btn-ghost" style="font-size:12px;padding:10px 14px;min-height:44px;white-space:nowrap;justify-content:flex-start">Close</button>
             </div>
           </div>
@@ -260,6 +263,7 @@
                 <div style="margin-top:12px;display:flex;align-items:center;gap:12px;flex-wrap:wrap">
                   <button onClick="{{ copyTemplate }}" style="font:inherit;font-family:var(--font-heading);font-weight:700;font-size:10px;letter-spacing:.08em;text-transform:uppercase;padding:8px 12px;border:2px solid var(--color-text);white-space:nowrap;cursor:pointer;background:none;color:var(--color-text)">{{ copyTplLabel }}</button>
                   <button onClick="{{ insertTemplate }}" style="font:inherit;font-family:var(--font-heading);font-weight:700;font-size:10px;letter-spacing:.08em;text-transform:uppercase;padding:8px 12px;border:2px solid var(--color-text);white-space:nowrap;cursor:pointer;background:none;color:var(--color-text);border-width:1px">Paste template into box</button>
+                  <button onClick="{{ copyTiersTemplate }}" style="font:inherit;font-family:var(--font-heading);font-weight:700;font-size:10px;letter-spacing:.08em;text-transform:uppercase;padding:8px 12px;border:1px solid var(--color-text);white-space:nowrap;cursor:pointer;background:none;color:var(--color-text)">Copy tiered template</button>
                   <span style="font-size:12px;color:var(--color-neutral-700);text-wrap:pretty">Each ASIN: line starts a new pick &#8212; that&#8217;s how the count is made (PRODUCT lines are optional separators). Only ASIN and WHY are needed; product title, category and prices come from the catalogue.</span>
                 </div>
                 <textarea class="input" rows="12" placeholder="GUIDE TITLE: &#8230;&#10;KICKER: &#8230;&#10;CAPTION: &#8230;&#10;INTRO:&#10;&#8230;&#10;HOW TO BUY WELL:&#10;- &#8230;&#10;&#10;PRODUCT&#10;ASIN: B0&#8230;&#10;WHY: &#8230;" value="{{ importText }}" onChange="{{ onImportText }}" style="margin-top:12px;font-family:ui-monospace,Menlo,monospace;font-size:12px;line-height:1.5;resize:vertical;width:100%;box-sizing:border-box"></textarea>
@@ -284,6 +288,11 @@
             <div class="field" style="margin:0">
               <label style="display:flex;align-items:center;gap:8px">Caption<button onClick="{{ aiCaption }}" style="{{ aiCaptionBtn.style }}">{{ aiCaptionBtn.label }}</button></label>
               <input class="input" placeholder="One line under the title" value="{{ fCaption }}" onChange="{{ onCaption }}" />
+            </div>
+            <div class="field" style="margin:0">
+              <label>Guide type</label>
+              <select class="input" value="{{ fFormat }}" onChange="{{ onFormat }}"><option value="picks">Picks &#183; different products</option><option value="tiers">Tiers &#183; budget / upgrade / splurge</option></select>
+              <div style="{{ formatHintStyle }}">{{ formatHint }}</div>
             </div>
             <div class="field" style="margin:0;grid-column:1 / -1">
               <label style="display:flex;align-items:baseline;gap:8px;flex-wrap:wrap">Guide brief<span style="font-weight:400;text-transform:none;letter-spacing:0;font-size:11px;color:var(--color-neutral-600)">Private &#183; never shown on the site</span></label>
@@ -393,6 +402,20 @@
                         <label style="font-size:11px">Category</label>
                         <input class="input" value="{{ p.fCat }}" onChange="{{ p.onCat }}" style="font-size:13px;padding:9px 11px" />
                       </div>
+                      <sc-if value="{{ p.isTiers }}" hint-placeholder-val="{{ false }}">
+                        <div class="field" style="margin:0">
+                          <label style="font-size:11px">Group</label>
+                          <input class="input" placeholder="e.g. Wall chargers" value="{{ p.fGroup }}" onChange="{{ p.onGroup }}" style="font-size:13px;padding:9px 11px" />
+                        </div>
+                        <div class="field" style="margin:0">
+                          <label style="font-size:11px">Tier</label>
+                          <select class="input" value="{{ p.fTier }}" onChange="{{ p.onTier }}" style="font-size:13px;padding:9px 11px"><option value="">Choose&#8230;</option><option value="budget">Budget</option><option value="upgrade">Upgrade</option><option value="splurge">Splurge</option></select>
+                        </div>
+                        <div class="field" style="margin:0;grid-column:1 / -1">
+                          <label style="font-size:11px">Why step up</label>
+                          <input class="input" placeholder="Upgrade and Splurge only &#8212; what the extra money buys" value="{{ p.fStep }}" onChange="{{ p.onStep }}" style="font-size:13px;padding:9px 11px" />
+                        </div>
+                      </sc-if>
                       <div class="field" style="margin:0">
                         <label style="font-size:11px">Price</label>
                         <input class="input" inputmode="decimal" value="{{ p.fPrice }}" onChange="{{ p.onPrice }}" style="font-size:13px;padding:9px 11px" />
@@ -424,6 +447,9 @@
 
           <div style="margin-top:26px;display:flex;gap:10px;flex-wrap:wrap">
             <button onClick="{{ save }}" class="btn btn-primary" disabled="{{ saving }}" style="font-size:12px;padding:12px 18px;min-height:44px;white-space:nowrap;justify-content:flex-start">{{ saveLabel }}</button>
+            <sc-if value="{{ canSaveOnly }}" hint-placeholder-val="{{ false }}">
+              <button onClick="{{ saveOnly }}" class="btn btn-secondary" disabled="{{ saving }}" title="Save the draft without queueing its products for an Amazon sync" style="font-size:12px;padding:12px 18px;min-height:44px;white-space:nowrap;justify-content:flex-start">{{ saveOnlyLabel }}</button>
+            </sc-if>
             <sc-if value="{{ canDelete }}" hint-placeholder-val="{{ false }}">
               <button onClick="{{ askDelete }}" class="btn btn-ghost" style="font-size:12px;padding:12px 18px;min-height:44px;justify-content:flex-start;color:var(--color-accent-700)">Delete guide</button>
             </sc-if>
@@ -482,10 +508,25 @@
           <div style="margin-top:30px;border-left:3px solid var(--color-accent);padding:12px 14px;font-size:13px;color:var(--color-accent-700)">No intro written yet &mdash; the site would open straight on the picks.</div>
         </sc-if>
 
-        <div style="margin-top:38px;font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--color-neutral-700)">The picks in detail</div>
-        <sc-if value="{{ pv.hasPicks }}" hint-placeholder-val="{{ true }}">
+        <div style="margin-top:38px;display:flex;align-items:center;gap:14px;flex-wrap:wrap">
+          <div style="font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--color-neutral-700)">The picks in detail</div>
+          <sc-if value="{{ pv.isTiers }}" hint-placeholder-val="{{ false }}">
+            <div style="margin-left:auto;display:flex">
+              <button onClick="{{ pvStacked }}" style="{{ pvSegStacked }}">Stacked</button>
+              <button onClick="{{ pvCols }}" style="{{ pvSegCols }}">Columns</button>
+            </div>
+          </sc-if>
+        </div>
+        <sc-if value="{{ pv.stackView }}" hint-placeholder-val="{{ true }}">
           <div style="margin-top:8px">
             <sc-for list="{{ pv.picks }}" as="d" hint-placeholder-count="3">
+              <div>
+              <sc-if value="{{ d.showHead }}" hint-placeholder-val="{{ false }}">
+                <div style="border-top:2px solid var(--color-text);margin-top:30px;padding:16px 0 6px;display:flex;align-items:baseline;gap:12px;flex-wrap:wrap">
+                  <h2 style="margin:0;font-family:var(--font-heading);font-size:30px;line-height:1.1;letter-spacing:-.02em">{{ d.groupName }}</h2>
+                  <span style="font-size:13px;color:var(--color-neutral-700)">{{ d.groupCount }}</span>
+                </div>
+              </sc-if>
               <div style="display:grid;grid-template-columns:150px minmax(0,1fr);gap:24px;border-top:2px solid var(--color-divider);padding:22px 0">
                 <div style="border:1px solid var(--color-divider);background:#ffffff;height:150px;position:relative;overflow:hidden">
                   <sc-if value="{{ d.hasImg }}" hint-placeholder-val="{{ true }}">
@@ -496,7 +537,7 @@
                   </sc-if>
                 </div>
                 <div style="display:flex;flex-direction:column;gap:10px;align-items:flex-start;min-width:0">
-                  <div style="font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--color-accent-700)">{{ d.n }} / {{ d.cat }}</div>
+                  <div style="{{ d.kickStyle }}">{{ d.kick }}</div>
                   <h3 style="margin:0;font-size:22px;line-height:1.2;font-family:var(--font-heading)">{{ d.title }}</h3>
                   <div style="display:flex;flex-wrap:wrap;align-items:baseline;gap:10px">
                     <span style="font-size:24px;font-weight:600">{{ d.price }}</span>
@@ -509,6 +550,9 @@
                   <sc-if value="{{ d.noDesc }}" hint-placeholder-val="{{ false }}">
                     <div style="font-size:13px;color:var(--color-accent-700)">No write-up yet &mdash; this pick would publish with no description.</div>
                   </sc-if>
+                  <sc-if value="{{ d.hasStepUp }}" hint-placeholder-val="{{ false }}">
+                    <div style="background:var(--color-surface);border-left:2px solid var(--color-accent);padding:10px 14px;font-size:14px;line-height:1.5"><span style="font-weight:600">Why step up. </span>{{ d.stepUp }}</div>
+                  </sc-if>
                   <sc-if value="{{ d.hasNote }}" hint-placeholder-val="{{ false }}">
                     <div style="background:var(--color-surface);border-left:2px solid var(--color-accent);padding:10px 14px;font-size:14px;line-height:1.5">
                       <span style="font-weight:600">Price check. </span>{{ d.note }}
@@ -517,8 +561,53 @@
                   <a class="btn btn-primary" href="{{ d.url }}" target="_blank" rel="nofollow sponsored noopener" style="margin-top:2px;font-size:12px">View on Amazon</a>
                 </div>
               </div>
+              </div>
             </sc-for>
           </div>
+        </sc-if>
+        <sc-if value="{{ pv.colView }}" hint-placeholder-val="{{ false }}">
+          <sc-for list="{{ pv.groups }}" as="g" hint-placeholder-count="2">
+            <div style="margin-top:30px">
+              <div style="border-top:2px solid var(--color-text);padding:16px 0 4px;display:flex;align-items:baseline;gap:12px;flex-wrap:wrap">
+                <h2 style="margin:0;font-family:var(--font-heading);font-size:30px;line-height:1.1;letter-spacing:-.02em">{{ g.name }}</h2>
+                <span style="font-size:13px;color:var(--color-neutral-700)">{{ g.count }}</span>
+              </div>
+              <div class="bg-two" style="{{ g.gridStyle }}">
+                <sc-for list="{{ g.picks }}" as="d" hint-placeholder-count="2">
+                  <div style="display:flex;flex-direction:column;gap:10px;align-items:flex-start;min-width:0;border-top:2px solid var(--color-divider);padding-top:18px">
+                    <div style="{{ d.kickStyle }}">{{ d.kick }}</div>
+                    <div style="border:1px solid var(--color-divider);background:#ffffff;height:220px;width:100%;box-sizing:border-box;position:relative;overflow:hidden">
+                      <sc-if value="{{ d.hasImg }}" hint-placeholder-val="{{ true }}">
+                        <dc-import name="ProductImage" src="{{ d.img }}" alt="" pad="16px" hint-size="100%,100%"></dc-import>
+                      </sc-if>
+                      <sc-if value="{{ d.noImg }}" hint-placeholder-val="{{ false }}">
+                        <div style="position:absolute;inset:0;display:grid;place-items:center;font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--color-accent-700)">No image</div>
+                      </sc-if>
+                    </div>
+                    <h3 style="margin:0;font-size:22px;line-height:1.2;font-family:var(--font-heading)">{{ d.title }}</h3>
+                    <div style="display:flex;flex-wrap:wrap;align-items:baseline;gap:10px">
+                      <span style="font-size:24px;font-weight:600">{{ d.price }}</span>
+                      <span style="font-size:15px;color:var(--color-neutral-700);text-decoration:line-through">{{ d.was }}</span>
+                      <span style="font-size:13px;color:var(--color-accent-700);font-weight:600">{{ d.off }}</span>
+                    </div>
+                    <sc-if value="{{ d.hasDesc }}" hint-placeholder-val="{{ true }}">
+                      <p style="margin:0;font-size:16px;line-height:1.55">{{ d.description }}</p>
+                    </sc-if>
+                    <sc-if value="{{ d.noDesc }}" hint-placeholder-val="{{ false }}">
+                      <div style="font-size:13px;color:var(--color-accent-700)">No write-up yet &mdash; this pick would publish with no description.</div>
+                    </sc-if>
+                    <sc-if value="{{ d.hasStepUp }}" hint-placeholder-val="{{ false }}">
+                      <div style="background:var(--color-surface);border-left:2px solid var(--color-accent);padding:10px 14px;font-size:14px;line-height:1.5"><span style="font-weight:600">Why step up. </span>{{ d.stepUp }}</div>
+                    </sc-if>
+                    <sc-if value="{{ d.hasNote }}" hint-placeholder-val="{{ false }}">
+                      <div style="background:var(--color-surface);border-left:2px solid var(--color-accent);padding:10px 14px;font-size:14px;line-height:1.5"><span style="font-weight:600">Price check. </span>{{ d.note }}</div>
+                    </sc-if>
+                    <a class="btn btn-primary" href="{{ d.url }}" target="_blank" rel="nofollow sponsored noopener" style="margin-top:auto;font-size:12px">View on Amazon</a>
+                  </div>
+                </sc-for>
+              </div>
+            </div>
+          </sc-for>
         </sc-if>
         <sc-if value="{{ pv.noPicks }}" hint-placeholder-val="{{ false }}">
           <div style="margin-top:8px;border-left:3px solid var(--color-accent);padding:12px 14px;font-size:13px;color:var(--color-accent-700)">No picks yet.</div>
@@ -877,7 +966,7 @@ class Component extends DCLogic {
   blankDraft() {
     return {
       id: null, title: "", caption: "", event: "", published: false, date: "",
-      intro: "", howto: "", brief: "", picks: [], content: {}
+      intro: "", howto: "", brief: "", picks: [], content: {}, format: "picks"
     };
   }
 
@@ -894,6 +983,7 @@ class Component extends DCLogic {
       intro: intro.join("\n\n"),
       howto: (c.howto || []).join("\n"),
       brief: c.brief || "",
+      format: c.format === "tiers" ? "tiers" : "picks",
       picks: (c.products || []).map(p => Object.assign({}, p)),
       // every other key in content (sections, faq, anything the app adds later)
       // rides along untouched so this editor cannot silently drop it
@@ -1025,6 +1115,7 @@ class Component extends DCLogic {
     "GUIDE TITLE: The Best Cheap Smart Home Devices in 2026",
     "KICKER: Smart home",
     "CAPTION: Plugs, cameras and bulbs worth buying on sale",
+    "FORMAT: Picks",
     "BRIEF: Optional. Private drafting notes \u2014 never shown on the site.",
     "",
     "INTRO:",
@@ -1046,6 +1137,71 @@ class Component extends DCLogic {
     "WHY: \u2026"
   ].join("\n");
 
+  IMPORT_TEMPLATE_TIERS = [
+    "GUIDE TITLE: The Best Chargers to Buy in 2026",
+    "KICKER: Charging",
+    "CAPTION: A budget pick and an upgrade for every kind of charger",
+    "FORMAT: Tiers",
+    "",
+    "INTRO:",
+    "First paragraph.",
+    "",
+    "HOW TO BUY WELL:",
+    "- First tip",
+    "",
+    "GROUP: Wall chargers",
+    "",
+    "PRODUCT",
+    "ASIN: B0XXXXXXXX",
+    "TIER: Budget",
+    "WHY: Two or three sentences on why it made the list.",
+    "",
+    "PRODUCT",
+    "ASIN: B0YYYYYYYY",
+    "TIER: Upgrade",
+    "WHY: \u2026",
+    "STEP UP: What the extra money buys over the budget pick.",
+    "",
+    "PRODUCT",
+    "ASIN: B0ZZZZZZZZ",
+    "TIER: Splurge",
+    "WHY: \u2026",
+    "STEP UP: Optional third tier \u2014 leave the block out if there is none.",
+    "",
+    "GROUP: Power banks",
+    "",
+    "PRODUCT",
+    "ASIN: \u2026",
+    "TIER: Budget",
+    "WHY: \u2026"
+  ].join("\n");
+
+  tierKeyOf(t) {
+    const s = String(t || "").toLowerCase();
+    return /splurge|best|premium|top/.test(s) ? "splurge" : /upgrade|better|step|mid/.test(s) ? "upgrade" : /budget|good|value|saver|entry/.test(s) ? "budget" : "";
+  }
+  tierName(t) { const k = this.tierKeyOf(t); return k === "budget" ? "Budget" : k === "upgrade" ? "Upgrade" : k === "splurge" ? "Splurge" : ""; }
+  // every product needs a group and a tier; every group needs a Budget and an Upgrade, one of each tier at most
+  tierErrors(list) {
+    const errs = [], by = {}, order = [];
+    let noGroup = 0, noTier = 0;
+    (list || []).forEach(p => {
+      const g = String(p.group || "").trim(), t = this.tierKeyOf(p.tier);
+      if (!g) noGroup++;
+      if (!t) noTier++;
+      if (g && t) { if (!by[g]) { by[g] = {}; order.push(g); } by[g][t] = (by[g][t] || 0) + 1; }
+    });
+    if (noGroup) errs.push(noGroup + (noGroup === 1 ? " product has" : " products have") + " no GROUP");
+    if (noTier) errs.push(noTier + (noTier === 1 ? " product has" : " products have") + " no TIER (Budget, Upgrade or Splurge)");
+    order.forEach(g => {
+      const t = by[g];
+      if (!t.budget) errs.push(g + " has no Budget pick");
+      if (!t.upgrade) errs.push(g + " has no Upgrade pick");
+      ["budget", "upgrade", "splurge"].forEach(k => { if (t[k] > 1) errs.push(g + " has " + t[k] + " " + this.tierName(k) + " picks"); });
+    });
+    return errs.join("; ");
+  }
+
   IMPORT_KEYS = [
     [/^(guide\s+)?title$|^headline$/, "title"], [/^kicker$|^eyebrow$|^label$/, "kicker"],
     [/^caption$|^subtitle$|^subhead$/, "caption"], [/^brief$|^guidelines?$|^instructions?$/, "brief"],
@@ -1053,13 +1209,15 @@ class Component extends DCLogic {
     [/^asin$/, "asin"], [/^category$/, "category"], [/^(deal\s+|current\s+|sale\s+)?price$|^now$/, "price"],
     [/^was(\s+price)?$|^original(\s+price)?$|^list(\s+price)?$|^regular(\s+price)?$/, "was"],
     [/^why(\s+it\s+made\s+the\s+list)?$|^description$|^write-?up$/, "why"],
-    [/^pricing\s+note$|^price\s+note$|^note$/, "note"]
+    [/^pricing\s+note$|^price\s+note$|^note$/, "note"],
+    [/^format$|^guide\s+(type|format)$|^type$/, "format"], [/^group$|^tier\s+group$/, "group"],
+    [/^tier$|^level$/, "tier"], [/^step\s*-?\s*up$|^why\s+(step\s+up|upgrade|splurge)$/, "stepup"]
   ];
 
   parseGuideDoc(text) {
     const lines = String(text || "").replace(/\r/g, "").split("\n");
     const guide = {}, products = [];
-    let cur = null, key = null, buf = [];
+    let cur = null, key = null, buf = [], group = "";
     const keyOf = label => {
       const l = label.toLowerCase().replace(/[*_`]/g, "").replace(/\s+/g, " ").trim();
       const hit = this.IMPORT_KEYS.find(k => k[0].test(l));
@@ -1068,7 +1226,7 @@ class Component extends DCLogic {
     const flush = () => {
       if (!key) return;
       const val = buf.join("\n").replace(/^\s+|\s+$/g, "");
-      const target = cur && ["asin", "category", "price", "was", "why", "note"].indexOf(key) > -1 ? cur : guide;
+      const target = cur && ["asin", "category", "price", "was", "why", "note", "tier", "stepup"].indexOf(key) > -1 ? cur : guide;
       if (val) target[key] = target[key] ? target[key] + "\n" + val : val;
       key = null; buf = [];
     };
@@ -1076,19 +1234,20 @@ class Component extends DCLogic {
       const line = raw.replace(/^\s*#+\s*/, "").replace(/^\s*\*\*(.+?)\*\*\s*/, "$1 ");
       // "PRODUCT", "Product 3", "Pick #2: Anker Nano", "## Product 1 — …", or a --- rule
       if (/^\s*(product|pick)\s*#?\s*\d*\s*([:.)\-\u2013\u2014].*)?$/i.test(line) || /^\s*-{3,}\s*$/.test(raw)) {
-        flush(); cur = {}; products.push(cur); return;
+        flush(); cur = group ? { group: group } : {}; products.push(cur); return;
       }
       const m = line.match(/^\s*(?:[-*\u2022]\s*)?([A-Za-z][A-Za-z ()\-]{1,34}?)\s*[:\uff1a]\s*(.*)$/);
       const k = m && keyOf(m[1].replace(/\([^)]*\)/g, ""));
       if (k) {
         flush();
+        if (k === "group") { group = (m[2] || "").trim(); cur = null; key = null; buf = []; return; }
         // an ASIN with no open product (or a second ASIN in the same one) starts a new product,
         // so a document without PRODUCT lines still splits correctly
-        if (k === "asin" && (!cur || cur.asin)) { cur = {}; products.push(cur); }
+        if (k === "asin" && (!cur || cur.asin)) { cur = group ? { group: group } : {}; products.push(cur); }
         // guide-level keys after the products started still go to the guide
         // product titles always come from the catalogue: a TITLE inside a product is ignored
         if (cur && k === "title" && !/guide/i.test(m[1])) { key = null; buf = []; return; }
-        if (cur && ["title", "intro", "howto", "kicker", "caption", "brief"].indexOf(k) > -1) cur = null;
+        if (cur && ["title", "intro", "howto", "kicker", "caption", "brief", "format"].indexOf(k) > -1) cur = null;
         key = k; buf = m[2] ? [m[2]] : []; return;
       }
       if (key) buf.push(raw);
@@ -1098,13 +1257,15 @@ class Component extends DCLogic {
     return {
       title: (guide.title || "").trim(), kicker: (guide.kicker || "").trim(), caption: (guide.caption || "").trim(),
       brief: (guide.brief || "").trim(),
+      format: /tier|budget|upgrade|splurge|good|better/i.test(guide.format || "") ? "tiers" : "picks",
       intro: (guide.intro || "").split(/\n\s*\n/).map(p => p.replace(/\s*\n\s*/g, " ").trim()).filter(Boolean).join("\n\n"),
       howto: (guide.howto || "").split("\n").map(l => l.replace(/^\s*(?:[-*\u2022]|\d+[.)])\s*/, "").trim()).filter(Boolean).join("\n"),
       products: products.filter(p => Object.keys(p).length).map(p => ({
         asin: (((p.asin || "").toUpperCase().match(/B0[A-Z0-9]{8}|\b\d{9}[\dX]\b/) || [])[0]) || "",
         category: (p.category || "").trim(),
         price: money(p.price), was: money(p.was),
-        why: (p.why || "").replace(/\s*\n\s*/g, " ").trim(), note: (p.note || "").replace(/\s*\n\s*/g, " ").trim()
+        why: (p.why || "").replace(/\s*\n\s*/g, " ").trim(), note: (p.note || "").replace(/\s*\n\s*/g, " ").trim(),
+        group: (p.group || "").trim(), tier: this.tierKeyOf(p.tier), stepup: (p.stepup || "").replace(/\s*\n\s*/g, " ").trim()
       }))
     };
   }
@@ -1119,6 +1280,10 @@ class Component extends DCLogic {
     if (!doc.title && !doc.products.length) {
       this.setState({ importParsed: null, importNote: "Nothing recognised \u2014 use the template labels (GUIDE TITLE:, PRODUCT, ASIN: \u2026)." });
       return;
+    }
+    if (doc.format === "tiers") {
+      const terr = this.tierErrors(doc.products.filter((p, i, a) => p.asin && a.findIndex(q => q.asin === p.asin) === i));
+      if (terr) { this.setState({ importParsed: null, importNote: "Tiered guide not imported \u2014 " + terr + "." }); return; }
     }
     this.setState({ importBusy: true, importNote: "Checking " + doc.products.length + " ASINs against the catalogue\u2026" });
     await this.loadLive(doc.products.map(p => p.asin), true);
@@ -1135,7 +1300,8 @@ class Component extends DCLogic {
       category: p.category || base.category || "",
       price: live ? base.price : p.price,
       original_price: live ? base.original_price : p.was,
-      description: p.why, pricing_note: p.note
+      description: p.why, pricing_note: p.note,
+      group: p.group || "", tier: p.tier || "", step_up: p.stepup || ""
     });
   }
 
@@ -1144,7 +1310,7 @@ class Component extends DCLogic {
     if (!doc || !this.state.draft) return;
     this.setDraft({
       title: doc.title, event: doc.kicker, caption: doc.caption, brief: doc.brief || (this.state.draft.brief || ""),
-      intro: doc.intro, howto: doc.howto,
+      intro: doc.intro, howto: doc.howto, format: doc.format,
       picks: doc.products.filter((p, i, a) => p.asin && a.findIndex(q => q.asin === p.asin) === i).map(p => this.importPick(p))
     });
     const withAsin = doc.products.filter((p, i, a) => p.asin && a.findIndex(q => q.asin === p.asin) === i);
@@ -1386,13 +1552,19 @@ class Component extends DCLogic {
         .map((t, i) => ({ n: String(i + 1).padStart(2, "0"), text: t })),
       hasHowto: !!(d.howto || "").trim(),
       hasPicks: picks.length > 0,
-      picks: picks.map((p, i) => {
+      picks: this.previewOrder(picks, d).map((p, i, arr) => {
         const price = this.num(p.price), was = this.num(p.original_price);
         const off = (price != null && was != null && was > price) ? Math.round((1 - price / was) * 100) : 0;
         const asin = (p.amazon_asin || "").trim().toUpperCase();
         return {
           n: String(i + 1).padStart(2, "0"),
-          cat: (p.category || "Uncategorised"),
+          cat: p.category || "Uncategorised",
+          kick: d.format === "tiers" ? (this.tierName(p.tier) ? this.tierName(p.tier) + " pick" : "No tier") : String(i + 1).padStart(2, "0") + " / " + (p.category || "Uncategorised"),
+          kickStyle: d.format === "tiers" ? this.tierChip(p, arr) : "font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--color-accent-700)",
+          showHead: d.format === "tiers" && (i === 0 || String(arr[i - 1].group || "").trim() !== String(p.group || "").trim()),
+          groupName: String(p.group || "").trim() || "No group",
+          groupCount: (() => { const k = String(p.group || "").trim(); const n = arr.filter(q => String(q.group || "").trim() === k).length; return n + (n === 1 ? " option" : " options"); })(),
+          stepUp: (p.step_up || "").trim(), hasStepUp: d.format === "tiers" && !!(p.step_up || "").trim() && this.tierKeyOf(p.tier) !== "budget",
           title: (p.title || "").trim() || "(untitled)",
           price: price != null ? this.money(price) : "no price",
           was: (was != null && price != null && was > price) ? this.money(was) : "",
@@ -1409,6 +1581,43 @@ class Component extends DCLogic {
         };
       })
     };
+  }
+
+  // the group's top tier (Upgrade, or Splurge when there is one) is the orange label
+  tierChip(p, arr) {
+    const rank = q => { const k = this.tierKeyOf(q.tier); return k === "budget" ? 0 : k === "upgrade" ? 1 : k === "splurge" ? 2 : -1; };
+    const g = String(p.group || "").trim();
+    const top = Math.max.apply(null, (arr || []).filter(q => String(q.group || "").trim() === g).map(rank));
+    const r = rank(p);
+    return "font-family:var(--font-heading);font-weight:800;font-size:13px;letter-spacing:.1em;text-transform:uppercase;padding:7px 12px;line-height:1.1;white-space:nowrap;align-self:flex-start;" +
+      (r > 0 && r === top ? "background:var(--color-accent);color:#16233a" : r > 0 ? "background:#ffffff;color:#16233a;border:2px solid #ffffff" : "border:2px solid var(--color-text);color:var(--color-text)");
+  }
+  // tiered preview layout: stacked rows or two columns per group, remembered on this device
+  pvColsOn() {
+    if (this._pvCols === undefined) { try { this._pvCols = localStorage.getItem("md-guides-pv-cols") !== "0"; } catch (e) { this._pvCols = true; } }
+    return this._pvCols;
+  }
+  setPvCols(on) { this._pvCols = on; try { localStorage.setItem("md-guides-pv-cols", on ? "1" : "0"); } catch (e) {} this.forceUpdate(); }
+  pvSeg(on) {
+    return "font:inherit;font-family:var(--font-heading);font-weight:700;font-size:10px;letter-spacing:.08em;text-transform:uppercase;padding:8px 12px;cursor:pointer;white-space:nowrap;border:1px solid var(--color-text);" +
+      (on ? "background:var(--color-text);color:var(--color-bg)" : "background:none;color:var(--color-text)");
+  }
+  withGroups(pv) {
+    const picks = pv.picks || [];
+    const isTiers = picks.some(p => p.showHead);
+    const groups = [];
+    picks.forEach(p => { if (p.showHead || !groups.length) groups.push({ name: p.groupName, count: p.groupCount, picks: [] }); groups[groups.length - 1].picks.push(p); });
+    const colView = isTiers && this.pvColsOn();
+    groups.forEach(g => { g.gridStyle = "display:grid;grid-template-columns:repeat(" + Math.min(3, Math.max(2, g.picks.length)) + ",minmax(0,1fr));gap:28px " + (g.picks.length >= 3 ? 24 : 32) + "px;padding:14px 0 8px"; });
+    return Object.assign({}, pv, { isTiers: isTiers, groups: groups, colView: colView, stackView: !!pv.hasPicks && !colView });
+  }
+  // tiered preview: grouped in first-appearance order, Budget before Upgrade before Splurge
+  previewOrder(picks, d) {
+    if (!d || d.format !== "tiers") return picks;
+    const order = [], by = {};
+    picks.forEach(p => { const k = String(p.group || "").trim(); if (!by[k]) { by[k] = []; order.push(k); } by[k].push(p); });
+    const rank = p => { const k = this.tierKeyOf(p.tier); return k === "budget" ? 0 : k === "upgrade" ? 1 : k === "splurge" ? 2 : 3; };
+    return [].concat.apply([], order.map(k => by[k].slice().sort((a, b) => rank(a) - rank(b))));
   }
 
   toggleSuggest(asin) {
@@ -1769,7 +1978,8 @@ class Component extends DCLogic {
     });
   }
 
-  async save() {
+  async save(opts) {
+    const quick = !!(opts && opts.skipQueue);
     const d = this.state.draft;
     if (!d) return;
     const title = (d.title || "").trim();
@@ -1798,6 +2008,7 @@ class Component extends DCLogic {
     const iso = d.date ? new Date(d.date + "T12:00:00").toISOString() : (d.published ? new Date().toISOString() : null);
     const content = Object.assign({}, d.content || {}, {
       subtitle: (d.caption || "").trim(),
+      format: d.format === "tiers" ? "tiers" : "picks",
       brief: (d.brief || "").trim(),
       intro: (d.intro || "").split(/\n\s*\n/).map(s => s.trim()).filter(Boolean),
       howto: (d.howto || "").split("\n").map(s => s.trim()).filter(Boolean),
@@ -1812,7 +2023,8 @@ class Component extends DCLogic {
         reviews: this.reviewsOf(p),
         review_count: this.reviewsOf(p),
         description: (p.description || "").trim(),
-        pricing_note: (p.pricing_note || "").trim()
+        pricing_note: (p.pricing_note || "").trim(),
+        ...(d.format === "tiers" ? { group: (p.group || "").trim(), tier: this.tierKeyOf(p.tier), step_up: (p.step_up || "").trim() } : {})
       }))
     });
     const body = {
@@ -1823,11 +2035,13 @@ class Component extends DCLogic {
       published_at: iso,
       content: content
     };
-    this.setState({ saving: true, statusText: d.published ? "Saving\u2026" : "Adding products to the sync queue\u2026", statusKind: "info" });
+    this.setState({ saving: true, statusText: d.published || quick ? "Saving\u2026" : "Adding products to the sync queue\u2026", statusKind: "info" });
     // a draft save queues its products first; only a clean queue stamps the
     // guide, and that stamp is what unlocks Publish
     let queueMsg = "";
-    if (!d.published) {
+    // "Save only" skips the queue; the stamp is cleared so Publish stays locked until a queued save
+    if (!d.published && quick) delete content.sync_queued_at;
+    if (!d.published && !quick) {
       queueMsg = await this.queueForSync((d.picks || []).map(p => p.amazon_asin));
       const ok = !/failed|could not/i.test(queueMsg);
       content.sync_queued_at = ok ? new Date().toISOString() : null;
@@ -1852,8 +2066,9 @@ class Component extends DCLogic {
         draft: row && row.id ? this.draftFrom(row) : this.state.draft,
         savedSlug: !!(d.published),
         statusText: d.published ? "Saved and live on the site."
+          : quick ? "Saved as a draft \u2014 products not added to the sync queue. Publish stays locked until you use Save as draft + add products to sync queue."
           : "Saved as a draft \u2014 not on the site yet. " + queueMsg + (content.sync_queued_at ? " Publish is now unlocked." : " Publish stays locked until the queue succeeds."),
-        statusKind: d.published || content.sync_queued_at ? "ok" : "error"
+        statusKind: d.published || quick || content.sync_queued_at ? "ok" : "error"
       });
       this.loadGuides();
     } catch (e) {
@@ -2145,6 +2360,9 @@ class Component extends DCLogic {
         : (d && d.published ? (d.id ? "Save changes" : "Save and publish")
           : "Save as draft + add products to sync queue"),
       closeDraft: () => this.closeDraft(),
+      saveOnly: () => this.save({ skipQueue: true }),
+      canSaveOnly: !!(d && !d.published),
+      saveOnlyLabel: this.state.saving ? "Saving\u2026" : "Save only",
       canDelete: !!(d && d.id),
       askDelete: () => this.setState({ confirm: { kind: "delete" } }),
 
@@ -2157,8 +2375,13 @@ class Component extends DCLogic {
       previewOpen: !!this.state.previewOpen,
       openPreview: () => this.setState({ previewOpen: true }),
       carouselHref: d && d.id && (d.howto || "").trim() ? (this.onAdmin() ? "/guidecarousel" : "Guide Carousel.dc.html") + "?guide=" + encodeURIComponent(d.id) : "",
+      carouselTarget: this.onAdmin() ? "_blank" : "_self",
       closePreview: () => this.setState({ previewOpen: false }),
-      pv: this.state.previewOpen ? this.buildPreview() : {},
+      pv: this.state.previewOpen ? this.withGroups(this.buildPreview()) : {},
+      pvStacked: () => this.setPvCols(false),
+      pvCols: () => this.setPvCols(true),
+      pvSegStacked: this.pvSeg(!this.pvColsOn()),
+      pvSegCols: this.pvSeg(this.pvColsOn()) + ";border-left:0",
 
       fTitle: d ? d.title : "",
       titleStyle: d && !(d.title || "").trim()
@@ -2166,6 +2389,17 @@ class Component extends DCLogic {
       onTitle: e => this.setDraft({ title: e.target.value }),
       fCaption: d ? d.caption : "",
       onCaption: e => this.setDraft({ caption: e.target.value }),
+      fFormat: d ? (d.format || "picks") : "picks",
+      onFormat: e => this.setDraft({ format: e.target.value }),
+      ...(() => {
+        const tiers = !!(d && d.format === "tiers");
+        const err = tiers ? this.tierErrors(d.picks || []) : "";
+        return {
+          formatHint: !tiers ? "Each pick is a different product." : err ? "Fix before publishing: " + err + "." : "Each group has a Budget and an Upgrade pick; Splurge is optional.",
+          formatHintStyle: "font-size:11px;line-height:1.35;margin-top:4px;color:var(--color-" + (err ? "accent-700" : "neutral-600") + ")"
+        };
+      })(),
+      copyTiersTemplate: () => this.copyText(this.IMPORT_TEMPLATE_TIERS),
       fBrief: d ? (d.brief || "") : "",
       onBrief: e => this.setDraft({ brief: e.target.value }),
       fEvent: d ? d.event : "",
@@ -2488,7 +2722,7 @@ class Component extends DCLogic {
           priceCell: "text-align:right;padding:3px 14px 10px;font-weight:600;white-space:nowrap" + (drift ? ";color:var(--color-accent-700)" : ""),
           wasTxt: (was != null && off) ? this.money(was) : "\u2014",
           offTxt: off ? off + "%" : "\u2014",
-          catTxt: p.category || "\u2014",
+          catTxt: d.format === "tiers" ? (p.group || "No group") + " \u00b7 " + (this.tierName(p.tier) || "no tier") : (p.category || "\u2014"),
           asinTxt: asin || "no ASIN",
           ...(() => {
             const live = this.liveFor(p);
@@ -2526,6 +2760,10 @@ class Component extends DCLogic {
           fTitle: p.title || "", onTitle: e => this.setPick(i, "title", e.target.value),
           fAsin: p.amazon_asin || "", onAsin: e => this.setPick(i, "amazon_asin", e.target.value.toUpperCase()),
           fCat: p.category || "", onCat: e => this.setPick(i, "category", e.target.value),
+          isTiers: d.format === "tiers",
+          fGroup: p.group || "", onGroup: e => this.setPick(i, "group", e.target.value),
+          fTier: this.tierKeyOf(p.tier), onTier: e => this.setPick(i, "tier", e.target.value),
+          fStep: p.step_up || "", onStep: e => this.setPick(i, "step_up", e.target.value),
           fPrice: p.price == null ? "" : String(p.price), onPrice: e => this.setPick(i, "price", e.target.value),
           fWas: p.original_price == null ? "" : String(p.original_price), onWas: e => this.setPick(i, "original_price", e.target.value),
           fDesc: p.description || "", onDesc: e => this.setPick(i, "description", e.target.value),

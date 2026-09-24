@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="/support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>MistryDeals · Links</title>
+  <link rel="stylesheet" href="/_ds/modernist-424462e2-4060-4771-92af-91bbc246b8fd/styles.css">
+  <style>
+    :root { --color-bg:#f2efe9; --color-surface:#faf8f4; --color-text:#16233a; --color-divider:#cfc9bb;
+      --color-neutral-600:#7b8698; --color-neutral-700:#5c6474; --color-neutral-800:#2f3c55; --color-neutral-900:#16233a;
+      --color-accent:#d98014; --color-accent-700:color-mix(in oklch,#d98014,black 30%); }
+    html { -webkit-text-size-adjust:100%; text-size-adjust:100%; }
+    body { margin:0; background:var(--color-bg); color:var(--color-text); font-family:var(--font-body); }
+    a { color:var(--color-accent-700); } a:hover { color:var(--color-text); }
+    input { font:inherit; }
+    input:focus-visible, a:focus-visible, button:focus-visible { outline:2px solid var(--color-accent); outline-offset:2px; }
+  </style>
+</helmet>
+
+<div style="max-width:560px;margin:0 auto;padding:28px 16px 48px;box-sizing:border-box;min-height:100vh;display:flex;flex-direction:column">
+  <a href="https://mistrydeals.com" style="display:flex;align-items:center;gap:9px;text-decoration:none;color:var(--color-text);font-family:var(--font-heading);font-weight:800;font-size:18px;letter-spacing:.02em;align-self:flex-start">
+    <span style="position:relative;width:21px;height:21px;flex:none;display:block"><span style="position:absolute;left:0;top:0;width:15px;height:15px;border:2.2px solid var(--color-text);border-radius:50%;box-sizing:border-box;display:block"></span><span style="position:absolute;left:12.7px;top:12px;width:8.3px;height:2.2px;background:var(--color-accent);transform:rotate(45deg);transform-origin:left center;display:block"></span></span>
+    MISTRYDEALS
+  </a>
+  <h1 style="margin:22px 0 6px;font-family:var(--font-heading);font-weight:800;font-size:34px;line-height:1.02;letter-spacing:-.03em;text-wrap:balance">Every deal from our posts</h1>
+  <p style="margin:0 0 20px;font-size:15px;line-height:1.45;color:var(--color-neutral-700);text-wrap:pretty">Saw it on Instagram or Facebook? It&#8217;s here, newest first. Prices update daily.</p>
+
+  <div style="display:grid;grid-template-columns:repeat(4,minmax(0,1fr));border:2px solid var(--color-text)">
+    <sc-for list="{{ tabs }}" as="t" hint-placeholder-count="4">
+      <button onClick="{{ t.pick }}" style="{{ t.style }}">
+        <span>{{ t.label }}</span>
+        <span style="{{ t.countStyle }}">{{ t.count }}</span>
+      </button>
+    </sc-for>
+  </div>
+
+  <div style="margin-top:12px;position:relative">
+    <input value="{{ query }}" onChange="{{ onQuery }}" placeholder="Search products" aria-label="Search products" style="width:100%;box-sizing:border-box;min-height:46px;padding:11px 14px;border:1px solid var(--color-divider);background:var(--color-surface);color:var(--color-text);font-size:15px;border-radius:0" />
+  </div>
+
+  <sc-if value="{{ loading }}" hint-placeholder-val="{{ false }}">
+    <div style="padding:40px 0;font-size:14px;color:var(--color-neutral-700)">Loading the latest deals&#8230;</div>
+  </sc-if>
+  <sc-if value="{{ error }}" hint-placeholder-val="{{ false }}">
+    <div style="margin-top:18px;border-left:3px solid var(--color-accent);padding:12px 14px;font-size:14px;line-height:1.45">{{ error }}</div>
+  </sc-if>
+  <sc-if value="{{ empty }}" hint-placeholder-val="{{ false }}">
+    <div style="margin-top:18px;border:1px solid var(--color-divider);padding:28px 18px;font-size:14px;line-height:1.5;color:var(--color-neutral-700)">{{ emptyText }}</div>
+  </sc-if>
+
+  <sc-if value="{{ isList }}" hint-placeholder-val="{{ true }}">
+    <div style="margin-top:14px;border-top:2px solid var(--color-text)">
+      <sc-for list="{{ items }}" as="d" hint-placeholder-count="6">
+        <a href="{{ d.href }}" rel="nofollow sponsored" style="display:grid;grid-template-columns:92px minmax(0,1fr) auto;gap:14px;align-items:center;padding:12px 0;border-bottom:1px solid var(--color-divider);text-decoration:none;color:var(--color-text)" style-hover="background:var(--color-surface)">
+          <span style="position:relative;display:block;width:92px;height:92px;background:#ffffff;border:1px solid var(--color-divider);overflow:hidden">
+            <dc-import name="ProductImage" src="{{ d.img }}" alt="" pad="8px" hint-size="100%,100%"></dc-import>
+          </span>
+          <span style="display:flex;flex-direction:column;gap:6px;min-width:0">
+            <span style="font-family:var(--font-heading);font-weight:700;font-size:15px;line-height:1.25;display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2;overflow:hidden">{{ d.title }}</span>
+            <span style="display:flex;align-items:baseline;flex-wrap:wrap;gap:4px 8px">
+              <span style="font-family:var(--font-heading);font-weight:800;font-size:22px;line-height:1;letter-spacing:-.02em">{{ d.price }}</span>
+              <span style="font-size:13px;color:var(--color-neutral-700);text-decoration:line-through">{{ d.was }}</span>
+              <sc-if value="{{ d.hasOff }}" hint-placeholder-val="{{ true }}">
+                <span style="background:var(--color-accent);color:#16233a;font-family:var(--font-heading);font-weight:800;font-size:12px;line-height:1;padding:4px 6px">{{ d.off }}</span>
+              </sc-if>
+            </span>
+            <sc-if value="{{ showDates }}" hint-placeholder-val="{{ true }}">
+              <span style="font-size:11.5px;color:var(--color-neutral-700)">{{ d.meta }}</span>
+            </sc-if>
+          </span>
+          <span aria-hidden="true" style="font-family:var(--font-heading);font-weight:800;font-size:18px;color:var(--color-accent-700);padding-right:4px">&#8594;</span>
+        </a>
+      </sc-for>
+    </div>
+  </sc-if>
+
+  <sc-if value="{{ isGrid }}" hint-placeholder-val="{{ false }}">
+    <div style="margin-top:14px;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px">
+      <sc-for list="{{ items }}" as="d" hint-placeholder-count="6">
+        <a href="{{ d.href }}" rel="nofollow sponsored" style="display:flex;flex-direction:column;border:1px solid var(--color-divider);background:var(--color-surface);text-decoration:none;color:var(--color-text);min-width:0" style-hover="border-color:var(--color-text)">
+          <span style="position:relative;display:block;aspect-ratio:1 / 1;background:#ffffff;border-bottom:1px solid var(--color-divider);overflow:hidden">
+            <dc-import name="ProductImage" src="{{ d.img }}" alt="" pad="12px" hint-size="100%,100%"></dc-import>
+            <sc-if value="{{ d.hasOff }}" hint-placeholder-val="{{ true }}">
+              <span style="position:absolute;left:0;top:0;background:var(--color-accent);color:#16233a;font-family:var(--font-heading);font-weight:800;font-size:13px;line-height:1;padding:6px 8px">{{ d.off }}</span>
+            </sc-if>
+          </span>
+          <span style="display:flex;flex-direction:column;gap:6px;padding:10px 10px 12px;min-width:0">
+            <span style="font-family:var(--font-heading);font-weight:700;font-size:14px;line-height:1.25;display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2;overflow:hidden;min-height:35px">{{ d.title }}</span>
+            <span style="display:flex;align-items:baseline;flex-wrap:wrap;gap:4px 8px">
+              <span style="font-family:var(--font-heading);font-weight:800;font-size:20px;line-height:1;letter-spacing:-.02em">{{ d.price }}</span>
+              <span style="font-size:12px;color:var(--color-neutral-700);text-decoration:line-through">{{ d.was }}</span>
+            </span>
+            <sc-if value="{{ showDates }}" hint-placeholder-val="{{ true }}">
+              <span style="font-size:11px;color:var(--color-neutral-700)">{{ d.meta }}</span>
+            </sc-if>
+          </span>
+        </a>
+      </sc-for>
+    </div>
+  </sc-if>
+
+  <sc-if value="{{ hasMore }}" hint-placeholder-val="{{ false }}">
+    <button onClick="{{ showMore }}" class="btn btn-secondary btn-block" style="margin-top:18px;min-height:48px;justify-content:space-between">{{ moreLabel }} <span>&#8595;</span></button>
+  </sc-if>
+
+  <div style="margin-top:auto;padding-top:36px;display:flex;flex-direction:column;gap:10px">
+    <a href="https://mistrydeals.com" class="btn btn-primary btn-block" style="min-height:48px;justify-content:space-between;background:var(--color-text);border-color:var(--color-text);color:var(--color-bg)">All deals on mistrydeals.com <span>&#8594;</span></a>
+    <a href="https://mistrydeals.com/guides" class="btn btn-secondary btn-block" style="min-height:48px;justify-content:space-between">Buying guides <span>&#8594;</span></a>
+    <p style="margin:8px 0 0;font-size:11.5px;line-height:1.5;color:var(--color-neutral-700);text-wrap:pretty">As an Amazon Associate we earn from qualifying purchases. It never changes your price. Prices and discounts can change after a post goes out.</p>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;layout&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;list&quot;,&quot;grid&quot;],&quot;default&quot;:&quot;list&quot;,&quot;tsType&quot;:&quot;\&quot;list\&quot; | \&quot;grid\&quot;&quot;},&quot;showDates&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;}}">
+const BASE = "https://qolksrytidvxarrlygyy.supabase.co";
+const KEY = "sb_publishable_UX38KeF1XAKtzvS01yfx7w_8s5NkOH3";
+const TABS = [
+  { key: "all", label: "All" },
+  { key: "ig", label: "Instagram" },
+  { key: "stories", label: "Stories" },
+  { key: "fb", label: "Facebook" }
+];
+const PLATFORM_TAB = { instagram: "ig", instagram_story: "stories", facebook_story: "stories", facebook: "fb" };
+const PLATFORM_NAME = { instagram: "Instagram", instagram_story: "Instagram story", facebook_story: "Facebook story", facebook: "Facebook" };
+
+class Component extends DCLogic {
+  state = { posts: null, error: "", tab: this.tabFromUrl(), query: "", shown: 30 };
+
+  tabFromUrl() {
+    const src = String(new URLSearchParams(location.search).get("src") || "").toLowerCase();
+    if (/stor/.test(src)) return "stories";
+    if (/^(ig|insta)/.test(src)) return "ig";
+    if (/^(fb|face)/.test(src)) return "fb";
+    return "all";
+  }
+
+  componentDidMount() { this.load(); }
+
+  async load() {
+    try {
+      const sel = "product_id,platform,scheduled_at,products(slug,display_title,title,price,original_price,scraped_coupon_price,image_url,asin,is_active)";
+      const res = await fetch(BASE + "/rest/v1/scheduled_posts?select=" + sel + "&status=eq.published&product_id=not.is.null&order=scheduled_at.desc&limit=1500", {
+        headers: { apikey: KEY, Authorization: "Bearer " + KEY }
+      });
+      if (!res.ok) throw new Error("HTTP " + res.status);
+      const rows = await res.json();
+      this.setState({ posts: rows.filter(r => r.products && r.products.slug && r.products.is_active !== false) });
+    } catch (e) {
+      this.setState({ posts: [], error: "Couldn\u2019t load the deals just now. Try again in a minute, or browse everything on mistrydeals.com." });
+    }
+  }
+
+  num(v) { const n = parseFloat(v); return isFinite(n) ? n : null; }
+  money(v) { return "$" + (Math.round(v * 100) % 100 ? v.toFixed(2) : Math.round(v).toLocaleString("en-US")); }
+
+  // newest post per ASIN within the tab; the list keeps that post's date and platform
+  dedupe(posts) {
+    const seen = {}, out = [];
+    posts.forEach(r => {
+      const p = r.products, k = String(p.asin || p.slug).toUpperCase();
+      if (seen[k]) { seen[k].platforms[r.platform] = 1; return; }
+      seen[k] = { post: r, platforms: { [r.platform]: 1 } };
+      out.push(seen[k]);
+    });
+    return out;
+  }
+
+  item(e) {
+    const r = e.post, p = r.products;
+    const coupon = this.num(p.scraped_coupon_price);
+    const now = coupon && coupon > 0 ? coupon : this.num(p.price);
+    const was = this.num(p.original_price);
+    const off = now != null && was != null && was > now ? Math.round((1 - now / was) * 100) : 0;
+    const d = r.scheduled_at ? new Date(r.scheduled_at) : null;
+    return {
+      href: "https://mistrydeals.com/d/" + encodeURIComponent(p.slug),
+      img: p.image_url || "",
+      title: (p.display_title || p.title || "Product").trim(),
+      price: now != null ? this.money(now) : "",
+      was: off >= 3 ? this.money(was) : "",
+      off: off >= 3 ? "\u2212" + off + "%" : "",
+      hasOff: off >= 3,
+      meta: (d ? "Posted " + d.toLocaleDateString("en-US", { month: "short", day: "numeric" }) : "Posted") + " \u00b7 " + (PLATFORM_NAME[r.platform] || "Social")
+    };
+  }
+
+  renderVals() {
+    const posts = this.state.posts;
+    const loading = posts === null;
+    const all = posts || [];
+    const byTab = {
+      all: this.dedupe(all),
+      ig: this.dedupe(all.filter(r => PLATFORM_TAB[r.platform] === "ig")),
+      stories: this.dedupe(all.filter(r => PLATFORM_TAB[r.platform] === "stories")),
+      fb: this.dedupe(all.filter(r => PLATFORM_TAB[r.platform] === "fb"))
+    };
+    const tab = this.state.tab;
+    const q = this.state.query.trim().toLowerCase();
+    const list = byTab[tab].filter(e => !q || ((e.post.products.display_title || "") + " " + (e.post.products.title || "")).toLowerCase().indexOf(q) !== -1);
+    const shown = list.slice(0, this.state.shown);
+    const layout = this.props.layout || "list";
+    return {
+      loading,
+      error: this.state.error,
+      tabs: TABS.map((t, i) => {
+        const on = t.key === tab;
+        return {
+          label: t.label,
+          count: loading ? "" : String(byTab[t.key].length),
+          pick: () => {
+            this.setState({ tab: t.key, shown: 30 });
+            try {
+              const u = new URL(location.href);
+              if (t.key === "all") u.searchParams.delete("src"); else u.searchParams.set("src", t.key === "stories" ? "story" : t.key);
+              history.replaceState(null, "", u.toString());
+            } catch (e) {}
+          },
+          style: "font:inherit;font-family:var(--font-heading);font-weight:700;font-size:13px;line-height:1.1;min-height:52px;padding:8px 4px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;cursor:pointer;border:0;" +
+            (i ? "border-left:2px solid var(--color-text);" : "") + (on ? "background:var(--color-text);color:var(--color-bg)" : "background:transparent;color:var(--color-text)"),
+          countStyle: "font-family:var(--font-body);font-weight:400;font-size:11px;opacity:" + (on ? ".75" : ".6")
+        };
+      }),
+      query: this.state.query,
+      onQuery: e => this.setState({ query: e.target.value, shown: 30 }),
+      empty: !loading && !this.state.error && !list.length,
+      emptyText: q ? "Nothing matches \u201c" + this.state.query.trim() + "\u201d. Try a shorter search, or switch to All."
+        : tab === "all" ? "No posts yet." : "Nothing posted here yet. Switch to All to see every deal.",
+      items: shown.map(e => this.item(e)),
+      isList: layout !== "grid",
+      isGrid: layout === "grid",
+      showDates: this.props.showDates !== false,
+      hasMore: list.length > shown.length,
+      moreLabel: "Show " + Math.min(30, list.length - shown.length) + " more",
+      showMore: () => this.setState({ shown: this.state.shown + 30 })
+    };
+  }
+}
+</script>
+</body>
+</html>

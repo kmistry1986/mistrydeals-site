@@ -11,5 +11,7 @@ Disallow: /buyingguides
 Disallow: /admin
 Disallow: /mobile
 Disallow: /d/
+Disallow: /*%7B%7B
+Disallow: /*{{
 
 Sitemap: https://mistrydeals.com/sitemap.xml
