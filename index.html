@@ -2626,5 +2626,25 @@ class Component extends DCLogic {
   }
 }
 </script>
+<script>
+// Intercept hash-based link clicks and convert to proper URLs
+document.addEventListener('click', function(e) {
+  const link = e.target.closest('a');
+  if (link && link.href && link.href.includes('#/')) {
+    e.preventDefault();
+    const hashPath = link.href.split('#/')[1] || '';
+    const newPath = '/' + hashPath;
+    window.history.pushState(null, '', newPath);
+    window.location.reload();
+  }
+}, true);
+
+// Redirect old hash URLs to proper URLs on page load
+if (location.hash && location.hash.startsWith('#/')) {
+  const hashPath = location.hash.replace(/^#\/?/, '') || '';
+  const newPath = '/' + hashPath;
+  window.history.replaceState(null, '', newPath);
+}
+</script>
 </body>
 </html>
