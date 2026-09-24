@@ -3,6 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="/support.js"></script>
 </head>
 <body>
 <x-dc>
@@ -2625,94 +2626,5 @@ class Component extends DCLogic {
   }
 }
 </script>
-<script>
-// Intercept ALL hash-based navigation at the window.location level
-// This catches both direct hash assignments and component-based navigation
-(function() {
-  const originalPushState = window.history.pushState;
-  const originalReplaceState = window.history.replaceState;
-
-  // Override pushState to convert hash URLs to proper URLs
-  window.history.pushState = function(state, title, url) {
-    if (url && url.includes('#/')) {
-      const hashPath = url.split('#/')[1] || '';
-      const newPath = '/' + hashPath;
-      return originalPushState.call(this, state, title, newPath);
-    }
-    return originalPushState.call(this, state, title, url);
-  };
-
-  // Override replaceState to convert hash URLs to proper URLs
-  window.history.replaceState = function(state, title, url) {
-    if (url && url.includes('#/')) {
-      const hashPath = url.split('#/')[1] || '';
-      const newPath = '/' + hashPath;
-      return originalReplaceState.call(this, state, title, newPath);
-    }
-    return originalReplaceState.call(this, state, title, url);
-  };
-
-  // Intercept direct location.hash assignment
-  let hashInterceptor = null;
-
-  // Use a descriptor to intercept hash property assignment
-  Object.defineProperty(window.location, 'hash', {
-    set: function(value) {
-      if (value && value.startsWith('#/')) {
-        const hashPath = value.replace(/^#\/?/, '') || '';
-        const newPath = '/' + hashPath;
-        window.history.pushState(null, '', newPath);
-        window.location.reload();
-      } else if (value.startsWith('#')) {
-        // Handle just # or other hash values - also redirect
-        const hashPath = value.replace(/^#\/?/, '') || '';
-        if (hashPath) {
-          const newPath = '/' + hashPath;
-          window.history.pushState(null, '', newPath);
-          window.location.reload();
-        }
-      }
-    },
-    get: function() {
-      return window.location.hash;
-    }
-  });
-
-  // Handle page load with existing hash URL
-  window.addEventListener('load', function() {
-    if (location.hash && location.hash.startsWith('#/')) {
-      const hashPath = location.hash.replace(/^#\/?/, '') || '';
-      const newPath = '/' + hashPath;
-      window.history.replaceState(null, '', newPath);
-    }
-  });
-})();
-</script>
-<!-- Routing: convert clean URL path to hash for component initialization -->
-<script>
-// On page load, if we have a clean path (e.g., /prime), convert it to hash (#prime)
-// so the component's existing routing logic picks it up
-(function() {
-  setTimeout(function() {
-    const path = window.location.pathname;
-    if (path && path !== '/' && !window.location.hash) {
-      // Set hash for component routing
-      const hashValue = path.replace(/^\//, '');
-      window.location.hash = '#' + hashValue;
-    }
-  }, 100);
-})();
-</script>
 </body>
 </html>
-<!-- Routing: convert clean URL path to hash for component initialization -->
-<script>
-// On page load, if we have a clean path (e.g., /prime), convert it to hash (#prime)
-// so the component's existing routing logic picks it up
-(function() {
-  // Run after component is ready
-  setTimeout(function() {
-    const path = window.location.pathname;
-    if (path && path !== '/' && !window.location.hash) {
-      // Set hash without the leading slash for component routing
-      const hashValue = path.replace(/^\//, '');
