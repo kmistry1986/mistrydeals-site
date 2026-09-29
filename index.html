@@ -2,6 +2,7 @@
 <html>
 <head>
 <meta charset="utf-8">
+<meta name="google-site-verification" content="un8jkHZoXAU4oDtTqyaZTRqQEoD9RVeZjK9nE-NtYwk" />
 <base href="/">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <script src="/support.js"></script>
@@ -2090,6 +2091,8 @@ class Component extends DCLogic {
         if (next.length < PAGE) break;
       }
     } catch (e) { /* keep whatever already painted */ }
+    // counts stay blank until every page is in, so they land once at their final value
+    this.setState({ liveDone: true });
   }
   componentDidUpdate() { this.paint(); }
   isDark() { return this.state.dark === undefined ? !!this.props.dark : this.state.dark; }
@@ -2173,7 +2176,7 @@ class Component extends DCLogic {
     // The one live-deal count every label shares. Counted from the rows because
     // the grid's test is `was > price` and PostgREST cannot compare two columns,
     // so no count query can express it. Climbs while paging, ends exact.
-    const liveCount = (this.state.live || []).filter(d => d.hasOff).length;
+    const liveCount = this.state.liveDone ? (this.state.live || []).filter(d => d.hasOff).length : 0;
     const num = c => "font-family:var(--font-heading);font-weight:800;font-size:34px;line-height:1;letter-spacing:-.02em;color:" + c;
     const flag = (label, on) => ({
       label,
@@ -2546,18 +2549,18 @@ class Component extends DCLogic {
         return v.length ? v[Math.floor(v.length / 2)] + "%" : "\u2014";
       })(this.state.live),
       addedWeek: this.state.addedWeek != null ? Number(this.state.addedWeek).toLocaleString() : "\u2014",
-      newToday: (this.state.live || []).filter(d => d.hasOff && Date.now() - d.createdAt < 86400000).length,
+      newToday: this.state.liveDone ? (this.state.live || []).filter(d => d.hasOff && Date.now() - d.createdAt < 86400000).length : "",
       catCount: (function (all) {
         const seen = {};
         (all || []).forEach(d => { if (d.catRaw && d.hasOff) seen[d.catRaw] = 1; });
         return Object.keys(seen).length;
-      })(this.state.live),
+      })(this.state.liveDone ? this.state.live : null) || "",
       searchLabel: liveCount ? "Search " + liveCount.toLocaleString() + " live deals" : "Search live deals",
       showingLabel: (function (vis, shown, total, filtered) {
         if (!vis) return "Showing 12 deals";
         const n = Math.min(shown, vis.length);
         if (filtered) return "Showing " + n + " of " + vis.length + " matching deals";
-        return "Showing " + n + " of " + Number(total || vis.length).toLocaleString() + " deals";
+        return total ? "Showing " + n + " of " + Number(total).toLocaleString() + " deals" : "Showing " + n + " deals";
       })(this.visibleDeals(), this.state.shown || 12, liveCount,
          !!((this.state.q || "").trim()) || ((this.state.chip || "All deals") !== "All deals")),
       noResults: !!(this.visibleDeals() && this.visibleDeals().length === 0),

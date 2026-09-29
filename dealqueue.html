@@ -333,6 +333,10 @@
           <option value="{{ o }}">{{ o }}</option>
         </sc-for>
       </select>
+      <div style="display:flex;flex:none">
+          <button onClick="{{ viewRows }}" title="Table view" style="{{ viewRowsStyle }}">Rows</button>
+          <button onClick="{{ viewCards }}" title="Card view with larger pictures" style="{{ viewCardsStyle }}">Cards</button>
+        </div>
       <span style="margin-left:auto;font-size:12px;color:var(--color-neutral-700)">{{ showing }}</span>
       <sc-if value="{{ canRejectAll }}" hint-placeholder-val="{{ false }}">
         <button onClick="{{ rejectAll }}" title="Reject every deal currently in view" style="font:inherit;font-family:var(--font-heading);font-weight:700;font-size:10px;letter-spacing:.08em;text-transform:uppercase;padding:7px 11px;cursor:pointer;border:1px solid var(--color-accent);background:transparent;color:var(--color-accent-700)" style-hover="background:var(--color-accent);color:#16233a">{{ rejectAllLabel }}</button>
@@ -355,7 +359,13 @@
             <button onClick="{{ rejectAll }}" title="Reject every deal currently in view" style="font:inherit;font-family:var(--font-heading);font-weight:700;font-size:10px;letter-spacing:.08em;text-transform:uppercase;flex:none;min-height:44px;padding:0 12px;cursor:pointer;border:1px solid var(--color-accent);background:transparent;color:var(--color-accent-700)">{{ rejectAllLabel }}</button>
           </sc-if>
         </div>
-        <div style="font-size:12px;color:var(--color-neutral-700)">{{ showing }}</div>
+        <div style="display:flex;align-items:center;gap:8px">
+          <div style="font-size:12px;color:var(--color-neutral-700);flex:1 1 auto;min-width:0">{{ showing }}</div>
+          <div style="display:flex;flex:none">
+          <button onClick="{{ viewRows }}" title="Table view" style="{{ viewRowsStyle }}">Rows</button>
+          <button onClick="{{ viewCards }}" title="Card view with larger pictures" style="{{ viewCardsStyle }}">Cards</button>
+        </div>
+        </div>
       </div>
       </sc-if>
     </div>
@@ -382,6 +392,7 @@
       </div>
     </sc-if>
 
+    <sc-if value="{{ rowView }}" hint-placeholder-val="{{ true }}">
     <div style="overflow-x:auto;padding-bottom:48px">
       <div class="m-scroll" style="min-width:1282px">
         <div class="m-hide" style="display:grid;grid-template-columns:3px 64px minmax(220px,1fr) 104px 84px 92px 120px 108px 96px 236px;gap:10px;padding:10px 0;border-bottom:2px solid var(--color-divider);font-family:var(--font-heading);font-weight:700;font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--color-neutral-700)">
@@ -595,6 +606,129 @@
         </div>
       </div>
     </div>
+    </sc-if>
+    <sc-if value="{{ cardView }}" hint-placeholder-val="{{ false }}">
+    <div style="padding:18px 0 48px">
+      <sc-if value="{{ loading }}" hint-placeholder-val="{{ true }}">
+        <div style="padding:40px;text-align:center;color:var(--color-neutral-700);font-size:13px">Loading the queue&#8230;</div>
+      </sc-if>
+      <sc-if value="{{ error }}" hint-placeholder-val="{{ false }}">
+        <div style="border-left:3px solid var(--color-accent);padding:14px 16px;margin:0 0 20px;font-size:13px;line-height:1.5;color:var(--color-accent-700)">{{ error }}</div>
+      </sc-if>
+      <sc-if value="{{ empty }}" hint-placeholder-val="{{ false }}">
+        <div style="padding:40px;text-align:center;color:var(--color-neutral-700);font-size:13px">{{ emptyNote }}</div>
+      </sc-if>
+      <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:18px">
+        <sc-for list="{{ rows }}" as="r" hint-placeholder-count="8">
+          <div style="{{ r.cardStyle }}">
+            <div style="position:relative;aspect-ratio:1 / 1;background:#ffffff;border-bottom:1px solid var(--color-divider);overflow:hidden">
+              <dc-import name="ProductImage" src="{{ r.img }}" alt="" pad="16px" hint-size="100%,100%"></dc-import>
+              <sc-if value="{{ r.off }}" hint-placeholder-val="{{ true }}">
+                <span style="position:absolute;left:0;top:0;background:var(--color-accent);color:#16233a;font-family:var(--font-heading);font-weight:800;font-size:15px;line-height:1;padding:7px 9px">{{ r.off }}</span>
+              </sc-if>
+              <sc-if value="{{ r.isDone }}" hint-placeholder-val="{{ false }}">
+                <span style="position:absolute;right:8px;top:8px;display:flex;flex-wrap:wrap;gap:4px;justify-content:flex-end;background:var(--color-bg);padding:3px 4px">
+                  <span style="{{ r.statusStyle }}">{{ r.status }}</span>
+                </span>
+              </sc-if>
+            </div>
+            <div style="display:flex;flex-direction:column;gap:8px;padding:12px 12px 14px;flex:1 1 auto;min-width:0">
+              <div style="font-family:var(--font-heading);font-weight:700;font-size:14.5px;line-height:1.3;display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:3;overflow:hidden" title="{{ r.title }}">{{ r.title }}</div>
+              <div style="display:flex;align-items:baseline;flex-wrap:wrap;gap:4px 9px">
+                <span style="font-family:var(--font-heading);font-weight:800;font-size:22px;line-height:1;letter-spacing:-.02em">{{ r.price }}</span>
+                <span style="font-size:12.5px;color:var(--color-neutral-600);text-decoration:line-through">{{ r.was }}</span>
+                <sc-if value="{{ r.couponPrice }}" hint-placeholder-val="{{ false }}">
+                  <span style="font-family:var(--font-heading);font-weight:700;font-size:13px;color:var(--color-accent-700)" title="Price with coupon">{{ r.couponPrice }}</span>
+                </sc-if>
+                <sc-if value="{{ r.couponCode }}" hint-placeholder-val="{{ false }}">
+                  <span style="font-family:var(--font-heading);font-weight:700;font-size:10px;letter-spacing:.06em;text-transform:uppercase;border:1px solid var(--color-divider);padding:2px 7px;color:var(--color-neutral-700)">{{ r.couponCode }}</span>
+                </sc-if>
+              </div>
+              <div style="display:flex;flex-wrap:wrap;gap:4px 12px;font-size:11.5px;color:var(--color-neutral-700);line-height:1.35">
+                <sc-if value="{{ r.hasRating }}" hint-placeholder-val="{{ false }}">
+                  <span>{{ r.rating }}</span>
+                </sc-if>
+                <sc-if value="{{ r.hasCash }}" hint-placeholder-val="{{ false }}">
+                  <span style="{{ r.cashFlatStyle }}" title="{{ r.cashTitle }}">{{ r.cashback }}</span>
+                </sc-if>
+                <span>{{ r.added }}</span>
+              </div>
+              <sc-if value="{{ r.note }}" hint-placeholder-val="{{ false }}">
+                <div style="font-size:11px;color:var(--color-accent-700);line-height:1.35">{{ r.note }}</div>
+              </sc-if>
+              <sc-if value="{{ r.skipReason }}" hint-placeholder-val="{{ false }}">
+                <div style="{{ r.skipStyle }}" title="{{ r.skipTitle }}">{{ r.skipReason }}</div>
+              </sc-if>
+              <sc-if value="{{ r.priorNote }}" hint-placeholder-val="{{ false }}">
+                <div style="{{ r.priorStyle }}" title="This ASIN has been through review before">{{ r.priorNote }}</div>
+              </sc-if>
+              <div style="display:flex;flex-wrap:wrap;align-items:center;gap:6px 12px;font-family:var(--font-heading);font-weight:700;font-size:10px;letter-spacing:.06em;text-transform:uppercase">
+                <a href="{{ r.amazonUrl }}" target="_blank" rel="noopener">Amazon &#8599;</a>
+                <sc-if value="{{ r.sourceLink }}" hint-placeholder-val="{{ false }}">
+                  <a href="{{ r.sourceLink }}" target="_blank" rel="noopener" title="{{ r.sourceLink }}">{{ r.source }}</a>
+                </sc-if>
+                <sc-if value="{{ r.noSourceLink }}" hint-placeholder-val="{{ true }}">
+                  <span style="color:var(--color-neutral-600)">{{ r.source }}</span>
+                </sc-if>
+                <button onClick="{{ r.history }}" title="Every price we have on record for this ASIN" style="font:inherit;background:none;border:0;padding:0;cursor:pointer;color:var(--color-neutral-700)" style-hover="color:var(--color-accent-700)">History</button>
+                <span style="margin-left:auto;font-family:var(--font-body);font-weight:400;font-size:10.5px;letter-spacing:.03em;text-transform:none;color:var(--color-neutral-600)">{{ r.asin }}</span>
+              </div>
+              <div style="margin-top:auto;padding-top:10px;border-top:1px solid var(--color-divider)">
+                <sc-if value="{{ r.isPending }}" hint-placeholder-val="{{ true }}">
+                  <div style="display:grid;grid-template-columns:minmax(0,1.4fr) minmax(0,1fr) minmax(0,1fr);gap:6px">
+                    <button onClick="{{ r.approve }}" style="{{ r.cardApproveStyle }}">{{ r.approveLabel }}</button>
+                    <button onClick="{{ r.needsSync }}" style="{{ r.cardBtnStyle }}" title="Queue for Amazon data sync without publishing">{{ r.needsSyncLabel }}</button>
+                    <button onClick="{{ r.reject }}" style="{{ r.cardRejectStyle }}">Reject</button>
+                  </div>
+                  <sc-if value="{{ r.showTargets }}" hint-placeholder-val="{{ true }}">
+                    <div style="display:flex;flex-wrap:wrap;align-items:center;gap:5px;margin-top:8px">
+                      <span style="font-family:var(--font-heading);font-weight:700;font-size:9.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--color-neutral-600)">{{ r.postVerb }}</span>
+                      <sc-for list="{{ r.targets }}" as="pt" hint-placeholder-count="3">
+                        <button onClick="{{ pt.go }}" title="{{ pt.title }}" style="{{ pt.style }}">{{ pt.mark }}</button>
+                      </sc-for>
+                      <button onClick="{{ r.makeRule }}" title="{{ r.makeRuleTitle }}" style="font:inherit;font-family:var(--font-heading);font-weight:700;font-size:9.5px;letter-spacing:.06em;text-transform:uppercase;background:none;border:0;padding:0;margin-left:auto;cursor:pointer;color:var(--color-neutral-700)">+ Rule</button>
+                    </div>
+                  </sc-if>
+                </sc-if>
+                <sc-if value="{{ r.isDone }}" hint-placeholder-val="{{ false }}">
+                  <div style="display:flex;align-items:center;flex-wrap:wrap;gap:4px">
+                    <span style="{{ r.statusStyle }}">{{ r.status }}</span>
+                    <sc-if value="{{ r.liveState }}" hint-placeholder-val="{{ false }}">
+                      <span style="{{ r.liveStyle }}">{{ r.liveState }}</span>
+                    </sc-if>
+                  </div>
+                  <sc-if value="{{ r.syncNote }}" hint-placeholder-val="{{ false }}">
+                    <div style="{{ r.syncNoteStyle }}">{{ r.syncNote }}</div>
+                  </sc-if>
+                  <div style="display:flex;flex-wrap:wrap;gap:4px 14px">
+                    <sc-if value="{{ r.syncStale }}" hint-placeholder-val="{{ false }}">
+                      <button onClick="{{ r.sync }}" style="font:inherit;font-family:var(--font-heading);font-weight:700;font-size:10px;letter-spacing:.08em;text-transform:uppercase;background:none;border:0;padding:0;margin-top:6px;cursor:pointer;color:var(--color-accent-700)">{{ r.syncLabel }}</button>
+                    </sc-if>
+                    <sc-if value="{{ r.needsRow }}" hint-placeholder-val="{{ false }}">
+                      <button onClick="{{ r.addRow }}" style="font:inherit;font-family:var(--font-heading);font-weight:700;font-size:10px;letter-spacing:.08em;text-transform:uppercase;background:none;border:0;padding:0;margin-top:6px;cursor:pointer;color:var(--color-accent-700)">{{ r.addRowLabel }}</button>
+                    </sc-if>
+                    <sc-if value="{{ r.canToggleLive }}" hint-placeholder-val="{{ false }}">
+                      <button onClick="{{ r.toggleLive }}" style="font:inherit;font-family:var(--font-heading);font-weight:700;font-size:10px;letter-spacing:.08em;text-transform:uppercase;background:none;border:0;padding:0;margin-top:6px;cursor:pointer;color:var(--color-accent-700)">{{ r.toggleLiveLabel }}</button>
+                    </sc-if>
+                    <sc-if value="{{ r.canUndo }}" hint-placeholder-val="{{ false }}">
+                      <button onClick="{{ r.undo }}" style="font:inherit;font-family:var(--font-heading);font-weight:700;font-size:10px;letter-spacing:.08em;text-transform:uppercase;background:none;border:0;padding:0;margin-top:6px;cursor:pointer;color:var(--color-neutral-700)">Back to pending</button>
+                    </sc-if>
+                    <sc-if value="{{ r.canDelete }}" hint-placeholder-val="{{ false }}">
+                      <button onClick="{{ r.deleteRow }}" style="font:inherit;font-family:var(--font-heading);font-weight:700;font-size:10px;letter-spacing:.08em;text-transform:uppercase;background:none;border:0;padding:0;margin-top:6px;cursor:pointer;color:var(--color-accent-700)">Delete row</button>
+                    </sc-if>
+                  </div>
+                </sc-if>
+              </div>
+            </div>
+          </div>
+        </sc-for>
+      </div>
+      <div style="display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;padding:22px 0 0">
+        <span style="font-size:13px;color:var(--color-neutral-700)">{{ showing }}</span>
+        <button onClick="{{ more }}" class="btn btn-secondary" style="font-size:12px;padding:8px 12px;min-height:44px">Load 50 more</button>
+      </div>
+    </div>
+    </sc-if>
     </sc-if>
 
     <sc-if value="{{ onBrands }}" hint-placeholder-val="{{ false }}">
@@ -3073,6 +3207,20 @@ class Component extends DCLogic {
     });
   }
 
+  // Rows / Cards, remembered on this device; phones default to cards
+  queueView() {
+    if (this._qView === undefined) {
+      let v = null; try { v = localStorage.getItem("md-dq-view"); } catch (e) {}
+      this._qView = v === "rows" || v === "cards" ? v : (this.state.narrow ? "cards" : "rows");
+    }
+    return this._qView;
+  }
+  setQueueView(v) { this._qView = v; try { localStorage.setItem("md-dq-view", v); } catch (e) {} this.forceUpdate(); }
+  viewSeg(on) {
+    return "font:inherit;font-family:var(--font-heading);font-weight:700;font-size:10px;letter-spacing:.08em;text-transform:uppercase;min-height:" + (this.state.narrow ? "44px" : "30px") + ";padding:0 11px;cursor:pointer;border:1px solid var(--color-text);" +
+      (on ? "background:var(--color-text);color:var(--color-bg)" : "background:transparent;color:var(--color-text)");
+  }
+
   density() {
     const p = this.props.density || "Comfortable";
     // the thumbnail COLUMN stays 64px at every density so the static header
@@ -3343,6 +3491,12 @@ class Component extends DCLogic {
       microLabel: "font-family:var(--font-heading);font-weight:700;font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:var(--color-neutral-600);margin-bottom:3px",
       isWide: !this.state.narrow,
       isNarrow: !!this.state.narrow,
+      rowView: this.queueView() === "rows",
+      cardView: this.queueView() === "cards",
+      viewRows: () => this.setQueueView("rows"),
+      viewCards: () => this.setQueueView("cards"),
+      viewRowsStyle: this.viewSeg(this.queueView() === "rows"),
+      viewCardsStyle: this.viewSeg(this.queueView() === "cards") + ";border-left:0",
       menuOpen: !!this.state.menuOpen,
       openMenu: () => this.setState({ menuOpen: true }),
       closeMenu: () => this.setState({ menuOpen: false }),
@@ -3758,6 +3912,7 @@ class Component extends DCLogic {
               cashTitle: pct > 0
                 ? Math.round(pct) + "% back with the Prime Visa on this deal"
                 : (prod ? "No bonus cashback rate set on this product" : "Not in the catalogue yet \u2014 set the rate after it syncs"),
+              hasCash: pct > 0,
               cashStyle: "font-family:var(--font-heading);font-weight:800;font-size:" + (pct > 0 ? "14px" : "13px") +
                 ";line-height:1.2;color:" + (pct > 0 ? "var(--color-accent-700)" : "var(--color-neutral-600)"),
               // the labelled mobile cell sits in the price band and aligns on
@@ -3888,6 +4043,12 @@ class Component extends DCLogic {
           showTargets: !this.state.narrow,
           // rejecting is a bulk action, so single-row Reject is desktop-only
           showReject: !this.state.narrow,
+          hasRating: !!r.rating,
+          cardStyle: "display:flex;flex-direction:column;min-width:0;background:var(--color-surface);border:1px solid var(--color-divider);border-top:3px solid " +
+            (st === "pending" ? "var(--color-accent)" : st === "rejected" ? "var(--color-neutral-400)" : "var(--color-text)") + (busy ? ";opacity:.6" : ""),
+          cardApproveStyle: "font:inherit;font-family:var(--font-heading);font-weight:700;font-size:11px;letter-spacing:.08em;text-transform:uppercase;min-height:40px;padding:0 8px;cursor:pointer;border:1px solid var(--color-text);background:var(--color-text);color:var(--color-bg);line-height:1.15" + (busy ? ";opacity:.45" : ""),
+          cardBtnStyle: "font:inherit;font-family:var(--font-heading);font-weight:700;font-size:11px;letter-spacing:.08em;text-transform:uppercase;min-height:40px;padding:0 6px;cursor:pointer;border:1px solid var(--color-text);background:transparent;color:var(--color-text)" + (busy ? ";opacity:.45" : ""),
+          cardRejectStyle: "font:inherit;font-family:var(--font-heading);font-weight:700;font-size:11px;letter-spacing:.08em;text-transform:uppercase;min-height:40px;padding:0 6px;cursor:pointer;border:1px solid var(--color-accent);background:transparent;color:var(--color-accent-700)" + (busy ? ";opacity:.45" : ""),
           reject: () => this.reject(r),
           rejectStyle: "font:inherit;font-family:var(--font-heading);font-weight:700;font-size:10px;letter-spacing:.08em;text-transform:uppercase;padding:6px 10px;cursor:pointer;border:1px solid var(--color-accent);background:transparent;color:var(--color-accent-700)" + (busy ? ";opacity:.45" : ""),
           targets: targets,

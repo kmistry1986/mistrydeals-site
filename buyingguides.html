@@ -71,6 +71,12 @@
   @media (max-width: 1080px) { .bg-split { grid-template-columns: 1fr !important; } }
   @media (max-width: 720px) { .bg-two { grid-template-columns: 1fr !important; } }
   @media (max-width: 720px) { .bg-why { display: none !important; } }
+  .bg-listtoggle { display: none; }
+  @media (max-width: 1080px) {
+    .bg-listtoggle { display: flex !important; }
+    .bg-listbody { display: none; }
+    .bg-listbody.is-open { display: block; }
+  }
 </style>
 </helmet>
 
@@ -176,6 +182,8 @@
           <div style="font-family:var(--font-heading);font-weight:700;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--color-neutral-700)">{{ listCount }}</div>
           <button onClick="{{ reloadGuides }}" style="margin-left:auto;font:inherit;font-family:var(--font-heading);font-weight:700;font-size:10px;letter-spacing:.08em;text-transform:uppercase;background:none;border:0;padding:0;cursor:pointer;color:var(--color-neutral-700)">Reload</button>
         </div>
+        <button onClick="{{ toggleList }}" class="bg-listtoggle" aria-expanded="{{ listOpen }}" style="width:100%;margin-top:10px;min-height:44px;align-items:center;justify-content:space-between;gap:10px;padding:10px 14px;font:inherit;font-family:var(--font-heading);font-weight:700;font-size:12px;letter-spacing:.08em;text-transform:uppercase;cursor:pointer;background:none;border:2px solid var(--color-text);color:var(--color-text)"><span>{{ listToggleLabel }}</span><span>{{ listCaret }}</span></button>
+        <div class="bg-listbody {{ listOpenClass }}">
         <button onClick="{{ newGuide }}" class="btn btn-primary btn-block" style="margin-top:14px;font-size:12px;padding:11px 14px;min-height:44px;justify-content:flex-start">New guide</button>
         <div style="margin-top:12px;display:flex;gap:6px;flex-wrap:wrap">
           <sc-for list="{{ listTabs }}" as="t" hint-placeholder-count="3">
@@ -205,6 +213,7 @@
               </div>
             </div>
           </sc-for>
+        </div>
         </div>
       </div>
 
@@ -2360,6 +2369,11 @@ class Component extends DCLogic {
         : (d && d.published ? (d.id ? "Save changes" : "Save and publish")
           : "Save as draft + add products to sync queue"),
       closeDraft: () => this.closeDraft(),
+      listOpen: !!this.state.listOpen,
+      listOpenClass: this.state.listOpen ? "is-open" : "",
+      listToggleLabel: this.state.listOpen ? "Hide current guides" : "Show current guides",
+      listCaret: this.state.listOpen ? "\u2212" : "+",
+      toggleList: () => this.setState({ listOpen: !this.state.listOpen }),
       saveOnly: () => this.save({ skipQueue: true }),
       canSaveOnly: !!(d && !d.published),
       saveOnlyLabel: this.state.saving ? "Saving\u2026" : "Save only",
