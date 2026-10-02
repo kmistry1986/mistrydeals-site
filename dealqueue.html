@@ -594,6 +594,7 @@
                   <button onClick="{{ r.undo }}" style="font:inherit;font-family:var(--font-heading);font-weight:700;font-size:10px;letter-spacing:.08em;text-transform:uppercase;background:none;border:0;padding:0;margin-top:6px;cursor:pointer;color:var(--color-neutral-700)">Back to pending</button>
                 </sc-if>
                 <sc-if value="{{ r.canDelete }}" hint-placeholder-val="{{ false }}">
+                  <button onClick="{{ r.resync }}" title="Send back to the Amazon data sync for another try" style="font:inherit;font-family:var(--font-heading);font-weight:700;font-size:10px;letter-spacing:.08em;text-transform:uppercase;background:none;border:0;padding:0;margin-top:6px;cursor:pointer;color:var(--color-text);display:block">Resync</button>
                   <button onClick="{{ r.deleteRow }}" title="Delete this queue record outright \u2014 the scraper may pick the deal up again later" style="font:inherit;font-family:var(--font-heading);font-weight:700;font-size:10px;letter-spacing:.08em;text-transform:uppercase;background:none;border:0;padding:0;margin-top:6px;cursor:pointer;color:var(--color-accent-700);display:block">Delete row</button>
                 </sc-if>
               </sc-if>
@@ -715,6 +716,7 @@
                       <button onClick="{{ r.undo }}" style="font:inherit;font-family:var(--font-heading);font-weight:700;font-size:10px;letter-spacing:.08em;text-transform:uppercase;background:none;border:0;padding:0;margin-top:6px;cursor:pointer;color:var(--color-neutral-700)">Back to pending</button>
                     </sc-if>
                     <sc-if value="{{ r.canDelete }}" hint-placeholder-val="{{ false }}">
+                      <button onClick="{{ r.resync }}" title="Send back to the Amazon data sync for another try" style="font:inherit;font-family:var(--font-heading);font-weight:700;font-size:10px;letter-spacing:.08em;text-transform:uppercase;background:none;border:0;padding:0;margin-top:6px;cursor:pointer;color:var(--color-text);margin-right:12px">Resync</button>
                       <button onClick="{{ r.deleteRow }}" style="font:inherit;font-family:var(--font-heading);font-weight:700;font-size:10px;letter-spacing:.08em;text-transform:uppercase;background:none;border:0;padding:0;margin-top:6px;cursor:pointer;color:var(--color-accent-700)">Delete row</button>
                     </sc-if>
                   </div>
@@ -2170,6 +2172,33 @@ class Component extends DCLogic {
     return /error|fail/i.test(String((row && row.status) || ""));
   }
 
+  // sends a failed row back to the Amazon data sync; clears the old error so the next run starts clean
+  async resyncRow(row) {
+    const status = "approved_needs_amazon_data_sync";
+    this.setState({ busyId: row.id, saved: "Sending back to sync\u2026" });
+    const stamp = new Date().toISOString();
+    const send = body => this.req(BASE + "/rest/v1/product_pipeline?id=eq." + row.id, {
+      method: "PATCH", headers: this.headers({ Prefer: "return=minimal" }), body: JSON.stringify(body)
+    });
+    try {
+      let res = await send({ status: status, updated_at: stamp, error_message: null });
+      // older tables have no error_message column
+      if (!res.ok && res.status === 400) res = await send({ status: status, updated_at: stamp });
+      if (!res.ok) {
+        let why = "";
+        try { const j = await res.json(); why = j.message || ""; } catch (e) {}
+        this.setState({ busyId: null, saved: "Could not resync (" + res.status + ")" + (why ? " \u2014 " + why : "") });
+        return this.clearNote();
+      }
+      this.removeRows([row.id]);
+      this.setState({ busyId: null, saved: "Sent back to Amazon data sync" });
+      this.loadCounts();
+    } catch (e) {
+      this.setState({ busyId: null, saved: "Could not resync \u2014 network error" });
+    }
+    this.clearNote();
+  }
+
   async deleteRow(row) {
     const label = this.decode(row.title || row.asin || "this row");
     const ok = await this.ask({
@@ -3174,6 +3203,13 @@ class Component extends DCLogic {
       const p = location.pathname;
       if (/brandrules|\/admin\/brands/.test(p)) return "brands";
       if (/scrapelog|\/admin\/scrapes/.test(p)) return "scrapes";
+      const h = (location.hash || "").replace("#", "");
+      if (h === "brands" || h === "scrapes") return h;
+      try {
+        const s = sessionStorage.getItem("md-admin-tab");
+        sessionStorage.removeItem("md-admin-tab");
+        if (s === "brands" || s === "scrapes") return s;
+      } catch (e) {}
       return "queue";
     }
     const h = (location.hash || "").replace("#", "");
@@ -3196,8 +3232,9 @@ class Component extends DCLogic {
   goTab(tab, fromUrl) {
     if (!fromUrl) {
       if (this.onAdmin()) {
-        const path = this.adminHref(tab === "queue" ? "dealqueue" : tab);
-        if (location.pathname !== path) history.pushState(null, "", path);
+        const base = this.adminHref("dealqueue");
+        const path = tab === "brands" || tab === "scrapes" ? base + "#" + tab : base;
+        if (location.pathname + location.hash !== path) history.pushState(null, "", path);
       } else if (tab === "brands" || tab === "scrapes") {
         if (location.hash !== "#" + tab) location.hash = tab;
       } else if (location.hash) history.replaceState(null, "", location.pathname + location.search);
@@ -3506,8 +3543,8 @@ class Component extends DCLogic {
         { label: "Catalogue", href: this.adminHref("catalogue"), tab: null },
         { label: "Deal queue", href: this.adminHref("dealqueue"), tab: "queue" },
         { label: "Social", href: this.adminHref("carousel"), tab: null },
-        { label: "Brand rules", href: this.adminHref("brands"), tab: "brands" },
-        { label: "Scrape log", href: this.adminHref("scrapes"), tab: "scrapes" },
+        { label: "Brand rules", href: this.adminHref("dealqueue") + "#brands", tab: "brands" },
+        { label: "Scrape log", href: this.adminHref("dealqueue") + "#scrapes", tab: "scrapes" },
         { label: "Buying guides", href: this.adminHref("guides"), tab: null },
         { label: "View site", href: this.onAdmin() ? "/" : "MistryDeals Site.dc.html", tab: null }
       ].map(m => ({
@@ -3611,8 +3648,8 @@ class Component extends DCLogic {
       hQueue: this.adminHref("dealqueue"),
       hCarousel: this.adminHref("carousel"),
       carouselTabStyle: tabOff,
-      hBrands: this.adminHref("brands"),
-      hScrapes: this.adminHref("scrapes"),
+      hBrands: this.adminHref("dealqueue") + "#brands",
+      hScrapes: this.adminHref("dealqueue") + "#scrapes",
       hReddit: this.adminHref("reddit"),
       hGuides: this.adminHref("guides"),
       queueTabStyle: this.state.tab === "queue" ? tabOn : tabOff,
@@ -4063,6 +4100,7 @@ class Component extends DCLogic {
           canUndo: !pending,
           canDelete: !pending && this.isSyncError(r),
           deleteRow: () => this.deleteRow(r),
+          resync: () => this.resyncRow(r),
           undo: () => this.undo(r)
         };
       })

@@ -71,6 +71,10 @@
       "destination": "/links.html"
     },
     {
+      "source": "/watches",
+      "destination": "/pricewatches.html"
+    },
+    {
       "source": "/catalogue",
       "destination": "/catalogue.html"
     },

@@ -10,6 +10,8 @@ Disallow: /redditposter
 Disallow: /buyingguides
 Disallow: /admin
 Disallow: /mobile
+Disallow: /watches
+Disallow: /pricewatches
 Disallow: /d/
 Disallow: /*%7B%7B
 Disallow: /*{{

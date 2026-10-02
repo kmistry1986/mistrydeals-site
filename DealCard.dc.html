@@ -50,8 +50,9 @@
         <div title="{{ deal.cashTitle }}" style="font-size:10.5px;font-family:var(--font-heading);font-weight:700;letter-spacing:.04em;line-height:1.25;background:var(--color-prime);color:var(--color-prime-ink);padding:5px 8px;min-width:0;flex:1 1 auto">{{ deal.cashBadge }}</div>
       </sc-if>
     </div>
-    <div style="display:grid;grid-template-columns:1fr;gap:8px">
+    <div style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px">
       <a href="{{ deal.url }}" target="_blank" rel="nofollow sponsored noopener" class="btn btn-primary" style="justify-content:space-between;font-size:11.5px;padding:9px 8px;gap:4px;min-width:0">Amazon <span>&#8594;</span></a>
+      <button onClick="{{ deal.watch }}" class="btn btn-secondary" style="justify-content:flex-start;font-size:11.5px;padding:9px 8px;min-width:0;white-space:nowrap">Add Price Watch</button>
     </div>
   </div>
 </div>

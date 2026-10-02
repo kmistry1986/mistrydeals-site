@@ -242,8 +242,9 @@
               </sc-if>
             </div>
             <div style="font-size:11px;color:var(--color-neutral-700)">★ {{ h.rating }} {{ h.reviews }}</div>
-            <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(118px,1fr));gap:8px">
+            <div style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px">
               <a href="{{ h.url }}" target="_blank" rel="nofollow sponsored noopener" class="btn btn-primary" style="justify-content:space-between;font-size:13px;padding:11px 10px;gap:4px;min-width:0">Amazon <span>&#8594;</span></a>
+              <button onClick="{{ h.watch }}" class="btn btn-secondary" style="justify-content:flex-start;font-size:13px;padding:11px 10px;min-width:0;white-space:nowrap">Add Price Watch</button>
             </div>
           </div>
         </div>
@@ -776,10 +777,20 @@
             </div>
           </sc-for>
         </sc-if>
+        <sc-for list="{{ guide.sectionsTop }}" as="sec" hint-placeholder-count="0">
+          <div>
+            <hr class="hr" />
+            <div style="font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--color-neutral-700);margin-bottom:8px">{{ sec.n }}</div>
+            <h3 style="margin:0 0 10px">{{ sec.title }}</h3>
+            <sc-for list="{{ sec.paras }}" as="para" hint-placeholder-count="2">
+              <p style="max-width:78ch;text-wrap:pretty">{{ para }}</p>
+            </sc-for>
+          </div>
+        </sc-for>
         <sc-if value="{{ guide.hasHowto }}" hint-placeholder-val="{{ false }}">
           <div>
             <hr class="hr" />
-            <div style="font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--color-neutral-700);margin-bottom:16px">How to buy well</div>
+            <div style="font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--color-neutral-700);margin-bottom:16px">{{ guide.howtoLabel }}</div>
             <sc-for list="{{ guide.howto }}" as="h" hint-placeholder-count="3">
               <div style="display:grid;grid-template-columns:36px 1fr;gap:14px;border-top:1px solid var(--color-divider);padding:14px 0">
                 <span style="font-size:13px;color:var(--color-accent-700);font-weight:600">{{ h.n }}</span>
@@ -793,7 +804,9 @@
             <hr class="hr" />
             <div style="font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--color-neutral-700);margin-bottom:8px">{{ sec.n }}</div>
             <h3 style="margin:0 0 10px">{{ sec.title }}</h3>
-            <p style="max-width:78ch">{{ sec.content }}</p>
+            <sc-for list="{{ sec.paras }}" as="para" hint-placeholder-count="2">
+              <p style="max-width:78ch;text-wrap:pretty">{{ para }}</p>
+            </sc-for>
           </div>
         </sc-for>
         <sc-if value="{{ guide.hasFaq }}" hint-placeholder-val="{{ false }}">
@@ -1366,6 +1379,45 @@
   </div>
 </div>
 </sc-if>
+<sc-if value="{{ watchOpen }}" hint-placeholder-val="{{ false }}">
+<div class="dialog-backdrop" onClick="{{ closeWatch }}" style="z-index:1000">
+  <div class="dialog" role="dialog" aria-modal="true" aria-labelledby="pw-title" onClick="{{ stopProp }}" style="width:min(460px,100%);border-top:4px solid var(--color-accent)">
+    <div style="display:flex;align-items:flex-start;gap:12px">
+      <div style="min-width:0;flex:1">
+        <div style="font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--color-accent-700);margin-bottom:6px">Add price watch</div>
+        <div id="pw-title" class="dialog-title" style="font-size:19px;line-height:1.2;text-wrap:pretty">{{ watchTitle }}</div>
+        <div style="font-size:13px;color:var(--color-neutral-700);margin-top:4px">Now {{ watchPrice }}</div>
+      </div>
+      <button onClick="{{ closeWatch }}" aria-label="Close" class="btn btn-ghost" style="padding:6px 10px;font-size:18px;line-height:1">&#215;</button>
+    </div>
+    <sc-if value="{{ wDone }}" hint-placeholder-val="{{ false }}">
+      <div style="border-top:2px solid var(--color-divider);padding-top:14px;display:flex;flex-direction:column;gap:14px">
+        <p style="margin:0;font-size:15px;line-height:1.5">{{ wDoneMsg }}</p>
+        <div class="dialog-actions"><a href="/watches" class="btn btn-secondary">Manage watches</a><button onClick="{{ closeWatch }}" class="btn btn-primary">Done</button></div>
+      </div>
+    </sc-if>
+    <sc-if value="{{ wForm }}" hint-placeholder-val="{{ true }}">
+      <div style="border-top:2px solid var(--color-divider);padding-top:14px;display:flex;flex-direction:column;gap:14px">
+        <div class="field"><label for="pw-email">Email</label><input id="pw-email" class="input" type="email" autocomplete="email" placeholder="you@email.com" value="{{ wEmail }}" onChange="{{ onWEmail }}" style="min-height:44px;font-size:15px"></input></div>
+        <div class="field"><label for="pw-product">Product</label><input id="pw-product" class="input" type="text" readonly="readonly" value="{{ watchTitle }}" style="min-height:44px;font-size:15px;background:var(--color-neutral-100);color:var(--color-neutral-700)"></input></div>
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px">
+          <div class="field"><label for="pw-asin">ASIN</label><input id="pw-asin" class="input" type="text" readonly="readonly" value="{{ watchAsin }}" style="min-height:44px;font-size:15px;letter-spacing:.04em;background:var(--color-neutral-100);color:var(--color-neutral-700)"></input></div>
+          <div class="field"><label for="pw-target">Target price ($)</label><input id="pw-target" class="input" type="number" inputmode="decimal" min="0" step="0.01" value="{{ wTarget }}" onChange="{{ onWTarget }}" style="min-height:44px;font-size:15px"></input></div>
+        </div>
+        <div style="font-size:12px;color:var(--color-neutral-700)">{{ wHint }}</div>
+        <sc-if value="{{ hasWErr }}" hint-placeholder-val="{{ false }}">
+          <div role="alert" style="font-size:13px;color:var(--color-accent-700);font-weight:600">{{ wErr }}</div>
+        </sc-if>
+        <div class="dialog-actions">
+          <button onClick="{{ closeWatch }}" class="btn btn-secondary">Cancel</button>
+          <button onClick="{{ submitWatch }}" disabled="{{ wBusy }}" class="btn btn-primary">{{ wBtn }}</button>
+        </div>
+      </div>
+    </sc-if>
+  </div>
+</div>
+</sc-if>
+
 </x-dc>
 <noscript><nav aria-label="Site"><ul><li><a href="/">Featured deals</a></li><li><a href="/guides">Guides</a></li><li><a href="/guides/the-best-charging-equipment-wall-chargers-power-banks-stands-and-more">The best charging equipment wall chargers power banks stands and more</a></li><li><a href="/guides/the-most-useful-kitchen-gadgets-under-150">The most useful kitchen gadgets under 150</a></li><li><a href="/guides/back-to-school-tech-under-100">Back to school tech under 100</a></li><li><a href="/guides/best-cheap-smart-home-devices">Best cheap smart home devices</a></li><li><a href="/categories">Categories</a></li><li><a href="/prime">Prime</a></li><li><a href="/about">About</a></li></ul></nav></noscript>
 <script type="text/x-dc" data-dc-script data-props="{&quot;accent&quot;:{&quot;editor&quot;:&quot;color&quot;,&quot;default&quot;:&quot;#d98014&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;options&quot;:[&quot;#d98014&quot;,&quot;#ec3013&quot;,&quot;#0f6b4f&quot;,&quot;#1b3fd8&quot;],&quot;section&quot;:&quot;Theme&quot;},&quot;dark&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:false,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Theme&quot;}}">
@@ -1629,7 +1681,7 @@ class Component extends DCLogic {
     const off = showWas ? "\u2212" + Math.round((1 - price / was) * 100) + "%" : "";
     const count = r.review_count != null ? r.review_count : r.reviews;
     const asin = r.amazon_asin || r.asin;
-    return {
+    const out = {
       title: r.display_title || r.title || r.display_name || "Product",
       cat: this.catOf(r, catMap) || "Product",
       price: price != null ? "$" + Math.round(price) : "",
@@ -1671,6 +1723,45 @@ class Component extends DCLogic {
       asin: asin || "",
       atLowest: this.atLowest(asin, price)
     };
+    out.watch = () => this.openWatch(out);
+    return out;
+  }
+  openWatch(d) {
+    const cur = d && isFinite(d.priceNum) ? d.priceNum : null;
+    let email = "";
+    try { email = localStorage.getItem("md-watch-email") || ""; } catch (e) {}
+    this.setState({ watch: { asin: d.asin || "", title: d.title || "Product", price: cur }, wEmail: email,
+      wTarget: cur != null ? (Math.round(cur * 90) / 100).toFixed(2) : "", wErr: "", wDone: false, wBusy: false });
+  }
+  async submitWatch() {
+    const w = this.state.watch; if (!w || this.state.wBusy) return;
+    const email = String(this.state.wEmail || "").trim().toLowerCase();
+    const target = parseFloat(this.state.wTarget);
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return this.setState({ wErr: "Enter a valid email address." });
+    if (!(target > 0)) return this.setState({ wErr: "Enter a target price above $0." });
+    const asin = String(w.asin || "").trim().toUpperCase();
+    if (!/^[A-Z0-9]{10}$/.test(asin)) return this.setState({ wErr: "This product doesn't have a valid ASIN, so it can't be watched." });
+    this.setState({ wBusy: true, wErr: "" });
+    const BASE = "https://qolksrytidvxarrlygyy.supabase.co";
+    const KEY = "sb_publishable_UX38KeF1XAKtzvS01yfx7w_8s5NkOH3";
+    try {
+      const res = await fetch(BASE + "/rest/v1/price_watches", {
+        method: "POST",
+        headers: { apikey: KEY, Authorization: "Bearer " + KEY, "Content-Type": "application/json", Prefer: "return=minimal" },
+        body: JSON.stringify({ user_email: email, asin, target_price: Math.round(target * 100) / 100 })
+      });
+      if (!res.ok) {
+        let body = ""; try { body = await res.text(); } catch (e) {}
+        if (res.status === 409 || /duplicate|23505|unique/i.test(body)) {
+          this.setState({ wBusy: false, wErr: "You're already watching this product with that email." }); return;
+        }
+        throw new Error(res.status + " " + body);
+      }
+      try { localStorage.setItem("md-watch-email", email); } catch (e) {}
+      this.setState({ wBusy: false, wDone: true });
+    } catch (e) {
+      this.setState({ wBusy: false, wErr: "Couldn't save the watch. Try again in a minute." });
+    }
   }
   guideProduct(p, i) {
     const n = v => (v === null || v === undefined || v === "") ? null : parseFloat(v);
@@ -1786,11 +1877,14 @@ class Component extends DCLogic {
     return best || list[0] || null;
   }
   buildGuide(g) {
-    if (!g) return { kicker: "Buying guide", title: "", caption: "", date: "", count: "", priceAsOf: "", priceStamp: "", intro: [], sections: [], faq: [], hasFaq: false, howto: [], hasHowto: false, picks: [], isPicks: true, isTiers: false, groups: [] };
+    if (!g) return { kicker: "Buying guide", title: "", caption: "", date: "", count: "", priceAsOf: "", priceStamp: "", intro: [], sections: [], sectionsTop: [], howtoLabel: "How to buy well", faq: [], hasFaq: false, howto: [], hasHowto: false, picks: [], isPicks: true, isTiers: false, groups: [] };
     const c = g.content || {};
     const active = this.state.activeAsins;
     const products = (c.products || []).filter(p => !active || !p.amazon_asin || active.indexOf(p.amazon_asin) > -1);
     const intro = Array.isArray(c.intro) ? c.intro : (c.intro ? [c.intro] : []);
+    const advice = c.format === "advice";
+    const secs = (c.sections || []).map((sec, i) => ({ n: String(i + 1).padStart(2, "0"), title: sec.title || "", content: sec.content || "",
+      paras: String(sec.content || "").split(/\n\s*\n/).map(x => x.trim()).filter(Boolean) }));
     // with live prices: the newest price sync among the picks, never earlier than the publish date
     const ls = this.state.liveStats || {};
     const dates = products.map(p => ls[p.amazon_asin] && ls[p.amazon_asin].last_price_sync).concat([g.published_at])
@@ -1802,7 +1896,7 @@ class Component extends DCLogic {
       title: g.title || "",
       caption: g.caption || c.subtitle || "",
       date: g.published_at ? "Published " + new Date(g.published_at).toLocaleDateString("en-US", { day: "numeric", month: "long", year: "numeric" }) : "",
-      count: products.length + (products.length === 1 ? " pick" : " picks"),
+      count: advice ? "Shopping advice" : products.length + (products.length === 1 ? " pick" : " picks"),
       // the picks store a price snapshot taken when the guide was written, so
       // the page says so rather than implying the figures are live
       // the short form repeats under every pick; the long one heads the section
@@ -1813,14 +1907,16 @@ class Component extends DCLogic {
         ? "Prices and discounts were correct on " + asOfTxt + " and may have changed since. Check the current price on Amazon before buying."
         : "Prices and discounts were correct when this guide was published and may have changed since. Check the current price on Amazon before buying.",
       intro,
-      sections: (c.sections || []).map((sec, i) => ({ n: String(i + 1).padStart(2, "0"), title: sec.title || "", content: sec.content || "" })),
+      sections: advice ? [] : secs,
+      sectionsTop: advice ? secs : [],
+      howtoLabel: advice ? "Checklist" : "How to buy well",
       faq: c.faq || [],
       hasFaq: !!(c.faq && c.faq.length),
       howto: (c.howto || []).map((t, i) => ({ n: String(i + 1).padStart(2, "0"), text: t })),
       hasHowto: !!(c.howto && c.howto.length),
       picks: products.map((p, i) => this.guideProduct(p, i)),
       isTiers: c.format === "tiers",
-      isPicks: c.format !== "tiers",
+      isPicks: c.format !== "tiers" && !advice,
       groups: c.format === "tiers" ? this.guideGroups(products, products.map((p, i) => this.guideProduct(p, i))) : []
     };
   }
@@ -2262,6 +2358,23 @@ class Component extends DCLogic {
       x: 4 + i * 33, y: 130 - h, h, fill: i === 17 ? "var(--color-accent)" : "var(--color-neutral-400)"
     }));
     return {
+      watchOpen: !!this.state.watch,
+      watchTitle: (this.state.watch || {}).title || "",
+      watchPrice: (this.state.watch || {}).price != null ? "$" + this.state.watch.price.toFixed(2) : "\u2014",
+      watchAsin: (this.state.watch || {}).asin || "",
+      wEmail: this.state.wEmail || "", wTarget: this.state.wTarget || "",
+      onWEmail: e => this.setState({ wEmail: e.target.value, wErr: "" }),
+      onWTarget: e => this.setState({ wTarget: e.target.value, wErr: "" }),
+      closeWatch: () => this.setState({ watch: null }),
+      stopProp: e => e.stopPropagation(),
+      submitWatch: () => this.submitWatch(),
+      wBusy: !!this.state.wBusy, wBtn: this.state.wBusy ? "Saving\u2026" : "Start watching",
+      wErr: this.state.wErr || "", hasWErr: !!this.state.wErr,
+      wDone: !!this.state.wDone, wForm: !this.state.wDone,
+      wHint: (() => { const w = this.state.watch || {}; const t = parseFloat(this.state.wTarget);
+        if (w.price != null && t >= w.price) return "That's at or above today's price. We'll email you as soon as it's checked.";
+        return w.price != null && t > 0 ? "We'll email you once it drops to $" + t.toFixed(2) + " or less (" + Math.round((1 - t / w.price) * 100) + "% under today)." : "We'll email you once it drops to your target."; })(),
+      wDoneMsg: "Watch created! We'll email " + (this.state.wEmail || "you") + " when the price drops to $" + (parseFloat(this.state.wTarget) || 0).toFixed(2) + " or less.",
       isHome: s === "home", isCat: s === "category", isDetail: s === "detail",
       isGuide: s === "guide", isPrime: s === "prime", isAbout: s === "about", isMobile: s === "mobile",
       goHome: (e) => { if (e && e.preventDefault) e.preventDefault(); this.go("home"); },
@@ -2530,7 +2643,7 @@ class Component extends DCLogic {
             title: g.title || "",
             caption: g.caption || "",
             img: p.image_url || "",
-            meta: n + (n === 1 ? " pick" : " picks") + (g.published_at ? " \u00b7 " + new Date(g.published_at).toLocaleDateString("en-US", { day: "numeric", month: "short" }) : ""),
+            meta: ((g.content || {}).format === "advice" ? "Shopping advice" : n + (n === 1 ? " pick" : " picks")) + (g.published_at ? " \u00b7 " + new Date(g.published_at).toLocaleDateString("en-US", { day: "numeric", month: "short" }) : ""),
             href: self.path("guide", i),
             open: (e) => { if (e && e.preventDefault) e.preventDefault(); self.go("guide", i); }
           };
@@ -2565,7 +2678,7 @@ class Component extends DCLogic {
         return {
           kicker: g.event_name || "Buying guide", title: g.title || "", caption: g.caption || (g.content || {}).subtitle || "",
           img: (hp && hp.image_url) || "",
-          meta: n + (n === 1 ? " pick" : " picks") + (g.published_at ? " \u00b7 " + new Date(g.published_at).toLocaleDateString("en-US", { day: "numeric", month: "long", year: "numeric" }) : ""),
+          meta: ((g.content || {}).format === "advice" ? "Shopping advice" : n + (n === 1 ? " pick" : " picks")) + (g.published_at ? " \u00b7 " + new Date(g.published_at).toLocaleDateString("en-US", { day: "numeric", month: "long", year: "numeric" }) : ""),
           href: this.path("guide", String(i)),
           open: (e) => { if (e && e.preventDefault) e.preventDefault(); this.go("guide", String(i)); }
         };

@@ -1,0 +1,437 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Your price watches · MistryDeals</title>
+  <meta name="robots" content="noindex">
+  <link rel="stylesheet" href="_ds/modernist-424462e2-4060-4771-92af-91bbc246b8fd/styles.css">
+  <style>
+    :root { --color-bg:#f2efe9; --color-surface:#faf8f4; --color-text:#16233a; --color-divider:#cfc9bb;
+      --color-neutral-600:#7b8698; --color-neutral-700:#5c6474; --color-neutral-800:#2f3c55; --color-neutral-900:#16233a;
+      --color-accent:#d98014; --color-accent-700:color-mix(in oklch,#d98014,black 30%); }
+    html { -webkit-text-size-adjust:100%; text-size-adjust:100%; }
+    body { margin:0; background:var(--color-bg); color:var(--color-text); font-family:var(--font-body); }
+    a { color:var(--color-accent-700); } a:hover { color:var(--color-text); }
+    input, button { font:inherit; }
+    input:focus-visible, a:focus-visible, button:focus-visible { outline:2px solid var(--color-accent); outline-offset:2px; }
+  </style>
+</helmet>
+
+<div style="max-width:1120px;margin:0 auto;padding:28px 18px 56px;box-sizing:border-box;min-height:100vh;display:flex;flex-direction:column">
+  <div style="display:flex;align-items:center;gap:16px;flex-wrap:wrap">
+    <a href="https://mistrydeals.com" style="display:flex;align-items:center;gap:9px;text-decoration:none;color:var(--color-text);font-family:var(--font-heading);font-weight:800;font-size:18px;letter-spacing:.02em">
+      <span style="position:relative;width:21px;height:21px;flex:none;display:block"><span style="position:absolute;left:0;top:0;width:15px;height:15px;border:2.2px solid var(--color-text);border-radius:50%;box-sizing:border-box;display:block"></span><span style="position:absolute;left:12.7px;top:12px;width:8.3px;height:2.2px;background:var(--color-accent);transform:rotate(45deg);transform-origin:left center;display:block"></span></span>
+      MISTRYDEALS
+    </a>
+    <a href="https://mistrydeals.com" style="margin-left:auto;font-size:13px;font-weight:600;text-decoration:none;white-space:nowrap">All deals &#8594;</a>
+  </div>
+
+  <div style="margin-top:28px;padding-bottom:18px;border-bottom:2px solid var(--color-text);display:flex;align-items:flex-end;gap:16px;flex-wrap:wrap">
+    <div style="min-width:0;flex:1 1 320px">
+      <div style="font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--color-accent-700);margin-bottom:8px">Price watch</div>
+      <h1 style="margin:0;font-family:var(--font-heading);font-weight:800;font-size:clamp(30px,5vw,44px);line-height:1;letter-spacing:-.03em;text-wrap:balance">Your price watches</h1>
+      <p style="margin:10px 0 0;font-size:15px;line-height:1.45;color:var(--color-neutral-700);max-width:58ch;text-wrap:pretty">We check every watched product nightly and email you when it drops to your target.</p>
+    </div>
+    <sc-if value="{{ signedIn }}" hint-placeholder-val="{{ false }}">
+      <div style="display:flex;align-items:center;gap:12px;flex:0 1 auto;min-width:0;max-width:100%">
+        <span style="font-size:13px;color:var(--color-neutral-700);overflow-wrap:anywhere;min-width:0;flex:1 1 auto">Signed in as <strong style="color:var(--color-text)">{{ email }}</strong></span>
+        <button onClick="{{ signOut }}" class="btn btn-ghost" style="font-size:13px;padding:8px 10px;white-space:nowrap;flex:none">Sign out</button>
+      </div>
+    </sc-if>
+  </div>
+
+  <sc-if value="{{ hasErr }}" hint-placeholder-val="{{ false }}">
+    <div role="alert" style="margin-top:18px;border-left:3px solid var(--color-accent);background:var(--color-surface);padding:12px 14px;font-size:14px;line-height:1.45;display:flex;gap:12px;align-items:flex-start">
+      <span style="flex:1;min-width:0">{{ err }}</span>
+      <button onClick="{{ clearErr }}" aria-label="Dismiss" style="border:0;background:transparent;cursor:pointer;font-size:18px;line-height:1;padding:0 2px;color:var(--color-neutral-700)">&#215;</button>
+    </div>
+  </sc-if>
+
+  <sc-if value="{{ showLogin }}" hint-placeholder-val="{{ true }}">
+    <div style="margin-top:28px;max-width:460px;border-top:4px solid var(--color-accent);background:var(--color-surface);padding:22px 20px 24px;display:flex;flex-direction:column;gap:14px">
+      <sc-if value="{{ sent }}" hint-placeholder-val="{{ false }}">
+        <div style="display:flex;flex-direction:column;gap:12px">
+          <h2 style="margin:0;font-family:var(--font-heading);font-weight:800;font-size:22px;line-height:1.15">Check your inbox</h2>
+          <p style="margin:0;font-size:15px;line-height:1.5;text-wrap:pretty">We sent a sign-in link to <strong>{{ loginEmail }}</strong>. Open it on this device to see your watches. It expires in an hour.</p>
+          <button onClick="{{ resetSent }}" class="btn btn-ghost" style="align-self:flex-start;font-size:13px;padding:8px 0">Use a different email</button>
+        </div>
+      </sc-if>
+      <sc-if value="{{ notSent }}" hint-placeholder-val="{{ true }}">
+        <div style="display:flex;flex-direction:column;gap:14px">
+          <h2 style="margin:0;font-family:var(--font-heading);font-weight:800;font-size:22px;line-height:1.15">Sign in to manage your watches</h2>
+          <p style="margin:0;font-size:14px;line-height:1.5;color:var(--color-neutral-700);text-wrap:pretty">Enter the email you used for your price watches. We&#8217;ll send a one-time link &#8212; no password.</p>
+          <div class="field" style="margin:0"><label for="pw-login">Email</label><input id="pw-login" class="input" type="email" autocomplete="email" placeholder="you@email.com" value="{{ loginEmail }}" onChange="{{ onLoginEmail }}" onKeyDown="{{ onLoginKey }}" style="min-height:46px;font-size:15px;width:100%;box-sizing:border-box"></input></div>
+          <button onClick="{{ sendLink }}" disabled="{{ sending }}" class="btn btn-primary btn-block" style="min-height:48px;justify-content:space-between">{{ sendLabel }} <span>&#8594;</span></button>
+        </div>
+      </sc-if>
+    </div>
+  </sc-if>
+
+  <sc-if value="{{ signedIn }}" hint-placeholder-val="{{ false }}">
+    <div style="margin-top:22px;display:flex;flex-direction:column">
+      <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap">
+        <div style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr));border:2px solid var(--color-text);min-width:min(360px,100%)">
+          <sc-for list="{{ tabs }}" as="t" hint-placeholder-count="3">
+            <button onClick="{{ t.pick }}" style="{{ t.style }}"><span>{{ t.label }}</span><span style="{{ t.countStyle }}">{{ t.count }}</span></button>
+          </sc-for>
+        </div>
+        <button onClick="{{ reload }}" class="btn btn-ghost" style="margin-left:auto;font-size:13px;padding:8px 10px">{{ reloadLabel }}</button>
+      </div>
+
+      <sc-if value="{{ loading }}" hint-placeholder-val="{{ false }}">
+        <div style="padding:40px 0;font-size:14px;color:var(--color-neutral-700)">Loading your watches&#8230;</div>
+      </sc-if>
+      <sc-if value="{{ empty }}" hint-placeholder-val="{{ false }}">
+        <div style="margin-top:18px;border:1px solid var(--color-divider);padding:28px 20px;display:flex;flex-direction:column;gap:14px;align-items:flex-start">
+          <p style="margin:0;font-size:15px;line-height:1.5;text-wrap:pretty">{{ emptyText }}</p>
+          <a href="https://mistrydeals.com" class="btn btn-secondary" style="justify-content:space-between;gap:14px">Browse deals <span>&#8594;</span></a>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{ wide }}" hint-placeholder-val="{{ true }}">
+        <div style="margin-top:16px">
+          <div style="display:grid;grid-template-columns:104px minmax(0,1fr) 128px 100px 104px 124px 236px;gap:12px;padding:0 0 8px;border-bottom:2px solid var(--color-text);font-family:var(--font-heading);font-weight:700;font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--color-neutral-700)">
+            <span>ASIN</span><span>Product</span><span>Target</span><span>Current</span><span>Status</span><span>Last checked</span><span>Actions</span>
+          </div>
+          <sc-for list="{{ rows }}" as="w" hint-placeholder-count="4">
+            <div style="display:grid;grid-template-columns:104px minmax(0,1fr) 128px 100px 104px 124px 236px;gap:12px;align-items:center;padding:12px 0;border-bottom:1px solid var(--color-divider);min-height:44px">
+              <span style="font-size:12.5px;letter-spacing:.04em;color:var(--color-neutral-700)">{{ w.asin }}</span>
+              <a href="{{ w.url }}" target="_blank" rel="nofollow sponsored noopener" style="font-family:var(--font-heading);font-weight:700;font-size:14.5px;line-height:1.3;color:var(--color-text);text-decoration:none;display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2;overflow:hidden" style-hover="text-decoration:underline">{{ w.title }}</a>
+              <span style="display:flex;align-items:center;min-width:0">
+                <sc-if value="{{ w.editing }}" hint-placeholder-val="{{ false }}">
+                  <span style="display:flex;align-items:center;border:1px solid var(--color-text);background:var(--color-surface);width:100%;box-sizing:border-box">
+                    <span style="padding-left:8px;font-size:14px;color:var(--color-neutral-700)">$</span>
+                    <input type="number" inputmode="decimal" min="0" step="0.01" aria-label="Target price" value="{{ editVal }}" onChange="{{ onEditVal }}" onKeyDown="{{ onEditKey }}" autofocus="autofocus" style="border:0;background:transparent;padding:8px 6px;font-size:14px;width:100%;min-width:0;outline:none;color:var(--color-text)"></input>
+                  </span>
+                </sc-if>
+                <sc-if value="{{ w.notEditing }}" hint-placeholder-val="{{ true }}">
+                  <span style="font-family:var(--font-heading);font-weight:800;font-size:18px;letter-spacing:-.01em">{{ w.target }}</span>
+                </sc-if>
+              </span>
+              <span style="display:flex;flex-direction:column;gap:2px">
+                <span style="font-family:var(--font-heading);font-weight:700;font-size:16px">{{ w.current }}</span>
+                <span style="font-size:11px;color:var(--color-neutral-700)">{{ w.gap }}</span>
+              </span>
+              <span><span style="{{ w.statusStyle }}">{{ w.status }}</span></span>
+              <span style="font-size:12.5px;line-height:1.35;color:var(--color-neutral-700)">{{ w.checked }}</span>
+              <span style="display:flex;gap:6px;justify-content:flex-start;flex-wrap:wrap">
+                <sc-if value="{{ w.idle }}" hint-placeholder-val="{{ true }}">
+                  <span style="display:flex;gap:6px">
+                    <button onClick="{{ w.edit }}" disabled="{{ w.busy }}" class="btn btn-secondary" style="font-size:12.5px;padding:8px 10px;min-height:36px">Edit</button>
+                    <button onClick="{{ w.toggle }}" disabled="{{ w.busy }}" class="btn btn-secondary" style="font-size:12.5px;padding:8px 10px;min-height:36px;min-width:70px">{{ w.toggleLabel }}</button>
+                    <button onClick="{{ w.askDelete }}" disabled="{{ w.busy }}" class="btn btn-ghost" style="font-size:12.5px;padding:8px 8px;min-height:36px;color:var(--color-accent-700)">Delete</button>
+                  </span>
+                </sc-if>
+                <sc-if value="{{ w.editing }}" hint-placeholder-val="{{ false }}">
+                  <span style="display:flex;gap:6px">
+                    <button onClick="{{ w.save }}" disabled="{{ w.busy }}" class="btn btn-primary" style="font-size:12.5px;padding:8px 12px;min-height:36px">{{ w.saveLabel }}</button>
+                    <button onClick="{{ cancelEdit }}" class="btn btn-ghost" style="font-size:12.5px;padding:8px 8px;min-height:36px">Cancel</button>
+                  </span>
+                </sc-if>
+                <sc-if value="{{ w.confirming }}" hint-placeholder-val="{{ false }}">
+                  <span style="display:flex;gap:6px;align-items:center">
+                    <span style="font-size:12.5px;font-weight:600">Delete?</span>
+                    <button onClick="{{ w.remove }}" disabled="{{ w.busy }}" class="btn btn-primary" style="font-size:12.5px;padding:8px 12px;min-height:36px">{{ w.deleteLabel }}</button>
+                    <button onClick="{{ cancelDelete }}" class="btn btn-ghost" style="font-size:12.5px;padding:8px 8px;min-height:36px">Keep</button>
+                  </span>
+                </sc-if>
+              </span>
+            </div>
+          </sc-for>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{ narrow }}" hint-placeholder-val="{{ false }}">
+        <div style="margin-top:14px;border-top:2px solid var(--color-text)">
+          <sc-for list="{{ rows }}" as="w" hint-placeholder-count="3">
+            <div style="padding:16px 0;border-bottom:1px solid var(--color-divider);display:flex;flex-direction:column;gap:12px">
+              <div style="display:flex;gap:12px;align-items:flex-start">
+                <div style="min-width:0;flex:1;display:flex;flex-direction:column;gap:4px">
+                  <a href="{{ w.url }}" target="_blank" rel="nofollow sponsored noopener" style="font-family:var(--font-heading);font-weight:700;font-size:16px;line-height:1.25;color:var(--color-text);text-decoration:none;display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2;overflow:hidden">{{ w.title }}</a>
+                  <span style="font-size:12px;letter-spacing:.04em;color:var(--color-neutral-700)">ASIN {{ w.asin }}</span>
+                </div>
+                <span style="{{ w.statusStyle }}">{{ w.status }}</span>
+              </div>
+              <div style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr));border:1px solid var(--color-divider)">
+                <div style="padding:10px;display:flex;flex-direction:column;gap:4px;min-width:0">
+                  <span style="font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--color-neutral-700)">Target</span>
+                  <sc-if value="{{ w.editing }}" hint-placeholder-val="{{ false }}">
+                    <span style="display:flex;align-items:center;border:1px solid var(--color-text);background:var(--color-surface)">
+                      <span style="padding-left:6px;font-size:15px;color:var(--color-neutral-700)">$</span>
+                      <input type="number" inputmode="decimal" min="0" step="0.01" aria-label="Target price" value="{{ editVal }}" onChange="{{ onEditVal }}" onKeyDown="{{ onEditKey }}" autofocus="autofocus" style="border:0;background:transparent;padding:6px 4px;font-size:16px;width:100%;min-width:0;outline:none;color:var(--color-text)"></input>
+                    </span>
+                  </sc-if>
+                  <sc-if value="{{ w.notEditing }}" hint-placeholder-val="{{ true }}">
+                    <span style="font-family:var(--font-heading);font-weight:800;font-size:19px">{{ w.target }}</span>
+                  </sc-if>
+                </div>
+                <div style="padding:10px;display:flex;flex-direction:column;gap:4px;border-left:1px solid var(--color-divider);min-width:0">
+                  <span style="font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--color-neutral-700)">Current</span>
+                  <span style="font-family:var(--font-heading);font-weight:700;font-size:17px">{{ w.current }}</span>
+                  <span style="font-size:11px;color:var(--color-neutral-700)">{{ w.gap }}</span>
+                </div>
+                <div style="padding:10px;display:flex;flex-direction:column;gap:4px;border-left:1px solid var(--color-divider);min-width:0">
+                  <span style="font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--color-neutral-700)">Checked</span>
+                  <span style="font-size:12.5px;line-height:1.35">{{ w.checked }}</span>
+                </div>
+              </div>
+              <sc-if value="{{ w.idle }}" hint-placeholder-val="{{ true }}">
+                <div style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px">
+                  <button onClick="{{ w.edit }}" disabled="{{ w.busy }}" class="btn btn-secondary" style="justify-content:flex-start;min-height:44px;font-size:14px">Edit target</button>
+                  <button onClick="{{ w.toggle }}" disabled="{{ w.busy }}" class="btn btn-secondary" style="justify-content:flex-start;min-height:44px;font-size:14px">{{ w.toggleLabel }}</button>
+                  <button onClick="{{ w.askDelete }}" disabled="{{ w.busy }}" class="btn btn-ghost" style="justify-content:flex-start;min-height:44px;font-size:14px;color:var(--color-accent-700)">Delete</button>
+                </div>
+              </sc-if>
+              <sc-if value="{{ w.editing }}" hint-placeholder-val="{{ false }}">
+                <div style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px">
+                  <button onClick="{{ w.save }}" disabled="{{ w.busy }}" class="btn btn-primary" style="justify-content:flex-start;min-height:44px;font-size:14px">{{ w.saveLabel }}</button>
+                  <button onClick="{{ cancelEdit }}" class="btn btn-secondary" style="justify-content:flex-start;min-height:44px;font-size:14px">Cancel</button>
+                </div>
+              </sc-if>
+              <sc-if value="{{ w.confirming }}" hint-placeholder-val="{{ false }}">
+                <div style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px">
+                  <button onClick="{{ w.remove }}" disabled="{{ w.busy }}" class="btn btn-primary" style="justify-content:flex-start;min-height:44px;font-size:14px">{{ w.deleteLabel }}</button>
+                  <button onClick="{{ cancelDelete }}" class="btn btn-secondary" style="justify-content:flex-start;min-height:44px;font-size:14px">Keep watching</button>
+                </div>
+              </sc-if>
+            </div>
+          </sc-for>
+        </div>
+      </sc-if>
+    </div>
+  </sc-if>
+
+  <p style="margin:auto 0 0;padding-top:40px;font-size:11.5px;line-height:1.5;color:var(--color-neutral-700);max-width:70ch;text-wrap:pretty">Prices are checked once a night, so Amazon&#8217;s price can change between checks. As an Amazon Associate we earn from qualifying purchases; it never changes your price.</p>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;sampleData&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:false,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Preview&quot;},&quot;defaultFilter&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;all&quot;,&quot;active&quot;,&quot;paused&quot;],&quot;default&quot;:&quot;all&quot;,&quot;tsType&quot;:&quot;\&quot;all\&quot; | \&quot;active\&quot; | \&quot;paused\&quot;&quot;}}">
+const BASE = "https://qolksrytidvxarrlygyy.supabase.co";
+const KEY = "sb_publishable_UX38KeF1XAKtzvS01yfx7w_8s5NkOH3";
+const SKEY = "md-watch-session";
+const SAMPLE = [
+  { id: "s1", asin: "B0CHX3QBCH", display_title: "Apple AirPods Pro (2nd generation) with MagSafe USB-C case", target_price: 169, current_price: 189.99, active: true, last_checked: new Date(Date.now() - 5 * 3600e3).toISOString(), created_at: "2026-09-28" },
+  { id: "s2", asin: "B09B8V1LZ3", title: "Echo Dot (5th Gen) smart speaker with Alexa, Charcoal", target_price: 29.99, current_price: 27.99, active: true, last_checked: new Date(Date.now() - 5 * 3600e3).toISOString(), created_at: "2026-09-20" },
+  { id: "s3", asin: "B0BSHF7WHW", display_title: null, title: null, target_price: 54, current_price: null, active: true, last_checked: null, created_at: "2026-10-01" },
+  { id: "s4", asin: "B07FZ8S74R", display_title: "Instant Pot Duo 7-in-1 Electric Pressure Cooker, 6 Quart", target_price: 59.95, current_price: 79.95, active: false, last_checked: new Date(Date.now() - 30 * 3600e3).toISOString(), created_at: "2026-09-02" }
+];
+
+class Component extends DCLogic {
+  state = { session: null, email: "", loginEmail: "", sent: false, sending: false, err: "", watches: null, loading: false,
+    editId: null, editVal: "", busyId: null, confirmId: null, filter: null,
+    narrow: typeof window !== "undefined" && window.innerWidth < 980 };
+
+  sample() { try { return !!this.props.sampleData || new URLSearchParams(location.search).get("sample") === "1"; } catch (e) { return false; } }
+
+  componentDidMount() {
+    this.onResize = () => { const n = window.innerWidth < 980; if (n !== this.state.narrow) this.setState({ narrow: n }); };
+    window.addEventListener("resize", this.onResize);
+    if (this.sample()) { this.setState({ email: "you@email.com", watches: SAMPLE.slice() }); return; }
+    let login = ""; try { login = localStorage.getItem("md-watch-email") || ""; } catch (e) {}
+    this.setState({ loginEmail: login });
+    const hash = new URLSearchParams((location.hash || "").replace(/^#/, ""));
+    if (hash.get("access_token")) {
+      const s = { access_token: hash.get("access_token"), refresh_token: hash.get("refresh_token"),
+        expires_at: Number(hash.get("expires_at")) || Math.floor(Date.now() / 1000) + Number(hash.get("expires_in") || 3600) };
+      try { history.replaceState(null, "", location.pathname + location.search); } catch (e) {}
+      this.saveSession(s); this.start(s); return;
+    }
+    if (hash.get("error_description") || hash.get("error")) {
+      try { history.replaceState(null, "", location.pathname + location.search); } catch (e) {}
+      this.setState({ err: /expired|invalid/i.test(hash.get("error_description") || "") ? "That sign-in link has expired or was already used. Send a new one below." : "Sign-in didn\u2019t work: " + (hash.get("error_description") || hash.get("error")) });
+      return;
+    }
+    let saved = null; try { saved = JSON.parse(localStorage.getItem(SKEY) || "null"); } catch (e) {}
+    if (saved && saved.access_token) this.start(saved);
+  }
+  componentWillUnmount() { window.removeEventListener("resize", this.onResize); }
+
+  saveSession(s) { this.setState({ session: s }); try { localStorage.setItem(SKEY, JSON.stringify(s)); } catch (e) {} }
+  signOut(msg) {
+    try { localStorage.removeItem(SKEY); } catch (e) {}
+    this.setState({ session: null, email: "", watches: null, editId: null, confirmId: null, sent: false, err: msg || "" });
+  }
+
+  async start(s) {
+    this.setState({ session: s, loading: true });
+    try {
+      const res = await this.authFetch("/auth/v1/user");
+      if (!res.ok) throw new Error("user " + res.status);
+      const u = await res.json();
+      this.setState({ email: String(u.email || "").toLowerCase() });
+      await this.load();
+    } catch (e) {
+      this.setState({ loading: false });
+      if (this.state.session) this.signOut("Your sign-in has expired. Send yourself a new link.");
+    }
+  }
+
+  async refresh() {
+    const s = this.state.session;
+    if (!s || !s.refresh_token) throw new Error("no refresh");
+    const res = await fetch(BASE + "/auth/v1/token?grant_type=refresh_token", {
+      method: "POST", headers: { apikey: KEY, "Content-Type": "application/json" }, body: JSON.stringify({ refresh_token: s.refresh_token })
+    });
+    if (!res.ok) throw new Error("refresh " + res.status);
+    const j = await res.json();
+    const n = { access_token: j.access_token, refresh_token: j.refresh_token, expires_at: j.expires_at || Math.floor(Date.now() / 1000) + (j.expires_in || 3600) };
+    this.saveSession(n);
+    return n;
+  }
+
+  async authFetch(path, opts, retried) {
+    let s = this.state.session;
+    if (!s) throw new Error("signed out");
+    if (s.expires_at && s.expires_at * 1000 - 60000 < Date.now()) s = await this.refresh();
+    const o = Object.assign({}, opts || {});
+    o.headers = Object.assign({ apikey: KEY, Authorization: "Bearer " + s.access_token }, o.headers || {});
+    const res = await fetch(BASE + path, o);
+    if (res.status === 401 && !retried) { await this.refresh(); return this.authFetch(path, opts, true); }
+    return res;
+  }
+
+  async sendLink() {
+    const email = String(this.state.loginEmail || "").trim().toLowerCase();
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return this.setState({ err: "Enter a valid email address." });
+    this.setState({ sending: true, err: "" });
+    try {
+      const back = location.origin + location.pathname;
+      const res = await fetch(BASE + "/auth/v1/otp?redirect_to=" + encodeURIComponent(back), {
+        method: "POST", headers: { apikey: KEY, "Content-Type": "application/json" }, body: JSON.stringify({ email, create_user: true })
+      });
+      if (res.status === 429) throw new Error("Too many sign-in emails in a short time. Wait a minute and try again.");
+      if (!res.ok) throw new Error("Couldn\u2019t send the link just now. Try again in a minute.");
+      try { localStorage.setItem("md-watch-email", email); } catch (e) {}
+      this.setState({ sending: false, sent: true, loginEmail: email });
+    } catch (e) {
+      this.setState({ sending: false, err: e.message });
+    }
+  }
+
+  async load() {
+    if (this.sample()) return;
+    this.setState({ loading: true });
+    try {
+      const email = this.state.email.replace(/[*,()]/g, "");
+      const res = await this.authFetch("/rest/v1/price_watches?select=*&user_email=ilike." + encodeURIComponent(email) + "&order=created_at.desc");
+      if (!res.ok) throw new Error(String(res.status));
+      this.setState({ watches: await res.json(), loading: false });
+    } catch (e) {
+      this.setState({ loading: false, watches: this.state.watches || [], err: "Couldn\u2019t load your watches. Try again in a minute." });
+    }
+  }
+
+  async mutate(w, method, body, done) {
+    this.setState({ busyId: w.id, err: "" });
+    if (this.sample()) {
+      this.setState(s => ({ busyId: null, watches: method === "DELETE" ? s.watches.filter(x => x.id !== w.id) : s.watches.map(x => x.id === w.id ? Object.assign({}, x, body) : x) }));
+      return done && done();
+    }
+    try {
+      const res = await this.authFetch("/rest/v1/price_watches?id=eq." + encodeURIComponent(w.id), {
+        method, headers: { "Content-Type": "application/json", Prefer: "return=representation" }, body: body ? JSON.stringify(body) : undefined
+      });
+      if (!res.ok) throw new Error(String(res.status));
+      const rows = await res.json();
+      if (!rows.length) throw new Error("blocked");
+      this.setState(s => ({ busyId: null, watches: method === "DELETE" ? s.watches.filter(x => x.id !== w.id) : s.watches.map(x => x.id === w.id ? rows[0] : x) }));
+      if (done) done();
+    } catch (e) {
+      this.setState({ busyId: null, err: e.message === "blocked" ? "That change wasn\u2019t allowed. Sign out and back in, then try again." : "Couldn\u2019t save that change. Try again in a minute." });
+    }
+  }
+
+  saveTarget(w) {
+    const v = parseFloat(this.state.editVal);
+    if (!(v > 0)) return this.setState({ err: "Enter a target price above $0." });
+    this.mutate(w, "PATCH", { target_price: Math.round(v * 100) / 100 }, () => this.setState({ editId: null }));
+  }
+
+  money(v) { const n = parseFloat(v); return isFinite(n) ? "$" + n.toFixed(2) : "\u2014"; }
+  when(t) {
+    if (!t) return "Not yet \u2014 tonight";
+    const d = new Date(t), h = (Date.now() - d) / 3600e3;
+    if (h < 1) return "Under an hour ago";
+    if (h < 24) return Math.round(h) + (Math.round(h) === 1 ? " hour ago" : " hours ago");
+    return d.toLocaleDateString("en-US", { month: "short", day: "numeric" }) + ", " + d.toLocaleTimeString("en-US", { hour: "numeric", minute: "2-digit" });
+  }
+
+  row(w) {
+    const target = parseFloat(w.target_price), cur = parseFloat(w.current_price);
+    const hasCur = isFinite(cur);
+    const hit = w.active && hasCur && cur <= target;
+    const editing = this.state.editId === w.id, confirming = this.state.confirmId === w.id, busy = this.state.busyId === w.id;
+    const tag = "display:inline-block;font-family:var(--font-heading);font-weight:800;font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;padding:5px 7px;line-height:1;white-space:nowrap;";
+    return {
+      asin: w.asin || "\u2014",
+      title: (w.display_title || w.title || "").trim() || "Title arrives after tonight\u2019s check",
+      url: "https://www.amazon.com/dp/" + encodeURIComponent(w.asin || "") + "?tag=mistrydealshp-20",
+      target: this.money(target),
+      current: hasCur ? this.money(cur) : "\u2014",
+      gap: !hasCur ? "" : hit ? "At or under target" : "$" + (cur - target).toFixed(2) + " to go",
+      status: hit ? "At target" : w.active ? "Active" : "Paused",
+      statusStyle: tag + (hit ? "background:var(--color-accent);color:#16233a" : w.active ? "border:1.5px solid var(--color-text);color:var(--color-text)" : "border:1.5px solid var(--color-divider);color:var(--color-neutral-700)"),
+      checked: this.when(w.last_checked),
+      editing, confirming, idle: !editing && !confirming, notEditing: !editing, busy,
+      toggleLabel: busy && !editing && !confirming ? "\u2026" : w.active ? "Pause" : "Resume",
+      saveLabel: busy ? "Saving\u2026" : "Save",
+      deleteLabel: busy ? "Deleting\u2026" : "Delete",
+      edit: () => this.setState({ editId: w.id, confirmId: null, editVal: isFinite(target) ? target.toFixed(2) : "", err: "" }),
+      save: () => this.saveTarget(w),
+      toggle: () => this.mutate(w, "PATCH", { active: !w.active }),
+      askDelete: () => this.setState({ confirmId: w.id, editId: null }),
+      remove: () => this.mutate(w, "DELETE", null, () => this.setState({ confirmId: null }))
+    };
+  }
+
+  renderVals() {
+    const all = this.state.watches || [];
+    const signedIn = !!(this.state.session || this.sample()) && !!this.state.email;
+    const filter = this.state.filter || this.props.defaultFilter || "all";
+    const counts = { all: all.length, active: all.filter(w => w.active).length, paused: all.filter(w => !w.active).length };
+    const list = all.filter(w => filter === "all" || (filter === "active" ? w.active : !w.active));
+    const editing = all.find(w => w.id === this.state.editId);
+    const loading = this.state.loading && !this.state.watches;
+    return {
+      signedIn, email: this.state.email,
+      showLogin: !signedIn && !this.state.session,
+      sent: this.state.sent, notSent: !this.state.sent,
+      loginEmail: this.state.loginEmail,
+      onLoginEmail: e => this.setState({ loginEmail: e.target.value, err: "" }),
+      onLoginKey: e => { if (e.key === "Enter") this.sendLink(); },
+      sendLink: () => this.sendLink(),
+      sending: this.state.sending, sendLabel: this.state.sending ? "Sending\u2026" : "Email me a sign-in link",
+      resetSent: () => this.setState({ sent: false }),
+      signOut: () => this.sample() ? null : this.signOut(),
+      err: this.state.err, hasErr: !!this.state.err, clearErr: () => this.setState({ err: "" }),
+      loading,
+      reload: () => this.load(), reloadLabel: this.state.loading ? "Refreshing\u2026" : "Refresh",
+      tabs: [["all", "All"], ["active", "Active"], ["paused", "Paused"]].map(([k, label], i) => {
+        const on = k === filter;
+        return { label, count: String(counts[k]), pick: () => this.setState({ filter: k }),
+          style: "font:inherit;font-family:var(--font-heading);font-weight:700;font-size:13px;line-height:1.1;min-height:46px;padding:6px 10px;display:flex;align-items:center;justify-content:space-between;gap:8px;cursor:pointer;border:0;" +
+            (i ? "border-left:2px solid var(--color-text);" : "") + (on ? "background:var(--color-text);color:var(--color-bg)" : "background:transparent;color:var(--color-text)"),
+          countStyle: "font-family:var(--font-body);font-weight:400;font-size:12px;opacity:" + (on ? ".8" : ".6") };
+      }),
+      empty: !loading && !!this.state.watches && !list.length,
+      emptyText: !all.length ? "You\u2019re not watching anything yet. Open any deal and tap Add Price Watch to get an email when it drops."
+        : filter === "paused" ? "No paused watches." : "No active watches \u2014 resume one from Paused, or add a new one from any deal.",
+      rows: list.map(w => this.row(w)),
+      wide: !this.state.narrow, narrow: this.state.narrow,
+      editVal: this.state.editVal,
+      onEditVal: e => this.setState({ editVal: e.target.value }),
+      onEditKey: e => { if (e.key === "Enter" && editing) this.saveTarget(editing); if (e.key === "Escape") this.setState({ editId: null }); },
+      cancelEdit: () => this.setState({ editId: null }),
+      cancelDelete: () => this.setState({ confirmId: null })
+    };
+  }
+}
+</script>
+</body>
+</html>
