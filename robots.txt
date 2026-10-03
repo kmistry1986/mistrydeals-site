@@ -12,6 +12,7 @@ Disallow: /admin
 Disallow: /mobile
 Disallow: /watches
 Disallow: /pricewatches
+Disallow: /price-watch
 Disallow: /d/
 Disallow: /*%7B%7B
 Disallow: /*{{

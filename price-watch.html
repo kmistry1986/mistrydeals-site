@@ -1,0 +1,580 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Your price watches · MistryDeals</title>
+  <meta name="robots" content="noindex">
+  <link rel="stylesheet" href="_ds/modernist-424462e2-4060-4771-92af-91bbc246b8fd/styles.css">
+  <link rel="canonical" href="https://mistrydeals.com/price-watch">
+  <style>
+    html { -webkit-text-size-adjust:100%; text-size-adjust:100%; }
+    body { margin:0; background:var(--color-bg); color:var(--color-text); font-family:var(--font-body); }
+    a { color:var(--color-accent-700); } a:hover { color:var(--color-text); }
+    input, button { font:inherit; }
+    input:focus-visible, a:focus-visible, button:focus-visible { outline:2px solid var(--color-accent); outline-offset:2px; }
+
+    .btn-primary { background: var(--color-neutral-900); color: var(--color-bg); border-color: var(--color-neutral-900); }
+    .btn-primary:hover { background: var(--color-neutral-800); border-color: var(--color-neutral-800); }
+    @media (max-width: 820px) {
+      .m-wrap { flex-wrap: wrap !important; }
+      .nav { flex-wrap: wrap !important; row-gap: 8px !important; }
+    }
+    @media (max-width: 560px) {
+      .nav { flex-direction: column; align-items: stretch !important; gap: 10px !important; padding: 12px 16px !important; }
+      .nav > .nav-brand { font-size: 16px; }
+      .nav-links { display: none !important; }
+      .m-wrap { min-width: 0 !important; }
+    }
+  </style>
+</helmet>
+
+<div style="background:var(--color-bg)">
+  <div class="nav" style="max-width:1280px;margin:0 auto;gap:24px">
+    <a href="{{ hHome }}" class="nav-brand m-wrap" style="display:flex;align-items:center;gap:8px;text-decoration:none"><span style="position:relative;width:19.6px;height:19.6px;flex:none;display:block"><span style="position:absolute;left:0;top:0;width:14px;height:14px;border:2.1px solid var(--color-text);border-radius:50%;box-sizing:border-box;display:block"></span><span style="position:absolute;left:11.9px;top:11.2px;width:7.7px;height:2.1px;background:var(--color-accent);transform:rotate(45deg);transform-origin:left center;display:block"></span></span>MISTRYDEALS</a>
+    <div class="m-wrap nav-links" style="display:flex;gap:20px;align-items:center"><a href="{{ hHome }}">Featured Deals</a><a href="{{ hPrime }}">Prime Card Deals</a><a href="{{ hCat }}">Categories</a><a href="{{ hGuide }}">Buying Guides</a><a href="{{ hWatchSelf }}" aria-current="page">Price Watch</a><a href="{{ hAbout }}">About</a></div>
+    <div class="m-wrap nav-search" style="display:flex;gap:8px;align-items:center;min-width:280px"><input class="input" placeholder="Search live deals" value="{{ query }}" onChange="{{ onQuery }}" onKeyDown="{{ onQueryKey }}"></input><button onClick="{{ runSearch }}" class="btn btn-secondary">Search</button>
+      <div style="position:relative;flex:none"><button onClick="{{ toggleMenu }}" title="Menu" aria-label="Menu" aria-expanded="{{ menuExpanded }}" style="font:inherit;flex:none;width:44px;height:44px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;cursor:pointer;background:transparent;border:1px solid var(--color-divider);color:var(--color-text)"><span style="display:block;width:16px;height:2px;background:currentColor"></span><span style="display:block;width:16px;height:2px;background:currentColor"></span><span style="display:block;width:16px;height:2px;background:currentColor"></span></button>
+      <sc-if value="{{ menuOpen }}" hint-placeholder-val="{{ false }}">
+        <div onClick="{{ closeMenu }}" style="position:fixed;inset:0;z-index:40"></div>
+        <div style="position:absolute;right:0;top:calc(100% + 8px);z-index:41;min-width:236px;background:var(--color-bg);border:2px solid var(--color-text);padding:6px 0;box-shadow:var(--shadow-lg)">
+          <sc-for list="{{ menuItems }}" as="m" hint-placeholder-count="6">
+            <a href="{{ m.href }}" style="{{ m.style }}">{{ m.label }}</a>
+          </sc-for>
+          <div style="height:2px;background:var(--color-divider);margin:6px 0"></div>
+          <button onClick="{{ toggleDark }}" style="font:inherit;font-family:var(--font-heading);font-weight:700;font-size:13px;letter-spacing:.04em;width:100%;min-height:44px;display:flex;align-items:center;justify-content:space-between;gap:12px;padding:0 16px;background:transparent;border:0;cursor:pointer;color:var(--color-text);text-align:left"><span>{{ darkRowLabel }}</span><span style="font-size:15px">{{ darkGlyph }}</span></button>
+        </div>
+      </sc-if></div></div>
+  </div>
+</div>
+<div style="max-width:1280px;margin:0 auto;padding:12px 16px 56px;box-sizing:border-box;min-height:calc(100vh - 80px);display:flex;flex-direction:column">
+  <div style="margin-top:28px;padding-bottom:18px;border-bottom:2px solid var(--color-text);display:flex;align-items:flex-end;gap:16px;flex-wrap:wrap">
+    <div style="min-width:0;flex:1 1 320px">
+      <div style="font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--color-accent-700);margin-bottom:8px">Price watch</div>
+      <h1 style="margin:0;font-family:var(--font-heading);font-weight:800;font-size:clamp(30px,5vw,44px);line-height:1;letter-spacing:-.03em;text-wrap:balance">Your price watches</h1>
+      <p style="margin:10px 0 0;font-size:15px;line-height:1.45;color:var(--color-neutral-700);max-width:58ch;text-wrap:pretty">We check every watched product nightly and email you when it drops to your target.</p>
+    </div>
+    <sc-if value="{{ signedIn }}" hint-placeholder-val="{{ false }}">
+      <div style="display:flex;align-items:center;gap:12px;flex:0 1 auto;min-width:0;max-width:100%">
+        <span style="font-size:13px;color:var(--color-neutral-700);overflow-wrap:anywhere;min-width:0;flex:1 1 auto">Signed in as <strong style="color:var(--color-text)">{{ email }}</strong></span>
+        <button onClick="{{ signOut }}" class="btn btn-ghost" style="font-size:13px;padding:8px 10px;white-space:nowrap;flex:none">Sign out</button>
+      </div>
+    </sc-if>
+  </div>
+
+  <sc-if value="{{ hasErr }}" hint-placeholder-val="{{ false }}">
+    <div role="alert" style="margin-top:18px;border-left:3px solid var(--color-accent);background:var(--color-surface);padding:12px 14px;font-size:14px;line-height:1.45;display:flex;gap:12px;align-items:flex-start">
+      <span style="flex:1;min-width:0">{{ err }}</span>
+      <button onClick="{{ clearErr }}" aria-label="Dismiss" style="border:0;background:transparent;cursor:pointer;font-size:18px;line-height:1;padding:0 2px;color:var(--color-neutral-700)">&#215;</button>
+    </div>
+  </sc-if>
+
+  <sc-if value="{{ showLogin }}" hint-placeholder-val="{{ true }}">
+    <div style="margin-top:28px;max-width:460px;border-top:4px solid var(--color-accent);background:var(--color-surface);padding:22px 20px 24px;display:flex;flex-direction:column;gap:14px">
+      <sc-if value="{{ hasInfo }}" hint-placeholder-val="{{ false }}">
+        <div role="status" style="border-left:3px solid var(--color-text);padding:8px 12px;font-size:14px;line-height:1.45">{{ info }}</div>
+      </sc-if>
+      <sc-if value="{{ isAuthForm }}" hint-placeholder-val="{{ true }}">
+        <div style="display:flex;flex-direction:column;gap:14px">
+          <div style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));border:2px solid var(--color-text)">
+            <button onClick="{{ toSignIn }}" style="{{ tabSignIn }}">Sign in</button>
+            <button onClick="{{ toSignUp }}" style="{{ tabSignUp }}">Create account</button>
+          </div>
+          <h2 style="margin:0;font-family:var(--font-heading);font-weight:800;font-size:22px;line-height:1.15">{{ authHeading }}</h2>
+          <p style="margin:0;font-size:14px;line-height:1.5;color:var(--color-neutral-700);text-wrap:pretty">{{ authSub }}</p>
+          <div class="field" style="margin:0"><label for="pw-email">Email</label><input id="pw-email" class="input" type="email" autocomplete="email" placeholder="you@email.com" value="{{ loginEmail }}" onChange="{{ onLoginEmail }}" onKeyDown="{{ onAuthKey }}" style="min-height:46px;font-size:15px;width:100%;box-sizing:border-box"></input></div>
+          <div class="field" style="margin:0"><label for="pw-pass">Password</label><input id="pw-pass" class="input" type="password" autocomplete="{{ passAc }}" placeholder="" value="{{ password }}" onChange="{{ onPassword }}" onKeyDown="{{ onAuthKey }}" style="min-height:46px;font-size:15px;width:100%;box-sizing:border-box"></input></div>
+          <sc-if value="{{ isSignUp }}" hint-placeholder-val="{{ false }}">
+            <div class="field" style="margin:0"><label for="pw-pass2">Confirm password</label><input id="pw-pass2" class="input" type="password" autocomplete="new-password" placeholder="" value="{{ password2 }}" onChange="{{ onPassword2 }}" onKeyDown="{{ onAuthKey }}" style="min-height:46px;font-size:15px;width:100%;box-sizing:border-box"></input></div>
+          </sc-if>
+          <button onClick="{{ submitAuth }}" disabled="{{ sending }}" class="btn btn-primary btn-block" style="min-height:48px;justify-content:space-between">{{ submitLabel }} <span>&#8594;</span></button>
+          <sc-if value="{{ isSignIn }}" hint-placeholder-val="{{ true }}">
+            <div><button onClick="{{ toForgot }}" style="font:inherit;font-size:13px;font-weight:600;background:none;border:0;padding:0;cursor:pointer;color:var(--color-accent-700);text-decoration:underline;text-underline-offset:2px">Forgot password?</button></div>
+          </sc-if>
+        </div>
+      </sc-if>
+      <sc-if value="{{ isForgot }}" hint-placeholder-val="{{ false }}">
+        <div style="display:flex;flex-direction:column;gap:14px">
+          <h2 style="margin:0;font-family:var(--font-heading);font-weight:800;font-size:22px;line-height:1.15">Reset your password</h2>
+          <p style="margin:0;font-size:14px;line-height:1.5;color:var(--color-neutral-700);text-wrap:pretty">Enter your account email and we&#8217;ll send a link to choose a new password.</p>
+          <div class="field" style="margin:0"><label for="pw-femail">Email</label><input id="pw-femail" class="input" type="email" autocomplete="email" placeholder="you@email.com" value="{{ loginEmail }}" onChange="{{ onLoginEmail }}" onKeyDown="{{ onAuthKey }}" style="min-height:46px;font-size:15px;width:100%;box-sizing:border-box"></input></div>
+          <button onClick="{{ submitAuth }}" disabled="{{ sending }}" class="btn btn-primary btn-block" style="min-height:48px;justify-content:space-between">{{ submitLabel }} <span>&#8594;</span></button>
+          <div><button onClick="{{ toSignIn }}" style="font:inherit;font-size:13px;font-weight:600;background:none;border:0;padding:0;cursor:pointer;color:var(--color-accent-700);text-decoration:underline;text-underline-offset:2px">Back to sign in</button></div>
+        </div>
+      </sc-if>
+      <sc-if value="{{ isReset }}" hint-placeholder-val="{{ false }}">
+        <div style="display:flex;flex-direction:column;gap:14px">
+          <h2 style="margin:0;font-family:var(--font-heading);font-weight:800;font-size:22px;line-height:1.15">Choose a new password</h2>
+          <div class="field" style="margin:0"><label for="pw-new">New password</label><input id="pw-new" class="input" type="password" autocomplete="new-password" placeholder="" value="{{ password }}" onChange="{{ onPassword }}" onKeyDown="{{ onAuthKey }}" style="min-height:46px;font-size:15px;width:100%;box-sizing:border-box"></input></div>
+          <div class="field" style="margin:0"><label for="pw-new2">Confirm new password</label><input id="pw-new2" class="input" type="password" autocomplete="new-password" placeholder="" value="{{ password2 }}" onChange="{{ onPassword2 }}" onKeyDown="{{ onAuthKey }}" style="min-height:46px;font-size:15px;width:100%;box-sizing:border-box"></input></div>
+          <button onClick="{{ submitAuth }}" disabled="{{ sending }}" class="btn btn-primary btn-block" style="min-height:48px;justify-content:space-between">{{ submitLabel }} <span>&#8594;</span></button>
+        </div>
+      </sc-if>
+    </div>
+  </sc-if>
+
+  <sc-if value="{{ signedIn }}" hint-placeholder-val="{{ false }}">
+    <div style="margin-top:22px;display:flex;flex-direction:column">
+      <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap">
+        <div style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr));border:2px solid var(--color-text);min-width:min(360px,100%)">
+          <sc-for list="{{ tabs }}" as="t" hint-placeholder-count="3">
+            <button onClick="{{ t.pick }}" style="{{ t.style }}"><span>{{ t.label }}</span><span style="{{ t.countStyle }}">{{ t.count }}</span></button>
+          </sc-for>
+        </div>
+        <button onClick="{{ reload }}" class="btn btn-ghost" style="margin-left:auto;font-size:13px;padding:8px 10px">{{ reloadLabel }}</button>
+      </div>
+
+      <sc-if value="{{ loading }}" hint-placeholder-val="{{ false }}">
+        <div style="padding:40px 0;font-size:14px;color:var(--color-neutral-700)">Loading your watches&#8230;</div>
+      </sc-if>
+      <sc-if value="{{ empty }}" hint-placeholder-val="{{ false }}">
+        <div style="margin-top:18px;border:1px solid var(--color-divider);padding:28px 20px;display:flex;flex-direction:column;gap:14px;align-items:flex-start">
+          <p style="margin:0;font-size:15px;line-height:1.5;text-wrap:pretty">{{ emptyText }}</p>
+          <a href="https://mistrydeals.com" class="btn btn-secondary" style="justify-content:space-between;gap:14px">Browse deals <span>&#8594;</span></a>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{ wide }}" hint-placeholder-val="{{ true }}">
+        <div style="margin-top:16px">
+          <div style="display:grid;grid-template-columns:104px minmax(0,1fr) 128px 100px 104px 124px 236px;gap:12px;padding:0 0 8px;border-bottom:2px solid var(--color-text);font-family:var(--font-heading);font-weight:700;font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--color-neutral-700)">
+            <span>ASIN</span><span>Product</span><span>Target</span><span>Current</span><span>Status</span><span>Last checked</span><span>Actions</span>
+          </div>
+          <sc-for list="{{ rows }}" as="w" hint-placeholder-count="4">
+            <div style="display:grid;grid-template-columns:104px minmax(0,1fr) 128px 100px 104px 124px 236px;gap:12px;align-items:center;padding:12px 0;border-bottom:1px solid var(--color-divider);min-height:44px">
+              <span style="font-size:12.5px;letter-spacing:.04em;color:var(--color-neutral-700)">{{ w.asin }}</span>
+              <a href="{{ w.url }}" target="_blank" rel="nofollow sponsored noopener" style="font-family:var(--font-heading);font-weight:700;font-size:14.5px;line-height:1.3;color:var(--color-text);text-decoration:none;display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2;overflow:hidden" style-hover="text-decoration:underline">{{ w.title }}</a>
+              <span style="display:flex;align-items:center;min-width:0">
+                <sc-if value="{{ w.editing }}" hint-placeholder-val="{{ false }}">
+                  <span style="display:flex;align-items:center;border:1px solid var(--color-text);background:var(--color-surface);width:100%;box-sizing:border-box">
+                    <span style="padding-left:8px;font-size:14px;color:var(--color-neutral-700)">$</span>
+                    <input type="number" inputmode="decimal" min="0" step="0.01" aria-label="Target price" value="{{ editVal }}" onChange="{{ onEditVal }}" onKeyDown="{{ onEditKey }}" autofocus="autofocus" style="border:0;background:transparent;padding:8px 6px;font-size:14px;width:100%;min-width:0;outline:none;color:var(--color-text)"></input>
+                  </span>
+                </sc-if>
+                <sc-if value="{{ w.notEditing }}" hint-placeholder-val="{{ true }}">
+                  <span style="font-family:var(--font-heading);font-weight:800;font-size:18px;letter-spacing:-.01em">{{ w.target }}</span>
+                </sc-if>
+              </span>
+              <span style="display:flex;flex-direction:column;gap:2px">
+                <span style="font-family:var(--font-heading);font-weight:700;font-size:16px">{{ w.current }}</span>
+                <span style="font-size:11px;color:var(--color-neutral-700)">{{ w.gap }}</span>
+              </span>
+              <span><span style="{{ w.statusStyle }}">{{ w.status }}</span></span>
+              <span style="font-size:12.5px;line-height:1.35;color:var(--color-neutral-700)">{{ w.checked }}</span>
+              <span style="display:flex;gap:6px;justify-content:flex-start;flex-wrap:wrap">
+                <sc-if value="{{ w.idle }}" hint-placeholder-val="{{ true }}">
+                  <span style="display:flex;gap:6px">
+                    <button onClick="{{ w.edit }}" disabled="{{ w.busy }}" class="btn btn-secondary" style="font-size:12.5px;padding:8px 10px;min-height:36px">Edit</button>
+                    <button onClick="{{ w.toggle }}" disabled="{{ w.busy }}" class="btn btn-secondary" style="font-size:12.5px;padding:8px 10px;min-height:36px;min-width:70px">{{ w.toggleLabel }}</button>
+                    <button onClick="{{ w.askDelete }}" disabled="{{ w.busy }}" class="btn btn-ghost" style="font-size:12.5px;padding:8px 8px;min-height:36px;color:var(--color-accent-700)">Delete</button>
+                  </span>
+                </sc-if>
+                <sc-if value="{{ w.editing }}" hint-placeholder-val="{{ false }}">
+                  <span style="display:flex;gap:6px">
+                    <button onClick="{{ w.save }}" disabled="{{ w.busy }}" class="btn btn-primary" style="font-size:12.5px;padding:8px 12px;min-height:36px">{{ w.saveLabel }}</button>
+                    <button onClick="{{ cancelEdit }}" class="btn btn-ghost" style="font-size:12.5px;padding:8px 8px;min-height:36px">Cancel</button>
+                  </span>
+                </sc-if>
+                <sc-if value="{{ w.confirming }}" hint-placeholder-val="{{ false }}">
+                  <span style="display:flex;gap:6px;align-items:center">
+                    <span style="font-size:12.5px;font-weight:600">Delete?</span>
+                    <button onClick="{{ w.remove }}" disabled="{{ w.busy }}" class="btn btn-primary" style="font-size:12.5px;padding:8px 12px;min-height:36px">{{ w.deleteLabel }}</button>
+                    <button onClick="{{ cancelDelete }}" class="btn btn-ghost" style="font-size:12.5px;padding:8px 8px;min-height:36px">Keep</button>
+                  </span>
+                </sc-if>
+              </span>
+            </div>
+          </sc-for>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{ narrow }}" hint-placeholder-val="{{ false }}">
+        <div style="margin-top:14px;border-top:2px solid var(--color-text)">
+          <sc-for list="{{ rows }}" as="w" hint-placeholder-count="3">
+            <div style="padding:16px 0;border-bottom:1px solid var(--color-divider);display:flex;flex-direction:column;gap:12px">
+              <div style="display:flex;gap:12px;align-items:flex-start">
+                <div style="min-width:0;flex:1;display:flex;flex-direction:column;gap:4px">
+                  <a href="{{ w.url }}" target="_blank" rel="nofollow sponsored noopener" style="font-family:var(--font-heading);font-weight:700;font-size:16px;line-height:1.25;color:var(--color-text);text-decoration:none;display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2;overflow:hidden">{{ w.title }}</a>
+                  <span style="font-size:12px;letter-spacing:.04em;color:var(--color-neutral-700)">ASIN {{ w.asin }}</span>
+                </div>
+                <span style="{{ w.statusStyle }}">{{ w.status }}</span>
+              </div>
+              <div style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr));border:1px solid var(--color-divider)">
+                <div style="padding:10px;display:flex;flex-direction:column;gap:4px;min-width:0">
+                  <span style="font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--color-neutral-700)">Target</span>
+                  <sc-if value="{{ w.editing }}" hint-placeholder-val="{{ false }}">
+                    <span style="display:flex;align-items:center;border:1px solid var(--color-text);background:var(--color-surface)">
+                      <span style="padding-left:6px;font-size:15px;color:var(--color-neutral-700)">$</span>
+                      <input type="number" inputmode="decimal" min="0" step="0.01" aria-label="Target price" value="{{ editVal }}" onChange="{{ onEditVal }}" onKeyDown="{{ onEditKey }}" autofocus="autofocus" style="border:0;background:transparent;padding:6px 4px;font-size:16px;width:100%;min-width:0;outline:none;color:var(--color-text)"></input>
+                    </span>
+                  </sc-if>
+                  <sc-if value="{{ w.notEditing }}" hint-placeholder-val="{{ true }}">
+                    <span style="font-family:var(--font-heading);font-weight:800;font-size:19px">{{ w.target }}</span>
+                  </sc-if>
+                </div>
+                <div style="padding:10px;display:flex;flex-direction:column;gap:4px;border-left:1px solid var(--color-divider);min-width:0">
+                  <span style="font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--color-neutral-700)">Current</span>
+                  <span style="font-family:var(--font-heading);font-weight:700;font-size:17px">{{ w.current }}</span>
+                  <span style="font-size:11px;color:var(--color-neutral-700)">{{ w.gap }}</span>
+                </div>
+                <div style="padding:10px;display:flex;flex-direction:column;gap:4px;border-left:1px solid var(--color-divider);min-width:0">
+                  <span style="font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--color-neutral-700)">Checked</span>
+                  <span style="font-size:12.5px;line-height:1.35">{{ w.checked }}</span>
+                </div>
+              </div>
+              <sc-if value="{{ w.idle }}" hint-placeholder-val="{{ true }}">
+                <div style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px">
+                  <button onClick="{{ w.edit }}" disabled="{{ w.busy }}" class="btn btn-secondary" style="justify-content:flex-start;min-height:44px;font-size:14px">Edit target</button>
+                  <button onClick="{{ w.toggle }}" disabled="{{ w.busy }}" class="btn btn-secondary" style="justify-content:flex-start;min-height:44px;font-size:14px">{{ w.toggleLabel }}</button>
+                  <button onClick="{{ w.askDelete }}" disabled="{{ w.busy }}" class="btn btn-ghost" style="justify-content:flex-start;min-height:44px;font-size:14px;color:var(--color-accent-700)">Delete</button>
+                </div>
+              </sc-if>
+              <sc-if value="{{ w.editing }}" hint-placeholder-val="{{ false }}">
+                <div style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px">
+                  <button onClick="{{ w.save }}" disabled="{{ w.busy }}" class="btn btn-primary" style="justify-content:flex-start;min-height:44px;font-size:14px">{{ w.saveLabel }}</button>
+                  <button onClick="{{ cancelEdit }}" class="btn btn-secondary" style="justify-content:flex-start;min-height:44px;font-size:14px">Cancel</button>
+                </div>
+              </sc-if>
+              <sc-if value="{{ w.confirming }}" hint-placeholder-val="{{ false }}">
+                <div style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px">
+                  <button onClick="{{ w.remove }}" disabled="{{ w.busy }}" class="btn btn-primary" style="justify-content:flex-start;min-height:44px;font-size:14px">{{ w.deleteLabel }}</button>
+                  <button onClick="{{ cancelDelete }}" class="btn btn-secondary" style="justify-content:flex-start;min-height:44px;font-size:14px">Keep watching</button>
+                </div>
+              </sc-if>
+            </div>
+          </sc-for>
+        </div>
+      </sc-if>
+    </div>
+  </sc-if>
+
+  <p style="margin:auto 0 0;padding-top:40px;font-size:11.5px;line-height:1.5;color:var(--color-neutral-700);max-width:70ch;text-wrap:pretty">Prices are checked once a night, so Amazon&#8217;s price can change between checks. As an Amazon Associate we earn from qualifying purchases; it never changes your price.</p>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;sampleData&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:false,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Preview&quot;},&quot;defaultFilter&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;all&quot;,&quot;active&quot;,&quot;paused&quot;],&quot;default&quot;:&quot;all&quot;,&quot;tsType&quot;:&quot;\&quot;all\&quot; | \&quot;active\&quot; | \&quot;paused\&quot;&quot;}}">
+const BASE = "https://qolksrytidvxarrlygyy.supabase.co";
+const KEY = "sb_publishable_UX38KeF1XAKtzvS01yfx7w_8s5NkOH3";
+const SKEY = "md-watch-session";
+const SAMPLE = [
+  { id: "s1", asin: "B0CHX3QBCH", display_title: "Apple AirPods Pro (2nd generation) with MagSafe USB-C case", target_price: 169, current_price: 189.99, active: true, last_checked: new Date(Date.now() - 5 * 3600e3).toISOString(), created_at: "2026-09-28" },
+  { id: "s2", asin: "B09B8V1LZ3", title: "Echo Dot (5th Gen) smart speaker with Alexa, Charcoal", target_price: 29.99, current_price: 27.99, active: true, last_checked: new Date(Date.now() - 5 * 3600e3).toISOString(), created_at: "2026-09-20" },
+  { id: "s3", asin: "B0BSHF7WHW", display_title: null, title: null, target_price: 54, current_price: null, active: true, last_checked: null, created_at: "2026-10-01" },
+  { id: "s4", asin: "B07FZ8S74R", display_title: "Instant Pot Duo 7-in-1 Electric Pressure Cooker, 6 Quart", target_price: 59.95, current_price: 79.95, active: false, last_checked: new Date(Date.now() - 30 * 3600e3).toISOString(), created_at: "2026-09-02" }
+];
+
+class Component extends DCLogic {
+  state = { session: null, email: "", loginEmail: "", mode: "signin", password: "", password2: "", info: "", sending: false, err: "", watches: null, loading: false,
+    editId: null, editVal: "", busyId: null, confirmId: null, filter: null,
+    narrow: typeof window !== "undefined" && window.innerWidth < 980,
+    query: "", menuOpen: false, dark: (function () { try { return localStorage.getItem("md-theme") === "dark"; } catch (e) { return false; } })() };
+
+  deployed() { return location.pathname.indexOf(".dc.html") === -1; }
+  sitePath(route) { return this.deployed() ? "/" + route : "MistryDeals Site.dc.html#/" + route; }
+  paint() {
+    const r = document.documentElement.style, dark = this.state.dark;
+    const NEUT = ["#faf8f4", "#f2efe9", "#e3dfd5", "#c9c4b7", "#9aa2b0", "#7b8698", "#5c6474", "#2f3c55", "#16233a"];
+    r.setProperty("--color-bg", dark ? "#11151d" : "#f2efe9");
+    r.setProperty("--color-surface", dark ? "#1a202c" : "#faf8f4");
+    r.setProperty("--color-text", dark ? "#eef0f4" : "#16233a");
+    r.setProperty("--color-divider", dark ? "color-mix(in srgb, #eef0f4 26%, transparent)" : "#cfc9bb");
+    NEUT.forEach((hex, i) => r.setProperty("--color-neutral-" + ((i + 1) * 100), dark ? NEUT[8 - i] : hex));
+    const base = "#d98014", toward = dark ? "#141312" : "white", away = dark ? "#eef0f4" : "black";
+    const mix = (w, p) => "color-mix(in oklch, " + base + ", " + w + " " + p + "%)";
+    r.setProperty("--color-accent", base);
+    [["100", toward, 88], ["200", toward, 74], ["300", toward, 56], ["400", toward, 28], ["600", away, 16], ["700", away, 30], ["800", away, 46], ["900", away, 62]]
+      .forEach(([k, w, p]) => r.setProperty("--color-accent-" + k, mix(w, p)));
+    r.setProperty("--color-accent-500", base);
+    document.body.style.background = "var(--color-bg)";
+    document.body.style.color = "var(--color-text)";
+  }
+  search() {
+    const q = String(this.state.query || "").trim();
+    location.href = this.deployed() ? "/" + (q ? "?q=" + encodeURIComponent(q) : "") : "MistryDeals Site.dc.html" + (q ? "?q=" + encodeURIComponent(q) : "");
+  }
+
+  sample() { try { return !!this.props.sampleData || new URLSearchParams(location.search).get("sample") === "1"; } catch (e) { return false; } }
+
+  componentDidUpdate() { this.paint(); }
+  componentDidMount() {
+    this.paint();
+    this.onResize = () => { const n = window.innerWidth < 980; if (n !== this.state.narrow) this.setState({ narrow: n }); };
+    window.addEventListener("resize", this.onResize);
+    if (this.sample()) { this.setState({ email: "you@email.com", watches: SAMPLE.slice() }); return; }
+    let login = ""; try { login = localStorage.getItem("md-watch-email") || ""; } catch (e) {}
+    this.setState({ loginEmail: login });
+    const hash = new URLSearchParams((location.hash || "").replace(/^#/, ""));
+    if (hash.get("access_token")) {
+      const s = { access_token: hash.get("access_token"), refresh_token: hash.get("refresh_token"),
+        expires_at: Number(hash.get("expires_at")) || Math.floor(Date.now() / 1000) + Number(hash.get("expires_in") || 3600) };
+      const type = hash.get("type");
+      try { history.replaceState(null, "", location.pathname + location.search); } catch (e) {}
+      this.saveSession(s);
+      if (type === "recovery") { this.setState({ mode: "reset", info: "" }); return; }
+      if (type === "signup") this.setState({ info: "" });
+      this.start(s); return;
+    }
+    if (hash.get("error_description") || hash.get("error")) {
+      try { history.replaceState(null, "", location.pathname + location.search); } catch (e) {}
+      this.setState({ err: /expired|invalid/i.test(hash.get("error_description") || "") ? "That link has expired or was already used. Sign in, or request a new reset link." : "Sign-in didn\u2019t work: " + (hash.get("error_description") || hash.get("error")) });
+      return;
+    }
+    let saved = null; try { saved = JSON.parse(localStorage.getItem(SKEY) || "null"); } catch (e) {}
+    if (saved && saved.access_token) this.start(saved);
+  }
+  componentWillUnmount() { window.removeEventListener("resize", this.onResize); }
+
+  saveSession(s) { const prev = this.state.session || {}; s = Object.assign({ user_id: prev.user_id, email: prev.email }, s); this.setState({ session: s }); try { localStorage.setItem(SKEY, JSON.stringify(s)); } catch (e) {} }
+  signOut(msg) {
+    try { localStorage.removeItem(SKEY); } catch (e) {}
+    this.setState({ session: null, email: "", userId: null, watches: null, editId: null, confirmId: null, mode: "signin", password: "", password2: "", info: "", err: msg || "" });
+  }
+
+  async start(s) {
+    this.setState({ session: s, loading: true });
+    try {
+      const res = await this.authFetch("/auth/v1/user");
+      if (!res.ok) throw new Error("user " + res.status);
+      const u = await res.json();
+      this.setState({ email: String(u.email || "").toLowerCase(), userId: u.id || null });
+      try { const cur = JSON.parse(localStorage.getItem(SKEY) || "null"); if (cur) localStorage.setItem(SKEY, JSON.stringify(Object.assign(cur, { user_id: u.id, email: String(u.email || "").toLowerCase() }))); } catch (e) {}
+      await this.load();
+    } catch (e) {
+      this.setState({ loading: false });
+      if (this.state.session) this.signOut("Your session has expired. Sign in again.");
+    }
+  }
+
+  async refresh() {
+    const s = this.state.session;
+    if (!s || !s.refresh_token) throw new Error("no refresh");
+    const res = await fetch(BASE + "/auth/v1/token?grant_type=refresh_token", {
+      method: "POST", headers: { apikey: KEY, "Content-Type": "application/json" }, body: JSON.stringify({ refresh_token: s.refresh_token })
+    });
+    if (!res.ok) throw new Error("refresh " + res.status);
+    const j = await res.json();
+    const n = { access_token: j.access_token, refresh_token: j.refresh_token, expires_at: j.expires_at || Math.floor(Date.now() / 1000) + (j.expires_in || 3600) };
+    this.saveSession(n);
+    return n;
+  }
+
+  async authFetch(path, opts, retried) {
+    let s = this.state.session;
+    if (!s) throw new Error("signed out");
+    if (s.expires_at && s.expires_at * 1000 - 60000 < Date.now()) s = await this.refresh();
+    const o = Object.assign({}, opts || {});
+    o.headers = Object.assign({ apikey: KEY, Authorization: "Bearer " + s.access_token }, o.headers || {});
+    const res = await fetch(BASE + path, o);
+    if (res.status === 401 && !retried) { await this.refresh(); return this.authFetch(path, opts, true); }
+    return res;
+  }
+
+  sessionFrom(j) {
+    return { access_token: j.access_token, refresh_token: j.refresh_token,
+      expires_at: j.expires_at || Math.floor(Date.now() / 1000) + (j.expires_in || 3600) };
+  }
+  authErr(j, fallback) {
+    const m = String((j && (j.error_description || j.msg || j.message || j.error)) || "");
+    if (/invalid login credentials/i.test(m)) return "That email and password don’t match.";
+    if (/email not confirmed/i.test(m)) return "Confirm your email first — check your inbox for the link we sent.";
+    if (/already registered|already exists/i.test(m)) return "That email already has an account. Sign in instead.";
+    if (/password should be|weak/i.test(m)) return "Use a password of at least 8 characters.";
+    if (/rate limit|too many/i.test(m)) return "Too many attempts. Wait a minute and try again.";
+    return fallback;
+  }
+
+  async submitAuth() {
+    const mode = this.state.mode;
+    const email = String(this.state.loginEmail || "").trim().toLowerCase();
+    const pw = this.state.password || "";
+    if (mode !== "reset" && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return this.setState({ err: "Enter a valid email address." });
+    if ((mode === "signup" || mode === "reset") && pw.length < 8) return this.setState({ err: "Use a password of at least 8 characters." });
+    if ((mode === "signup" || mode === "reset") && pw !== this.state.password2) return this.setState({ err: "The passwords don’t match." });
+    if (mode === "signin" && !pw) return this.setState({ err: "Enter your password." });
+    this.setState({ sending: true, err: "", info: "" });
+    const back = location.origin + location.pathname;
+    const post = (path, body) => fetch(BASE + path, { method: "POST", headers: { apikey: KEY, "Content-Type": "application/json" }, body: JSON.stringify(body) });
+    try {
+      if (mode === "signin") {
+        const res = await post("/auth/v1/token?grant_type=password", { email, password: pw });
+        const j = await res.json().catch(() => ({}));
+        if (!res.ok || !j.access_token) throw new Error(this.authErr(j, "Couldn’t sign in. Try again in a minute."));
+        try { localStorage.setItem("md-watch-email", email); } catch (e) {}
+        const s = this.sessionFrom(j); this.saveSession(s);
+        this.setState({ sending: false, password: "" }); this.start(s);
+      } else if (mode === "signup") {
+        const res = await post("/auth/v1/signup?redirect_to=" + encodeURIComponent(back), { email, password: pw });
+        const j = await res.json().catch(() => ({}));
+        if (!res.ok) throw new Error(this.authErr(j, "Couldn’t create the account. Try again in a minute."));
+        try { localStorage.setItem("md-watch-email", email); } catch (e) {}
+        if (j.access_token) { const s = this.sessionFrom(j); this.saveSession(s); this.setState({ sending: false, password: "", password2: "" }); this.start(s); }
+        else this.setState({ sending: false, mode: "signin", password: "", password2: "", info: "Account created. We sent a confirmation link to " + email + " — open it, then sign in." });
+      } else if (mode === "forgot") {
+        const res = await post("/auth/v1/recover?redirect_to=" + encodeURIComponent(back), { email });
+        if (!res.ok && res.status !== 404) { const j = await res.json().catch(() => ({})); throw new Error(this.authErr(j, "Couldn’t send the reset link. Try again in a minute.")); }
+        this.setState({ sending: false, mode: "signin", info: "If " + email + " has an account, a reset link is on its way." });
+      } else if (mode === "reset") {
+        const res = await this.authFetch("/auth/v1/user", { method: "PUT", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ password: pw }) });
+        const j = await res.json().catch(() => ({}));
+        if (!res.ok) throw new Error(this.authErr(j, "Couldn’t update the password. Request a new reset link."));
+        this.setState({ sending: false, mode: "signin", password: "", password2: "" });
+        this.start(this.state.session);
+      }
+    } catch (e) {
+      this.setState({ sending: false, err: e.message });
+    }
+  }
+
+  async load() {
+    if (this.sample()) return;
+    this.setState({ loading: true });
+    try {
+      const res = await this.authFetch("/rest/v1/price_watches?select=*&user_id=eq." + encodeURIComponent(this.state.userId || "") + "&order=created_at.desc");
+      if (!res.ok) throw new Error(String(res.status));
+      this.setState({ watches: await res.json(), loading: false });
+    } catch (e) {
+      this.setState({ loading: false, watches: this.state.watches || [], err: "Couldn\u2019t load your watches. Try again in a minute." });
+    }
+  }
+
+  async mutate(w, method, body, done) {
+    this.setState({ busyId: w.id, err: "" });
+    if (this.sample()) {
+      this.setState(s => ({ busyId: null, watches: method === "DELETE" ? s.watches.filter(x => x.id !== w.id) : s.watches.map(x => x.id === w.id ? Object.assign({}, x, body) : x) }));
+      return done && done();
+    }
+    try {
+      const res = await this.authFetch("/rest/v1/price_watches?id=eq." + encodeURIComponent(w.id), {
+        method, headers: { "Content-Type": "application/json", Prefer: "return=representation" }, body: body ? JSON.stringify(body) : undefined
+      });
+      if (!res.ok) throw new Error(String(res.status));
+      const rows = await res.json();
+      if (!rows.length) throw new Error("blocked");
+      this.setState(s => ({ busyId: null, watches: method === "DELETE" ? s.watches.filter(x => x.id !== w.id) : s.watches.map(x => x.id === w.id ? rows[0] : x) }));
+      if (done) done();
+    } catch (e) {
+      this.setState({ busyId: null, err: e.message === "blocked" ? "That change wasn\u2019t allowed. Sign out and back in, then try again." : "Couldn\u2019t save that change. Try again in a minute." });
+    }
+  }
+
+  saveTarget(w) {
+    const v = parseFloat(this.state.editVal);
+    if (!(v > 0)) return this.setState({ err: "Enter a target price above $0." });
+    this.mutate(w, "PATCH", { target_price: Math.round(v * 100) / 100 }, () => this.setState({ editId: null }));
+  }
+
+  money(v) { const n = parseFloat(v); return isFinite(n) ? "$" + n.toFixed(2) : "\u2014"; }
+  when(t) {
+    if (!t) return "Not yet \u2014 tonight";
+    const d = new Date(t), h = (Date.now() - d) / 3600e3;
+    if (h < 1) return "Under an hour ago";
+    if (h < 24) return Math.round(h) + (Math.round(h) === 1 ? " hour ago" : " hours ago");
+    return d.toLocaleDateString("en-US", { month: "short", day: "numeric" }) + ", " + d.toLocaleTimeString("en-US", { hour: "numeric", minute: "2-digit" });
+  }
+
+  row(w) {
+    const target = parseFloat(w.target_price), cur = parseFloat(w.current_price);
+    const hasCur = isFinite(cur);
+    const hit = w.active && hasCur && cur <= target;
+    const editing = this.state.editId === w.id, confirming = this.state.confirmId === w.id, busy = this.state.busyId === w.id;
+    const tag = "display:inline-block;font-family:var(--font-heading);font-weight:800;font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;padding:5px 7px;line-height:1;white-space:nowrap;";
+    return {
+      asin: w.asin || "\u2014",
+      title: (w.display_title || w.title || "").trim() || "Title arrives after tonight\u2019s check",
+      url: "https://www.amazon.com/dp/" + encodeURIComponent(w.asin || "") + "?tag=mistrydealshp-20",
+      target: this.money(target),
+      current: hasCur ? this.money(cur) : "\u2014",
+      gap: !hasCur ? "" : hit ? "At or under target" : "$" + (cur - target).toFixed(2) + " to go",
+      status: hit ? "At target" : w.active ? "Active" : "Paused",
+      statusStyle: tag + (hit ? "background:var(--color-accent);color:#16233a" : w.active ? "border:1.5px solid var(--color-text);color:var(--color-text)" : "border:1.5px solid var(--color-divider);color:var(--color-neutral-700)"),
+      checked: this.when(w.last_checked),
+      editing, confirming, idle: !editing && !confirming, notEditing: !editing, busy,
+      toggleLabel: busy && !editing && !confirming ? "\u2026" : w.active ? "Pause" : "Resume",
+      saveLabel: busy ? "Saving\u2026" : "Save",
+      deleteLabel: busy ? "Deleting\u2026" : "Delete",
+      edit: () => this.setState({ editId: w.id, confirmId: null, editVal: isFinite(target) ? target.toFixed(2) : "", err: "" }),
+      save: () => this.saveTarget(w),
+      toggle: () => this.mutate(w, "PATCH", { active: !w.active }),
+      askDelete: () => this.setState({ confirmId: w.id, editId: null }),
+      remove: () => this.mutate(w, "DELETE", null, () => this.setState({ confirmId: null }))
+    };
+  }
+
+  renderVals() {
+    const all = this.state.watches || [];
+    const signedIn = !!(this.state.session || this.sample()) && !!this.state.email;
+    const filter = this.state.filter || this.props.defaultFilter || "all";
+    const counts = { all: all.length, active: all.filter(w => w.active).length, paused: all.filter(w => !w.active).length };
+    const list = all.filter(w => filter === "all" || (filter === "active" ? w.active : !w.active));
+    const editing = all.find(w => w.id === this.state.editId);
+    const loading = this.state.loading && !this.state.watches;
+    const mode = this.state.mode || "signin";
+    const tabStyle = (on, left) => "font:inherit;font-family:var(--font-heading);font-weight:700;font-size:13px;min-height:44px;padding:6px 12px;display:flex;align-items:center;justify-content:flex-start;cursor:pointer;border:0;" +
+      (left ? "border-left:2px solid var(--color-text);" : "") + (on ? "background:var(--color-text);color:var(--color-bg)" : "background:transparent;color:var(--color-text)");
+    return {
+      hWatchSelf: this.deployed() ? "/price-watch" : "Price Watches.dc.html",
+      hHome: this.sitePath(""), hCat: this.sitePath("categories"), hPrime: this.sitePath("prime"), hGuide: this.sitePath("guides"), hAbout: this.sitePath("about"),
+      query: this.state.query, onQuery: e => this.setState({ query: e.target.value }),
+      onQueryKey: e => { if (e.key === "Enter") { e.preventDefault(); this.search(); } },
+      runSearch: e => { if (e && e.preventDefault) e.preventDefault(); this.search(); },
+      menuOpen: !!this.state.menuOpen, menuExpanded: this.state.menuOpen ? "true" : "false",
+      toggleMenu: e => { if (e && e.preventDefault) e.preventDefault(); this.setState(st => ({ menuOpen: !st.menuOpen })); },
+      closeMenu: () => this.setState({ menuOpen: false }),
+      menuItems: [["", "Featured Deals"], ["prime", "Prime Card Deals"], ["categories", "Categories"], ["guides", "Buying Guides"], ["price-watch", "Price Watch"], ["about", "About"]].map(([r, label]) => ({
+        label, href: r === "price-watch" ? (this.deployed() ? "/price-watch" : "Price Watches.dc.html") : this.sitePath(r),
+        style: "display:flex;align-items:center;min-height:44px;padding:0 16px;text-decoration:none;font-family:var(--font-heading);font-weight:700;font-size:13px;letter-spacing:.04em;color:" + (r === "price-watch" ? "var(--color-accent-700)" : "var(--color-text)")
+      })),
+      darkRowLabel: this.state.dark ? "Light mode" : "Dark mode", darkGlyph: this.state.dark ? "\u2600" : "\u263D",
+      toggleDark: e => { if (e && e.preventDefault) e.preventDefault(); const next = !this.state.dark; try { localStorage.setItem("md-theme", next ? "dark" : "light"); } catch (err) {} this.setState({ dark: next, menuOpen: false }); },
+      signedIn, email: this.state.email,
+      showLogin: !signedIn && (!this.state.session || this.state.mode === "reset"),
+      isAuthForm: mode === "signin" || mode === "signup", isSignIn: mode === "signin", isSignUp: mode === "signup",
+      isForgot: mode === "forgot", isReset: mode === "reset",
+      info: this.state.info, hasInfo: !!this.state.info,
+      authHeading: mode === "signup" ? "Create your account" : "Sign in to manage your watches",
+      authSub: mode === "signup" ? "Create a free account to save price watches and manage them in one place." : "Use the email and password for your MistryDeals account.",
+      passAc: mode === "signup" ? "new-password" : "current-password",
+      tabSignIn: tabStyle(mode === "signin", false), tabSignUp: tabStyle(mode === "signup", true),
+      toSignIn: () => this.setState({ mode: "signin", err: "", password2: "" }),
+      toSignUp: () => this.setState({ mode: "signup", err: "", info: "" }),
+      toForgot: () => this.setState({ mode: "forgot", err: "", info: "" }),
+      loginEmail: this.state.loginEmail,
+      onLoginEmail: e => this.setState({ loginEmail: e.target.value, err: "" }),
+      password: this.state.password, password2: this.state.password2,
+      onPassword: e => this.setState({ password: e.target.value, err: "" }),
+      onPassword2: e => this.setState({ password2: e.target.value, err: "" }),
+      onAuthKey: e => { if (e.key === "Enter") this.submitAuth(); },
+      submitAuth: () => this.submitAuth(),
+      sending: this.state.sending,
+      submitLabel: this.state.sending ? "Working\u2026" : mode === "signup" ? "Create account" : mode === "forgot" ? "Send reset link" : mode === "reset" ? "Save new password" : "Sign in",
+      signOut: () => this.sample() ? null : this.signOut(),
+      err: this.state.err, hasErr: !!this.state.err, clearErr: () => this.setState({ err: "" }),
+      loading,
+      reload: () => this.load(), reloadLabel: this.state.loading ? "Refreshing\u2026" : "Refresh",
+      tabs: [["all", "All"], ["active", "Active"], ["paused", "Paused"]].map(([k, label], i) => {
+        const on = k === filter;
+        return { label, count: String(counts[k]), pick: () => this.setState({ filter: k }),
+          style: "font:inherit;font-family:var(--font-heading);font-weight:700;font-size:13px;line-height:1.1;min-height:46px;padding:6px 10px;display:flex;align-items:center;justify-content:space-between;gap:8px;cursor:pointer;border:0;" +
+            (i ? "border-left:2px solid var(--color-text);" : "") + (on ? "background:var(--color-text);color:var(--color-bg)" : "background:transparent;color:var(--color-text)"),
+          countStyle: "font-family:var(--font-body);font-weight:400;font-size:12px;opacity:" + (on ? ".8" : ".6") };
+      }),
+      empty: !loading && !!this.state.watches && !list.length,
+      emptyText: !all.length ? "You\u2019re not watching anything yet. Open any deal and tap Add Price Watch \u2014 it saves straight to this account."
+        : filter === "paused" ? "No paused watches." : "No active watches \u2014 resume one from Paused, or add a new one from any deal.",
+      rows: list.map(w => this.row(w)),
+      wide: !this.state.narrow, narrow: this.state.narrow,
+      editVal: this.state.editVal,
+      onEditVal: e => this.setState({ editVal: e.target.value }),
+      onEditKey: e => { if (e.key === "Enter" && editing) this.saveTarget(editing); if (e.key === "Escape") this.setState({ editId: null }); },
+      cancelEdit: () => this.setState({ editId: null }),
+      cancelDelete: () => this.setState({ confirmId: null })
+    };
+  }
+}
+</script>
+</body>
+</html>

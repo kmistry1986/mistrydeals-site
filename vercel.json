@@ -79,10 +79,6 @@
       "destination": "/links.html"
     },
     {
-      "source": "/price-watch",
-      "destination": "/pricewatches.html"
-    },
-    {
       "source": "/catalogue",
       "destination": "/catalogue.html"
     },
