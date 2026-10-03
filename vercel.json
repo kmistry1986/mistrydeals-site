@@ -5,6 +5,14 @@
   "trailingSlash": false,
   "redirects": [
     {
+      "source": "/watches",
+      "destination": "/price-watch"
+    },
+    {
+      "source": "/pricewatches",
+      "destination": "/price-watch"
+    },
+    {
       "source": "/admin",
       "destination": "/catalogue"
     },
@@ -71,7 +79,7 @@
       "destination": "/links.html"
     },
     {
-      "source": "/watches",
+      "source": "/price-watch",
       "destination": "/pricewatches.html"
     },
     {

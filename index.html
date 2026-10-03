@@ -146,10 +146,10 @@
     </a>
     <div class="m-wrap nav-links" style="display:flex;gap:20px;align-items:center">
       <a href="/" aria-current="page" onClick="{{ goHome }}">Featured Deals</a>
-      <a href="/categories" onClick="{{ goCat }}">Categories</a>
       <a href="/prime" onClick="{{ goPrime }}">Prime Card Deals</a>
+      <a href="/categories" onClick="{{ goCat }}">Categories</a>
       <a href="/guides" onClick="{{ goGuide }}">Buying Guides</a>
-      <a href="/about" onClick="{{ goAbout }}">About</a>
+      <a href="/price-watch">Price Watch</a><a href="/about" onClick="{{ goAbout }}">About</a>
     </div>
     <div class="m-wrap nav-search" style="display:flex;gap:8px;align-items:center;min-width:280px">
       <input class="input" placeholder="{{ searchLabel }}" value="{{ query }}" onChange="{{ onQuery }}" onKeyDown="{{ onQueryKey }}" />
@@ -394,7 +394,7 @@
   <div class="nav" style="max-width:1280px;margin:0 auto;gap:24px">
     <a href="/" onClick="{{ goHome }}" class="nav-brand m-wrap" style="display:flex;align-items:center;gap:8px;text-decoration:none"><span style="position:relative;width:19.6px;height:19.6px;flex:none;display:block"><span style="position:absolute;left:0;top:0;width:14px;height:14px;border:2.1px solid var(--color-text);border-radius:50%;box-sizing:border-box;display:block"></span><span style="position:absolute;left:11.9px;top:11.2px;width:7.7px;height:2.1px;background:var(--color-accent);transform:rotate(45deg);transform-origin:left center;display:block"></span></span>MISTRYDEALS</a>
     <div class="m-wrap nav-links" style="display:flex;gap:20px;align-items:center">
-      <a href="/" onClick="{{ goHome }}">Featured Deals</a><a href="/categories" aria-current="page" onClick="{{ goCat }}">Categories</a><a href="/prime" onClick="{{ goPrime }}">Prime Card Deals</a><a href="/guides" onClick="{{ goGuide }}">Buying Guides</a><a href="/about" onClick="{{ goAbout }}">About</a>
+      <a href="/" onClick="{{ goHome }}">Featured Deals</a><a href="/prime" onClick="{{ goPrime }}">Prime Card Deals</a><a href="/categories" aria-current="page" onClick="{{ goCat }}">Categories</a><a href="/guides" onClick="{{ goGuide }}">Buying Guides</a><a href="/price-watch">Price Watch</a><a href="/about" onClick="{{ goAbout }}">About</a>
     </div>
     <div class="m-wrap nav-search" style="display:flex;gap:8px;align-items:center;min-width:280px">
       <input class="input" placeholder="{{ searchLabel }}" value="{{ query }}" onChange="{{ onQuery }}" onKeyDown="{{ onQueryKey }}" /><button onClick="{{ runSearch }}" class="btn btn-secondary">Search</button>
@@ -512,7 +512,7 @@
 <div style="background:var(--color-bg);min-height:100vh">
   <div class="nav" style="max-width:1280px;margin:0 auto;gap:24px">
     <a href="/" onClick="{{ goHome }}" class="nav-brand m-wrap" style="display:flex;align-items:center;gap:8px;text-decoration:none"><span style="position:relative;width:19.6px;height:19.6px;flex:none;display:block"><span style="position:absolute;left:0;top:0;width:14px;height:14px;border:2.1px solid var(--color-text);border-radius:50%;box-sizing:border-box;display:block"></span><span style="position:absolute;left:11.9px;top:11.2px;width:7.7px;height:2.1px;background:var(--color-accent);transform:rotate(45deg);transform-origin:left center;display:block"></span></span>MISTRYDEALS</a>
-    <div class="m-wrap nav-links" style="display:flex;gap:20px;align-items:center"><a href="/" onClick="{{ goHome }}">Featured Deals</a><a href="/categories" onClick="{{ goCat }}">Categories</a><a href="/prime" onClick="{{ goPrime }}">Prime Card Deals</a><a href="/guides" onClick="{{ goGuide }}">Buying Guides</a><a href="/about" onClick="{{ goAbout }}">About</a></div>
+    <div class="m-wrap nav-links" style="display:flex;gap:20px;align-items:center"><a href="/" onClick="{{ goHome }}">Featured Deals</a><a href="/prime" onClick="{{ goPrime }}">Prime Card Deals</a><a href="/categories" onClick="{{ goCat }}">Categories</a><a href="/guides" onClick="{{ goGuide }}">Buying Guides</a><a href="/price-watch">Price Watch</a><a href="/about" onClick="{{ goAbout }}">About</a></div>
     <div class="m-wrap nav-search" style="display:flex;gap:8px;align-items:center;min-width:280px"><input class="input" placeholder="{{ searchLabel }}" value="{{ query }}" onChange="{{ onQuery }}" onKeyDown="{{ onQueryKey }}" /><button onClick="{{ runSearch }}" class="btn btn-secondary">Search</button>
       <div style="position:relative;flex:none"><button onClick="{{ toggleMenu }}" title="Menu" aria-label="Menu" aria-expanded="{{ menuExpanded }}" style="{{ tMenuBtn }}"><span style="display:block;width:16px;height:2px;background:currentColor"></span><span style="display:block;width:16px;height:2px;background:currentColor"></span><span style="display:block;width:16px;height:2px;background:currentColor"></span></button>
       <sc-if value="{{ menuOpen }}" hint-placeholder-val="{{ false }}">
@@ -607,7 +607,7 @@
 <div style="background:var(--color-bg);min-height:100vh">
   <div class="nav" style="max-width:1280px;margin:0 auto;gap:24px">
     <a href="/" onClick="{{ goHome }}" class="nav-brand m-wrap" style="display:flex;align-items:center;gap:8px;text-decoration:none"><span style="position:relative;width:19.6px;height:19.6px;flex:none;display:block"><span style="position:absolute;left:0;top:0;width:14px;height:14px;border:2.1px solid var(--color-text);border-radius:50%;box-sizing:border-box;display:block"></span><span style="position:absolute;left:11.9px;top:11.2px;width:7.7px;height:2.1px;background:var(--color-accent);transform:rotate(45deg);transform-origin:left center;display:block"></span></span>MISTRYDEALS</a>
-    <div class="m-wrap nav-links" style="display:flex;gap:20px;align-items:center"><a href="/" onClick="{{ goHome }}">Featured Deals</a><a href="/categories" onClick="{{ goCat }}">Categories</a><a href="/prime" onClick="{{ goPrime }}">Prime Card Deals</a><a href="/guides" aria-current="page" onClick="{{ goGuide }}">Buying Guides</a><a href="/about" onClick="{{ goAbout }}">About</a></div>
+    <div class="m-wrap nav-links" style="display:flex;gap:20px;align-items:center"><a href="/" onClick="{{ goHome }}">Featured Deals</a><a href="/prime" onClick="{{ goPrime }}">Prime Card Deals</a><a href="/categories" onClick="{{ goCat }}">Categories</a><a href="/guides" aria-current="page" onClick="{{ goGuide }}">Buying Guides</a><a href="/price-watch">Price Watch</a><a href="/about" onClick="{{ goAbout }}">About</a></div>
     <div class="m-wrap nav-search" style="display:flex;gap:8px;align-items:center;min-width:280px"><input class="input" placeholder="{{ searchLabel }}" value="{{ query }}" onChange="{{ onQuery }}" onKeyDown="{{ onQueryKey }}" /><button onClick="{{ runSearch }}" class="btn btn-secondary">Search</button>
       <div style="position:relative;flex:none"><button onClick="{{ toggleMenu }}" title="Menu" aria-label="Menu" aria-expanded="{{ menuExpanded }}" style="{{ tMenuBtn }}"><span style="display:block;width:16px;height:2px;background:currentColor"></span><span style="display:block;width:16px;height:2px;background:currentColor"></span><span style="display:block;width:16px;height:2px;background:currentColor"></span></button>
       <sc-if value="{{ menuOpen }}" hint-placeholder-val="{{ false }}">
@@ -832,7 +832,7 @@
 <div style="background:var(--color-bg);min-height:100vh">
   <div class="nav" style="max-width:1280px;margin:0 auto;gap:24px">
     <a href="/" onClick="{{ goHome }}" class="nav-brand m-wrap" style="display:flex;align-items:center;gap:8px;text-decoration:none"><span style="position:relative;width:19.6px;height:19.6px;flex:none;display:block"><span style="position:absolute;left:0;top:0;width:14px;height:14px;border:2.1px solid var(--color-text);border-radius:50%;box-sizing:border-box;display:block"></span><span style="position:absolute;left:11.9px;top:11.2px;width:7.7px;height:2.1px;background:var(--color-accent);transform:rotate(45deg);transform-origin:left center;display:block"></span></span>MISTRYDEALS</a>
-    <div class="m-wrap nav-links" style="display:flex;gap:20px;align-items:center"><a href="/" onClick="{{ goHome }}">Featured Deals</a><a href="/categories" onClick="{{ goCat }}">Categories</a><a href="/prime" aria-current="page" onClick="{{ goPrime }}">Prime Card Deals</a><a href="/guides" onClick="{{ goGuide }}">Buying Guides</a><a href="/about" onClick="{{ goAbout }}">About</a></div>
+    <div class="m-wrap nav-links" style="display:flex;gap:20px;align-items:center"><a href="/" onClick="{{ goHome }}">Featured Deals</a><a href="/prime" aria-current="page" onClick="{{ goPrime }}">Prime Card Deals</a><a href="/categories" onClick="{{ goCat }}">Categories</a><a href="/guides" onClick="{{ goGuide }}">Buying Guides</a><a href="/price-watch">Price Watch</a><a href="/about" onClick="{{ goAbout }}">About</a></div>
     <div class="m-wrap nav-search" style="display:flex;gap:8px;align-items:center;min-width:280px"><input class="input" placeholder="{{ searchLabel }}" value="{{ query }}" onChange="{{ onQuery }}" onKeyDown="{{ onQueryKey }}" /><button onClick="{{ runSearch }}" class="btn btn-secondary">Search</button>
       <div style="position:relative;flex:none"><button onClick="{{ toggleMenu }}" title="Menu" aria-label="Menu" aria-expanded="{{ menuExpanded }}" style="{{ tMenuBtn }}"><span style="display:block;width:16px;height:2px;background:currentColor"></span><span style="display:block;width:16px;height:2px;background:currentColor"></span><span style="display:block;width:16px;height:2px;background:currentColor"></span></button>
       <sc-if value="{{ menuOpen }}" hint-placeholder-val="{{ false }}">
@@ -932,7 +932,7 @@
 <div style="background:var(--color-bg);min-height:100vh">
   <div class="nav" style="max-width:1280px;margin:0 auto;gap:24px">
     <a href="/" onClick="{{ goHome }}" class="nav-brand m-wrap" style="display:flex;align-items:center;gap:8px;text-decoration:none"><span style="position:relative;width:19.6px;height:19.6px;flex:none;display:block"><span style="position:absolute;left:0;top:0;width:14px;height:14px;border:2.1px solid var(--color-text);border-radius:50%;box-sizing:border-box;display:block"></span><span style="position:absolute;left:11.9px;top:11.2px;width:7.7px;height:2.1px;background:var(--color-accent);transform:rotate(45deg);transform-origin:left center;display:block"></span></span>MISTRYDEALS</a>
-    <div class="m-wrap nav-links" style="display:flex;gap:20px;align-items:center"><a href="/" onClick="{{ goHome }}">Featured Deals</a><a href="/categories" onClick="{{ goCat }}">Categories</a><a href="/prime" onClick="{{ goPrime }}">Prime Card Deals</a><a href="/guides" onClick="{{ goGuide }}">Buying Guides</a><a href="/about" aria-current="page" onClick="{{ goAbout }}">About</a></div>
+    <div class="m-wrap nav-links" style="display:flex;gap:20px;align-items:center"><a href="/" onClick="{{ goHome }}">Featured Deals</a><a href="/prime" onClick="{{ goPrime }}">Prime Card Deals</a><a href="/categories" onClick="{{ goCat }}">Categories</a><a href="/guides" onClick="{{ goGuide }}">Buying Guides</a><a href="/price-watch">Price Watch</a><a href="/about" aria-current="page" onClick="{{ goAbout }}">About</a></div>
     <div class="m-wrap nav-search" style="display:flex;gap:8px;align-items:center;min-width:280px"><input class="input" placeholder="{{ searchLabel }}" value="{{ query }}" onChange="{{ onQuery }}" onKeyDown="{{ onQueryKey }}" /><button onClick="{{ runSearch }}" class="btn btn-secondary">Search</button>
       <div style="position:relative;flex:none"><button onClick="{{ toggleMenu }}" title="Menu" aria-label="Menu" aria-expanded="{{ menuExpanded }}" style="{{ tMenuBtn }}"><span style="display:block;width:16px;height:2px;background:currentColor"></span><span style="display:block;width:16px;height:2px;background:currentColor"></span><span style="display:block;width:16px;height:2px;background:currentColor"></span></button>
       <sc-if value="{{ menuOpen }}" hint-placeholder-val="{{ false }}">
@@ -1381,7 +1381,7 @@
 </sc-if>
 <sc-if value="{{ watchOpen }}" hint-placeholder-val="{{ false }}">
 <div class="dialog-backdrop" onClick="{{ closeWatch }}" style="z-index:1000">
-  <div class="dialog" role="dialog" aria-modal="true" aria-labelledby="pw-title" onClick="{{ stopProp }}" style="width:min(460px,100%);border-top:4px solid var(--color-accent)">
+  <div class="dialog" role="dialog" aria-modal="true" aria-labelledby="pw-title" onClick="{{ stopProp }}" style="width:min(460px,100%);border-top:4px solid var(--color-accent);max-height:calc(100dvh - 32px);overflow-y:auto;box-sizing:border-box">
     <div style="display:flex;align-items:flex-start;gap:12px">
       <div style="min-width:0;flex:1">
         <div style="font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--color-accent-700);margin-bottom:6px">Add price watch</div>
@@ -1393,12 +1393,36 @@
     <sc-if value="{{ wDone }}" hint-placeholder-val="{{ false }}">
       <div style="border-top:2px solid var(--color-divider);padding-top:14px;display:flex;flex-direction:column;gap:14px">
         <p style="margin:0;font-size:15px;line-height:1.5">{{ wDoneMsg }}</p>
-        <div class="dialog-actions"><a href="/watches" class="btn btn-secondary">Manage watches</a><button onClick="{{ closeWatch }}" class="btn btn-primary">Done</button></div>
+        <div class="dialog-actions"><a href="{{ hWatch }}" class="btn btn-secondary">Manage watches</a><button onClick="{{ closeWatch }}" class="btn btn-primary">Done</button></div>
+      </div>
+    </sc-if>
+    <sc-if value="{{ wNeedAuth }}" hint-placeholder-val="{{ false }}">
+      <div style="border-top:2px solid var(--color-divider);padding-top:14px;display:flex;flex-direction:column;gap:14px">
+        <p style="margin:0;font-size:14px;line-height:1.5;color:var(--color-neutral-700);text-wrap:pretty">{{ wAuthSub }}</p>
+        <div style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));border:2px solid var(--color-text)">
+          <button onClick="{{ wToSignIn }}" style="{{ wTabIn }}">Sign in</button>
+          <button onClick="{{ wToSignUp }}" style="{{ wTabUp }}">Create account</button>
+        </div>
+        <sc-if value="{{ hasWInfo }}" hint-placeholder-val="{{ false }}">
+          <div role="status" style="border-left:3px solid var(--color-text);padding:8px 12px;font-size:14px;line-height:1.45">{{ wInfo }}</div>
+        </sc-if>
+        <div class="field"><label for="pw-aemail">Email</label><input id="pw-aemail" class="input" type="email" autocomplete="email" placeholder="you@email.com" value="{{ wEmail }}" onChange="{{ onWEmail }}" onKeyDown="{{ onWAuthKey }}" style="min-height:44px;font-size:15px"></input></div>
+        <div class="field"><label for="pw-apass">Password</label><input id="pw-apass" class="input" type="password" autocomplete="{{ wPassAc }}" placeholder="" value="{{ wPass }}" onChange="{{ onWPass }}" onKeyDown="{{ onWAuthKey }}" style="min-height:44px;font-size:15px"></input></div>
+        <sc-if value="{{ wIsSignUp }}" hint-placeholder-val="{{ false }}">
+          <div class="field"><label for="pw-apass2">Confirm password</label><input id="pw-apass2" class="input" type="password" autocomplete="new-password" placeholder="" value="{{ wPass2 }}" onChange="{{ onWPass2 }}" onKeyDown="{{ onWAuthKey }}" style="min-height:44px;font-size:15px"></input></div>
+        </sc-if>
+        <sc-if value="{{ hasWErr }}" hint-placeholder-val="{{ false }}">
+          <div role="alert" style="font-size:13px;color:var(--color-accent-700);font-weight:600">{{ wErr }}</div>
+        </sc-if>
+        <div class="dialog-actions">
+          <a href="{{ hWatch }}" class="btn btn-ghost" style="margin-right:auto;font-size:13px">Forgot password?</a>
+          <button onClick="{{ submitWAuth }}" disabled="{{ wBusy }}" class="btn btn-primary">{{ wAuthBtn }}</button>
+        </div>
       </div>
     </sc-if>
     <sc-if value="{{ wForm }}" hint-placeholder-val="{{ true }}">
       <div style="border-top:2px solid var(--color-divider);padding-top:14px;display:flex;flex-direction:column;gap:14px">
-        <div class="field"><label for="pw-email">Email</label><input id="pw-email" class="input" type="email" autocomplete="email" placeholder="you@email.com" value="{{ wEmail }}" onChange="{{ onWEmail }}" style="min-height:44px;font-size:15px"></input></div>
+        <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;font-size:13px;color:var(--color-neutral-700)"><span style="min-width:0;overflow-wrap:anywhere">Signed in as <strong style="color:var(--color-text)">{{ wAcct }}</strong></span><button onClick="{{ wSignOut }}" style="font:inherit;font-size:13px;font-weight:600;background:none;border:0;padding:0;cursor:pointer;color:var(--color-accent-700);text-decoration:underline">Not you?</button></div>
         <div class="field"><label for="pw-product">Product</label><input id="pw-product" class="input" type="text" readonly="readonly" value="{{ watchTitle }}" style="min-height:44px;font-size:15px;background:var(--color-neutral-100);color:var(--color-neutral-700)"></input></div>
         <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px">
           <div class="field"><label for="pw-asin">ASIN</label><input id="pw-asin" class="input" type="text" readonly="readonly" value="{{ watchAsin }}" style="min-height:44px;font-size:15px;letter-spacing:.04em;background:var(--color-neutral-100);color:var(--color-neutral-700)"></input></div>
@@ -1419,7 +1443,7 @@
 </sc-if>
 
 </x-dc>
-<noscript><nav aria-label="Site"><ul><li><a href="/">Featured deals</a></li><li><a href="/guides">Guides</a></li><li><a href="/guides/the-best-charging-equipment-wall-chargers-power-banks-stands-and-more">The best charging equipment wall chargers power banks stands and more</a></li><li><a href="/guides/the-most-useful-kitchen-gadgets-under-150">The most useful kitchen gadgets under 150</a></li><li><a href="/guides/back-to-school-tech-under-100">Back to school tech under 100</a></li><li><a href="/guides/best-cheap-smart-home-devices">Best cheap smart home devices</a></li><li><a href="/categories">Categories</a></li><li><a href="/prime">Prime</a></li><li><a href="/about">About</a></li></ul></nav></noscript>
+<noscript><nav aria-label="Site"><ul><li><a href="/">Featured deals</a></li><li><a href="/guides">Guides</a></li><li><a href="/guides/the-best-charging-equipment-wall-chargers-power-banks-stands-and-more">The best charging equipment wall chargers power banks stands and more</a></li><li><a href="/guides/the-most-useful-kitchen-gadgets-under-150">The most useful kitchen gadgets under 150</a></li><li><a href="/guides/back-to-school-tech-under-100">Back to school tech under 100</a></li><li><a href="/guides/best-cheap-smart-home-devices">Best cheap smart home devices</a></li><li><a href="/categories">Categories</a></li><li><a href="/prime">Prime</a></li><li><a href="/price-watch">Price Watch</a></li><li><a href="/about">About</a></li></ul></nav></noscript>
 <script type="text/x-dc" data-dc-script data-props="{&quot;accent&quot;:{&quot;editor&quot;:&quot;color&quot;,&quot;default&quot;:&quot;#d98014&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;options&quot;:[&quot;#d98014&quot;,&quot;#ec3013&quot;,&quot;#0f6b4f&quot;,&quot;#1b3fd8&quot;],&quot;section&quot;:&quot;Theme&quot;},&quot;dark&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:false,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Theme&quot;}}">
 const mk = (title, cat, sub, price, was, off, rating, reviews, updated, code) => ({
   title, cat, sub, price, was, off: "\u2212" + off + "%", hasOff: true, rating,
@@ -1476,6 +1500,14 @@ class Component extends DCLogic {
   state = { screen: "home", view: (function(){ try { return window.innerWidth <= 560 ? "list" : "grid"; } catch (e) { return "grid"; } })(), dark: (function(){ try { return localStorage.getItem("md-theme") === "dark"; } catch (e) { return false; } })() };
   componentDidMount() {
     this.readHash();
+    // md-q-param: other pages (e.g. /price-watch) search by sending ?q=
+    try {
+      const q = new URLSearchParams(location.search).get("q");
+      if (q) {
+        history.replaceState(null, "", location.pathname + location.hash);
+        this.setState({ query: q }, () => setTimeout(() => this.submitSearch(), 0));
+      }
+    } catch (e) {}
     window.addEventListener("hashchange", this.readHash);
     window.addEventListener("popstate", this.readHash);
     this.paint(); this.loadCategories(); this.loadDeals(); this.loadGuides(); this.loadPrime(); this.loadPromoted(); this.loadCounts(); this.loadQueueCoupons(); this.loadLowestEver();
@@ -1726,43 +1758,110 @@ class Component extends DCLogic {
     out.watch = () => this.openWatch(out);
     return out;
   }
-  openWatch(d) {
+  watchSession() { try { return JSON.parse(localStorage.getItem("md-watch-session") || "null"); } catch (e) { return null; } }
+  saveWatchSession(j, fallbackEmail) {
+    const u = j.user || {};
+    const s = { access_token: j.access_token, refresh_token: j.refresh_token,
+      expires_at: j.expires_at || Math.floor(Date.now() / 1000) + (j.expires_in || 3600),
+      user_id: u.id || null, email: String(u.email || fallbackEmail || "").toLowerCase() };
+    try { localStorage.setItem("md-watch-session", JSON.stringify(s)); localStorage.setItem("md-watch-email", s.email); } catch (e) {}
+    return s;
+  }
+  // returns a live session (refreshing if needed) with user_id + email filled in, or null
+  async liveWatchSession() {
+    const BASE = "https://qolksrytidvxarrlygyy.supabase.co", KEY = "sb_publishable_UX38KeF1XAKtzvS01yfx7w_8s5NkOH3";
+    let s = this.watchSession();
+    if (!s || !s.access_token) return null;
+    try {
+      if (s.expires_at && s.expires_at * 1000 - 60000 < Date.now()) {
+        if (!s.refresh_token) return null;
+        const r = await fetch(BASE + "/auth/v1/token?grant_type=refresh_token", { method: "POST", headers: { apikey: KEY, "Content-Type": "application/json" }, body: JSON.stringify({ refresh_token: s.refresh_token }) });
+        if (!r.ok) return null;
+        s = this.saveWatchSession(await r.json(), s.email);
+      }
+      if (!s.user_id || !s.email) {
+        const r = await fetch(BASE + "/auth/v1/user", { headers: { apikey: KEY, Authorization: "Bearer " + s.access_token } });
+        if (!r.ok) return null;
+        const u = await r.json();
+        s = Object.assign({}, s, { user_id: u.id, email: String(u.email || "").toLowerCase() });
+        try { localStorage.setItem("md-watch-session", JSON.stringify(s)); } catch (e) {}
+      }
+      return s;
+    } catch (e) { return null; }
+  }
+  async openWatch(d) {
     const cur = d && isFinite(d.priceNum) ? d.priceNum : null;
     let email = "";
     try { email = localStorage.getItem("md-watch-email") || ""; } catch (e) {}
-    this.setState({ watch: { asin: d.asin || "", title: d.title || "Product", price: cur }, wEmail: email,
-      wTarget: cur != null ? (Math.round(cur * 90) / 100).toFixed(2) : "", wErr: "", wDone: false, wBusy: false });
+    this.setState({ watch: { asin: d.asin || "", title: d.title || "Product", price: cur }, wEmail: email, wPass: "", wPass2: "",
+      wTarget: cur != null ? (Math.round(cur * 90) / 100).toFixed(2) : "", wErr: "", wInfo: "", wDone: false, wBusy: false,
+      wSession: null, wChecking: true, wMode: "signin" });
+    const s = await this.liveWatchSession();
+    this.setState({ wSession: s, wChecking: false });
+  }
+  async submitWAuth() {
+    const BASE = "https://qolksrytidvxarrlygyy.supabase.co", KEY = "sb_publishable_UX38KeF1XAKtzvS01yfx7w_8s5NkOH3";
+    const mode = this.state.wMode || "signin";
+    const email = String(this.state.wEmail || "").trim().toLowerCase(), pw = this.state.wPass || "";
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return this.setState({ wErr: "Enter a valid email address." });
+    if (mode === "signin" && !pw) return this.setState({ wErr: "Enter your password." });
+    if (mode === "signup" && pw.length < 8) return this.setState({ wErr: "Use a password of at least 8 characters." });
+    if (mode === "signup" && pw !== this.state.wPass2) return this.setState({ wErr: "The passwords don\u2019t match." });
+    this.setState({ wBusy: true, wErr: "", wInfo: "" });
+    const friendly = (j, fb) => { const m = String((j && (j.error_description || j.msg || j.message || j.error)) || "");
+      if (/invalid login credentials/i.test(m)) return "That email and password don\u2019t match.";
+      if (/email not confirmed/i.test(m)) return "Confirm your email first \u2014 check your inbox for the link we sent.";
+      if (/already registered|already exists/i.test(m)) return "That email already has an account. Sign in instead.";
+      if (/password should be|weak/i.test(m)) return "Use a password of at least 8 characters.";
+      if (/rate limit|too many/i.test(m)) return "Too many attempts. Wait a minute and try again.";
+      return fb; };
+    try {
+      const back = location.origin + (this.clean() ? "/price-watch" : location.pathname.replace(/[^/]*$/, "") + "Price Watches.dc.html");
+      const url = mode === "signin" ? "/auth/v1/token?grant_type=password" : "/auth/v1/signup?redirect_to=" + encodeURIComponent(back);
+      const res = await fetch(BASE + url, { method: "POST", headers: { apikey: KEY, "Content-Type": "application/json" }, body: JSON.stringify({ email, password: pw }) });
+      const j = await res.json().catch(() => ({}));
+      if (!res.ok) throw new Error(friendly(j, mode === "signin" ? "Couldn\u2019t sign in. Try again in a minute." : "Couldn\u2019t create the account. Try again in a minute."));
+      try { localStorage.setItem("md-watch-email", email); } catch (e) {}
+      if (!j.access_token) {
+        this.setState({ wBusy: false, wMode: "signin", wPass: "", wPass2: "",
+          wInfo: "Account created. Open the confirmation link we sent to " + email + ", then sign in here to save this watch." });
+        return;
+      }
+      this.setState({ wBusy: false, wPass: "", wPass2: "", wSession: this.saveWatchSession(j, email) });
+    } catch (e) { this.setState({ wBusy: false, wErr: e.message }); }
   }
   async submitWatch() {
     const w = this.state.watch; if (!w || this.state.wBusy) return;
-    const email = String(this.state.wEmail || "").trim().toLowerCase();
     const target = parseFloat(this.state.wTarget);
-    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return this.setState({ wErr: "Enter a valid email address." });
     if (!(target > 0)) return this.setState({ wErr: "Enter a target price above $0." });
     const asin = String(w.asin || "").trim().toUpperCase();
     if (!/^[A-Z0-9]{10}$/.test(asin)) return this.setState({ wErr: "This product doesn't have a valid ASIN, so it can't be watched." });
     this.setState({ wBusy: true, wErr: "" });
-    const BASE = "https://qolksrytidvxarrlygyy.supabase.co";
-    const KEY = "sb_publishable_UX38KeF1XAKtzvS01yfx7w_8s5NkOH3";
+    const s = await this.liveWatchSession();
+    if (!s) { this.setState({ wBusy: false, wSession: null, wErr: "Your session expired. Sign in again to save this watch." }); return; }
+    const BASE = "https://qolksrytidvxarrlygyy.supabase.co", KEY = "sb_publishable_UX38KeF1XAKtzvS01yfx7w_8s5NkOH3";
     try {
       const res = await fetch(BASE + "/rest/v1/price_watches", {
         method: "POST",
-        headers: { apikey: KEY, Authorization: "Bearer " + KEY, "Content-Type": "application/json", Prefer: "return=minimal" },
-        body: JSON.stringify({ user_email: email, asin, target_price: Math.round(target * 100) / 100 })
+        headers: { apikey: KEY, Authorization: "Bearer " + s.access_token, "Content-Type": "application/json", Prefer: "return=minimal" },
+        body: JSON.stringify({ user_id: s.user_id, user_email: s.email, asin, target_price: Math.round(target * 100) / 100, title: w.title || null })
       });
       if (!res.ok) {
         let body = ""; try { body = await res.text(); } catch (e) {}
         if (res.status === 409 || /duplicate|23505|unique/i.test(body)) {
-          this.setState({ wBusy: false, wErr: "You're already watching this product with that email." }); return;
+          this.setState({ wBusy: false, wErr: "You're already watching this product. Change the target on your Price Watch page." }); return;
+        }
+        if (res.status === 401 || res.status === 403 || /row-level security/i.test(body)) {
+          this.setState({ wBusy: false, wErr: "We couldn't save this to your account. Sign out and back in on the Price Watch page, then try again." }); return;
         }
         throw new Error(res.status + " " + body);
       }
-      try { localStorage.setItem("md-watch-email", email); } catch (e) {}
       this.setState({ wBusy: false, wDone: true });
     } catch (e) {
       this.setState({ wBusy: false, wErr: "Couldn't save the watch. Try again in a minute." });
     }
   }
+  wSignOut() { try { localStorage.removeItem("md-watch-session"); } catch (e) {} this.setState({ wSession: null, wMode: "signin" }); }
   guideProduct(p, i) {
     const n = v => (v === null || v === undefined || v === "") ? null : parseFloat(v);
     const lv = (this.state.liveStats || {})[p.amazon_asin] || null;
@@ -2370,11 +2469,29 @@ class Component extends DCLogic {
       submitWatch: () => this.submitWatch(),
       wBusy: !!this.state.wBusy, wBtn: this.state.wBusy ? "Saving\u2026" : "Start watching",
       wErr: this.state.wErr || "", hasWErr: !!this.state.wErr,
-      wDone: !!this.state.wDone, wForm: !this.state.wDone,
+      wDone: !!this.state.wDone,
+      wForm: !this.state.wDone && !!this.state.wSession,
+      wNeedAuth: !this.state.wDone && !this.state.wSession && !this.state.wChecking,
+      wAcct: (this.state.wSession || {}).email || "",
+      wSignOut: () => this.wSignOut(),
+      wIsSignUp: this.state.wMode === "signup",
+      wAuthSub: this.state.wMode === "signup" ? "Create a free account to save price watches and manage them in one place." : "Sign in to your MistryDeals account to save this watch.",
+      wPassAc: this.state.wMode === "signup" ? "new-password" : "current-password",
+      wTabIn: (on => "font:inherit;font-family:var(--font-heading);font-weight:700;font-size:13px;min-height:44px;padding:6px 12px;display:flex;align-items:center;justify-content:flex-start;cursor:pointer;border:0;" + (on ? "background:var(--color-text);color:var(--color-bg)" : "background:transparent;color:var(--color-text)"))(this.state.wMode !== "signup"),
+      wTabUp: (on => "font:inherit;font-family:var(--font-heading);font-weight:700;font-size:13px;min-height:44px;padding:6px 12px;display:flex;align-items:center;justify-content:flex-start;cursor:pointer;border:0;border-left:2px solid var(--color-text);" + (on ? "background:var(--color-text);color:var(--color-bg)" : "background:transparent;color:var(--color-text)"))(this.state.wMode === "signup"),
+      wToSignIn: () => this.setState({ wMode: "signin", wErr: "" }),
+      wToSignUp: () => this.setState({ wMode: "signup", wErr: "", wInfo: "" }),
+      wInfo: this.state.wInfo || "", hasWInfo: !!this.state.wInfo,
+      wPass: this.state.wPass || "", wPass2: this.state.wPass2 || "",
+      onWPass: e => this.setState({ wPass: e.target.value, wErr: "" }),
+      onWPass2: e => this.setState({ wPass2: e.target.value, wErr: "" }),
+      onWAuthKey: e => { if (e.key === "Enter") this.submitWAuth(); },
+      submitWAuth: () => this.submitWAuth(),
+      wAuthBtn: this.state.wBusy ? "Working\u2026" : this.state.wMode === "signup" ? "Create account" : "Sign in",
       wHint: (() => { const w = this.state.watch || {}; const t = parseFloat(this.state.wTarget);
         if (w.price != null && t >= w.price) return "That's at or above today's price. We'll email you as soon as it's checked.";
         return w.price != null && t > 0 ? "We'll email you once it drops to $" + t.toFixed(2) + " or less (" + Math.round((1 - t / w.price) * 100) + "% under today)." : "We'll email you once it drops to your target."; })(),
-      wDoneMsg: "Watch created! We'll email " + (this.state.wEmail || "you") + " when the price drops to $" + (parseFloat(this.state.wTarget) || 0).toFixed(2) + " or less.",
+      wDoneMsg: "Watch created! We'll email " + ((this.state.wSession || {}).email || "you") + " when the price drops to $" + (parseFloat(this.state.wTarget) || 0).toFixed(2) + " or less.",
       isHome: s === "home", isCat: s === "category", isDetail: s === "detail",
       isGuide: s === "guide", isPrime: s === "prime", isAbout: s === "about", isMobile: s === "mobile",
       goHome: (e) => { if (e && e.preventDefault) e.preventDefault(); this.go("home"); },
@@ -2387,6 +2504,7 @@ class Component extends DCLogic {
       goAdmin: (e) => { if (e && e.preventDefault) e.preventDefault(); this.go("admin"); },
       hHome: this.path("home"), hCat: this.path("category"), hGuide: this.path("guide"),
       hPrime: this.path("prime"), hAbout: this.path("about"),
+      hWatch: this.clean() ? "/price-watch" : "Price Watches.dc.html",
 
       // the signposts name the newest real guide and the live cashback count,
       // so they read as current rather than as permanent furniture
@@ -2455,12 +2573,12 @@ class Component extends DCLogic {
         this.setState({ dark: next, menuOpen: false }, () => this.paint());
       },
       menuItems: [
-        ["home", "Featured Deals"], ["category", "Categories"], ["prime", "Prime Card Deals"],
-        ["guide", "Buying Guides"], ["about", "About"]
+        ["home", "Featured Deals"], ["prime", "Prime Card Deals"], ["category", "Categories"],
+        ["guide", "Buying Guides"], ["watch", "Price Watch"], ["about", "About"]
       ].map(it => ({
         label: it[1],
-        href: this.path(it[0]),
-        open: (e) => { if (e) e.preventDefault(); this.setState({ menuOpen: false }); this.go(it[0]); },
+        href: it[0] === "watch" ? (this.clean() ? "/price-watch" : "Price Watches.dc.html") : this.path(it[0]),
+        open: (e) => { if (it[0] === "watch") return; if (e) e.preventDefault(); this.setState({ menuOpen: false }); this.go(it[0]); },
         style: "display:flex;align-items:center;min-height:44px;padding:0 16px;text-decoration:none;font-family:var(--font-heading);font-weight:700;font-size:13px;letter-spacing:.04em;color:" +
           (s === it[0] ? "var(--color-accent-700)" : "var(--color-text)")
       })),
