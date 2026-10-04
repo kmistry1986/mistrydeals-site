@@ -274,6 +274,7 @@
                   <button onClick="{{ copyTemplate }}" style="font:inherit;font-family:var(--font-heading);font-weight:700;font-size:10px;letter-spacing:.08em;text-transform:uppercase;padding:8px 12px;border:2px solid var(--color-text);white-space:nowrap;cursor:pointer;background:none;color:var(--color-text)">{{ copyTplLabel }}</button>
                   <button onClick="{{ insertTemplate }}" style="font:inherit;font-family:var(--font-heading);font-weight:700;font-size:10px;letter-spacing:.08em;text-transform:uppercase;padding:8px 12px;border:2px solid var(--color-text);white-space:nowrap;cursor:pointer;background:none;color:var(--color-text);border-width:1px">Paste template into box</button>
                   <button onClick="{{ copyTiersTemplate }}" style="font:inherit;font-family:var(--font-heading);font-weight:700;font-size:10px;letter-spacing:.08em;text-transform:uppercase;padding:8px 12px;border:1px solid var(--color-text);white-space:nowrap;cursor:pointer;background:none;color:var(--color-text)">Copy tiered template</button>
+                  <button onClick="{{ copyAdviceTemplate }}" style="font:inherit;font-family:var(--font-heading);font-weight:700;font-size:10px;letter-spacing:.08em;text-transform:uppercase;padding:8px 12px;border:1px solid var(--color-text);white-space:nowrap;cursor:pointer;background:none;color:var(--color-text)">Copy advice template</button>
                   <span style="font-size:12px;color:var(--color-neutral-700);text-wrap:pretty">Each ASIN: line starts a new pick &#8212; that&#8217;s how the count is made (PRODUCT lines are optional separators). Only ASIN and WHY are needed; product title, category and prices come from the catalogue.</span>
                 </div>
                 <textarea class="input" rows="12" placeholder="GUIDE TITLE: &#8230;&#10;KICKER: &#8230;&#10;CAPTION: &#8230;&#10;INTRO:&#10;&#8230;&#10;HOW TO BUY WELL:&#10;- &#8230;&#10;&#10;PRODUCT&#10;ASIN: B0&#8230;&#10;WHY: &#8230;" value="{{ importText }}" onChange="{{ onImportText }}" style="margin-top:12px;font-family:ui-monospace,Menlo,monospace;font-size:12px;line-height:1.5;resize:vertical;width:100%;box-sizing:border-box"></textarea>
@@ -299,9 +300,22 @@
               <label style="display:flex;align-items:center;gap:8px">Caption<button onClick="{{ aiCaption }}" style="{{ aiCaptionBtn.style }}">{{ aiCaptionBtn.label }}</button></label>
               <input class="input" placeholder="One line under the title" value="{{ fCaption }}" onChange="{{ onCaption }}" />
             </div>
+            <div class="field" style="margin:0;grid-column:1 / -1">
+              <label style="display:flex;align-items:baseline;gap:8px;flex-wrap:wrap">Cover image<span style="font-weight:400;text-transform:none;letter-spacing:0;font-size:11px;color:var(--color-neutral-600)">Optional &#183; shown on guide cards in black and white. Without one, cards use the top pick&#8217;s photo, or a type cover.</span></label>
+              <div style="display:flex;gap:12px;align-items:flex-start;flex-wrap:wrap">
+                <div style="{{ coverThumb }}"></div>
+                <div style="flex:1 1 280px;min-width:0;display:flex;flex-direction:column;gap:8px">
+                  <input class="input" placeholder="https://&#8230; image URL, or upload a file" value="{{ fCover }}" onChange="{{ onCover }}" />
+                  <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center">
+                    <label class="btn btn-secondary" style="font-size:12px;padding:7px 12px;cursor:pointer;margin:0;text-transform:none;letter-spacing:0">{{ coverUploadLabel }}<input type="file" accept="image/*" onChange="{{ onCoverFile }}" style="display:none" /></label>
+                    <sc-if value="{{ hasCover }}" hint-placeholder-val="{{ false }}"><button onClick="{{ clearCover }}" class="btn btn-ghost" style="font-size:12px;padding:7px 12px">Remove</button></sc-if>
+                  </div>
+                </div>
+              </div>
+            </div>
             <div class="field" style="margin:0">
               <label>Guide type</label>
-              <select class="input" value="{{ fFormat }}" onChange="{{ onFormat }}"><option value="picks">Picks &#183; different products</option><option value="tiers">Tiers &#183; budget / upgrade / splurge</option></select>
+              <select class="input" value="{{ fFormat }}" onChange="{{ onFormat }}"><option value="picks">Picks &#183; different products</option><option value="tiers">Tiers &#183; budget / upgrade / splurge</option><option value="advice">Advice &#183; no products</option></select>
               <div style="{{ formatHintStyle }}">{{ formatHint }}</div>
             </div>
             <div class="field" style="margin:0;grid-column:1 / -1">
@@ -311,6 +325,12 @@
             </div>
           </div>
 
+          <sc-if value="{{ isAdvice }}" hint-placeholder-val="{{ false }}">
+            <div style="margin-top:22px;border:2px solid var(--color-text);padding:14px 16px;display:flex;align-items:center;gap:14px;flex-wrap:wrap">
+              <button onClick="{{ aiAdvice }}" style="{{ aiAdviceBtn.style }}">{{ aiAdviceBtn.label }}</button>
+              <span style="font-size:12px;line-height:1.45;color:var(--color-neutral-700);flex:1;min-width:220px;text-wrap:pretty">Writes the intro, sections and checklist from the title, kicker and brief. Title, kicker and caption are filled only if blank.</span>
+            </div>
+          </sc-if>
           <div style="margin-top:26px">
             <div class="field" style="margin:0">
               <label style="display:flex;align-items:center;gap:8px">Intro<button onClick="{{ aiIntro }}" style="{{ aiIntroBtn.style }}">{{ aiIntroBtn.label }}</button></label>
@@ -321,11 +341,23 @@
 
           <div style="margin-top:22px">
             <div class="field" style="margin:0">
-              <label style="display:flex;align-items:center;gap:8px">How to buy well<button onClick="{{ aiHowto }}" style="{{ aiHowtoBtn.style }}">{{ aiHowtoBtn.label }}</button></label>
+              <label style="display:flex;align-items:center;gap:8px">{{ howtoLabel }}<button onClick="{{ aiHowto }}" style="{{ aiHowtoBtn.style }}">{{ aiHowtoBtn.label }}</button></label>
               <textarea class="input" rows="4" placeholder="One tip per line. Rendered as a numbered list." value="{{ fHowto }}" onChange="{{ onHowto }}"></textarea>
               <div style="font-size:11px;line-height:1.35;margin-top:4px;color:var(--color-neutral-600)">{{ howtoNote }}</div>
             </div>
           </div>
+
+          <sc-if value="{{ isAdvice }}" hint-placeholder-val="{{ false }}">
+            <div style="margin-top:22px">
+              <div class="field" style="margin:0">
+                <label>Sections</label>
+                <textarea class="input" rows="16" placeholder="## Section heading&#10;A paragraph.&#10;&#10;Another paragraph.&#10;&#10;## Next heading&#10;&#8230;" value="{{ fSections }}" onChange="{{ onSections }}" style="font-family:inherit;resize:vertical;line-height:1.45;width:100%;box-sizing:border-box"></textarea>
+                <div style="font-size:11px;line-height:1.35;margin-top:4px;color:var(--color-neutral-600)">{{ sectionsNote }}</div>
+              </div>
+            </div>
+          </sc-if>
+
+          <sc-if value="{{ notAdvice }}" hint-placeholder-val="{{ true }}">
 
           <div style="margin-top:34px;display:flex;align-items:baseline;gap:14px;padding-bottom:10px;border-bottom:2px solid var(--color-divider);flex-wrap:wrap">
             <div style="font-family:var(--font-heading);font-weight:700;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--color-neutral-700)">Picks</div>
@@ -455,6 +487,7 @@
             </sc-for>
           </div>
 
+          </sc-if>
           <div style="margin-top:26px;display:flex;gap:10px;flex-wrap:wrap">
             <button onClick="{{ save }}" class="btn btn-primary" disabled="{{ saving }}" style="font-size:12px;padding:12px 18px;min-height:44px;white-space:nowrap;justify-content:flex-start">{{ saveLabel }}</button>
             <sc-if value="{{ canSaveOnly }}" hint-placeholder-val="{{ false }}">
@@ -518,6 +551,7 @@
           <div style="margin-top:30px;border-left:3px solid var(--color-accent);padding:12px 14px;font-size:13px;color:var(--color-accent-700)">No intro written yet &mdash; the site would open straight on the picks.</div>
         </sc-if>
 
+        <sc-if value="{{ pv.notAdvice }}" hint-placeholder-val="{{ true }}">
         <div style="margin-top:38px;display:flex;align-items:center;gap:14px;flex-wrap:wrap">
           <div style="font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--color-neutral-700)">The picks in detail</div>
           <sc-if value="{{ pv.isTiers }}" hint-placeholder-val="{{ false }}">
@@ -527,6 +561,7 @@
             </div>
           </sc-if>
         </div>
+        </sc-if>
         <sc-if value="{{ pv.stackView }}" hint-placeholder-val="{{ true }}">
           <div style="margin-top:8px">
             <sc-for list="{{ pv.picks }}" as="d" hint-placeholder-count="3">
@@ -623,9 +658,18 @@
           <div style="margin-top:8px;border-left:3px solid var(--color-accent);padding:12px 14px;font-size:13px;color:var(--color-accent-700)">No picks yet.</div>
         </sc-if>
 
+        <sc-for list="{{ pv.sections }}" as="sec" hint-placeholder-count="0">
+          <div style="margin-top:34px;border-top:2px solid var(--color-divider);padding-top:16px">
+            <div style="font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--color-neutral-700);margin-bottom:8px">{{ sec.n }}</div>
+            <h3 style="margin:0 0 10px;font-family:var(--font-heading);font-size:26px;line-height:1.15">{{ sec.title }}</h3>
+            <sc-for list="{{ sec.paras }}" as="para" hint-placeholder-count="2">
+              <p style="font-size:16px;line-height:1.55;max-width:70ch;margin:0 0 12px">{{ para }}</p>
+            </sc-for>
+          </div>
+        </sc-for>
         <sc-if value="{{ pv.hasHowto }}" hint-placeholder-val="{{ false }}">
           <div style="margin-top:38px">
-            <div style="font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--color-neutral-700);margin-bottom:16px">How to buy well</div>
+            <div style="font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--color-neutral-700);margin-bottom:16px">{{ pv.howtoLabel }}</div>
             <sc-for list="{{ pv.howto }}" as="h" hint-placeholder-count="3">
               <div style="display:grid;grid-template-columns:36px minmax(0,1fr);gap:14px;border-top:1px solid var(--color-divider);padding:14px 0">
                 <span style="font-size:13px;color:var(--color-accent-700);font-weight:600">{{ h.n }}</span>
@@ -976,7 +1020,7 @@ class Component extends DCLogic {
   blankDraft() {
     return {
       id: null, title: "", caption: "", event: "", published: false, date: "",
-      intro: "", howto: "", brief: "", picks: [], content: {}, format: "picks"
+      intro: "", howto: "", brief: "", picks: [], content: {}, format: "picks", sections: "", cover: ""
     };
   }
 
@@ -993,7 +1037,9 @@ class Component extends DCLogic {
       intro: intro.join("\n\n"),
       howto: (c.howto || []).join("\n"),
       brief: c.brief || "",
-      format: c.format === "tiers" ? "tiers" : "picks",
+      format: c.format === "tiers" || c.format === "advice" ? c.format : "picks",
+      cover: c.cover_image || "",
+      sections: (c.sections || []).map(x => "## " + (x.title || "") + "\n" + String(x.content || "")).join("\n\n"),
       picks: (c.products || []).map(p => Object.assign({}, p)),
       // every other key in content (sections, faq, anything the app adds later)
       // rides along untouched so this editor cannot silently drop it
@@ -1147,6 +1193,32 @@ class Component extends DCLogic {
     "WHY: \u2026"
   ].join("\n");
 
+  IMPORT_TEMPLATE_ADVICE = [
+    "GUIDE TITLE: How to Prepare for Prime Day",
+    "KICKER: Prime Day",
+    "CAPTION: What to do in the weeks before so you only buy real deals",
+    "FORMAT: Advice",
+    "BRIEF: Optional. Private drafting notes \u2014 never shown on the site.",
+    "",
+    "INTRO:",
+    "First paragraph.",
+    "",
+    "Second paragraph.",
+    "",
+    "SECTIONS:",
+    "## First section heading",
+    "A paragraph.",
+    "",
+    "Another paragraph.",
+    "",
+    "## Second section heading",
+    "A paragraph.",
+    "",
+    "CHECKLIST:",
+    "- First thing to do",
+    "- Second thing to do"
+  ].join("\n");
+
   IMPORT_TEMPLATE_TIERS = [
     "GUIDE TITLE: The Best Chargers to Buy in 2026",
     "KICKER: Charging",
@@ -1215,7 +1287,7 @@ class Component extends DCLogic {
   IMPORT_KEYS = [
     [/^(guide\s+)?title$|^headline$/, "title"], [/^kicker$|^eyebrow$|^label$/, "kicker"],
     [/^caption$|^subtitle$|^subhead$/, "caption"], [/^brief$|^guidelines?$|^instructions?$/, "brief"],
-    [/^intro(duction)?$/, "intro"], [/^how\s+to\s+buy(\s+well)?$|^buying\s+tips$|^tips$|^how\s*to$/, "howto"],
+    [/^intro(duction)?$/, "intro"], [/^sections?$/, "sections"], [/^how\s+to\s+buy(\s+well)?$|^buying\s+tips$|^tips$|^how\s*to$|^checklist$/, "howto"],
     [/^asin$/, "asin"], [/^category$/, "category"], [/^(deal\s+|current\s+|sale\s+)?price$|^now$/, "price"],
     [/^was(\s+price)?$|^original(\s+price)?$|^list(\s+price)?$|^regular(\s+price)?$/, "was"],
     [/^why(\s+it\s+made\s+the\s+list)?$|^description$|^write-?up$/, "why"],
@@ -1257,7 +1329,7 @@ class Component extends DCLogic {
         // guide-level keys after the products started still go to the guide
         // product titles always come from the catalogue: a TITLE inside a product is ignored
         if (cur && k === "title" && !/guide/i.test(m[1])) { key = null; buf = []; return; }
-        if (cur && ["title", "intro", "howto", "kicker", "caption", "brief", "format"].indexOf(k) > -1) cur = null;
+        if (cur && ["title", "intro", "howto", "kicker", "caption", "brief", "format", "sections"].indexOf(k) > -1) cur = null;
         key = k; buf = m[2] ? [m[2]] : []; return;
       }
       if (key) buf.push(raw);
@@ -1267,7 +1339,8 @@ class Component extends DCLogic {
     return {
       title: (guide.title || "").trim(), kicker: (guide.kicker || "").trim(), caption: (guide.caption || "").trim(),
       brief: (guide.brief || "").trim(),
-      format: /tier|budget|upgrade|splurge|good|better/i.test(guide.format || "") ? "tiers" : "picks",
+      format: /advice|general|no products/i.test(guide.format || "") ? "advice" : /tier|budget|upgrade|splurge|good|better/i.test(guide.format || "") ? "tiers" : "picks",
+      sections: (guide.sections || "").trim(),
       intro: (guide.intro || "").split(/\n\s*\n/).map(p => p.replace(/\s*\n\s*/g, " ").trim()).filter(Boolean).join("\n\n"),
       howto: (guide.howto || "").split("\n").map(l => l.replace(/^\s*(?:[-*\u2022]|\d+[.)])\s*/, "").trim()).filter(Boolean).join("\n"),
       products: products.filter(p => Object.keys(p).length).map(p => ({
@@ -1283,6 +1356,17 @@ class Component extends DCLogic {
   async runImport() {
     if (this.state.importBusy) return;
     const doc = this.parseGuideDoc(this.state.importText);
+    if (doc.format === "advice") {
+      const secN = this.parseSections(doc.sections).length;
+      if (!doc.title && !doc.intro && !secN) {
+        this.setState({ importParsed: null, importNote: "Nothing recognised \u2014 an advice guide needs at least GUIDE TITLE:, INTRO: or SECTIONS:." });
+        return;
+      }
+      doc.products = [];
+      this.setState({ importParsed: doc, importNote: "" });
+      this.applyImport();
+      return;
+    }
     if (!doc.products.some(p => p.asin)) {
       this.setState({ importParsed: null, importNote: "No products found \u2014 each product needs an \u201cASIN: B0\u2026\u201d line (a PRODUCT line before it is optional)." });
       return;
@@ -1320,16 +1404,18 @@ class Component extends DCLogic {
     if (!doc || !this.state.draft) return;
     this.setDraft({
       title: doc.title, event: doc.kicker, caption: doc.caption, brief: doc.brief || (this.state.draft.brief || ""),
-      intro: doc.intro, howto: doc.howto, format: doc.format,
+      intro: doc.intro, howto: doc.howto, format: doc.format, sections: doc.sections || "",
       picks: doc.products.filter((p, i, a) => p.asin && a.findIndex(q => q.asin === p.asin) === i).map(p => this.importPick(p))
     });
     const withAsin = doc.products.filter((p, i, a) => p.asin && a.findIndex(q => q.asin === p.asin) === i);
     const notLive = withAsin.filter(p => !this.liveFor({ amazon_asin: p.asin })).length;
     const noWhy = withAsin.filter(p => !p.why).length;
+    const adv = doc.format === "advice";
+    const secN = adv ? this.parseSections(doc.sections).length : 0;
     const gaps = [notLive ? notLive + " not live" : "", noWhy ? noWhy + " missing a write-up" : "",
-      !doc.title ? "no guide title" : ""].filter(Boolean);
+      !doc.title ? "no guide title" : "", adv && !secN ? "no sections" : ""].filter(Boolean);
     this.setState({ importParsed: null, importText: "", importOpen: false, openPick: null, previewOpen: true,
-      statusText: "Imported " + withAsin.length + " picks" + (gaps.length ? " \u2014 " + gaps.join(", ") : "") + ". Check the preview, then save.",
+      statusText: (adv ? "Imported advice guide with " + secN + (secN === 1 ? " section" : " sections") : "Imported " + withAsin.length + " picks") + (gaps.length ? " \u2014 " + gaps.join(", ") : "") + ". Check the preview, then save.",
       statusKind: gaps.length ? "error" : "ok" });
   }
 
@@ -1549,7 +1635,7 @@ class Component extends DCLogic {
       caption: (d.caption || "").trim(),
       hasCaption: !!(d.caption || "").trim(),
       date: d.date ? this.when(d.date + "T12:00:00") : "no date set",
-      count: picks.length + (picks.length === 1 ? " pick" : " picks"),
+      count: d.format === "advice" ? "Shopping advice" : picks.length + (picks.length === 1 ? " pick" : " picks"),
       state: d.published ? "Live on the site" : "Draft \u2014 not on the site",
       stateStyle: "font-family:var(--font-heading);font-weight:700;font-size:10px;letter-spacing:.1em;" +
         "text-transform:uppercase;padding:5px 9px;border:1px solid var(--color-" +
@@ -1557,7 +1643,11 @@ class Component extends DCLogic {
       intro: (d.intro || "").split(/\n\s*\n/).map(s => s.trim()).filter(Boolean),
       hasIntro: !!(d.intro || "").trim(),
       noIntro: !(d.intro || "").trim(),
-      noPicks: picks.length === 0,
+      noPicks: picks.length === 0 && d.format !== "advice",
+      isAdvice: d.format === "advice",
+      notAdvice: d.format !== "advice",
+      howtoLabel: d.format === "advice" ? "Checklist" : "How to buy well",
+      sections: d.format === "advice" ? this.parseSections(d.sections).map((x, i) => ({ n: String(i + 1).padStart(2, "0"), title: x.title, paras: x.content.split("\n\n") })) : [],
       howto: (d.howto || "").split("\n").map(s => s.trim()).filter(Boolean)
         .map((t, i) => ({ n: String(i + 1).padStart(2, "0"), text: t })),
       hasHowto: !!(d.howto || "").trim(),
@@ -1757,6 +1847,19 @@ class Component extends DCLogic {
   }
 
   // the picks are the guide's only source of truth, so every prompt carries them
+  // "## Heading" starts a section; blank lines split paragraphs inside it
+  parseSections(text) {
+    const out = []; let cur = null;
+    String(text || "").split("\n").forEach(l => {
+      const m = l.match(/^\s*#{1,3}\s+(.*)$/);
+      if (m) { cur = { title: m[1].trim(), lines: [] }; out.push(cur); return; }
+      if (!cur) { if (!l.trim()) return; cur = { title: "", lines: [] }; out.push(cur); }
+      cur.lines.push(l);
+    });
+    return out.map(x => ({ title: x.title, content: x.lines.join("\n").split(/\n\s*\n/).map(p => p.replace(/\s*\n\s*/g, " ").trim()).filter(Boolean).join("\n\n") }))
+      .filter(x => x.title || x.content);
+  }
+
   picksContext() {
     const d = this.state.draft || {};
     const lines = (d.picks || []).map((p, i) => {
@@ -1769,7 +1872,10 @@ class Component extends DCLogic {
     });
     return this.briefBlock() + "Guide title: " + (d.title || "(untitled)") + "\n" +
       (d.event ? "Occasion: " + d.event + "\n" : "") +
-      (lines.length ? "The picks, in order:\n" + lines.join("\n") : "No picks chosen yet.");
+      (d.format === "advice"
+        ? "This is a general shopping-advice guide with no product picks." +
+          (this.parseSections(d.sections).length ? "\nSections: " + this.parseSections(d.sections).map(x => x.title).filter(Boolean).join("; ") : "")
+        : lines.length ? "The picks, in order:\n" + lines.join("\n") : "No picks chosen yet.");
   }
 
   async runAi(key, prompt, maxTokens, apply) {
@@ -1788,7 +1894,7 @@ class Component extends DCLogic {
 
   aiTitle() {
     const d = this.state.draft || {};
-    if (!(d.picks || []).length) { this.setState({ statusText: "Add at least one pick first — the title is drafted from them.", statusKind: "error" }); return; }
+    if (d.format !== "advice" && !(d.picks || []).length) { this.setState({ statusText: "Add at least one pick first — the title is drafted from them.", statusKind: "error" }); return; }
     const prev = (d.title || "").trim();
     this.runAi("title",
       this.picksContext().replace(/^Guide title:.*\n/m, "") + "\n\nWrite the headline for a buying guide built from exactly these picks. " +
@@ -1801,7 +1907,7 @@ class Component extends DCLogic {
 
   aiKicker() {
     const d = this.state.draft || {};
-    if (!(d.picks || []).length) { this.setState({ statusText: "Add at least one pick first — the kicker is drafted from them.", statusKind: "error" }); return; }
+    if (d.format !== "advice" && !(d.picks || []).length) { this.setState({ statusText: "Add at least one pick first — the kicker is drafted from them.", statusKind: "error" }); return; }
     const prev = (d.event || "").trim();
     this.runAi("kicker",
       this.picksContext() + "\n\nWrite the kicker: the small label above the guide title. Two to four words, title case, " +
@@ -1817,7 +1923,44 @@ class Component extends DCLogic {
       t => this.setDraft({ caption: t.split("\n")[0].slice(0, 140) }));
   }
 
+  aiAdvice() {
+    const d = this.state.draft || {};
+    if (!(d.title || "").trim() && !(d.event || "").trim() && !(d.brief || "").trim()) {
+      this.setState({ statusText: "Give it a title, kicker or brief first — e.g. “How to prepare for Prime Day”.", statusKind: "error" }); return;
+    }
+    const today = new Date().toLocaleDateString("en-US", { day: "numeric", month: "long", year: "numeric" });
+    this.runAi("advice",
+      this.briefBlock() + "Topic / working title: " + ((d.title || "").trim() || "(none yet)") + "\n" +
+      (d.event ? "Occasion: " + d.event + "\n" : "") + "Today is " + today + ".\n\n" +
+      "Write a general shopping-advice guide for MistryDeals, a US site that finds verified Amazon deals. It recommends no specific products. " +
+      "Return JSON only, no prose around it, in this shape: " +
+      "{\"title\": string, \"kicker\": string, \"caption\": string, \"intro\": [string, string], \"sections\": [{\"title\": string, \"content\": string}], \"checklist\": [string]}. " +
+      "title: at most 60 characters, title case, plain search words, no colon. kicker: two to four words. caption: one line, at most 90 characters, no full stop. " +
+      "intro: two paragraphs of about 45 words. sections: four to six, each with a short heading and two short paragraphs separated by a blank line (\\n\\n), about 90 words in total; " +
+      "practical and specific — timing, what to research beforehand, using price history, budgeting, shipping and return cutoffs where relevant. " +
+      "checklist: five to seven items, at most 16 words each. Do not invent event dates unless the brief gives them; no specific prices, products or brands; no emoji; American English.", 2400,
+      t => {
+        let j = null;
+        try { j = JSON.parse(t.slice(t.indexOf("{"), t.lastIndexOf("}") + 1)); } catch (e) {}
+        if (!j || !Array.isArray(j.sections)) { setTimeout(() => this.setState({ statusText: "The draft came back malformed — try again.", statusKind: "error" }), 0); return; }
+        const patch = {
+          intro: (j.intro || []).map(p => String(p).trim()).filter(Boolean).join("\n\n"),
+          sections: j.sections.map(x => "## " + String(x.title || "").trim() + "\n" + String(x.content || "").trim()).join("\n\n"),
+          howto: (j.checklist || []).map(x => this.clean(x)).filter(Boolean).join("\n")
+        };
+        if (!(d.title || "").trim() && j.title) patch.title = String(j.title).slice(0, 90);
+        if (!(d.event || "").trim() && j.kicker) patch.event = String(j.kicker).slice(0, 40);
+        if (!(d.caption || "").trim() && j.caption) patch.caption = String(j.caption).slice(0, 140);
+        this.setDraft(patch);
+      });
+  }
+
   aiIntro() {
+    if ((this.state.draft || {}).format === "advice") {
+      return this.runAi("intro", this.picksContext() + "\n\nWrite the intro for this advice guide: exactly two paragraphs separated by one blank line, " +
+        "about 45 words each. The first says what the guide covers and who it is for; the second says what the reader will be able to do after reading. No prices, no products.", 500,
+        t => this.setDraft({ intro: t }));
+    }
     this.runAi("intro",
       this.picksContext() + "\n\nWrite the intro for this guide: exactly two paragraphs separated by one blank line, " +
       "about 45 words each. The first says what the guide covers and who it is for; the second says how the picks were " +
@@ -1826,6 +1969,11 @@ class Component extends DCLogic {
   }
 
   aiHowto() {
+    if ((this.state.draft || {}).format === "advice") {
+      return this.runAi("howto", this.picksContext() + "\n\nWrite a checklist for this guide: five to seven items, one per line, no numbering, " +
+        "at most 16 words each, each a concrete action the reader can tick off. No prices, no products.", 400,
+        t => this.setDraft({ howto: t.split("\n").map(l => this.clean(l)).filter(Boolean).slice(0, 8).join("\n") }));
+    }
     this.runAi("howto",
       this.picksContext() + "\n\nWrite four short buying tips for this category \u2014 one per line, no numbering, " +
       "at most 18 words each, each a concrete thing to check or avoid when buying. Generic price advice is not useful; " +
@@ -1994,15 +2142,17 @@ class Component extends DCLogic {
     if (!d) return;
     const title = (d.title || "").trim();
     if (!title) { this.setState({ statusText: "A guide needs a title.", statusKind: "error" }); return; }
-    if (!(d.picks || []).length) { this.setState({ statusText: "A guide needs at least one pick.", statusKind: "error" }); return; }
-    const bad = (d.picks || []).findIndex(p => !(p.title || "").trim() || !(p.amazon_asin || "").trim());
+    const advice = d.format === "advice";
+    if (advice && !(d.intro || "").trim() && !this.parseSections(d.sections).length) { this.setState({ statusText: "An advice guide needs an intro or at least one section.", statusKind: "error" }); return; }
+    if (!advice && !(d.picks || []).length) { this.setState({ statusText: "A guide needs at least one pick.", statusKind: "error" }); return; }
+    const bad = advice ? -1 : (d.picks || []).findIndex(p => !(p.title || "").trim() || !(p.amazon_asin || "").trim());
     if (bad > -1) {
       this.setState({ openPick: bad, statusText: "Pick " + (bad + 1) + " needs a title and an ASIN.", statusKind: "error" });
       return;
     }
     // hard stop: a pick with no write-up renders as a bare price on the site,
     // which is the one thing a buying guide is not
-    const blank = (d.picks || []).map((p, i) => (p.description || "").trim() ? -1 : i).filter(i => i > -1);
+    const blank = advice ? [] : (d.picks || []).map((p, i) => (p.description || "").trim() ? -1 : i).filter(i => i > -1);
     if (blank.length) {
       this.setState({
         openPick: blank[0],
@@ -2018,11 +2168,13 @@ class Component extends DCLogic {
     const iso = d.date ? new Date(d.date + "T12:00:00").toISOString() : (d.published ? new Date().toISOString() : null);
     const content = Object.assign({}, d.content || {}, {
       subtitle: (d.caption || "").trim(),
-      format: d.format === "tiers" ? "tiers" : "picks",
+      cover_image: String(d.cover || "").trim() || null,
+      format: advice ? "advice" : d.format === "tiers" ? "tiers" : "picks",
+      ...(advice ? { sections: this.parseSections(d.sections) } : {}),
       brief: (d.brief || "").trim(),
       intro: (d.intro || "").split(/\n\s*\n/).map(s => s.trim()).filter(Boolean),
       howto: (d.howto || "").split("\n").map(s => s.trim()).filter(Boolean),
-      products: (d.picks || []).map(p => ({
+      products: (advice ? [] : (d.picks || [])).map(p => ({
         amazon_asin: (p.amazon_asin || "").trim().toUpperCase(),
         title: (p.title || "").trim(),
         category: (p.category || "").trim(),
@@ -2051,7 +2203,9 @@ class Component extends DCLogic {
     let queueMsg = "";
     // "Save only" skips the queue; the stamp is cleared so Publish stays locked until a queued save
     if (!d.published && quick) delete content.sync_queued_at;
-    if (!d.published && !quick) {
+    if (!d.published && advice) {
+      content.sync_queued_at = new Date().toISOString();
+    } else if (!d.published && !quick) {
       queueMsg = await this.queueForSync((d.picks || []).map(p => p.amazon_asin));
       const ok = !/failed|could not/i.test(queueMsg);
       content.sync_queued_at = ok ? new Date().toISOString() : null;
@@ -2148,7 +2302,7 @@ class Component extends DCLogic {
   // with no picks on the live site.
   async togglePublished(row) {
     const next = !row.published;
-    if (next && !(((row.content || {}).products || []).length)) {
+    if (next && (row.content || {}).format !== "advice" && !(((row.content || {}).products || []).length)) {
       this.setState({
         statusText: "\u201c" + this.decode(row.title || "this guide") + "\u201d has no picks yet \u2014 open it, fill the picks, then publish.",
         statusKind: "error"
@@ -2196,6 +2350,25 @@ class Component extends DCLogic {
 
   // The host preview can swallow a "#brands" hash on navigation, so the wanted
   // tab is also left in sessionStorage for the deal-queue page to pick up.
+  async uploadCover(file) {
+    if (!file) return;
+    if (!/^image\//.test(file.type || "")) { this.setState({ statusText: "Pick an image file (JPG, PNG or WebP).", statusKind: "error" }); return; }
+    if (file.size > 5 * 1024 * 1024) { this.setState({ statusText: "That image is over 5 MB \u2014 resize it and try again.", statusKind: "error" }); return; }
+    this.setState({ coverBusy: true, statusText: "Uploading cover\u2026", statusKind: "info" });
+    const ext = String((file.name || "").split(".").pop() || "jpg").toLowerCase().replace(/[^a-z0-9]/g, "") || "jpg";
+    const path = "guides/" + Date.now() + "." + ext;
+    try {
+      const res = await this.req(BASE + "/storage/v1/object/social-images/" + path, {
+        method: "POST", headers: this.headers({ "Content-Type": file.type, "x-upsert": "true" }), body: file
+      });
+      if (!res.ok) throw new Error(String(res.status));
+      this.setDraft({ cover: BASE + "/storage/v1/object/public/social-images/" + path });
+      this.setState({ coverBusy: false, statusText: "Cover uploaded \u2014 save the guide to keep it.", statusKind: "info" });
+    } catch (e) {
+      this.setState({ coverBusy: false, statusText: "Upload failed (" + e.message + "). Paste an image URL instead.", statusKind: "error" });
+    }
+  }
+
   markTab(label) {
     const tab = label === "Brand rules" ? "brands" : label === "Scrape log" ? "scrapes" : "";
     if (!tab) return null;
@@ -2261,7 +2434,7 @@ class Component extends DCLogic {
       return true;
     });
     // drafts that can go live right now float to the top; everything else keeps its order
-    const ready = g => !g.published && !!((g.content || {}).sync_queued_at) && !!(((g.content || {}).products || []).length);
+    const ready = g => !g.published && !!((g.content || {}).sync_queued_at) && ((g.content || {}).format === "advice" || !!(((g.content || {}).products || []).length));
     shown.sort((a, b) => (ready(b) ? 1 : 0) - (ready(a) ? 1 : 0));
     const cats = this.state.catNames || [];
     const pickCount = (d && (d.picks || []).length) || 0;
@@ -2296,8 +2469,8 @@ class Component extends DCLogic {
         { label: "Catalogue", href: this.adminHref("catalogue") },
         { label: "Deal queue", href: this.adminHref("dealqueue") },
         { label: "Social", href: this.adminHref("carousel") },
-        { label: "Brand rules", href: this.adminHref("brands") },
-        { label: "Scrape log", href: this.adminHref("scrapes") },
+        { label: "Brand rules", href: this.adminHref("dealqueue") + "#brands" },
+        { label: "Scrape log", href: this.adminHref("dealqueue") + "#scrapes" },
         { label: "Reddit poster", href: this.adminHref("reddit") },
         { label: "Buying guides", href: this.adminHref("guides"), here: true },
         { label: "View site", href: this.onAdmin() ? "/" : "MistryDeals Site.dc.html" }
@@ -2307,8 +2480,8 @@ class Component extends DCLogic {
       hCatalogue: this.adminHref("catalogue"),
       hQueue: this.adminHref("dealqueue"),
       hCarousel: this.adminHref("carousel"),
-      hBrands: this.adminHref("brands"),
-      hScrapes: this.adminHref("scrapes"),
+      hBrands: this.adminHref("dealqueue") + "#brands",
+      hScrapes: this.adminHref("dealqueue") + "#scrapes",
       hReddit: this.adminHref("reddit"),
       hSite: this.onAdmin() ? "/" : "MistryDeals Site.dc.html",
 
@@ -2325,20 +2498,21 @@ class Component extends DCLogic {
         const on = d && d.id === g.id;
         const gp = (g.content || {}).products || [];
         const n = gp.length;
+        const adv = (g.content || {}).format === "advice";
         // flagged in the list too, so a stale live guide is visible without opening it
         const stale = gp.filter(p => this.driftOf(p)).length;
         return {
           title: this.decode(g.title || "") || "(untitled)",
-          meta: [ready(g) ? "Publishes " + this.when(new Date().toISOString()) + " when you press Publish" : this.when(g.published_at), n + (n === 1 ? " pick" : " picks"), g.event_name || "",
+          meta: [ready(g) ? "Publishes " + this.when(new Date().toISOString()) + " when you press Publish" : this.when(g.published_at), adv ? "Advice" : n + (n === 1 ? " pick" : " picks"), g.event_name || "",
             stale ? stale + " price" + (stale === 1 ? "" : "s") + " moved" : ""].filter(Boolean).join("  \u00b7  "),
           badge: g.published ? "Live" : ready(g) ? "Ready" : "Draft",
           badgeStyle: "font-family:var(--font-heading);font-weight:700;font-size:9px;letter-spacing:.08em;text-transform:uppercase;padding:3px 6px;" +
             (g.published ? "background:var(--color-text);color:var(--color-bg)" : ready(g) ? "background:var(--color-accent);color:#16233a" : "border:1px solid var(--color-divider);color:var(--color-neutral-700)"),
           toggleLabel: this.state.busyId === g.id ? "Working\u2026"
-            : g.published ? "Unpublish" : (!n ? "Needs picks" : ((g.content || {}).sync_queued_at ? "Publish" : "Queue first")),
+            : g.published ? "Unpublish" : (!n && !adv ? "Needs picks" : ((g.content || {}).sync_queued_at ? "Publish" : "Queue first")),
           toggleStyle: "font:inherit;font-family:var(--font-heading);font-weight:700;font-size:10px;letter-spacing:.08em;text-transform:uppercase;" +
             "background:none;padding:6px 9px;cursor:pointer;white-space:nowrap;border:1px solid var(--color-divider);color:var(--color-" +
-            (!g.published && !n ? "neutral-600" : "text") + ")",
+            (!g.published && !n && !adv ? "neutral-600" : "text") + ")",
           toggle: () => this.togglePublished(g),
           open: () => this.openGuide(g),
           wrapStyle: "border:1px solid " + (on ? "var(--color-text)" : "var(--color-divider)") + ";border-width:" + (on ? "2px" : "1px") + ";margin-bottom:8px",
@@ -2351,7 +2525,7 @@ class Component extends DCLogic {
       emptyNote: all.length
         ? (() => {
           const live = all.filter(g => g.published).length;
-          const empty = all.filter(g => !g.published && !(((g.content || {}).products || []).length)).length;
+          const empty = all.filter(g => !g.published && (g.content || {}).format !== "advice" && !(((g.content || {}).products || []).length)).length;
           return "There are " + all.length + " guides in the calendar and " + live + " are live. " +
             (empty ? "The other " + empty + " are titles and dates only \u2014 no picks written yet, so each needs its picks filled before it can go live. " : "") +
             "Open one and import its picks from a document, or start a new guide.";
@@ -2368,7 +2542,7 @@ class Component extends DCLogic {
       // a draft you can come back to, which "Create guide" did not say
       saveLabel: this.state.saving ? "Saving\u2026"
         : (d && d.published ? (d.id ? "Save changes" : "Save and publish")
-          : "Save as draft + add products to sync queue"),
+          : (d && d.format === "advice" ? "Save as draft" : "Save as draft + add products to sync queue")),
       closeDraft: () => this.closeDraft(),
       listOpen: !!this.state.listOpen,
       listOpenClass: this.state.listOpen ? "is-open" : "",
@@ -2376,7 +2550,7 @@ class Component extends DCLogic {
       listCaret: this.state.listOpen ? "\u2212" : "+",
       toggleList: () => this.setState({ listOpen: !this.state.listOpen }),
       saveOnly: () => this.save({ skipQueue: true }),
-      canSaveOnly: !!(d && !d.published),
+      canSaveOnly: !!(d && !d.published && d.format !== "advice"),
       saveOnlyLabel: this.state.saving ? "Saving\u2026" : "Save only",
       canDelete: !!(d && d.id),
       askDelete: () => this.setState({ confirm: { kind: "delete" } }),
@@ -2404,17 +2578,34 @@ class Component extends DCLogic {
       onTitle: e => this.setDraft({ title: e.target.value }),
       fCaption: d ? d.caption : "",
       onCaption: e => this.setDraft({ caption: e.target.value }),
+      fCover: d ? (d.cover || "") : "",
+      onCover: e => this.setDraft({ cover: e.target.value }),
+      onCoverFile: e => { const fl = e.target.files && e.target.files[0]; e.target.value = ""; this.uploadCover(fl); },
+      hasCover: !!(d && String(d.cover || "").trim()),
+      clearCover: () => this.setDraft({ cover: "" }),
+      coverUploadLabel: this.state.coverBusy ? "Uploading\u2026" : "Upload image",
+      coverThumb: "width:160px;height:90px;flex:none;box-sizing:border-box;border:1px solid var(--color-divider);background:" +
+        (d && String(d.cover || "").trim() ? "var(--color-neutral-200) center/cover no-repeat url(\"" + String(d.cover).trim().replace(/"/g, "%22") + "\");filter:grayscale(1)" : "repeating-linear-gradient(135deg, transparent 0 8px, var(--color-divider) 8px 9px)"),
       fFormat: d ? (d.format || "picks") : "picks",
       onFormat: e => this.setDraft({ format: e.target.value }),
+      isAdvice: !!(d && d.format === "advice"),
+      notAdvice: !(d && d.format === "advice"),
+      howtoLabel: d && d.format === "advice" ? "Checklist" : "How to buy well",
+      fSections: d ? (d.sections || "") : "",
+      onSections: e => this.setDraft({ sections: e.target.value }),
+      sectionsNote: (() => { const n = d ? this.parseSections(d.sections).length : 0; return n ? n + (n === 1 ? " section" : " sections") + " · start each with ## and a heading; blank lines split paragraphs." : "Start each section with ## and a heading; blank lines split paragraphs."; })(),
+      aiAdviceBtn: this.aiBtn("advice", "Generate advice guide with AI"),
+      aiAdvice: () => this.aiAdvice(),
       ...(() => {
         const tiers = !!(d && d.format === "tiers");
         const err = tiers ? this.tierErrors(d.picks || []) : "";
         return {
-          formatHint: !tiers ? "Each pick is a different product." : err ? "Fix before publishing: " + err + "." : "Each group has a Budget and an Upgrade pick; Splurge is optional.",
+          formatHint: d && d.format === "advice" ? "No products — intro, sections and a checklist. Generate them below or write your own." : !tiers ? "Each pick is a different product." : err ? "Fix before publishing: " + err + "." : "Each group has a Budget and an Upgrade pick; Splurge is optional.",
           formatHintStyle: "font-size:11px;line-height:1.35;margin-top:4px;color:var(--color-" + (err ? "accent-700" : "neutral-600") + ")"
         };
       })(),
       copyTiersTemplate: () => this.copyText(this.IMPORT_TEMPLATE_TIERS),
+      copyAdviceTemplate: () => this.copyText(this.IMPORT_TEMPLATE_ADVICE),
       fBrief: d ? (d.brief || "") : "",
       onBrief: e => this.setDraft({ brief: e.target.value }),
       fEvent: d ? d.event : "",
