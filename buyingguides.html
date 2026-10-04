@@ -300,6 +300,19 @@
               <label style="display:flex;align-items:center;gap:8px">Caption<button onClick="{{ aiCaption }}" style="{{ aiCaptionBtn.style }}">{{ aiCaptionBtn.label }}</button></label>
               <input class="input" placeholder="One line under the title" value="{{ fCaption }}" onChange="{{ onCaption }}" />
             </div>
+            <div class="field" style="margin:0;grid-column:1 / -1">
+              <label style="display:flex;align-items:baseline;gap:8px;flex-wrap:wrap">Cover image<span style="font-weight:400;text-transform:none;letter-spacing:0;font-size:11px;color:var(--color-neutral-600)">Optional &#183; shown on guide cards in black and white. Without one, cards use the top pick&#8217;s photo, or a type cover.</span></label>
+              <div style="display:flex;gap:12px;align-items:flex-start;flex-wrap:wrap">
+                <div style="{{ coverThumb }}"></div>
+                <div style="flex:1 1 280px;min-width:0;display:flex;flex-direction:column;gap:8px">
+                  <input class="input" placeholder="https://&#8230; image URL, or upload a file" value="{{ fCover }}" onChange="{{ onCover }}" />
+                  <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center">
+                    <label class="btn btn-secondary" style="font-size:12px;padding:7px 12px;cursor:pointer;margin:0;text-transform:none;letter-spacing:0">{{ coverUploadLabel }}<input type="file" accept="image/*" onChange="{{ onCoverFile }}" style="display:none" /></label>
+                    <sc-if value="{{ hasCover }}" hint-placeholder-val="{{ false }}"><button onClick="{{ clearCover }}" class="btn btn-ghost" style="font-size:12px;padding:7px 12px">Remove</button></sc-if>
+                  </div>
+                </div>
+              </div>
+            </div>
             <div class="field" style="margin:0">
               <label>Guide type</label>
               <select class="input" value="{{ fFormat }}" onChange="{{ onFormat }}"><option value="picks">Picks &#183; different products</option><option value="tiers">Tiers &#183; budget / upgrade / splurge</option><option value="advice">Advice &#183; no products</option></select>
@@ -1007,7 +1020,7 @@ class Component extends DCLogic {
   blankDraft() {
     return {
       id: null, title: "", caption: "", event: "", published: false, date: "",
-      intro: "", howto: "", brief: "", picks: [], content: {}, format: "picks", sections: ""
+      intro: "", howto: "", brief: "", picks: [], content: {}, format: "picks", sections: "", cover: ""
     };
   }
 
@@ -1025,6 +1038,7 @@ class Component extends DCLogic {
       howto: (c.howto || []).join("\n"),
       brief: c.brief || "",
       format: c.format === "tiers" || c.format === "advice" ? c.format : "picks",
+      cover: c.cover_image || "",
       sections: (c.sections || []).map(x => "## " + (x.title || "") + "\n" + String(x.content || "")).join("\n\n"),
       picks: (c.products || []).map(p => Object.assign({}, p)),
       // every other key in content (sections, faq, anything the app adds later)
@@ -2154,6 +2168,7 @@ class Component extends DCLogic {
     const iso = d.date ? new Date(d.date + "T12:00:00").toISOString() : (d.published ? new Date().toISOString() : null);
     const content = Object.assign({}, d.content || {}, {
       subtitle: (d.caption || "").trim(),
+      cover_image: String(d.cover || "").trim() || null,
       format: advice ? "advice" : d.format === "tiers" ? "tiers" : "picks",
       ...(advice ? { sections: this.parseSections(d.sections) } : {}),
       brief: (d.brief || "").trim(),
@@ -2335,6 +2350,25 @@ class Component extends DCLogic {
 
   // The host preview can swallow a "#brands" hash on navigation, so the wanted
   // tab is also left in sessionStorage for the deal-queue page to pick up.
+  async uploadCover(file) {
+    if (!file) return;
+    if (!/^image\//.test(file.type || "")) { this.setState({ statusText: "Pick an image file (JPG, PNG or WebP).", statusKind: "error" }); return; }
+    if (file.size > 5 * 1024 * 1024) { this.setState({ statusText: "That image is over 5 MB \u2014 resize it and try again.", statusKind: "error" }); return; }
+    this.setState({ coverBusy: true, statusText: "Uploading cover\u2026", statusKind: "info" });
+    const ext = String((file.name || "").split(".").pop() || "jpg").toLowerCase().replace(/[^a-z0-9]/g, "") || "jpg";
+    const path = "guides/" + Date.now() + "." + ext;
+    try {
+      const res = await this.req(BASE + "/storage/v1/object/social-images/" + path, {
+        method: "POST", headers: this.headers({ "Content-Type": file.type, "x-upsert": "true" }), body: file
+      });
+      if (!res.ok) throw new Error(String(res.status));
+      this.setDraft({ cover: BASE + "/storage/v1/object/public/social-images/" + path });
+      this.setState({ coverBusy: false, statusText: "Cover uploaded \u2014 save the guide to keep it.", statusKind: "info" });
+    } catch (e) {
+      this.setState({ coverBusy: false, statusText: "Upload failed (" + e.message + "). Paste an image URL instead.", statusKind: "error" });
+    }
+  }
+
   markTab(label) {
     const tab = label === "Brand rules" ? "brands" : label === "Scrape log" ? "scrapes" : "";
     if (!tab) return null;
@@ -2544,6 +2578,14 @@ class Component extends DCLogic {
       onTitle: e => this.setDraft({ title: e.target.value }),
       fCaption: d ? d.caption : "",
       onCaption: e => this.setDraft({ caption: e.target.value }),
+      fCover: d ? (d.cover || "") : "",
+      onCover: e => this.setDraft({ cover: e.target.value }),
+      onCoverFile: e => { const fl = e.target.files && e.target.files[0]; e.target.value = ""; this.uploadCover(fl); },
+      hasCover: !!(d && String(d.cover || "").trim()),
+      clearCover: () => this.setDraft({ cover: "" }),
+      coverUploadLabel: this.state.coverBusy ? "Uploading\u2026" : "Upload image",
+      coverThumb: "width:160px;height:90px;flex:none;box-sizing:border-box;border:1px solid var(--color-divider);background:" +
+        (d && String(d.cover || "").trim() ? "var(--color-neutral-200) center/cover no-repeat url(\"" + String(d.cover).trim().replace(/"/g, "%22") + "\");filter:grayscale(1)" : "repeating-linear-gradient(135deg, transparent 0 8px, var(--color-divider) 8px 9px)"),
       fFormat: d ? (d.format || "picks") : "picks",
       onFormat: e => this.setDraft({ format: e.target.value }),
       isAdvice: !!(d && d.format === "advice"),

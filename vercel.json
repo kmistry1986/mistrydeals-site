@@ -67,6 +67,10 @@
   ],
   "rewrites": [
     {
+      "source": "/watchadmin",
+      "destination": "/watchadmin.html"
+    },
+    {
       "source": "/(.*)/(DealCard|DealCardMini|DealRow|ProductImage)\\.dc\\.html",
       "destination": "/$2.dc.html"
     },

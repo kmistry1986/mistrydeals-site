@@ -130,6 +130,8 @@
       /* every tap target clears 44px */
       .nav button, .m-tap button { min-height: 44px; min-width: 44px; }
     }
+    .nav-links a { white-space: nowrap; }
+    @media (max-width: 1180px) { .nav-links { display: none !important; } }
   </style>
 </helmet>
 
@@ -151,18 +153,18 @@
       <a href="/guides" onClick="{{ goGuide }}">Buying Guides</a>
       <a href="/price-watch">Price Watch</a><a href="/about" onClick="{{ goAbout }}">About</a>
     </div>
-    <div class="m-wrap nav-search" style="display:flex;gap:8px;align-items:center;min-width:280px">
-      <input class="input" placeholder="{{ searchLabel }}" value="{{ query }}" onChange="{{ onQuery }}" onKeyDown="{{ onQueryKey }}" />
-      <button onClick="{{ runSearch }}" class="btn btn-secondary">Search</button>
+    <div class="m-wrap nav-search" style="display:flex;gap:8px;align-items:center;min-width:0;margin-left:auto;justify-content:flex-end">
+      <sc-if value="{{ searchOpen }}" hint-placeholder-val="{{ false }}"><input ref="{{ searchRef }}" class="input" style="flex:1 1 220px;min-width:0;width:auto" placeholder="{{ searchLabel }}" value="{{ query }}" onChange="{{ onQuery }}" onKeyDown="{{ onQueryKey }}" />
+      <button onClick="{{ runSearch }}" class="btn btn-secondary">Search</button><button onClick="{{ closeSearch }}" aria-label="Close search" title="Close search" style="font:inherit;flex:none;width:44px;height:44px;display:flex;align-items:center;justify-content:center;cursor:pointer;background:transparent;border:1px solid var(--color-divider);color:var(--color-text);padding:0;font-size:20px;line-height:1">&#215;</button></sc-if><sc-if value="{{ searchClosed }}" hint-placeholder-val="{{ true }}"><button onClick="{{ openSearch }}" aria-label="Search deals" title="Search deals" style="font:inherit;flex:none;width:44px;height:44px;display:flex;align-items:center;justify-content:center;cursor:pointer;background:transparent;border:1px solid var(--color-divider);color:var(--color-text);padding:0"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="8"></circle><path d="m21 21-4.3-4.3"></path></svg></button></sc-if>
       <div style="position:relative;flex:none"><button onClick="{{ toggleMenu }}" title="Menu" aria-label="Menu" aria-expanded="{{ menuExpanded }}" style="{{ tMenuBtn }}"><span style="display:block;width:16px;height:2px;background:currentColor"></span><span style="display:block;width:16px;height:2px;background:currentColor"></span><span style="display:block;width:16px;height:2px;background:currentColor"></span></button>
       <sc-if value="{{ menuOpen }}" hint-placeholder-val="{{ false }}">
         <div onClick="{{ closeMenu }}" style="position:fixed;inset:0;z-index:40"></div>
         <div style="position:absolute;right:0;top:calc(100% + 8px);z-index:41;min-width:236px;background:var(--color-bg);border:2px solid var(--color-text);padding:6px 0;box-shadow:var(--shadow-lg)">
-          <sc-for list="{{ menuItems }}" as="m" hint-placeholder-count="5">
+          <a href="{{ acctHref }}" style="display:flex;flex-direction:column;justify-content:center;gap:2px;min-height:52px;padding:6px 16px;text-decoration:none;color:var(--color-text);border-bottom:2px solid var(--color-divider);margin-bottom:6px"><span style="font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--color-neutral-700)">{{ acctKicker }}</span><span style="font-family:var(--font-heading);font-weight:700;font-size:13px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:240px">{{ acctLine }}</span></a><sc-for list="{{ menuItems }}" as="m" hint-placeholder-count="5">
             <a href="{{ m.href }}" onClick="{{ m.open }}" style="{{ m.style }}">{{ m.label }}</a>
           </sc-for>
           <div style="height:2px;background:var(--color-divider);margin:6px 0"></div>
-          <button onClick="{{ toggleDarkMenu }}" style="{{ tMenuDark }}"><span>{{ darkRowLabel }}</span><span style="font-size:15px">{{ darkGlyph }}</span></button>
+          <button onClick="{{ toggleDarkMenu }}" style="{{ tMenuDark }}"><span>{{ darkRowLabel }}</span><span style="font-size:15px">{{ darkGlyph }}</span></button><sc-if value="{{ acctIn }}" hint-placeholder-val="{{ false }}"><button onClick="{{ acctSignOut }}" style="{{ tMenuDark }}"><span>Sign out</span><span style="font-size:15px">&#8594;</span></button></sc-if>
         </div>
       </sc-if></div>
     </div>
@@ -341,7 +343,9 @@
       <sc-for list="{{ guides }}" as="g" hint-placeholder-count="3">
         <a href="{{ g.href }}" onClick="{{ g.open }}" style="text-decoration:none;color:inherit;border-top:2px solid var(--color-divider);padding-top:14px;display:flex;flex-direction:column;gap:10px" style-hover="border-color:var(--color-accent-700)">
           <span style="font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--color-accent-700)">{{ g.kicker }}</span>
-          <sc-if value="{{ g.img }}" hint-placeholder-val="{{ false }}">
+          <sc-if value="{{ g.coverImg }}" hint-placeholder-val="{{ false }}"><span style="display:block;height:150px;position:relative;overflow:hidden"><span style="{{ g.coverStyle }}"></span></span></sc-if>
+            <sc-if value="{{ g.typeCover }}" hint-placeholder-val="{{ false }}"><span style="display:flex;flex-direction:column;justify-content:flex-end;gap:6px;height:150px;box-sizing:border-box;padding:16px;background:var(--color-accent);color:#16233a"><span style="font-size:10px;letter-spacing:.14em;text-transform:uppercase;font-weight:700">MistryDeals guide</span><span style="font-family:var(--font-heading);font-weight:800;font-size:26px;line-height:1.02;letter-spacing:-.01em;text-wrap:balance">{{ g.kicker }}</span></span></sc-if>
+          <sc-if value="{{ g.prodImg }}" hint-placeholder-val="{{ false }}">
             <span style="display:block;height:150px;background:#ffffff;position:relative;overflow:hidden">
               <dc-import name="ProductImage" src="{{ g.img }}" alt="" pad="12px" hint-size="100%,100%"></dc-import>
             </span>
@@ -396,17 +400,17 @@
     <div class="m-wrap nav-links" style="display:flex;gap:20px;align-items:center">
       <a href="/" onClick="{{ goHome }}">Featured Deals</a><a href="/prime" onClick="{{ goPrime }}">Prime Card Deals</a><a href="/categories" aria-current="page" onClick="{{ goCat }}">Categories</a><a href="/guides" onClick="{{ goGuide }}">Buying Guides</a><a href="/price-watch">Price Watch</a><a href="/about" onClick="{{ goAbout }}">About</a>
     </div>
-    <div class="m-wrap nav-search" style="display:flex;gap:8px;align-items:center;min-width:280px">
-      <input class="input" placeholder="{{ searchLabel }}" value="{{ query }}" onChange="{{ onQuery }}" onKeyDown="{{ onQueryKey }}" /><button onClick="{{ runSearch }}" class="btn btn-secondary">Search</button>
+    <div class="m-wrap nav-search" style="display:flex;gap:8px;align-items:center;min-width:0;margin-left:auto;justify-content:flex-end">
+      <sc-if value="{{ searchOpen }}" hint-placeholder-val="{{ false }}"><input ref="{{ searchRef }}" class="input" style="flex:1 1 220px;min-width:0;width:auto" placeholder="{{ searchLabel }}" value="{{ query }}" onChange="{{ onQuery }}" onKeyDown="{{ onQueryKey }}" /><button onClick="{{ runSearch }}" class="btn btn-secondary">Search</button><button onClick="{{ closeSearch }}" aria-label="Close search" title="Close search" style="font:inherit;flex:none;width:44px;height:44px;display:flex;align-items:center;justify-content:center;cursor:pointer;background:transparent;border:1px solid var(--color-divider);color:var(--color-text);padding:0;font-size:20px;line-height:1">&#215;</button></sc-if><sc-if value="{{ searchClosed }}" hint-placeholder-val="{{ true }}"><button onClick="{{ openSearch }}" aria-label="Search deals" title="Search deals" style="font:inherit;flex:none;width:44px;height:44px;display:flex;align-items:center;justify-content:center;cursor:pointer;background:transparent;border:1px solid var(--color-divider);color:var(--color-text);padding:0"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="8"></circle><path d="m21 21-4.3-4.3"></path></svg></button></sc-if>
       <div style="position:relative;flex:none"><button onClick="{{ toggleMenu }}" title="Menu" aria-label="Menu" aria-expanded="{{ menuExpanded }}" style="{{ tMenuBtn }}"><span style="display:block;width:16px;height:2px;background:currentColor"></span><span style="display:block;width:16px;height:2px;background:currentColor"></span><span style="display:block;width:16px;height:2px;background:currentColor"></span></button>
       <sc-if value="{{ menuOpen }}" hint-placeholder-val="{{ false }}">
         <div onClick="{{ closeMenu }}" style="position:fixed;inset:0;z-index:40"></div>
         <div style="position:absolute;right:0;top:calc(100% + 8px);z-index:41;min-width:236px;background:var(--color-bg);border:2px solid var(--color-text);padding:6px 0;box-shadow:var(--shadow-lg)">
-          <sc-for list="{{ menuItems }}" as="m" hint-placeholder-count="5">
+          <a href="{{ acctHref }}" style="display:flex;flex-direction:column;justify-content:center;gap:2px;min-height:52px;padding:6px 16px;text-decoration:none;color:var(--color-text);border-bottom:2px solid var(--color-divider);margin-bottom:6px"><span style="font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--color-neutral-700)">{{ acctKicker }}</span><span style="font-family:var(--font-heading);font-weight:700;font-size:13px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:240px">{{ acctLine }}</span></a><sc-for list="{{ menuItems }}" as="m" hint-placeholder-count="5">
             <a href="{{ m.href }}" onClick="{{ m.open }}" style="{{ m.style }}">{{ m.label }}</a>
           </sc-for>
           <div style="height:2px;background:var(--color-divider);margin:6px 0"></div>
-          <button onClick="{{ toggleDarkMenu }}" style="{{ tMenuDark }}"><span>{{ darkRowLabel }}</span><span style="font-size:15px">{{ darkGlyph }}</span></button>
+          <button onClick="{{ toggleDarkMenu }}" style="{{ tMenuDark }}"><span>{{ darkRowLabel }}</span><span style="font-size:15px">{{ darkGlyph }}</span></button><sc-if value="{{ acctIn }}" hint-placeholder-val="{{ false }}"><button onClick="{{ acctSignOut }}" style="{{ tMenuDark }}"><span>Sign out</span><span style="font-size:15px">&#8594;</span></button></sc-if>
         </div>
       </sc-if></div>
     </div>
@@ -513,16 +517,16 @@
   <div class="nav" style="max-width:1280px;margin:0 auto;gap:24px">
     <a href="/" onClick="{{ goHome }}" class="nav-brand m-wrap" style="display:flex;align-items:center;gap:8px;text-decoration:none"><span style="position:relative;width:19.6px;height:19.6px;flex:none;display:block"><span style="position:absolute;left:0;top:0;width:14px;height:14px;border:2.1px solid var(--color-text);border-radius:50%;box-sizing:border-box;display:block"></span><span style="position:absolute;left:11.9px;top:11.2px;width:7.7px;height:2.1px;background:var(--color-accent);transform:rotate(45deg);transform-origin:left center;display:block"></span></span>MISTRYDEALS</a>
     <div class="m-wrap nav-links" style="display:flex;gap:20px;align-items:center"><a href="/" onClick="{{ goHome }}">Featured Deals</a><a href="/prime" onClick="{{ goPrime }}">Prime Card Deals</a><a href="/categories" onClick="{{ goCat }}">Categories</a><a href="/guides" onClick="{{ goGuide }}">Buying Guides</a><a href="/price-watch">Price Watch</a><a href="/about" onClick="{{ goAbout }}">About</a></div>
-    <div class="m-wrap nav-search" style="display:flex;gap:8px;align-items:center;min-width:280px"><input class="input" placeholder="{{ searchLabel }}" value="{{ query }}" onChange="{{ onQuery }}" onKeyDown="{{ onQueryKey }}" /><button onClick="{{ runSearch }}" class="btn btn-secondary">Search</button>
+    <div class="m-wrap nav-search" style="display:flex;gap:8px;align-items:center;min-width:0;margin-left:auto;justify-content:flex-end"><sc-if value="{{ searchOpen }}" hint-placeholder-val="{{ false }}"><input ref="{{ searchRef }}" class="input" style="flex:1 1 220px;min-width:0;width:auto" placeholder="{{ searchLabel }}" value="{{ query }}" onChange="{{ onQuery }}" onKeyDown="{{ onQueryKey }}" /><button onClick="{{ runSearch }}" class="btn btn-secondary">Search</button><button onClick="{{ closeSearch }}" aria-label="Close search" title="Close search" style="font:inherit;flex:none;width:44px;height:44px;display:flex;align-items:center;justify-content:center;cursor:pointer;background:transparent;border:1px solid var(--color-divider);color:var(--color-text);padding:0;font-size:20px;line-height:1">&#215;</button></sc-if><sc-if value="{{ searchClosed }}" hint-placeholder-val="{{ true }}"><button onClick="{{ openSearch }}" aria-label="Search deals" title="Search deals" style="font:inherit;flex:none;width:44px;height:44px;display:flex;align-items:center;justify-content:center;cursor:pointer;background:transparent;border:1px solid var(--color-divider);color:var(--color-text);padding:0"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="8"></circle><path d="m21 21-4.3-4.3"></path></svg></button></sc-if>
       <div style="position:relative;flex:none"><button onClick="{{ toggleMenu }}" title="Menu" aria-label="Menu" aria-expanded="{{ menuExpanded }}" style="{{ tMenuBtn }}"><span style="display:block;width:16px;height:2px;background:currentColor"></span><span style="display:block;width:16px;height:2px;background:currentColor"></span><span style="display:block;width:16px;height:2px;background:currentColor"></span></button>
       <sc-if value="{{ menuOpen }}" hint-placeholder-val="{{ false }}">
         <div onClick="{{ closeMenu }}" style="position:fixed;inset:0;z-index:40"></div>
         <div style="position:absolute;right:0;top:calc(100% + 8px);z-index:41;min-width:236px;background:var(--color-bg);border:2px solid var(--color-text);padding:6px 0;box-shadow:var(--shadow-lg)">
-          <sc-for list="{{ menuItems }}" as="m" hint-placeholder-count="5">
+          <a href="{{ acctHref }}" style="display:flex;flex-direction:column;justify-content:center;gap:2px;min-height:52px;padding:6px 16px;text-decoration:none;color:var(--color-text);border-bottom:2px solid var(--color-divider);margin-bottom:6px"><span style="font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--color-neutral-700)">{{ acctKicker }}</span><span style="font-family:var(--font-heading);font-weight:700;font-size:13px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:240px">{{ acctLine }}</span></a><sc-for list="{{ menuItems }}" as="m" hint-placeholder-count="5">
             <a href="{{ m.href }}" onClick="{{ m.open }}" style="{{ m.style }}">{{ m.label }}</a>
           </sc-for>
           <div style="height:2px;background:var(--color-divider);margin:6px 0"></div>
-          <button onClick="{{ toggleDarkMenu }}" style="{{ tMenuDark }}"><span>{{ darkRowLabel }}</span><span style="font-size:15px">{{ darkGlyph }}</span></button>
+          <button onClick="{{ toggleDarkMenu }}" style="{{ tMenuDark }}"><span>{{ darkRowLabel }}</span><span style="font-size:15px">{{ darkGlyph }}</span></button><sc-if value="{{ acctIn }}" hint-placeholder-val="{{ false }}"><button onClick="{{ acctSignOut }}" style="{{ tMenuDark }}"><span>Sign out</span><span style="font-size:15px">&#8594;</span></button></sc-if>
         </div>
       </sc-if></div></div>
   </div>
@@ -608,16 +612,16 @@
   <div class="nav" style="max-width:1280px;margin:0 auto;gap:24px">
     <a href="/" onClick="{{ goHome }}" class="nav-brand m-wrap" style="display:flex;align-items:center;gap:8px;text-decoration:none"><span style="position:relative;width:19.6px;height:19.6px;flex:none;display:block"><span style="position:absolute;left:0;top:0;width:14px;height:14px;border:2.1px solid var(--color-text);border-radius:50%;box-sizing:border-box;display:block"></span><span style="position:absolute;left:11.9px;top:11.2px;width:7.7px;height:2.1px;background:var(--color-accent);transform:rotate(45deg);transform-origin:left center;display:block"></span></span>MISTRYDEALS</a>
     <div class="m-wrap nav-links" style="display:flex;gap:20px;align-items:center"><a href="/" onClick="{{ goHome }}">Featured Deals</a><a href="/prime" onClick="{{ goPrime }}">Prime Card Deals</a><a href="/categories" onClick="{{ goCat }}">Categories</a><a href="/guides" aria-current="page" onClick="{{ goGuide }}">Buying Guides</a><a href="/price-watch">Price Watch</a><a href="/about" onClick="{{ goAbout }}">About</a></div>
-    <div class="m-wrap nav-search" style="display:flex;gap:8px;align-items:center;min-width:280px"><input class="input" placeholder="{{ searchLabel }}" value="{{ query }}" onChange="{{ onQuery }}" onKeyDown="{{ onQueryKey }}" /><button onClick="{{ runSearch }}" class="btn btn-secondary">Search</button>
+    <div class="m-wrap nav-search" style="display:flex;gap:8px;align-items:center;min-width:0;margin-left:auto;justify-content:flex-end"><sc-if value="{{ searchOpen }}" hint-placeholder-val="{{ false }}"><input ref="{{ searchRef }}" class="input" style="flex:1 1 220px;min-width:0;width:auto" placeholder="{{ searchLabel }}" value="{{ query }}" onChange="{{ onQuery }}" onKeyDown="{{ onQueryKey }}" /><button onClick="{{ runSearch }}" class="btn btn-secondary">Search</button><button onClick="{{ closeSearch }}" aria-label="Close search" title="Close search" style="font:inherit;flex:none;width:44px;height:44px;display:flex;align-items:center;justify-content:center;cursor:pointer;background:transparent;border:1px solid var(--color-divider);color:var(--color-text);padding:0;font-size:20px;line-height:1">&#215;</button></sc-if><sc-if value="{{ searchClosed }}" hint-placeholder-val="{{ true }}"><button onClick="{{ openSearch }}" aria-label="Search deals" title="Search deals" style="font:inherit;flex:none;width:44px;height:44px;display:flex;align-items:center;justify-content:center;cursor:pointer;background:transparent;border:1px solid var(--color-divider);color:var(--color-text);padding:0"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="8"></circle><path d="m21 21-4.3-4.3"></path></svg></button></sc-if>
       <div style="position:relative;flex:none"><button onClick="{{ toggleMenu }}" title="Menu" aria-label="Menu" aria-expanded="{{ menuExpanded }}" style="{{ tMenuBtn }}"><span style="display:block;width:16px;height:2px;background:currentColor"></span><span style="display:block;width:16px;height:2px;background:currentColor"></span><span style="display:block;width:16px;height:2px;background:currentColor"></span></button>
       <sc-if value="{{ menuOpen }}" hint-placeholder-val="{{ false }}">
         <div onClick="{{ closeMenu }}" style="position:fixed;inset:0;z-index:40"></div>
         <div style="position:absolute;right:0;top:calc(100% + 8px);z-index:41;min-width:236px;background:var(--color-bg);border:2px solid var(--color-text);padding:6px 0;box-shadow:var(--shadow-lg)">
-          <sc-for list="{{ menuItems }}" as="m" hint-placeholder-count="5">
+          <a href="{{ acctHref }}" style="display:flex;flex-direction:column;justify-content:center;gap:2px;min-height:52px;padding:6px 16px;text-decoration:none;color:var(--color-text);border-bottom:2px solid var(--color-divider);margin-bottom:6px"><span style="font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--color-neutral-700)">{{ acctKicker }}</span><span style="font-family:var(--font-heading);font-weight:700;font-size:13px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:240px">{{ acctLine }}</span></a><sc-for list="{{ menuItems }}" as="m" hint-placeholder-count="5">
             <a href="{{ m.href }}" onClick="{{ m.open }}" style="{{ m.style }}">{{ m.label }}</a>
           </sc-for>
           <div style="height:2px;background:var(--color-divider);margin:6px 0"></div>
-          <button onClick="{{ toggleDarkMenu }}" style="{{ tMenuDark }}"><span>{{ darkRowLabel }}</span><span style="font-size:15px">{{ darkGlyph }}</span></button>
+          <button onClick="{{ toggleDarkMenu }}" style="{{ tMenuDark }}"><span>{{ darkRowLabel }}</span><span style="font-size:15px">{{ darkGlyph }}</span></button><sc-if value="{{ acctIn }}" hint-placeholder-val="{{ false }}"><button onClick="{{ acctSignOut }}" style="{{ tMenuDark }}"><span>Sign out</span><span style="font-size:15px">&#8594;</span></button></sc-if>
         </div>
       </sc-if></div></div>
   </div>
@@ -632,7 +636,9 @@
         <sc-for list="{{ guideCards }}" as="g" hint-placeholder-count="3">
           <a href="{{ g.href }}" onClick="{{ g.open }}" style="text-decoration:none;color:inherit;display:flex;flex-direction:column;gap:10px;border-top:2px solid var(--color-text);padding-top:14px">
             <div style="height:220px;border:1px solid var(--color-divider);background:#ffffff;position:relative;overflow:hidden">
-              <sc-if value="{{ g.img }}" hint-placeholder-val="{{ false }}">
+              <sc-if value="{{ g.coverImg }}" hint-placeholder-val="{{ false }}"><span style="display:block;height:100%;position:relative;overflow:hidden"><span style="{{ g.coverStyle }}"></span></span></sc-if>
+            <sc-if value="{{ g.typeCover }}" hint-placeholder-val="{{ false }}"><span style="display:flex;flex-direction:column;justify-content:flex-end;gap:6px;height:100%;box-sizing:border-box;padding:16px;background:var(--color-accent);color:#16233a"><span style="font-size:10px;letter-spacing:.14em;text-transform:uppercase;font-weight:700">MistryDeals guide</span><span style="font-family:var(--font-heading);font-weight:800;font-size:26px;line-height:1.02;letter-spacing:-.01em;text-wrap:balance">{{ g.kicker }}</span></span></sc-if>
+              <sc-if value="{{ g.prodImg }}" hint-placeholder-val="{{ false }}">
                 <dc-import name="ProductImage" src="{{ g.img }}" alt="" pad="18px" hint-size="100%,100%"></dc-import>
               </sc-if>
             </div>
@@ -833,16 +839,16 @@
   <div class="nav" style="max-width:1280px;margin:0 auto;gap:24px">
     <a href="/" onClick="{{ goHome }}" class="nav-brand m-wrap" style="display:flex;align-items:center;gap:8px;text-decoration:none"><span style="position:relative;width:19.6px;height:19.6px;flex:none;display:block"><span style="position:absolute;left:0;top:0;width:14px;height:14px;border:2.1px solid var(--color-text);border-radius:50%;box-sizing:border-box;display:block"></span><span style="position:absolute;left:11.9px;top:11.2px;width:7.7px;height:2.1px;background:var(--color-accent);transform:rotate(45deg);transform-origin:left center;display:block"></span></span>MISTRYDEALS</a>
     <div class="m-wrap nav-links" style="display:flex;gap:20px;align-items:center"><a href="/" onClick="{{ goHome }}">Featured Deals</a><a href="/prime" aria-current="page" onClick="{{ goPrime }}">Prime Card Deals</a><a href="/categories" onClick="{{ goCat }}">Categories</a><a href="/guides" onClick="{{ goGuide }}">Buying Guides</a><a href="/price-watch">Price Watch</a><a href="/about" onClick="{{ goAbout }}">About</a></div>
-    <div class="m-wrap nav-search" style="display:flex;gap:8px;align-items:center;min-width:280px"><input class="input" placeholder="{{ searchLabel }}" value="{{ query }}" onChange="{{ onQuery }}" onKeyDown="{{ onQueryKey }}" /><button onClick="{{ runSearch }}" class="btn btn-secondary">Search</button>
+    <div class="m-wrap nav-search" style="display:flex;gap:8px;align-items:center;min-width:0;margin-left:auto;justify-content:flex-end"><sc-if value="{{ searchOpen }}" hint-placeholder-val="{{ false }}"><input ref="{{ searchRef }}" class="input" style="flex:1 1 220px;min-width:0;width:auto" placeholder="{{ searchLabel }}" value="{{ query }}" onChange="{{ onQuery }}" onKeyDown="{{ onQueryKey }}" /><button onClick="{{ runSearch }}" class="btn btn-secondary">Search</button><button onClick="{{ closeSearch }}" aria-label="Close search" title="Close search" style="font:inherit;flex:none;width:44px;height:44px;display:flex;align-items:center;justify-content:center;cursor:pointer;background:transparent;border:1px solid var(--color-divider);color:var(--color-text);padding:0;font-size:20px;line-height:1">&#215;</button></sc-if><sc-if value="{{ searchClosed }}" hint-placeholder-val="{{ true }}"><button onClick="{{ openSearch }}" aria-label="Search deals" title="Search deals" style="font:inherit;flex:none;width:44px;height:44px;display:flex;align-items:center;justify-content:center;cursor:pointer;background:transparent;border:1px solid var(--color-divider);color:var(--color-text);padding:0"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="8"></circle><path d="m21 21-4.3-4.3"></path></svg></button></sc-if>
       <div style="position:relative;flex:none"><button onClick="{{ toggleMenu }}" title="Menu" aria-label="Menu" aria-expanded="{{ menuExpanded }}" style="{{ tMenuBtn }}"><span style="display:block;width:16px;height:2px;background:currentColor"></span><span style="display:block;width:16px;height:2px;background:currentColor"></span><span style="display:block;width:16px;height:2px;background:currentColor"></span></button>
       <sc-if value="{{ menuOpen }}" hint-placeholder-val="{{ false }}">
         <div onClick="{{ closeMenu }}" style="position:fixed;inset:0;z-index:40"></div>
         <div style="position:absolute;right:0;top:calc(100% + 8px);z-index:41;min-width:236px;background:var(--color-bg);border:2px solid var(--color-text);padding:6px 0;box-shadow:var(--shadow-lg)">
-          <sc-for list="{{ menuItems }}" as="m" hint-placeholder-count="5">
+          <a href="{{ acctHref }}" style="display:flex;flex-direction:column;justify-content:center;gap:2px;min-height:52px;padding:6px 16px;text-decoration:none;color:var(--color-text);border-bottom:2px solid var(--color-divider);margin-bottom:6px"><span style="font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--color-neutral-700)">{{ acctKicker }}</span><span style="font-family:var(--font-heading);font-weight:700;font-size:13px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:240px">{{ acctLine }}</span></a><sc-for list="{{ menuItems }}" as="m" hint-placeholder-count="5">
             <a href="{{ m.href }}" onClick="{{ m.open }}" style="{{ m.style }}">{{ m.label }}</a>
           </sc-for>
           <div style="height:2px;background:var(--color-divider);margin:6px 0"></div>
-          <button onClick="{{ toggleDarkMenu }}" style="{{ tMenuDark }}"><span>{{ darkRowLabel }}</span><span style="font-size:15px">{{ darkGlyph }}</span></button>
+          <button onClick="{{ toggleDarkMenu }}" style="{{ tMenuDark }}"><span>{{ darkRowLabel }}</span><span style="font-size:15px">{{ darkGlyph }}</span></button><sc-if value="{{ acctIn }}" hint-placeholder-val="{{ false }}"><button onClick="{{ acctSignOut }}" style="{{ tMenuDark }}"><span>Sign out</span><span style="font-size:15px">&#8594;</span></button></sc-if>
         </div>
       </sc-if></div></div>
   </div>
@@ -933,16 +939,16 @@
   <div class="nav" style="max-width:1280px;margin:0 auto;gap:24px">
     <a href="/" onClick="{{ goHome }}" class="nav-brand m-wrap" style="display:flex;align-items:center;gap:8px;text-decoration:none"><span style="position:relative;width:19.6px;height:19.6px;flex:none;display:block"><span style="position:absolute;left:0;top:0;width:14px;height:14px;border:2.1px solid var(--color-text);border-radius:50%;box-sizing:border-box;display:block"></span><span style="position:absolute;left:11.9px;top:11.2px;width:7.7px;height:2.1px;background:var(--color-accent);transform:rotate(45deg);transform-origin:left center;display:block"></span></span>MISTRYDEALS</a>
     <div class="m-wrap nav-links" style="display:flex;gap:20px;align-items:center"><a href="/" onClick="{{ goHome }}">Featured Deals</a><a href="/prime" onClick="{{ goPrime }}">Prime Card Deals</a><a href="/categories" onClick="{{ goCat }}">Categories</a><a href="/guides" onClick="{{ goGuide }}">Buying Guides</a><a href="/price-watch">Price Watch</a><a href="/about" aria-current="page" onClick="{{ goAbout }}">About</a></div>
-    <div class="m-wrap nav-search" style="display:flex;gap:8px;align-items:center;min-width:280px"><input class="input" placeholder="{{ searchLabel }}" value="{{ query }}" onChange="{{ onQuery }}" onKeyDown="{{ onQueryKey }}" /><button onClick="{{ runSearch }}" class="btn btn-secondary">Search</button>
+    <div class="m-wrap nav-search" style="display:flex;gap:8px;align-items:center;min-width:0;margin-left:auto;justify-content:flex-end"><sc-if value="{{ searchOpen }}" hint-placeholder-val="{{ false }}"><input ref="{{ searchRef }}" class="input" style="flex:1 1 220px;min-width:0;width:auto" placeholder="{{ searchLabel }}" value="{{ query }}" onChange="{{ onQuery }}" onKeyDown="{{ onQueryKey }}" /><button onClick="{{ runSearch }}" class="btn btn-secondary">Search</button><button onClick="{{ closeSearch }}" aria-label="Close search" title="Close search" style="font:inherit;flex:none;width:44px;height:44px;display:flex;align-items:center;justify-content:center;cursor:pointer;background:transparent;border:1px solid var(--color-divider);color:var(--color-text);padding:0;font-size:20px;line-height:1">&#215;</button></sc-if><sc-if value="{{ searchClosed }}" hint-placeholder-val="{{ true }}"><button onClick="{{ openSearch }}" aria-label="Search deals" title="Search deals" style="font:inherit;flex:none;width:44px;height:44px;display:flex;align-items:center;justify-content:center;cursor:pointer;background:transparent;border:1px solid var(--color-divider);color:var(--color-text);padding:0"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="8"></circle><path d="m21 21-4.3-4.3"></path></svg></button></sc-if>
       <div style="position:relative;flex:none"><button onClick="{{ toggleMenu }}" title="Menu" aria-label="Menu" aria-expanded="{{ menuExpanded }}" style="{{ tMenuBtn }}"><span style="display:block;width:16px;height:2px;background:currentColor"></span><span style="display:block;width:16px;height:2px;background:currentColor"></span><span style="display:block;width:16px;height:2px;background:currentColor"></span></button>
       <sc-if value="{{ menuOpen }}" hint-placeholder-val="{{ false }}">
         <div onClick="{{ closeMenu }}" style="position:fixed;inset:0;z-index:40"></div>
         <div style="position:absolute;right:0;top:calc(100% + 8px);z-index:41;min-width:236px;background:var(--color-bg);border:2px solid var(--color-text);padding:6px 0;box-shadow:var(--shadow-lg)">
-          <sc-for list="{{ menuItems }}" as="m" hint-placeholder-count="5">
+          <a href="{{ acctHref }}" style="display:flex;flex-direction:column;justify-content:center;gap:2px;min-height:52px;padding:6px 16px;text-decoration:none;color:var(--color-text);border-bottom:2px solid var(--color-divider);margin-bottom:6px"><span style="font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--color-neutral-700)">{{ acctKicker }}</span><span style="font-family:var(--font-heading);font-weight:700;font-size:13px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:240px">{{ acctLine }}</span></a><sc-for list="{{ menuItems }}" as="m" hint-placeholder-count="5">
             <a href="{{ m.href }}" onClick="{{ m.open }}" style="{{ m.style }}">{{ m.label }}</a>
           </sc-for>
           <div style="height:2px;background:var(--color-divider);margin:6px 0"></div>
-          <button onClick="{{ toggleDarkMenu }}" style="{{ tMenuDark }}"><span>{{ darkRowLabel }}</span><span style="font-size:15px">{{ darkGlyph }}</span></button>
+          <button onClick="{{ toggleDarkMenu }}" style="{{ tMenuDark }}"><span>{{ darkRowLabel }}</span><span style="font-size:15px">{{ darkGlyph }}</span></button><sc-if value="{{ acctIn }}" hint-placeholder-val="{{ false }}"><button onClick="{{ acctSignOut }}" style="{{ tMenuDark }}"><span>Sign out</span><span style="font-size:15px">&#8594;</span></button></sc-if>
         </div>
       </sc-if></div></div>
   </div>
@@ -1426,6 +1432,7 @@
         <div class="field"><label for="pw-product">Product</label><input id="pw-product" class="input" type="text" readonly="readonly" value="{{ watchTitle }}" style="min-height:44px;font-size:15px;background:var(--color-neutral-100);color:var(--color-neutral-700)"></input></div>
         <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px">
           <div class="field"><label for="pw-asin">ASIN</label><input id="pw-asin" class="input" type="text" readonly="readonly" value="{{ watchAsin }}" style="min-height:44px;font-size:15px;letter-spacing:.04em;background:var(--color-neutral-100);color:var(--color-neutral-700)"></input></div>
+          <div class="field"><label for="pw-current">Current price</label><input id="pw-current" class="input" type="text" readonly="readonly" value="{{ currentPrice }}" style="min-height:44px;font-size:15px;background:var(--color-neutral-100);color:var(--color-neutral-700)"></input></div>
           <div class="field"><label for="pw-target">Target price ($)</label><input id="pw-target" class="input" type="number" inputmode="decimal" min="0" step="0.01" value="{{ wTarget }}" onChange="{{ onWTarget }}" style="min-height:44px;font-size:15px"></input></div>
         </div>
         <div style="font-size:12px;color:var(--color-neutral-700)">{{ wHint }}</div>
@@ -1498,8 +1505,24 @@ const SCREEN_OF = { "": "home", deals: "home", categories: "category", guides: "
 
 class Component extends DCLogic {
   state = { screen: "home", view: (function(){ try { return window.innerWidth <= 560 ? "list" : "grid"; } catch (e) { return "grid"; } })(), dark: (function(){ try { return localStorage.getItem("md-theme") === "dark"; } catch (e) { return false; } })() };
+  readAcct() {
+    let a = null;
+    try { a = JSON.parse(localStorage.getItem("md-watch-session") || "null"); } catch (e) {}
+    const ok = !!(a && a.access_token && (a.refresh_token || !a.expires_at || a.expires_at * 1000 > Date.now()));
+    const em = ok ? String(a.email || "") : "";
+    if (em !== (this.state.acctEmail || "")) this.setState({ acctEmail: em });
+  }
+  acctSignOut = () => {
+    try { localStorage.removeItem("md-watch-session"); } catch (e) {}
+    this.setState({ menuOpen: false, wSession: null, acctEmail: "" });
+  };
+  searchRef = React.createRef();
   componentDidMount() {
     this.readHash();
+    // md-acct-sync
+    this.readAcct();
+    this._acctStorage = e => { if (e.key === "md-watch-session") this.readAcct(); };
+    window.addEventListener("storage", this._acctStorage);
     // md-q-param: other pages (e.g. /price-watch) search by sending ?q=
     try {
       const q = new URLSearchParams(location.search).get("q");
@@ -1827,7 +1850,7 @@ class Component extends DCLogic {
           wInfo: "Account created. Open the confirmation link we sent to " + email + ", then sign in here to save this watch." });
         return;
       }
-      this.setState({ wBusy: false, wPass: "", wPass2: "", wSession: this.saveWatchSession(j, email) });
+      this.setState({ wBusy: false, wPass: "", wPass2: "", wSession: this.saveWatchSession(j, email) }, () => this.readAcct());
     } catch (e) { this.setState({ wBusy: false, wErr: e.message }); }
   }
   async submitWatch() {
@@ -1844,7 +1867,7 @@ class Component extends DCLogic {
       const res = await fetch(BASE + "/rest/v1/price_watches", {
         method: "POST",
         headers: { apikey: KEY, Authorization: "Bearer " + s.access_token, "Content-Type": "application/json", Prefer: "return=minimal" },
-        body: JSON.stringify({ user_id: s.user_id, user_email: s.email, asin, target_price: Math.round(target * 100) / 100, title: w.title || null })
+        body: JSON.stringify({ user_id: s.user_id, user_email: s.email, asin, target_price: Math.round(target * 100) / 100, title: w.title || null, current_price: w.price != null ? Math.round(w.price * 100) / 100 : null })
       });
       if (!res.ok) {
         let body = ""; try { body = await res.text(); } catch (e) {}
@@ -1861,7 +1884,7 @@ class Component extends DCLogic {
       this.setState({ wBusy: false, wErr: "Couldn't save the watch. Try again in a minute." });
     }
   }
-  wSignOut() { try { localStorage.removeItem("md-watch-session"); } catch (e) {} this.setState({ wSession: null, wMode: "signin" }); }
+  wSignOut() { try { localStorage.removeItem("md-watch-session"); } catch (e) {} this.setState({ wSession: null, wMode: "signin", acctEmail: "" }); }
   guideProduct(p, i) {
     const n = v => (v === null || v === undefined || v === "") ? null : parseFloat(v);
     const lv = (this.state.liveStats || {})[p.amazon_asin] || null;
@@ -1962,6 +1985,14 @@ class Component extends DCLogic {
     }));
   }
   // hero = the most expensive live pick that has an image (live price first, saved price as fallback)
+  // card artwork: uploaded cover (photo, B&W) > top pick's product image > type cover
+  coverVals(g, prodImg) {
+    const cov = String(((g && g.content) || {}).cover_image || "").trim();
+    return {
+      prodImg: !cov && !!prodImg, coverImg: !!cov, typeCover: !cov && !prodImg,
+      coverStyle: cov ? "display:block;width:100%;height:100%;background:var(--color-neutral-200) center/cover no-repeat url(\"" + cov.replace(/"/g, "%22") + "\");filter:grayscale(1)" : ""
+    };
+  }
   heroPick(g) {
     const active = this.state.activeAsins, ls = this.state.liveStats || {};
     const n = v => { const x = parseFloat(v); return isNaN(x) ? null : x; };
@@ -2461,6 +2492,7 @@ class Component extends DCLogic {
       watchTitle: (this.state.watch || {}).title || "",
       watchPrice: (this.state.watch || {}).price != null ? "$" + this.state.watch.price.toFixed(2) : "\u2014",
       watchAsin: (this.state.watch || {}).asin || "",
+      currentPrice: (this.state.watch || {}).price != null ? "$" + this.state.watch.price.toFixed(2) : "",
       wEmail: this.state.wEmail || "", wTarget: this.state.wTarget || "",
       onWEmail: e => this.setState({ wEmail: e.target.value, wErr: "" }),
       onWTarget: e => this.setState({ wTarget: e.target.value, wErr: "" }),
@@ -2504,6 +2536,17 @@ class Component extends DCLogic {
       goAdmin: (e) => { if (e && e.preventDefault) e.preventDefault(); this.go("admin"); },
       hHome: this.path("home"), hCat: this.path("category"), hGuide: this.path("guide"),
       hPrime: this.path("prime"), hAbout: this.path("about"),
+      acctKicker: this.state.acctEmail ? "Signed in" : "Price watches",
+      acctLine: this.state.acctEmail ? this.state.acctEmail : "Sign in",
+      acctIn: !!this.state.acctEmail, acctOut: !this.state.acctEmail,
+      acctName: this.state.acctEmail || "", acctInitial: (this.state.acctEmail || "?").charAt(0).toUpperCase(),
+      acctTitle: this.state.acctEmail ? "Signed in as " + this.state.acctEmail + " \u2014 your price watches" : "Sign in to manage price watches",
+      acctHref: this.clean() ? "/price-watch" : "Price Watches.dc.html",
+      acctSignOut: this.acctSignOut,
+      searchRef: this.searchRef,
+      searchOpen: !!(this.state.searchOpen || this.state.query), searchClosed: !(this.state.searchOpen || this.state.query),
+      openSearch: e => { if (e && e.preventDefault) e.preventDefault(); this.setState({ searchOpen: true, menuOpen: false }, () => setTimeout(() => { const el = this.searchRef.current; if (el) el.focus(); }, 0)); },
+      closeSearch: e => { if (e && e.preventDefault) e.preventDefault(); this.setState({ searchOpen: false, query: "" }); },
       hWatch: this.clean() ? "/price-watch" : "Price Watches.dc.html",
 
       // the signposts name the newest real guide and the live cashback count,
@@ -2745,7 +2788,7 @@ class Component extends DCLogic {
       clearSearch: (e) => { if (e && e.preventDefault) e.preventDefault(); this.setState({ q: "", chip: "All deals", shown: 12 }); },
       onQuery: (e) => this.setState({ q: e.target.value, shown: 12 }),
       resultsRef: this.results,
-      onQueryKey: (e) => { if (e.key === "Enter") { e.preventDefault(); this.submitSearch(); } },
+      onQueryKey: (e) => { if (e.key === "Enter") { e.preventDefault(); this.submitSearch(); } else if (e.key === "Escape") this.setState({ searchOpen: false }); },
       runSearch: (e) => { if (e && e.preventDefault) e.preventDefault(); this.submitSearch(); },
       loadMore: () => this.setState({ shown: (this.state.shown || 12) + 12 }),
       guides: (function (rows, self) {
@@ -2760,7 +2803,7 @@ class Component extends DCLogic {
             kicker: g.event_name || "Buying guide",
             title: g.title || "",
             caption: g.caption || "",
-            img: p.image_url || "",
+            img: p.image_url || "", ...self.coverVals(g, p.image_url),
             meta: ((g.content || {}).format === "advice" ? "Shopping advice" : n + (n === 1 ? " pick" : " picks")) + (g.published_at ? " \u00b7 " + new Date(g.published_at).toLocaleDateString("en-US", { day: "numeric", month: "short" }) : ""),
             href: self.path("guide", i),
             open: (e) => { if (e && e.preventDefault) e.preventDefault(); self.go("guide", i); }
@@ -2795,7 +2838,7 @@ class Component extends DCLogic {
         const hp = this.heroPick(g);
         return {
           kicker: g.event_name || "Buying guide", title: g.title || "", caption: g.caption || (g.content || {}).subtitle || "",
-          img: (hp && hp.image_url) || "",
+          img: (hp && hp.image_url) || "", ...this.coverVals(g, hp && hp.image_url),
           meta: ((g.content || {}).format === "advice" ? "Shopping advice" : n + (n === 1 ? " pick" : " picks")) + (g.published_at ? " \u00b7 " + new Date(g.published_at).toLocaleDateString("en-US", { day: "numeric", month: "long", year: "numeric" }) : ""),
           href: this.path("guide", String(i)),
           open: (e) => { if (e && e.preventDefault) e.preventDefault(); this.go("guide", String(i)); }
