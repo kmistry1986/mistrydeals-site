@@ -153,6 +153,15 @@
   ],
   "headers": [
     {
+      "source": "/d/:slug",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "no-store"
+        }
+      ]
+    },
+    {
       "source": "/:path*",
       "headers": [
         {
