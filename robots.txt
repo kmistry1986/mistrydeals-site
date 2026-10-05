@@ -1,9 +1,3 @@
-User-agent: facebookexternalhit
-Allow: /d/
-
-User-agent: Twitterbot
-Allow: /d/
-
 User-agent: *
 Allow: /
 Disallow: /catalogue
@@ -16,6 +10,10 @@ Disallow: /redditposter
 Disallow: /buyingguides
 Disallow: /admin
 Disallow: /mobile
+Disallow: /watches
+Disallow: /pricewatches
+Disallow: /price-watch
+Disallow: /watchadmin
 Disallow: /d/
 Disallow: /*%7B%7B
 Disallow: /*{{

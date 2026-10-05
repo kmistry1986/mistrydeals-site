@@ -423,25 +423,25 @@
           <sc-if value="{{ capIg }}" hint-placeholder-val="{{ true }}">
             <div style="display:flex;align-items:baseline;gap:10px;margin-bottom:6px">
               <div style="font-family:var(--font-heading);font-weight:700;font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:var(--color-neutral-700)">Caption</div>
-              <button onClick="{{ copyCollageCaption }}" style="{{ copyLink }}">Copy</button>
+              <button onClick="{{ copyCollageCaption }}" style="{{ copyLink }}">Copy</button><sc-if value="{{ igEdited }}" hint-placeholder-val="{{ false }}"><button onClick="{{ igReset }}" style="{{ copyLink }}">Reset</button></sc-if>
             </div>
-            <div style="border:1px solid var(--color-divider);padding:14px;font-size:12.5px;line-height:1.6;white-space:pre-wrap;overflow-wrap:anywhere;color:var(--color-text)">{{ collageCaption }}</div>
+            <textarea value="{{ collageCaption }}" onChange="{{ onIgEdit }}" spellcheck="true" style="display:block;width:100%;box-sizing:border-box;border:1px solid var(--color-divider);background:transparent;padding:14px;font-family:var(--font-body);font-size:12.5px;line-height:1.6;overflow-wrap:anywhere;color:var(--color-text);resize:vertical;field-sizing:content;min-height:160px;outline:none" style-focus="border-color:var(--color-accent)"></textarea>
             <div style="font-size:11px;color:var(--color-neutral-600);margin-top:6px">{{ collageCaptionMeta }}</div>
           </sc-if>
 
           <sc-if value="{{ capFb }}" hint-placeholder-val="{{ false }}">
             <div style="display:flex;align-items:baseline;gap:10px;margin-bottom:6px">
               <div style="font-family:var(--font-heading);font-weight:700;font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:var(--color-neutral-700)">Title</div>
-              <button onClick="{{ copyFbCollageTitle }}" style="{{ copyLink }}">Copy</button>
+              <button onClick="{{ copyFbCollageTitle }}" style="{{ copyLink }}">Copy</button><sc-if value="{{ fbTEdited }}" hint-placeholder-val="{{ false }}"><button onClick="{{ fbTReset }}" style="{{ copyLink }}">Reset</button></sc-if>
             </div>
-            <div style="border:1px solid var(--color-divider);padding:12px 14px;font-family:var(--font-heading);font-weight:700;font-size:15px;line-height:1.3;overflow-wrap:anywhere;color:var(--color-text)">{{ fbCollageTitle }}</div>
+            <input type="text" value="{{ fbCollageTitle }}" onChange="{{ onFbTEdit }}" style="display:block;width:100%;box-sizing:border-box;border:1px solid var(--color-divider);background:transparent;padding:12px 14px;font-family:var(--font-heading);font-weight:700;font-size:15px;line-height:1.3;color:var(--color-text);outline:none" style-focus="border-color:var(--color-accent)"></input>
             <div style="font-size:11px;color:var(--color-neutral-600);margin-top:6px">{{ fbCollageTitleMeta }}</div>
 
             <div style="display:flex;align-items:baseline;gap:10px;margin:14px 0 6px">
               <div style="font-family:var(--font-heading);font-weight:700;font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:var(--color-neutral-700)">Caption</div>
-              <button onClick="{{ copyFbCollage }}" style="{{ copyLink }}">Copy</button>
+              <button onClick="{{ copyFbCollage }}" style="{{ copyLink }}">Copy</button><sc-if value="{{ fbEdited }}" hint-placeholder-val="{{ false }}"><button onClick="{{ fbReset }}" style="{{ copyLink }}">Reset</button></sc-if>
             </div>
-            <div style="border:1px solid var(--color-divider);padding:14px;font-size:12.5px;line-height:1.6;white-space:pre-wrap;overflow-wrap:anywhere;color:var(--color-text)">{{ fbCollageCaption }}</div>
+            <textarea value="{{ fbCollageCaption }}" onChange="{{ onFbEdit }}" spellcheck="true" style="display:block;width:100%;box-sizing:border-box;border:1px solid var(--color-divider);background:transparent;padding:14px;font-family:var(--font-body);font-size:12.5px;line-height:1.6;overflow-wrap:anywhere;color:var(--color-text);resize:vertical;field-sizing:content;min-height:140px;outline:none" style-focus="border-color:var(--color-accent)"></textarea>
             <div style="font-size:11px;color:var(--color-neutral-600);margin-top:6px">{{ fbCaptionMeta }}</div>
           </sc-if>
         </div>
@@ -2147,17 +2147,30 @@ class Component extends DCLogic {
     }
     this.setState({ cExporting: false });
   }
-  collageCaption() {
+  capEdit(k, gen) {
+    const e = (this.state.capEdits || {})[k];
+    return e && e.base === gen ? e.text : gen;
+  }
+  setCapEdit(k, gen, text) {
+    const edits = Object.assign({}, this.state.capEdits || {});
+    if (text === gen) delete edits[k]; else edits[k] = { base: gen, text };
+    this.setState({ capEdits: edits });
+  }
+  capEdited(k, gen) { const e = (this.state.capEdits || {})[k]; return !!(e && e.base === gen); }
+  collageCaption() { return this.capEdit("ig", this.collageCaptionGen()); }
+  fbCollageTitle() { return this.capEdit("fbT", this.fbCollageTitleGen()); }
+  fbCollageCaption() { return this.capEdit("fb", this.fbCollageCaptionGen()); }
+  collageCaptionGen() {
     const all = this.state.slides;
     this.state.slides = (all || []).slice(0, 8);
     try { return this.reelCaption(); } finally { this.state.slides = all; }
   }
-  fbCollageTitle() {
+  fbCollageTitleGen() {
     const all = this.state.slides;
     this.state.slides = (all || []).slice(0, 8);
     try { return this.fbTitle(); } finally { this.state.slides = all; }
   }
-  fbCollageCaption() {
+  fbCollageCaptionGen() {
     const all = this.state.slides;
     this.state.slides = (all || []).slice(0, 8);
     try { return this.fbCaption(); } finally { this.state.slides = all; }
@@ -2335,7 +2348,16 @@ class Component extends DCLogic {
       })(),
       copyCollageCaption: () => this.copyText(this.collageCaption(), "Collage caption copied"),
       copyFbCollage: () => this.copyText(this.fbCollageCaption(), "Facebook caption copied"),
-      downloadCollage: () => this.downloadCollage()
+      downloadCollage: () => this.downloadCollage(),
+      igEdited: this.capEdited("ig", this.collageCaptionGen()),
+      fbTEdited: this.capEdited("fbT", this.fbCollageTitleGen()),
+      fbEdited: this.capEdited("fb", this.fbCollageCaptionGen()),
+      onIgEdit: (e) => this.setCapEdit("ig", this.collageCaptionGen(), e.target.value),
+      onFbTEdit: (e) => this.setCapEdit("fbT", this.fbCollageTitleGen(), e.target.value),
+      onFbEdit: (e) => this.setCapEdit("fb", this.fbCollageCaptionGen(), e.target.value),
+      igReset: () => this.setCapEdit("ig", "", ""),
+      fbTReset: () => this.setCapEdit("fbT", "", ""),
+      fbReset: () => this.setCapEdit("fb", "", "")
     };
   }
 
@@ -2556,16 +2578,16 @@ class Component extends DCLogic {
       navRest: navBase + "border:1px solid var(--color-divider);color:var(--color-text);border-left:0",
       hCatalogue: this.adminHref("catalogue"),
       hQueue: this.adminHref("dealqueue"),
-      hBrands: this.adminHref("brands"),
-      hScrapes: this.adminHref("scrapes"),
+      hBrands: this.adminHref("dealqueue") + "#brands",
+      hScrapes: this.adminHref("dealqueue") + "#scrapes",
       hReddit: this.adminHref("reddit"),
       hGuides: this.adminHref("guides"),
       menuNav: [
         { label: "Catalogue", href: this.adminHref("catalogue") },
         { label: "Deal queue", href: this.adminHref("dealqueue") },
         { label: "Social", href: this.adminHref("carousel"), here: true },
-        { label: "Brand rules", href: this.adminHref("brands") },
-        { label: "Scrape log", href: this.adminHref("scrapes") },
+        { label: "Brand rules", href: this.adminHref("dealqueue") + "#brands" },
+        { label: "Scrape log", href: this.adminHref("dealqueue") + "#scrapes" },
         { label: "Reddit poster", href: this.adminHref("reddit") },
         { label: "Buying guides", href: this.adminHref("guides") },
         { label: "View site", href: /^\/(catalogue|dealqueue|carousel|brandrules|scrapelog|redditposter|buyingguides)/.test(location.pathname) || location.pathname.indexOf("/admin/") !== -1 ? "/" : "MistryDeals Site.dc.html" }

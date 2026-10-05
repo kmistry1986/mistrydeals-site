@@ -4,56 +4,174 @@
   "cleanUrls": true,
   "trailingSlash": false,
   "redirects": [
-    { "source": "/admin", "destination": "/catalogue" },
-    { "source": "/admin/catalogue", "destination": "/catalogue" },
-    { "source": "/admin/dealqueue", "destination": "/dealqueue" },
-    { "source": "/admin/queue", "destination": "/dealqueue" },
-    { "source": "/admin/carousel", "destination": "/carousel" },
-    { "source": "/admin/brands", "destination": "/brandrules" },
-    { "source": "/admin/scrapes", "destination": "/scrapelog" },
-    { "source": "/admin/reddit", "destination": "/redditposter" },
-    { "source": "/admin/reddit-poster", "destination": "/redditposter" },
-    { "source": "/reddit-poster", "destination": "/redditposter" },
-    { "source": "/admin/guides", "destination": "/buyingguides" },
-    { "source": "/buying-guides", "destination": "/buyingguides" },
-    { "source": "/admin/guidecarousel", "destination": "/guidecarousel" }
+    {
+      "source": "/watches",
+      "destination": "/price-watch"
+    },
+    {
+      "source": "/pricewatches",
+      "destination": "/price-watch"
+    },
+    {
+      "source": "/admin",
+      "destination": "/catalogue"
+    },
+    {
+      "source": "/admin/catalogue",
+      "destination": "/catalogue"
+    },
+    {
+      "source": "/admin/dealqueue",
+      "destination": "/dealqueue"
+    },
+    {
+      "source": "/admin/queue",
+      "destination": "/dealqueue"
+    },
+    {
+      "source": "/admin/carousel",
+      "destination": "/carousel"
+    },
+    {
+      "source": "/admin/brands",
+      "destination": "/brandrules"
+    },
+    {
+      "source": "/admin/scrapes",
+      "destination": "/scrapelog"
+    },
+    {
+      "source": "/admin/reddit",
+      "destination": "/redditposter"
+    },
+    {
+      "source": "/admin/reddit-poster",
+      "destination": "/redditposter"
+    },
+    {
+      "source": "/reddit-poster",
+      "destination": "/redditposter"
+    },
+    {
+      "source": "/admin/guides",
+      "destination": "/buyingguides"
+    },
+    {
+      "source": "/buying-guides",
+      "destination": "/buyingguides"
+    },
+    {
+      "source": "/admin/guidecarousel",
+      "destination": "/guidecarousel"
+    }
   ],
   "rewrites": [
-    { "source": "/d/:slug", "destination": "https://qolksrytidvxarrlygyy.supabase.co/functions/v1/deal-redirect?slug=:slug" },
-    { "source": "/(.*)/(DealCard|DealCardMini|DealRow|ProductImage)\\.dc\\.html", "destination": "/$2.dc.html" },
-    { "source": "/(.*)/(DealCard|DealCardMini|DealRow|ProductImage)\\.dc", "destination": "/$2.dc.html" },
-    { "source": "/links", "destination": "/links.html" },
-    { "source": "/catalogue", "destination": "/catalogue.html" },
-    { "source": "/dealqueue", "destination": "/dealqueue.html" },
-    { "source": "/carousel", "destination": "/carousel.html" },
-    { "source": "/brandrules", "destination": "/dealqueue.html" },
-    { "source": "/scrapelog", "destination": "/dealqueue.html" },
-    { "source": "/redditposter", "destination": "/redditposter.html" },
-    { "source": "/buyingguides", "destination": "/buyingguides.html" },
-    { "source": "/guidecarousel", "destination": "/guidecarousel.html" },
-    { "source": "/deals", "destination": "/" },
-    { "source": "/deals/:chip", "destination": "/" },
-    { "source": "/categories", "destination": "/" },
-    { "source": "/categories/:cat", "destination": "/" },
-    { "source": "/guides", "destination": "/" },
-    { "source": "/guides/:slug", "destination": "/" },
-    { "source": "/prime", "destination": "/" },
-    { "source": "/about", "destination": "/" },
-    { "source": "/mobile", "destination": "/" },
-    { "source": "/deal", "destination": "/" },
-    { "source": "/deal/:id", "destination": "/" }
+    {
+      "source": "/watchadmin",
+      "destination": "/watchadmin.html"
+    },
+    {
+      "source": "/(.*)/(DealCard|DealCardMini|DealRow|ProductImage)\\.dc\\.html",
+      "destination": "/$2.dc.html"
+    },
+    {
+      "source": "/(.*)/(DealCard|DealCardMini|DealRow|ProductImage)\\.dc",
+      "destination": "/$2.dc.html"
+    },
+    {
+      "source": "/links",
+      "destination": "/links.html"
+    },
+    {
+      "source": "/catalogue",
+      "destination": "/catalogue.html"
+    },
+    {
+      "source": "/dealqueue",
+      "destination": "/dealqueue.html"
+    },
+    {
+      "source": "/carousel",
+      "destination": "/carousel.html"
+    },
+    {
+      "source": "/brandrules",
+      "destination": "/dealqueue.html"
+    },
+    {
+      "source": "/scrapelog",
+      "destination": "/dealqueue.html"
+    },
+    {
+      "source": "/redditposter",
+      "destination": "/redditposter.html"
+    },
+    {
+      "source": "/buyingguides",
+      "destination": "/buyingguides.html"
+    },
+    {
+      "source": "/guidecarousel",
+      "destination": "/guidecarousel.html"
+    },
+    {
+      "source": "/d/:slug",
+      "destination": "https://qolksrytidvxarrlygyy.supabase.co/functions/v1/deal-redirect?slug=:slug"
+    },
+    {
+      "source": "/deals",
+      "destination": "/"
+    },
+    {
+      "source": "/deals/:chip",
+      "destination": "/"
+    },
+    {
+      "source": "/categories",
+      "destination": "/"
+    },
+    {
+      "source": "/categories/:cat",
+      "destination": "/"
+    },
+    {
+      "source": "/guides",
+      "destination": "/"
+    },
+    {
+      "source": "/guides/:slug",
+      "destination": "/"
+    },
+    {
+      "source": "/prime",
+      "destination": "/"
+    },
+    {
+      "source": "/about",
+      "destination": "/"
+    },
+    {
+      "source": "/mobile",
+      "destination": "/"
+    },
+    {
+      "source": "/deal",
+      "destination": "/"
+    },
+    {
+      "source": "/deal/:id",
+      "destination": "/"
+    }
   ],
   "headers": [
     {
-      "source": "/d/:slug",
-      "headers": [
-        { "key": "Cache-Control", "value": "no-store" },
-        { "key": "x-vercel-cdn-cache-control", "value": "no-store" }
-      ]
-    },
-    {
       "source": "/:path*",
-      "headers": [{ "key": "Cache-Control", "value": "public, max-age=3600, s-maxage=3600" }]
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=3600, s-maxage=3600"
+        }
+      ]
     }
   ]
 }

@@ -301,7 +301,7 @@
               <input class="input" placeholder="One line under the title" value="{{ fCaption }}" onChange="{{ onCaption }}" />
             </div>
             <div class="field" style="margin:0;grid-column:1 / -1">
-              <label style="display:flex;align-items:baseline;gap:8px;flex-wrap:wrap">Cover image<span style="font-weight:400;text-transform:none;letter-spacing:0;font-size:11px;color:var(--color-neutral-600)">Optional &#183; shown on guide cards in black and white. Without one, cards use the top pick&#8217;s photo, or a type cover.</span></label>
+              <label style="display:flex;align-items:baseline;gap:8px;flex-wrap:wrap">Cover image<span style="font-weight:400;text-transform:none;letter-spacing:0;font-size:11px;color:var(--color-neutral-600)">Optional &#183; shown on guide cards. Without one, cards use the top pick&#8217;s photo, or a type cover.</span></label>
               <div style="display:flex;gap:12px;align-items:flex-start;flex-wrap:wrap">
                 <div style="{{ coverThumb }}"></div>
                 <div style="flex:1 1 280px;min-width:0;display:flex;flex-direction:column;gap:8px">
@@ -1647,7 +1647,9 @@ class Component extends DCLogic {
       isAdvice: d.format === "advice",
       notAdvice: d.format !== "advice",
       howtoLabel: d.format === "advice" ? "Checklist" : "How to buy well",
-      sections: d.format === "advice" ? this.parseSections(d.sections).map((x, i) => ({ n: String(i + 1).padStart(2, "0"), title: x.title, paras: x.content.split("\n\n") })) : [],
+      sections: d.format === "advice" ? this.parseSections(d.sections).map((x, i) => ({ n: String(i + 1).padStart(2, "0"),
+        title: x.title.replace(/\*\*?([^*\n]+)\*\*?/g, "$1").replace(/^\s*\d+\s*[.):\-\u2013\u2014]\s*/, ""),
+        paras: x.content.replace(/\*\*?([^*\n]+)\*\*?/g, "$1").split("\n\n") })) : [],
       howto: (d.howto || "").split("\n").map(s => s.trim()).filter(Boolean)
         .map((t, i) => ({ n: String(i + 1).padStart(2, "0"), text: t })),
       hasHowto: !!(d.howto || "").trim(),
@@ -2585,7 +2587,7 @@ class Component extends DCLogic {
       clearCover: () => this.setDraft({ cover: "" }),
       coverUploadLabel: this.state.coverBusy ? "Uploading\u2026" : "Upload image",
       coverThumb: "width:160px;height:90px;flex:none;box-sizing:border-box;border:1px solid var(--color-divider);background:" +
-        (d && String(d.cover || "").trim() ? "var(--color-neutral-200) center/cover no-repeat url(\"" + String(d.cover).trim().replace(/"/g, "%22") + "\");filter:grayscale(1)" : "repeating-linear-gradient(135deg, transparent 0 8px, var(--color-divider) 8px 9px)"),
+        (d && String(d.cover || "").trim() ? "var(--color-neutral-200) center/cover no-repeat url(\"" + String(d.cover).trim().replace(/"/g, "%22") + "\")" : "repeating-linear-gradient(135deg, transparent 0 8px, var(--color-divider) 8px 9px)"),
       fFormat: d ? (d.format || "picks") : "picks",
       onFormat: e => this.setDraft({ format: e.target.value }),
       isAdvice: !!(d && d.format === "advice"),
