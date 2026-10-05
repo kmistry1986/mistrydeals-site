@@ -1,3 +1,9 @@
+User-agent: facebookexternalhit
+Allow: /d/
+
+User-agent: Twitterbot
+Allow: /d/
+
 User-agent: *
 Allow: /
 Disallow: /catalogue
