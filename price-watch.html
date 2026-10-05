@@ -34,14 +34,15 @@
     }
     .nav-links a { white-space: nowrap; }
     @media (max-width: 1180px) { .nav-links { display: none !important; } }
+    @media (max-width: 560px) { .acct-email { display: none !important; } }
   </style>
 </helmet>
 
 <div style="background:var(--color-bg)">
   <div class="nav" style="max-width:1280px;margin:0 auto;gap:24px">
     <a href="{{ hHome }}" class="nav-brand m-wrap" style="display:flex;align-items:center;gap:8px;text-decoration:none"><span style="position:relative;width:19.6px;height:19.6px;flex:none;display:block"><span style="position:absolute;left:0;top:0;width:14px;height:14px;border:2.1px solid var(--color-text);border-radius:50%;box-sizing:border-box;display:block"></span><span style="position:absolute;left:11.9px;top:11.2px;width:7.7px;height:2.1px;background:var(--color-accent);transform:rotate(45deg);transform-origin:left center;display:block"></span></span>MISTRYDEALS</a>
-    <div class="m-wrap nav-links" style="display:flex;gap:20px;align-items:center"><a href="{{ hHome }}">Featured Deals</a><a href="{{ hPrime }}">Prime Card Deals</a><a href="{{ hCat }}">Categories</a><a href="{{ hGuide }}">Buying Guides</a><a href="{{ hWatchSelf }}" aria-current="page">Price Watch</a><a href="{{ hAbout }}">About</a></div>
-    <div class="m-wrap nav-search" style="display:flex;gap:8px;align-items:center;min-width:0;margin-left:auto;justify-content:flex-end"><sc-if value="{{ searchOpen }}" hint-placeholder-val="{{ false }}"><input ref="{{ searchRef }}" class="input" style="flex:1 1 220px;min-width:0;width:auto" placeholder="Search live deals" value="{{ query }}" onChange="{{ onQuery }}" onKeyDown="{{ onQueryKey }}"></input><button onClick="{{ runSearch }}" class="btn btn-secondary">Search</button><button onClick="{{ closeSearch }}" aria-label="Close search" title="Close search" style="font:inherit;flex:none;width:44px;height:44px;display:flex;align-items:center;justify-content:center;cursor:pointer;background:transparent;border:1px solid var(--color-divider);color:var(--color-text);padding:0;font-size:20px;line-height:1">&#215;</button></sc-if><sc-if value="{{ searchClosed }}" hint-placeholder-val="{{ true }}"><button onClick="{{ openSearch }}" aria-label="Search deals" title="Search deals" style="font:inherit;flex:none;width:44px;height:44px;display:flex;align-items:center;justify-content:center;cursor:pointer;background:transparent;border:1px solid var(--color-divider);color:var(--color-text);padding:0"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="8"></circle><path d="m21 21-4.3-4.3"></path></svg></button></sc-if>
+    <div class="m-wrap nav-links" style="display:flex;gap:20px;align-items:center;margin-left:auto"><a href="{{ hHome }}">Featured Deals</a><a href="{{ hPrime }}">Prime Card Deals</a><a href="{{ hCat }}">Categories</a><a href="{{ hGuide }}">Buying Guides</a><a href="{{ hWatchSelf }}" aria-current="page">Price Watch</a><a href="{{ hAbout }}">About</a></div>
+    <div class="m-wrap nav-search" style="display:flex;gap:8px;align-items:center;min-width:0;justify-content:flex-end;position:relative"><sc-if value="{{ acctIn }}" hint-placeholder-val="{{ false }}"><a href="{{ acctHref }}" class="acct-email" title="{{ acctTitle }}" style="display:flex;align-items:center;gap:8px;min-width:0;max-width:240px;margin-right:8px;font-size:14px;color:inherit;text-decoration:none;white-space:nowrap"><span aria-hidden="true" style="width:8px;height:8px;flex:none;background:var(--color-accent)"></span><span style="min-width:0;overflow:hidden;text-overflow:ellipsis;border-bottom:2px solid var(--color-accent);padding-bottom:1px">{{ acctName }}</span></a></sc-if><div style="{{ searchPanel }}" aria-hidden="{{ searchHidden }}"><input ref="{{ searchRef }}" class="input" style="flex:1 1 auto;min-width:0;width:100%" placeholder="Search live deals" value="{{ query }}" onChange="{{ onQuery }}" onKeyDown="{{ onQueryKey }}" tabIndex="{{ searchTab }}"></input><button onClick="{{ runSearch }}" tabIndex="{{ searchTab }}" aria-label="Run search" title="Search" style="font:inherit;flex:none;width:44px;height:44px;display:flex;align-items:center;justify-content:center;cursor:pointer;background:transparent;border:1px solid var(--color-divider);color:var(--color-text);padding:0"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="8"></circle><path d="m21 21-4.3-4.3"></path></svg></button></div><button onClick="{{ searchIconClick }}" aria-label="{{ searchIconLabel }}" title="{{ searchIconLabel }}" aria-expanded="{{ searchHiddenInv }}" style="font:inherit;flex:none;width:44px;height:44px;display:flex;align-items:center;justify-content:center;cursor:pointer;background:transparent;border:1px solid var(--color-divider);color:var(--color-text);padding:0"><sc-if value="{{ searchIsOpen }}" hint-placeholder-val="{{ false }}"><span aria-hidden="true" style="font-size:22px;line-height:1">&#215;</span></sc-if><sc-if value="{{ searchIsClosed }}" hint-placeholder-val="{{ true }}"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="8"></circle><path d="m21 21-4.3-4.3"></path></svg></sc-if></button>
       <div style="position:relative;flex:none"><button onClick="{{ toggleMenu }}" title="Menu" aria-label="Menu" aria-expanded="{{ menuExpanded }}" style="font:inherit;flex:none;width:44px;height:44px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;cursor:pointer;background:transparent;border:1px solid var(--color-divider);color:var(--color-text)"><span style="display:block;width:16px;height:2px;background:currentColor"></span><span style="display:block;width:16px;height:2px;background:currentColor"></span><span style="display:block;width:16px;height:2px;background:currentColor"></span></button>
       <sc-if value="{{ menuOpen }}" hint-placeholder-val="{{ false }}">
         <div onClick="{{ closeMenu }}" style="position:fixed;inset:0;z-index:40"></div>
@@ -117,6 +118,44 @@
           <div class="field" style="margin:0"><label for="pw-new2">Confirm new password</label><input id="pw-new2" class="input" type="password" autocomplete="new-password" placeholder="" value="{{ password2 }}" onChange="{{ onPassword2 }}" onKeyDown="{{ onAuthKey }}" style="min-height:46px;font-size:15px;width:100%;box-sizing:border-box"></input></div>
           <button onClick="{{ submitAuth }}" disabled="{{ sending }}" class="btn btn-primary btn-block" style="min-height:48px;justify-content:space-between">{{ submitLabel }} <span>&#8594;</span></button>
         </div>
+      </sc-if>
+    </div>
+  </sc-if>
+
+  <sc-if value="{{ signedIn }}" hint-placeholder-val="{{ false }}">
+    <div style="margin-top:22px;border:2px solid var(--color-text);padding:16px 16px 18px;display:flex;flex-direction:column;gap:12px">
+      <div style="display:flex;align-items:baseline;gap:10px;flex-wrap:wrap">
+        <div style="font-family:var(--font-heading);font-weight:800;font-size:17px;line-height:1.25;flex:0 1 auto">Watch any Amazon product</div>
+        <div style="font-size:13px;line-height:1.4;color:var(--color-neutral-700);flex:1 1 220px;min-width:0">Paste an Amazon link or a 10-character ASIN.</div>
+      </div>
+      <div style="display:grid;grid-template-columns:minmax(0,1fr) auto;gap:8px">
+        <input class="input" placeholder="https://www.amazon.com/dp/B0&#8230; or B0&#8230;" value="{{ addInput }}" onChange="{{ onAddInput }}" onKeyDown="{{ onAddKey }}" style="min-height:44px;font-size:15px;min-width:0"></input>
+        <button onClick="{{ lookupAdd }}" disabled="{{ addBusy }}" class="btn btn-secondary" style="min-height:44px;white-space:nowrap;flex:none">{{ lookupLabel }}</button>
+      </div>
+      <sc-if value="{{ hasAddErr }}" hint-placeholder-val="{{ false }}">
+        <div role="alert" style="font-size:13px;font-weight:600;color:var(--color-accent-700)">{{ addErr }}</div>
+      </sc-if>
+      <sc-if value="{{ hasAddFound }}" hint-placeholder-val="{{ false }}">
+        <div style="display:grid;grid-template-columns:72px minmax(0,1fr);gap:14px;align-items:start;border-top:2px solid var(--color-divider);padding-top:14px">
+          <div style="{{ addImgStyle }}"></div>
+          <div style="min-width:0;display:flex;flex-direction:column;gap:10px">
+            <div>
+              <div style="font-size:15px;font-weight:600;line-height:1.35;text-wrap:pretty">{{ addTitle }}</div>
+              <div style="font-size:12.5px;color:var(--color-neutral-700);margin-top:2px">{{ addMeta }}</div>
+            </div>
+            <sc-if value="{{ hasAddNote }}" hint-placeholder-val="{{ false }}">
+              <div style="font-size:13px;line-height:1.45;color:var(--color-neutral-700);border-left:3px solid var(--color-divider);padding:4px 10px;text-wrap:pretty">{{ addNote }}</div>
+            </sc-if>
+            <div style="display:flex;gap:10px;align-items:flex-end;flex-wrap:wrap">
+              <div class="field" style="margin:0;width:160px"><label style="font-family:var(--font-heading);font-weight:700;font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--color-neutral-700)">Target price ($)</label><input class="input" type="number" inputmode="decimal" min="0" step="0.01" value="{{ addTarget }}" onChange="{{ onAddTarget }}" onKeyDown="{{ onAddTargetKey }}" style="min-height:44px;font-size:15px"></input></div>
+              <button onClick="{{ saveAdd }}" disabled="{{ addBusy }}" class="btn btn-primary" style="min-height:44px;white-space:nowrap;flex:none">{{ saveAddLabel }}</button>
+              <button onClick="{{ cancelAdd }}" class="btn btn-ghost" style="min-height:44px;white-space:nowrap;flex:none">Cancel</button>
+            </div>
+          </div>
+        </div>
+      </sc-if>
+      <sc-if value="{{ hasAddOk }}" hint-placeholder-val="{{ false }}">
+        <div role="status" style="font-size:13.5px;border-left:3px solid var(--color-accent);padding:6px 10px">{{ addOk }}</div>
       </sc-if>
     </div>
   </sc-if>
@@ -303,6 +342,9 @@ class Component extends DCLogic {
 
   componentDidUpdate() { this.paint(); }
   searchRef = React.createRef();
+  openSearchNow() {
+    this.setState({ searchOpen: true, menuOpen: false }, () => setTimeout(() => { const el = this.searchRef.current; if (el) el.focus({ preventScroll: true }); }, 60));
+  }
   componentDidMount() {
     this.paint();
     this.onResize = () => { const n = window.innerWidth < 980; if (n !== this.state.narrow) this.setState({ narrow: n }); };
@@ -462,6 +504,82 @@ class Component extends DCLogic {
     } catch (e) {}
   }
 
+  parseAsin(raw) {
+    const t = String(raw || "").trim();
+    if (!t) return { err: "Paste an Amazon link or ASIN first." };
+    if (/^[A-Za-z0-9]{10}$/.test(t)) return { asin: t.toUpperCase() };
+    if (/amzn\.(to|eu|asia)|a\.co\//i.test(t)) return { err: "Short amzn.to / a.co links can\u2019t be read here. Open it, then copy the full amazon.com address from your browser." };
+    const m = t.match(/(?:\/dp\/|\/gp\/product\/|\/gp\/aw\/d\/|\/product\/|[?&]asin=|\/ASIN\/)([A-Za-z0-9]{10})(?=[/?&#]|$)/i);
+    if (m) return { asin: m[1].toUpperCase() };
+    if (/amazon\./i.test(t)) return { err: "Couldn\u2019t find an ASIN in that link. Use the product page link (it contains /dp/ followed by 10 characters)." };
+    return { err: "That isn\u2019t an ASIN or Amazon link. ASINs are 10 letters and numbers, like B0D6W8XQ6J." };
+  }
+
+  async lookupAdd() {
+    const p = this.parseAsin(this.state.addInput);
+    if (p.err) return this.setState({ addErr: p.err, addFound: null, addOk: "" });
+    if ((this.state.watches || []).some(w => String(w.asin || "").toUpperCase() === p.asin && w.active)) {
+      return this.setState({ addErr: "You\u2019re already watching " + p.asin + ". Change its target below.", addFound: null, addOk: "" });
+    }
+    this.setState({ addBusy: true, addErr: "", addOk: "" });
+    let prod = null;
+    try {
+      const res = await fetch(BASE + "/rest/v1/products?select=asin,display_title,title,image_url,price,scraped_coupon_price&asin=eq." + p.asin + "&limit=1", { headers: { apikey: KEY, Authorization: "Bearer " + KEY } });
+      if (res.ok) prod = (await res.json())[0] || null;
+    } catch (e) {}
+    let c = prod ? (parseFloat(prod.scraped_coupon_price) > 0 ? parseFloat(prod.scraped_coupon_price) : parseFloat(prod.price)) : NaN;
+    let title = prod ? (prod.display_title || prod.title || "") : "", img = prod ? prod.image_url || "" : "", live = false, note = "";
+    // not on the site: ask Amazon now via the lookup-asin edge function (signed-in only, 10 per hour)
+    if (!prod) {
+      try {
+        const ctl = typeof AbortController !== "undefined" ? new AbortController() : null;
+        const timer = ctl ? setTimeout(() => ctl.abort(), 12000) : null;
+        const res = await this.authFetch("/functions/v1/lookup-asin", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ asin: p.asin }), signal: ctl ? ctl.signal : undefined });
+        if (timer) clearTimeout(timer);
+        const j = await res.json().catch(() => ({}));
+        if (res.ok && j && (j.title || j.price != null)) {
+          title = j.title || ""; img = j.image_url || ""; c = parseFloat(j.price); live = true;
+        } else if (res.status === 429) {
+          note = "You\u2019ve used your 10 lookups for this hour" + (j.retry_after_min ? " \u2014 try again in " + j.retry_after_min + " min" : "") + ". You can still save this watch; we\u2019ll fill in the details tonight.";
+        } else if (res.status === 404 || (j && j.error === "not_found")) {
+          this.setState({ addBusy: false, addFound: null, addErr: "Amazon doesn\u2019t have a product with ASIN " + p.asin + ". Check the link or code." });
+          return;
+        } else {
+          note = "Couldn\u2019t reach Amazon right now. You can still save this watch; we\u2019ll fill in the details tonight.";
+        }
+      } catch (e) {
+        note = "Amazon took too long to answer. You can still save this watch; we\u2019ll fill in the details tonight.";
+      }
+    }
+    const price = c > 0 ? c : null;
+    this.setState({ addBusy: false, addNote: note, addFound: { asin: p.asin, onSite: !!prod || live, title, img, price },
+      addTarget: price != null ? (Math.round(price * 90) / 100).toFixed(2) : "" });
+  }
+
+  async saveAdd() {
+    const f = this.state.addFound; if (!f || this.state.addBusy) return;
+    const t = Math.round(parseFloat(this.state.addTarget) * 100) / 100;
+    if (!(t > 0)) return this.setState({ addErr: "Enter a target price above $0." });
+    this.setState({ addBusy: true, addErr: "" });
+    try {
+      const me = await this.authFetch("/auth/v1/user", {});
+      const u = me.ok ? await me.json() : {};
+      const res = await this.authFetch("/rest/v1/price_watches", { method: "POST", headers: { "Content-Type": "application/json", Prefer: "return=representation" },
+        body: JSON.stringify({ user_id: u.id || this.state.userId, user_email: String(u.email || this.state.email || "").toLowerCase(), asin: f.asin, target_price: t,
+          title: f.title || null, current_price: f.price }) });
+      if (!res.ok) {
+        const body = await res.text().catch(() => "");
+        if (res.status === 409 || /duplicate|23505|unique/i.test(body)) throw new Error("You\u2019re already watching this product.");
+        throw new Error("Couldn\u2019t save the watch (" + res.status + "). Try again in a minute.");
+      }
+      const rows = await res.json().catch(() => []);
+      this.setState(s => ({ addBusy: false, addFound: null, addInput: "", addTarget: "",
+        addOk: "Watching " + (f.title || f.asin) + " at $" + t.toFixed(2) + "." + (f.price != null ? "" : " Its title and price arrive after tonight\u2019s check."), addNote: "",
+        watches: rows[0] ? [rows[0]].concat(s.watches || []) : s.watches }));
+      if (!rows[0]) this.load();
+    } catch (e) { this.setState({ addBusy: false, addErr: e.message }); }
+  }
+
   async mutate(w, method, body, done) {
     this.setState({ busyId: w.id, err: "" });
     if (this.sample()) {
@@ -546,9 +664,35 @@ class Component extends DCLogic {
       acctHref: this.deployed() ? "/price-watch" : "Price Watches.dc.html",
       acctSignOut: () => { this.setState({ menuOpen: false }); this.signOut(); },
       searchRef: this.searchRef,
-      searchOpen: !!(this.state.searchOpen || this.state.query), searchClosed: !(this.state.searchOpen || this.state.query),
-      openSearch: e => { if (e && e.preventDefault) e.preventDefault(); this.setState({ searchOpen: true, menuOpen: false }, () => setTimeout(() => { const el = this.searchRef.current; if (el) el.focus(); }, 0)); },
+      ...(() => {
+        const open = !!(this.state.searchOpen || this.state.query);
+        return {
+          searchPanel: "position:absolute;top:calc(100% + 10px);right:42px;z-index:45;width:min(320px, calc(100vw - 72px));box-sizing:border-box;display:flex;gap:8px;align-items:center;padding:10px;background:var(--color-bg);box-shadow:var(--shadow-lg);transform-origin:top right;" +
+            (open ? "opacity:1;transform:translateY(0);visibility:visible;transition:opacity .2s ease, transform .26s cubic-bezier(.2,.7,.2,1), visibility 0s"
+                  : "opacity:0;transform:translateY(-8px);visibility:hidden;pointer-events:none;transition:opacity .16s ease, transform .2s ease, visibility 0s linear .2s"),
+          searchHidden: open ? "false" : "true", searchTab: open ? 0 : -1,
+          searchIconLabel: open ? "Close search" : "Search deals",
+          searchIsOpen: open, searchIsClosed: !open, searchHiddenInv: open ? "true" : "false",
+          searchIconClick: e => { if (e && e.preventDefault) e.preventDefault(); if (open) this.setState({ searchOpen: false, query: "" }); else this.openSearchNow(); }
+        };
+      })(),
+      openSearch: e => { if (e && e.preventDefault) e.preventDefault(); this.openSearchNow(); },
       closeSearch: e => { if (e && e.preventDefault) e.preventDefault(); this.setState({ searchOpen: false, query: "" }); },
+      addInput: this.state.addInput || "", onAddInput: e => this.setState({ addInput: e.target.value, addErr: "", addOk: "" }),
+      onAddKey: e => { if (e.key === "Enter") { e.preventDefault(); this.lookupAdd(); } },
+      lookupAdd: () => this.lookupAdd(), addBusy: !!this.state.addBusy,
+      lookupLabel: this.state.addBusy && !this.state.addFound ? "Looking up\u2026" : "Look up",
+      addErr: this.state.addErr || "", hasAddErr: !!this.state.addErr,
+      addOk: this.state.addOk || "", hasAddOk: !!this.state.addOk,
+      hasAddFound: !!this.state.addFound,
+      addTitle: (this.state.addFound || {}).title || "Amazon product " + ((this.state.addFound || {}).asin || ""),
+      addMeta: (() => { const f = this.state.addFound || {}; return f.asin ? f.asin + " \u00b7 " + (f.price != null ? "now $" + f.price.toFixed(2) + " on Amazon" : "price not available yet") : ""; })(),
+      addNote: this.state.addNote || "", hasAddNote: !!this.state.addNote,
+      addImgStyle: "width:72px;height:72px;box-sizing:border-box;border:1px solid var(--color-divider);background:#fff center/contain no-repeat" + ((this.state.addFound || {}).img ? " url(\"" + String(this.state.addFound.img).replace(/"/g, "%22") + "\")" : ""),
+      addTarget: this.state.addTarget || "", onAddTarget: e => this.setState({ addTarget: e.target.value, addErr: "" }),
+      onAddTargetKey: e => { if (e.key === "Enter") { e.preventDefault(); this.saveAdd(); } },
+      saveAdd: () => this.saveAdd(), saveAddLabel: this.state.addBusy && this.state.addFound ? "Saving\u2026" : "Start watching",
+      cancelAdd: () => this.setState({ addFound: null, addErr: "", addTarget: "", addNote: "" }),
       hWatchSelf: this.deployed() ? "/price-watch" : "Price Watches.dc.html",
       hHome: this.sitePath(""), hCat: this.sitePath("categories"), hPrime: this.sitePath("prime"), hGuide: this.sitePath("guides"), hAbout: this.sitePath("about"),
       query: this.state.query, onQuery: e => this.setState({ query: e.target.value }),
