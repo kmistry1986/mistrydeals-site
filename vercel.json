@@ -4,7 +4,6 @@
   "cleanUrls": true,
   "trailingSlash": false,
   "redirects": [
-    { "source": "/d/:slug", "destination": "https://qolksrytidvxarrlygyy.supabase.co/functions/v1/deal-redirect?slug=:slug", "permanent": false },
     { "source": "/admin", "destination": "/catalogue" },
     { "source": "/admin/catalogue", "destination": "/catalogue" },
     { "source": "/admin/dealqueue", "destination": "/dealqueue" },
@@ -20,6 +19,7 @@
     { "source": "/admin/guidecarousel", "destination": "/guidecarousel" }
   ],
   "rewrites": [
+    { "source": "/d/:slug", "destination": "https://qolksrytidvxarrlygyy.supabase.co/functions/v1/deal-redirect?slug=:slug" },
     { "source": "/(.*)/(DealCard|DealCardMini|DealRow|ProductImage)\\.dc\\.html", "destination": "/$2.dc.html" },
     { "source": "/(.*)/(DealCard|DealCardMini|DealRow|ProductImage)\\.dc", "destination": "/$2.dc.html" },
     { "source": "/links", "destination": "/links.html" },
@@ -44,6 +44,13 @@
     { "source": "/deal/:id", "destination": "/" }
   ],
   "headers": [
+    {
+      "source": "/d/:slug",
+      "headers": [
+        { "key": "Cache-Control", "value": "no-store" },
+        { "key": "x-vercel-cdn-cache-control", "value": "no-store" }
+      ]
+    },
     {
       "source": "/:path*",
       "headers": [{ "key": "Cache-Control", "value": "public, max-age=3600, s-maxage=3600" }]
