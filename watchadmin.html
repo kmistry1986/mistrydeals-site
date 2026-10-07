@@ -413,8 +413,8 @@ class Component extends DCLogic {
   adminHref(page) {
     const deployed = location.pathname.indexOf(".dc.html") === -1;
     const map = deployed
-      ? { catalogue: "/catalogue", dealqueue: "/dealqueue", carousel: "/carousel", reddit: "/redditposter", guides: "/buyingguides" }
-      : { catalogue: "MistryDeals Admin v2.dc.html", dealqueue: "MistryDeals Deal Queue.dc.html", carousel: "MistryDeals Social.dc.html", reddit: "MistryDeals Reddit Poster.dc.html", guides: "MistryDeals Buying Guides.dc.html" };
+      ? { catalogue: "/catalogue", dealqueue: "/dealqueue", carousel: "/carousel", reddit: "/redditposter", guides: "/buyingguides", stories: "/stories" }
+      : { catalogue: "MistryDeals Admin v2.dc.html", dealqueue: "MistryDeals Deal Queue.dc.html", carousel: "MistryDeals Social.dc.html", reddit: "MistryDeals Reddit Poster.dc.html", guides: "MistryDeals Buying Guides.dc.html", stories: "MistryDeals Stories.dc.html" };
     return map[page];
   }
 
@@ -500,7 +500,7 @@ class Component extends DCLogic {
       authError: this.state.authError, hasAuthError: !!this.state.authError,
       userEmail: this.state.user || "", savedNote: this.state.saved,
       signOut: () => this.signOutNow(), reload: () => this.load(),
-      nav: [["Catalogue", "catalogue"], ["Deal queue", "dealqueue"], ["Social", "carousel"], ["Reddit poster", "reddit"], ["Buying guides", "guides"]]
+      nav: [["Catalogue", "catalogue"], ["Deal queue", "dealqueue"], ["Social", "carousel"], ["Reddit poster", "reddit"], ["Buying guides", "guides"], ["Story links", "stories"]]
         .map(([label, k]) => ({ label, href: this.adminHref(k) })),
       stats: [
         { label: "Active", value: String(counts.active), sub: "waiting for a drop", numStyle: num("var(--color-text)") },

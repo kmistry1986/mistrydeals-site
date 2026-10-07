@@ -115,6 +115,7 @@
         <a href="{{ hReddit }}" style="font:inherit;font-family:var(--font-heading);font-weight:700;font-size:11px;letter-spacing:.1em;text-transform:uppercase;text-decoration:none;padding:8px 12px;border:1px solid var(--color-divider);color:var(--color-text);border-left:0">Reddit poster</a>
         <a href="{{ hGuides }}" style="font:inherit;font-family:var(--font-heading);font-weight:700;font-size:11px;letter-spacing:.1em;text-transform:uppercase;text-decoration:none;padding:8px 12px;border:1px solid var(--color-divider);color:var(--color-text);border-left:0">Buying guides</a>
         <a href="{{ hWatches }}" style="font:inherit;font-family:var(--font-heading);font-weight:700;font-size:11px;letter-spacing:.1em;text-transform:uppercase;text-decoration:none;padding:8px 12px;border:1px solid var(--color-divider);color:var(--color-text);border-left:0">Price watches</a>
+        <a href="{{ hStories }}" style="font:inherit;font-family:var(--font-heading);font-weight:700;font-size:11px;letter-spacing:.1em;text-transform:uppercase;text-decoration:none;padding:8px 12px;border:1px solid var(--color-divider);color:var(--color-text);border-left:0">Story links</a>
       </div>
       </sc-if>
       <sc-if value="{{ isWide }}" hint-placeholder-val="{{ true }}">
@@ -478,6 +479,7 @@
                   <button onClick="{{ r.history }}" title="Every price the pipeline has recorded for this ASIN" style="font:inherit;font-family:var(--font-heading);font-weight:700;font-size:10px;letter-spacing:.08em;text-transform:uppercase;background:none;border:0;padding:0;cursor:pointer;color:var(--color-accent-700)">History</button>
                   <button onClick="{{ r.edit }}" title="Edit title, category and prices" style="font:inherit;font-family:var(--font-heading);font-weight:700;font-size:10px;letter-spacing:.08em;text-transform:uppercase;background:none;border:0;padding:0;cursor:pointer;color:var(--color-accent-700)">Edit</button>
                   <button onClick="{{ r.reel }}" title="Render this deal as a 1080×1920 reel overlay and download the PNG" style="{{ r.reelStyle }}">{{ r.reelLabel }}</button>
+                  <sc-if value="{{ r.isNarrow }}" hint-placeholder-val="{{ false }}"><button onClick="{{ r.story }}" title="Copy the affiliate link and save the 1080×1920 story image" style="{{ r.storyStyle }}">{{ r.storyLabel }}</button></sc-if>
                   <button onClick="{{ r.remove }}" title="Delete this product permanently" style="font:inherit;font-family:var(--font-heading);font-weight:700;font-size:10px;letter-spacing:.08em;text-transform:uppercase;background:none;border:0;padding:0;cursor:pointer;color:var(--color-neutral-700)">Delete</button>
                 </div>
               </div>
@@ -2102,8 +2104,48 @@ class Component extends DCLogic {
     }
   }
 
+  // phone flow for manual stories: link goes to the clipboard first (while the tap still
+  // counts as a user gesture), then the 1080x1920 render is shared/saved
+  async storyKit(p) {
+    if (this.state.reelBusy) return;
+    const asin = p.asin;
+    if (!asin) { this.setState({ saved: "No ASIN on this product" }); return; }
+    const link = "https://www.amazon.com/dp/" + asin + "?tag=mistrydealshp-20";
+    let copied = false;
+    try { await navigator.clipboard.writeText(link); copied = true; }
+    catch (e) {
+      const ta = document.createElement("textarea"); ta.value = link; ta.setAttribute("readonly", ""); ta.style.position = "fixed"; ta.style.opacity = "0";
+      document.body.appendChild(ta); ta.select(); try { copied = document.execCommand("copy"); } catch (x) {} ta.remove();
+    }
+    this.setState({ reelBusy: p.id, storyBusy: p.id, saved: (copied ? "Link copied \u2014 " : "") + "rendering story\u2026" });
+    try {
+      const res = await this.req(BASE + "/functions/v1/reel-download", {
+        method: "POST", headers: this.headers({ "Content-Type": "application/json" }),
+        body: JSON.stringify({ productId: p.id, slug: p.slug || null, layout: "safe" })
+      });
+      if (!res.ok) { const t = await res.text().catch(() => ""); throw new Error(t ? t.slice(0, 120) : String(res.status)); }
+      const blob = await res.blob();
+      const name = (p.slug || asin) + "-story.png";
+      const file = new File([blob], name, { type: "image/png" });
+      let shared = false;
+      if (navigator.canShare && navigator.canShare({ files: [file] })) {
+        try { await navigator.share({ files: [file] }); shared = true; }
+        catch (e) { if (e && e.name === "AbortError") shared = true; }
+      }
+      if (!shared) {
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement("a"); a.href = url; a.download = name;
+        document.body.appendChild(a); a.click(); a.remove();
+        setTimeout(() => URL.revokeObjectURL(url), 4000);
+      }
+      this.setState({ reelBusy: "", storyBusy: "", saved: copied ? "Story image ready \u00b7 link copied" : "Story image ready \u00b7 copy failed: " + link });
+    } catch (e) {
+      this.setState({ reelBusy: "", storyBusy: "", saved: "Story failed \u2014 " + (e && e.message ? e.message : "network error") + (copied ? " (link was copied)" : "") });
+    }
+  }
+
   adminHref(page) {
-    const deployed = { catalogue: "/catalogue", dealqueue: "/dealqueue", carousel: "/carousel", brands: "/brandrules", scrapes: "/scrapelog", reddit: "/redditposter", guides: "/buyingguides", watches: "/watchadmin" };
+    const deployed = { catalogue: "/catalogue", dealqueue: "/dealqueue", carousel: "/carousel", brands: "/brandrules", scrapes: "/scrapelog", reddit: "/redditposter", guides: "/buyingguides", watches: "/watchadmin", stories: "/stories" };
     if (/^\/(catalogue|dealqueue|carousel|brandrules|scrapelog|redditposter|buyingguides)/.test(location.pathname) || location.pathname.indexOf("/admin/") !== -1) return deployed[page] || "/catalogue";
     const local = {
       catalogue: "MistryDeals Admin v2.dc.html",
@@ -2113,7 +2155,8 @@ class Component extends DCLogic {
       scrapes: "MistryDeals Deal Queue.dc.html#scrapes",
       reddit: "MistryDeals Reddit Poster.dc.html",
       guides: "MistryDeals Buying Guides.dc.html",
-      watches: "MistryDeals Watch Admin.dc.html"
+      watches: "MistryDeals Watch Admin.dc.html",
+      stories: "MistryDeals Stories.dc.html"
     };
     return local[page] || local.catalogue;
   }
@@ -2178,6 +2221,7 @@ class Component extends DCLogic {
         { label: "Reddit poster", href: this.adminHref("reddit") },
         { label: "Buying guides", href: this.adminHref("guides") },
         { label: "Price watches", href: this.adminHref("watches") },
+        { label: "Story links", href: this.adminHref("stories") },
         { label: "View site", href: /^\/(catalogue|dealqueue|carousel|brandrules|scrapelog|redditposter|buyingguides)/.test(location.pathname) || location.pathname.indexOf("/admin/") !== -1 ? "/" : "MistryDeals Site.dc.html" }
       ].map(m => ({
         label: m.label,
@@ -2193,6 +2237,7 @@ class Component extends DCLogic {
       hReddit: this.adminHref("reddit"),
       hGuides: this.adminHref("guides"),
       hWatches: this.adminHref("watches"),
+      hStories: this.adminHref("stories"),
       refresh: () => this.loadAll(),
       toggleDark: () => {
         const next = !this.isDark();
@@ -2730,6 +2775,10 @@ class Component extends DCLogic {
           sync: () => this.syncNow(p),
           edit: () => this.startEdit(p),
           reel: () => this.downloadReel(p),
+          story: () => this.storyKit(p),
+          storyLabel: this.state.storyBusy === p.id ? "Rendering\u2026" : "Story + link",
+          storyStyle: "font:inherit;font-family:var(--font-heading);font-weight:700;font-size:10px;letter-spacing:.08em;text-transform:uppercase;cursor:pointer;padding:6px 8px;min-height:32px;border:0;background:" +
+            (this.state.storyBusy === p.id ? "var(--color-neutral-300);color:var(--color-neutral-700)" : "var(--color-accent);color:#16233a"),
           reelLabel: this.state.reelBusy === p.id ? "Rendering\u2026" : "Reel",
           reelStyle: "font:inherit;font-family:var(--font-heading);font-weight:700;font-size:10px;letter-spacing:.08em;text-transform:uppercase;background:none;border:0;padding:0;cursor:pointer;color:" +
             (this.state.reelBusy === p.id ? "var(--color-neutral-600)" : "var(--color-accent-700)"),

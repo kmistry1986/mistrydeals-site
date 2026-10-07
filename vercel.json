@@ -67,6 +67,10 @@
   ],
   "rewrites": [
     {
+      "source": "/stories",
+      "destination": "/stories.html"
+    },
+    {
       "source": "/watchadmin",
       "destination": "/watchadmin.html"
     },
