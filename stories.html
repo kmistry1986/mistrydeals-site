@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <link rel="stylesheet" href="_ds/modernist-424462e2-4060-4771-92af-91bbc246b8fd/styles.css">
+  <meta name="robots" content="noindex, nofollow">
+  <style>
+    html { -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
+    body { margin: 0; }
+    .btn-primary { background: var(--color-neutral-900); color: var(--color-bg); border-color: var(--color-neutral-900); }
+    .btn-primary:hover { background: var(--color-neutral-800); border-color: var(--color-neutral-800); }
+    a { color: var(--color-accent-700); }
+    a:hover { color: var(--color-accent-600); }
+    @media (max-width: 720px) {
+      .s-row { grid-template-columns: 64px minmax(0,1fr) !important; }
+      .s-row > .s-acts { grid-column: 1 / -1 !important; justify-content: flex-start !important; }
+      .s-fs { font-size: 30px !important; }
+    }
+  </style>
+</helmet>
+
+<sc-if value="{{ verifying }}" hint-placeholder-val="{{ true }}">
+  <div style="background:var(--color-bg);min-height:100vh;display:grid;place-items:center;color:var(--color-neutral-700);font-family:var(--font-heading);font-weight:800;font-size:13px;letter-spacing:.12em;text-transform:uppercase">Mistrydeals</div>
+</sc-if>
+
+<sc-if value="{{ signedOut }}" hint-placeholder-val="{{ false }}">
+  <div style="background:var(--color-bg);min-height:100vh;display:grid;place-items:center;padding:24px;color:var(--color-text)">
+    <div style="width:100%;max-width:380px">
+      <div style="font-family:var(--font-heading);font-weight:800;font-size:13px;letter-spacing:.12em;text-transform:uppercase;margin-bottom:28px">Mistrydeals</div>
+      <h1 style="margin:0 0 8px;font-size:34px;line-height:1.05;letter-spacing:-.02em">Admin sign in</h1>
+      <p style="margin:0 0 24px;font-size:14px;color:var(--color-neutral-700)">Story links for manual link stickers.</p>
+      <form onSubmit="{{ onSignIn }}">
+        <div class="field" style="margin-bottom:14px"><label>Email</label><input class="input" type="email" autocomplete="username" value="{{ email }}" onChange="{{ onEmail }}"></input></div>
+        <div class="field" style="margin-bottom:18px"><label>Password</label><input class="input" type="password" autocomplete="current-password" value="{{ password }}" onChange="{{ onPassword }}"></input></div>
+        <sc-if value="{{ hasAuthError }}" hint-placeholder-val="{{ false }}">
+          <div style="border-left:3px solid var(--color-accent);padding:8px 12px;margin-bottom:16px;font-size:13px;color:var(--color-accent-700)">{{ authError }}</div>
+        </sc-if>
+        <button type="submit" class="btn btn-primary btn-block" style="justify-content:space-between">{{ signInLabel }} <span>&#8594;</span></button>
+      </form>
+    </div>
+  </div>
+</sc-if>
+
+<sc-if value="{{ signedIn }}" hint-placeholder-val="{{ false }}">
+<div style="background:var(--color-bg);min-height:100vh;color:var(--color-text)">
+  <div style="border-bottom:2px solid var(--color-divider)">
+    <div style="max-width:1100px;margin:0 auto;padding:18px 16px;display:flex;align-items:flex-end;gap:16px 24px;flex-wrap:wrap">
+      <div>
+        <div style="font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--color-accent-700);margin-bottom:8px">MistryDeals &#183; internal</div>
+        <h1 class="s-fs" style="margin:0;font-size:38px;line-height:1;letter-spacing:-.02em;white-space:nowrap">Story links</h1>
+      </div>
+      <div style="display:flex;flex-wrap:wrap;gap:0;min-width:0;flex:1 1 360px">
+        <sc-for list="{{ nav }}" as="n" hint-placeholder-count="5">
+          <a href="{{ n.href }}" style="font:inherit;font-family:var(--font-heading);font-weight:700;font-size:11px;letter-spacing:.1em;text-transform:uppercase;text-decoration:none;padding:8px 12px;border:1px solid var(--color-divider);margin:0 -1px -1px 0;color:var(--color-text);white-space:nowrap">{{ n.label }}</a>
+        </sc-for>
+        <span style="font-family:var(--font-heading);font-weight:700;font-size:11px;letter-spacing:.1em;text-transform:uppercase;padding:8px 12px;border:1px solid var(--color-text);background:var(--color-text);color:var(--color-bg);margin:0 -1px -1px 0;white-space:nowrap">Story links</span>
+      </div>
+      <div style="margin-left:auto;display:flex;align-items:center;gap:10px;flex-wrap:wrap">
+        <span style="font-size:12px;color:var(--color-neutral-700)">{{ toast }}</span>
+        <button onClick="{{ reload }}" class="btn btn-secondary" style="font-size:12px;padding:8px 12px;white-space:nowrap">Refresh</button>
+        <button onClick="{{ signOut }}" class="btn btn-ghost" style="font-size:12px;padding:8px 12px;white-space:nowrap">Sign out</button>
+      </div>
+    </div>
+  </div>
+
+  <div style="max-width:1100px;margin:0 auto;padding:20px 16px 60px">
+    <p style="margin:0 0 16px;font-size:14px;line-height:1.5;color:var(--color-neutral-700);max-width:72ch;text-wrap:pretty">Stories post automatically, but Instagram&#8217;s API can&#8217;t add link stickers. Open each story in the app, add a Link sticker, and paste the link from here. Ticks are saved on this device.</p>
+
+    <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:6px">
+      <div style="display:flex;flex-wrap:wrap;gap:6px">
+        <sc-for list="{{ ranges }}" as="f" hint-placeholder-count="4">
+          <button onClick="{{ f.pick }}" style="{{ f.style }}">{{ f.label }}</button>
+        </sc-for>
+      </div>
+      <div style="display:flex;flex-wrap:wrap;gap:6px">
+        <sc-for list="{{ plats }}" as="f" hint-placeholder-count="3">
+          <button onClick="{{ f.pick }}" style="{{ f.style }}">{{ f.label }}</button>
+        </sc-for>
+      </div>
+      <label style="display:flex;align-items:center;gap:8px;font-size:13px;cursor:pointer;margin-left:auto"><input type="checkbox" checked="{{ hideDone }}" onChange="{{ toggleHideDone }}"></input>Hide stickered</label>
+    </div>
+
+    <sc-if value="{{ hasError }}" hint-placeholder-val="{{ false }}">
+      <div style="border-left:3px solid var(--color-accent);padding:12px 14px;margin-top:16px;font-size:13px;line-height:1.5;color:var(--color-accent-700)">{{ error }}</div>
+    </sc-if>
+    <sc-if value="{{ loading }}" hint-placeholder-val="{{ true }}">
+      <div style="padding:40px 0;color:var(--color-neutral-700);font-size:13px">Loading stories&#8230;</div>
+    </sc-if>
+    <sc-if value="{{ empty }}" hint-placeholder-val="{{ false }}">
+      <div style="padding:40px 0;color:var(--color-neutral-700);font-size:14px">{{ emptyText }}</div>
+    </sc-if>
+
+    <sc-for list="{{ days }}" as="d" hint-placeholder-count="2">
+      <div style="margin-top:22px">
+        <div style="display:flex;align-items:baseline;gap:12px;flex-wrap:wrap;padding-bottom:8px;border-bottom:2px solid var(--color-text)">
+          <h2 style="margin:0;font-size:20px;line-height:1.1">{{ d.label }}</h2>
+          <span style="font-size:12px;color:var(--color-neutral-700)">{{ d.meta }}</span>
+          <button onClick="{{ d.copyAll }}" class="btn btn-ghost" style="margin-left:auto;font-size:12px;padding:6px 10px">Copy all links</button>
+        </div>
+        <sc-for list="{{ d.rows }}" as="r" hint-placeholder-count="4">
+          <div class="s-row" style="{{ r.rowStyle }}">
+            <div style="{{ r.imgStyle }}"></div>
+            <div style="min-width:0">
+              <div style="display:flex;align-items:baseline;gap:8px;flex-wrap:wrap;font-size:12px;color:var(--color-neutral-700)">
+                <span style="font-family:var(--font-heading);font-weight:800;font-size:14px;color:var(--color-text)">#{{ r.n }}</span>
+                <span>{{ r.time }}</span><span>&#183;</span><span>{{ r.plat }}</span>
+                <sc-if value="{{ r.hasPrice }}" hint-placeholder-val="{{ false }}"><span>&#183;</span><span>{{ r.price }}</span></sc-if>
+              </div>
+              <div style="font-size:14.5px;font-weight:600;line-height:1.3;margin-top:3px;overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical">{{ r.title }}</div>
+              <a href="{{ r.link }}" target="_blank" rel="noopener sponsored" style="display:block;font-size:12.5px;margin-top:4px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-variant-numeric:tabular-nums">{{ r.link }}</a>
+            </div>
+            <div class="s-acts" style="display:flex;gap:6px;justify-content:flex-end;align-items:center;flex-wrap:wrap">
+              <button onClick="{{ r.copy }}" class="btn btn-primary" style="font-size:12px;padding:8px 12px;min-height:40px;white-space:nowrap">{{ r.copyLabel }}</button>
+              <button onClick="{{ r.toggle }}" class="btn btn-secondary" style="font-size:12px;padding:8px 12px;min-height:40px;white-space:nowrap">{{ r.doneLabel }}</button>
+            </div>
+          </div>
+        </sc-for>
+      </div>
+    </sc-for>
+  </div>
+</div>
+</sc-if>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+const BASE = "https://qolksrytidvxarrlygyy.supabase.co";
+const KEY = "sb_publishable_UX38KeF1XAKtzvS01yfx7w_8s5NkOH3";
+const TAG = "mistrydealshp-20";
+const DONE_KEY = "md-story-stickered";
+
+class Component extends DCLogic {
+  state = {
+    token: null, refresh: null, user: null, email: "", password: "", authError: "", signingIn: false, verifying: true,
+    posts: null, products: {}, error: "", range: "today", plat: "all", hideDone: false, copied: null, toast: "",
+    done: (function () { try { return JSON.parse(localStorage.getItem(DONE_KEY) || "{}"); } catch (e) { return {}; } })()
+  };
+
+  componentDidMount() {
+    this.paint();
+    let stored = null;
+    try { stored = JSON.parse(localStorage.getItem("md-admin-session") || "null"); } catch (e) {}
+    if (!stored || !stored.token) { this.signOutNow(); return; }
+    this.validate(stored);
+  }
+
+  paint() {
+    const r = document.documentElement.style;
+    let dark = false;
+    try { dark = !!JSON.parse(localStorage.getItem("md-admin-dark") || "false"); } catch (e) {}
+    const NEUT = ["#faf8f4", "#f2efe9", "#e3dfd5", "#c9c4b7", "#9aa2b0", "#7b8698", "#5c6474", "#2f3c55", "#16233a"];
+    r.setProperty("--color-bg", dark ? "#11151d" : "#f2efe9");
+    r.setProperty("--color-surface", dark ? "#1a202c" : "#faf8f4");
+    r.setProperty("--color-text", dark ? "#eef0f4" : "#16233a");
+    r.setProperty("--color-divider", dark ? "color-mix(in srgb, #eef0f4 26%, transparent)" : "#cfc9bb");
+    NEUT.forEach((hex, i) => r.setProperty("--color-neutral-" + ((i + 1) * 100), dark ? NEUT[8 - i] : hex));
+    const base = "#d98014", away = dark ? "#eef0f4" : "black";
+    r.setProperty("--color-accent", base);
+    r.setProperty("--color-accent-600", "color-mix(in oklch, " + base + ", " + away + " 16%)");
+    r.setProperty("--color-accent-700", "color-mix(in oklch, " + base + ", " + away + " 30%)");
+    document.body.style.background = "var(--color-bg)";
+    document.body.style.color = "var(--color-text)";
+  }
+
+  async validate(stored) {
+    try {
+      const res = await fetch(BASE + "/auth/v1/user", { headers: { apikey: KEY, Authorization: "Bearer " + stored.token } });
+      if (res.ok) {
+        const u = await res.json();
+        this.setState({ token: stored.token, refresh: stored.refresh || null, user: (u && u.email) || stored.user, verifying: false }, () => this.load());
+        return;
+      }
+      this.setState({ refresh: stored.refresh || null, user: stored.user });
+      const fresh = await this.refreshSession(stored.refresh);
+      if (!fresh) { this.signOutNow(); this.setState({ authError: "Session expired \u2014 sign in again." }); return; }
+      this.setState({ verifying: false }, () => this.load());
+    } catch (e) { this.signOutNow(); }
+  }
+
+  async refreshSession(rt) {
+    rt = rt || this.state.refresh;
+    if (!rt) return null;
+    try {
+      const res = await fetch(BASE + "/auth/v1/token?grant_type=refresh_token", { method: "POST", headers: { apikey: KEY, "Content-Type": "application/json" }, body: JSON.stringify({ refresh_token: rt }) });
+      if (!res.ok) return null;
+      const d = await res.json();
+      if (!d.access_token) return null;
+      const s = { token: d.access_token, refresh: d.refresh_token || rt, user: this.state.user };
+      try { localStorage.setItem("md-admin-session", JSON.stringify(s)); } catch (e) {}
+      this.setState({ token: s.token, refresh: s.refresh });
+      return s.token;
+    } catch (e) { return null; }
+  }
+
+  async req(url) {
+    const h = t => ({ headers: { apikey: KEY, Authorization: "Bearer " + (t || this.state.token || KEY) } });
+    let res = await fetch(url, h());
+    if (res.status === 401 || res.status === 403) { const fresh = await this.refreshSession(); if (fresh) res = await fetch(url, h(fresh)); }
+    return res;
+  }
+
+  async signIn(e) {
+    if (e && e.preventDefault) e.preventDefault();
+    this.setState({ signingIn: true, authError: "" });
+    try {
+      const res = await fetch(BASE + "/auth/v1/token?grant_type=password", { method: "POST", headers: { apikey: KEY, "Content-Type": "application/json" }, body: JSON.stringify({ email: this.state.email, password: this.state.password }) });
+      const d = await res.json();
+      if (!res.ok || !d.access_token) { this.setState({ signingIn: false, authError: d.error_description || d.msg || "Sign in failed." }); return; }
+      const s = { token: d.access_token, refresh: d.refresh_token || null, user: (d.user && d.user.email) || this.state.email };
+      try { localStorage.setItem("md-admin-session", JSON.stringify(s)); } catch (err) {}
+      this.setState({ token: s.token, refresh: s.refresh, user: s.user, password: "", signingIn: false, verifying: false }, () => this.load());
+    } catch (err) { this.setState({ signingIn: false, authError: "Network error. Try again." }); }
+  }
+  signOutNow() {
+    try { localStorage.removeItem("md-admin-session"); } catch (e) {}
+    this.setState({ token: null, user: null, refresh: null, posts: null, verifying: false });
+  }
+
+  since() {
+    const now = new Date(), r = this.state.range;
+    const start = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+    if (r === "today") return start;
+    if (r === "yesterday") return new Date(start.getTime() - 86400000);
+    return new Date(start.getTime() - (r === "7d" ? 6 : 29) * 86400000);
+  }
+
+  async load() {
+    this.setState({ error: "", posts: null });
+    const from = this.since().toISOString();
+    try {
+      const res = await this.req(BASE + "/rest/v1/scheduled_posts?select=id,product_id,platform,status,scheduled_at,updated_at,image_url,caption,post_source" +
+        "&platform=in.(instagram_story,facebook_story)&status=eq.published&updated_at=gte." + encodeURIComponent(from) + "&order=updated_at.asc&limit=1000");
+      if (!res.ok) { this.setState({ posts: [], error: "Could not load scheduled_posts (" + res.status + ")." }); return; }
+      const posts = await res.json();
+      this.setState({ posts });
+      const ids = Array.from(new Set(posts.map(p => p.product_id).filter(Boolean)));
+      const out = {};
+      for (let i = 0; i < ids.length; i += 80) {
+        const r = await this.req(BASE + "/rest/v1/products?select=id,asin,display_title,title,image_url,price,scraped_coupon_price&id=in.(" + ids.slice(i, i + 80).join(",") + ")");
+        if (r.ok) (await r.json()).forEach(p => { out[p.id] = p; });
+      }
+      this.setState({ products: out });
+    } catch (e) { this.setState({ posts: [], error: "Could not load stories \u2014 network error." }); }
+  }
+
+  link(p) { return p && p.asin ? "https://www.amazon.com/dp/" + p.asin + "?tag=" + TAG : ""; }
+  async copyText(t, id, msg) {
+    try { await navigator.clipboard.writeText(t); }
+    catch (e) { const ta = document.createElement("textarea"); ta.value = t; document.body.appendChild(ta); ta.select(); try { document.execCommand("copy"); } catch (x) {} ta.remove(); }
+    this.setState({ copied: id, toast: msg });
+    clearTimeout(this._ct); this._ct = setTimeout(() => this.setState({ copied: null, toast: "" }), 1800);
+  }
+  toggleDone(id) {
+    const done = Object.assign({}, this.state.done);
+    if (done[id]) delete done[id]; else done[id] = Date.now();
+    try { localStorage.setItem(DONE_KEY, JSON.stringify(done)); } catch (e) {}
+    this.setState({ done });
+  }
+  adminHref(k) {
+    const dep = location.pathname.indexOf(".dc.html") === -1;
+    const m = dep ? { catalogue: "/catalogue", dealqueue: "/dealqueue", carousel: "/carousel", guides: "/buyingguides", watches: "/watchadmin" }
+      : { catalogue: "MistryDeals Admin v2.dc.html", dealqueue: "MistryDeals Deal Queue.dc.html", carousel: "MistryDeals Social.dc.html", guides: "MistryDeals Buying Guides.dc.html", watches: "MistryDeals Watch Admin.dc.html" };
+    return m[k];
+  }
+
+  renderVals() {
+    const posts = this.state.posts || [], prods = this.state.products || {}, done = this.state.done || {};
+    const plat = this.state.plat;
+    let list = posts.filter(p => plat === "all" || p.platform === plat);
+    const shown = list.filter(p => !(this.state.hideDone && done[p.id]));
+    const dayKey = iso => { const d = new Date(iso); return d.getFullYear() + "-" + (d.getMonth() + 1) + "-" + d.getDate(); };
+    const groups = {}, order = [];
+    list.forEach(p => { const k = dayKey(p.updated_at || p.scheduled_at); if (!groups[k]) { groups[k] = []; order.push(k); } groups[k].push(p); });
+    const today = dayKey(new Date().toISOString()), yest = dayKey(new Date(Date.now() - 86400000).toISOString());
+    const days = order.slice().reverse().map(k => {
+      const all = groups[k];
+      const rows = all.map((p, i) => ({ p, n: i + 1 })).filter(x => !(this.state.hideDone && done[x.p.id])).map(({ p, n }) => {
+        const pr = prods[p.product_id] || {};
+        const c = parseFloat(pr.scraped_coupon_price) > 0 ? parseFloat(pr.scraped_coupon_price) : parseFloat(pr.price);
+        const link = this.link(pr), img = pr.image_url || p.image_url || "", isDone = !!done[p.id];
+        return {
+          n: String(n), time: new Date(p.updated_at || p.scheduled_at).toLocaleTimeString("en-US", { hour: "numeric", minute: "2-digit" }),
+          plat: p.platform === "facebook_story" ? "Facebook story" : "Instagram story",
+          price: c > 0 ? "$" + c.toFixed(2) : "", hasPrice: c > 0,
+          title: pr.display_title || pr.title || p.caption || "Product", link: link || "No ASIN on this product",
+          imgStyle: "width:64px;height:64px;box-sizing:border-box;border:1px solid var(--color-divider);background:#fff center/contain no-repeat" + (img ? " url(\"" + String(img).replace(/"/g, "%22") + "\")" : ""),
+          rowStyle: "display:grid;grid-template-columns:64px minmax(0,1fr) auto;gap:14px;align-items:center;padding:12px 0;border-bottom:1px solid var(--color-divider)" + (isDone ? ";opacity:.5" : ""),
+          copyLabel: this.state.copied === p.id ? "Copied" : "Copy link",
+          copy: () => link && this.copyText(link, p.id, "Link copied"),
+          doneLabel: isDone ? "Undo" : "Stickered",
+          toggle: () => this.toggleDone(p.id)
+        };
+      });
+      const left = all.filter(p => !done[p.id]).length;
+      const d0 = new Date(all[0].updated_at || all[0].scheduled_at);
+      return {
+        label: k === today ? "Today" : k === yest ? "Yesterday" : d0.toLocaleDateString("en-US", { weekday: "short", month: "short", day: "numeric" }),
+        meta: all.length + (all.length === 1 ? " story" : " stories") + " \u00b7 " + (left ? left + " to sticker" : "all stickered") + " \u00b7 oldest first",
+        copyAll: () => this.copyText(all.map((p, i) => (i + 1) + ". " + ((prods[p.product_id] || {}).display_title || (prods[p.product_id] || {}).title || p.caption || "Product") + "\n" + (this.link(prods[p.product_id]) || "(no ASIN)")).join("\n\n"), "all-" + k, "All links copied"),
+        rows
+      };
+    }).filter(d => d.rows.length);
+
+    const pill = (on, label, pick) => ({ label, pick, style: "font:inherit;font-size:12px;padding:7px 10px;cursor:pointer;white-space:nowrap;border:1px solid " +
+      (on ? "var(--color-accent);background:var(--color-accent);color:#16233a" : "var(--color-divider);background:transparent;color:var(--color-text)") });
+    const setRange = r => this.setState({ range: r }, () => this.load());
+
+    return {
+      verifying: this.state.verifying, signedOut: !this.state.verifying && !this.state.token, signedIn: !this.state.verifying && !!this.state.token,
+      email: this.state.email, password: this.state.password,
+      onEmail: e => this.setState({ email: e.target.value }), onPassword: e => this.setState({ password: e.target.value }),
+      onSignIn: e => this.signIn(e), signInLabel: this.state.signingIn ? "Signing in\u2026" : "Sign in",
+      authError: this.state.authError, hasAuthError: !!this.state.authError,
+      signOut: () => this.signOutNow(), reload: () => this.load(), toast: this.state.toast,
+      nav: [["Catalogue", "catalogue"], ["Deal queue", "dealqueue"], ["Social", "carousel"], ["Buying guides", "guides"], ["Price watches", "watches"]].map(([label, k]) => ({ label, href: this.adminHref(k) })),
+      ranges: [["today", "Today"], ["yesterday", "Since yesterday"], ["7d", "7 days"], ["30d", "30 days"]].map(([k, l]) => pill(this.state.range === k, l, () => setRange(k))),
+      plats: [["all", "All"], ["instagram_story", "Instagram"], ["facebook_story", "Facebook"]].map(([k, l]) => pill(plat === k, l, () => this.setState({ plat: k }))),
+      hideDone: !!this.state.hideDone, toggleHideDone: () => this.setState(s => ({ hideDone: !s.hideDone })),
+      error: this.state.error, hasError: !!this.state.error,
+      loading: this.state.posts === null,
+      empty: this.state.posts !== null && !days.length,
+      emptyText: list.length && !shown.length ? "Every story in this range is stickered." : "No stories posted in this range yet.",
+      days
+    };
+  }
+}
+</script>
+</body>
+</html>
