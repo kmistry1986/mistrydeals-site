@@ -1,0 +1,2898 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="robots" content="noindex, nofollow">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="/support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <link rel="stylesheet" href="/_ds/modernist-424462e2-4060-4771-92af-91bbc246b8fd/styles.css">
+  <style>
+    html { -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
+    body { margin: 0; }
+    /* 10a: navy does the reading and the pressing, amber only points.
+       A solid amber button with light type sits at ~2.6:1 — unusable. */
+    .btn-primary {
+      background: var(--color-neutral-900); color: var(--color-bg);
+      border-color: var(--color-neutral-900);
+    }
+    .btn-primary:hover { background: var(--color-neutral-800); border-color: var(--color-neutral-800); }
+    .btn-primary:active { background: var(--color-neutral-900); }
+    a { color: var(--color-accent-700); }
+    a:hover { color: var(--color-accent-600); }
+
+    @media (max-width: 820px) {
+      .m-stack { grid-template-columns: minmax(0,1fr) !important; gap: 22px !important; }
+      .m-2col { grid-template-columns: repeat(2, minmax(0,1fr)) !important; }
+      .m-wrap { flex-wrap: wrap !important; }
+      .seg { flex-wrap: wrap !important; max-width: 100%; }
+      .m-scroll { min-width: 0 !important; }
+      .m-hide { display: none !important; }
+      .m-row { grid-template-columns: 3px 64px minmax(0,1fr) !important; gap: 6px 10px !important; padding: 12px 0 !important; }
+      .m-row > :nth-child(n+4) { grid-column: 2 / -1 !important; }
+      .m-static { position: static !important; top: auto !important; }
+      .m-fs-xl { font-size: clamp(34px, 9vw, 52px) !important; }
+      .m-fs-lg { font-size: clamp(28px, 7.5vw, 40px) !important; }
+      .m-fs-md { font-size: clamp(22px, 6vw, 30px) !important; }
+      .nav { flex-wrap: wrap !important; row-gap: 8px !important; }
+      img, video { max-width: 100%; }
+    }
+    input[type="checkbox"] { accent-color: var(--color-accent); }
+  </style>
+</helmet>
+
+<template id="__bundler_thumbnail">
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400"><rect width="400" height="400" fill="#f2efe9"></rect><rect x="110" y="130" width="180" height="26" fill="#16233a"></rect><rect x="110" y="176" width="180" height="26" fill="#16233a"></rect><rect x="110" y="222" width="120" height="26" fill="#d98014"></rect></svg>
+</template>
+
+<sc-if value="{{ verifying }}" hint-placeholder-val="{{ true }}">
+  <div style="background:var(--color-bg);min-height:100vh;display:grid;place-items:center;padding:24px;color:var(--color-text)">
+    <div class="m-wrap" style="display:flex;align-items:center;gap:9px;font-family:var(--font-heading);font-weight:800;font-size:13px;letter-spacing:.12em;text-transform:uppercase;color:var(--color-neutral-700)">
+      <span style="position:relative;width:18.2px;height:18.2px;flex:none;display:block"><span style="position:absolute;left:0;top:0;width:13px;height:13px;border:1.9px solid var(--color-text);border-radius:50%;box-sizing:border-box;display:block"></span><span style="position:absolute;left:11px;top:10.4px;width:7.2px;height:1.9px;background:var(--color-accent);transform:rotate(45deg);transform-origin:left center;display:block"></span></span>Mistrydeals
+    </div>
+  </div>
+</sc-if>
+
+<sc-if value="{{ signedOut }}" hint-placeholder-val="{{ false }}">
+  <div style="background:var(--color-bg);min-height:100vh;display:grid;place-items:center;padding:24px;color:var(--color-text)">
+    <div style="width:100%;max-width:380px">
+      <div class="m-wrap" style="display:flex;align-items:center;gap:9px;font-family:var(--font-heading);font-weight:800;font-size:13px;letter-spacing:.12em;text-transform:uppercase;margin-bottom:28px">
+        <span style="position:relative;width:18.2px;height:18.2px;flex:none;display:block"><span style="position:absolute;left:0;top:0;width:13px;height:13px;border:1.9px solid var(--color-text);border-radius:50%;box-sizing:border-box;display:block"></span><span style="position:absolute;left:11px;top:10.4px;width:7.2px;height:1.9px;background:var(--color-accent);transform:rotate(45deg);transform-origin:left center;display:block"></span></span>Mistrydeals
+      </div>
+      <h1 class="m-fs-md" style="margin:0 0 8px;font-size:34px;line-height:1.05;letter-spacing:-.02em">Admin sign in</h1>
+      <p style="margin:0 0 24px;font-size:14px;color:var(--color-neutral-700)">This area manages live deals and social posting.</p>
+      <form onSubmit="{{ onSignIn }}">
+        <div class="field" style="margin-bottom:14px">
+          <label>Email</label>
+          <input class="input" type="email" autocomplete="username" value="{{ email }}" onChange="{{ onEmail }}" />
+        </div>
+        <div class="field" style="margin-bottom:18px">
+          <label>Password</label>
+          <input class="input" type="password" autocomplete="current-password" value="{{ password }}" onChange="{{ onPassword }}" />
+        </div>
+        <sc-if value="{{ authError }}" hint-placeholder-val="{{ false }}">
+          <div style="border-left:3px solid var(--color-accent);padding:8px 12px;margin-bottom:16px;font-size:13px;color:var(--color-accent-700)">{{ authError }}</div>
+        </sc-if>
+        <button type="submit" class="btn btn-primary btn-block" style="justify-content:space-between">{{ signInLabel }} <span>&#8594;</span></button>
+      </form>
+    </div>
+    <sc-if value="{{ confirmOpen }}" hint-placeholder-val="{{ false }}">
+    <div style="position:fixed;inset:0;background:color-mix(in srgb, var(--color-neutral-900) 55%, transparent);display:grid;place-items:center;padding:24px;z-index:80">
+      <div style="background:var(--color-bg);border:2px solid var(--color-text);max-width:460px;width:100%;padding:24px">
+        <h2 style="margin:0 0 10px;font-size:22px;line-height:1.15;letter-spacing:-.01em">{{ confirmTitle }}</h2>
+        <sc-if value="{{ confirmBody }}" hint-placeholder-val="{{ false }}">
+          <div style="font-size:14px;font-weight:600;line-height:1.4;margin-bottom:8px">{{ confirmBody }}</div>
+        </sc-if>
+        <p style="margin:0 0 20px;font-size:13px;line-height:1.5;color:var(--color-neutral-700);text-wrap:pretty">{{ confirmDetail }}</p>
+        <div style="display:flex;gap:10px">
+          <button onClick="{{ confirmYes }}" style="{{ confirmStyle }}">{{ confirmLabel }}</button>
+          <button onClick="{{ confirmNo }}" class="btn btn-ghost" style="font-size:13px;padding:9px 14px">Cancel</button>
+        </div>
+      </div>
+    </div>
+  </sc-if>
+</div>
+</sc-if>
+
+<sc-if value="{{ signedIn }}" hint-placeholder-val="{{ false }}">
+<div style="background:var(--color-bg);min-height:100vh;color:var(--color-text)">
+  <div style="border-bottom:2px solid var(--color-divider)">
+    <div style="max-width:1720px;margin:0 auto;padding:18px 16px;display:flex;align-items:flex-end;gap:24px;flex-wrap:wrap">
+      <div>
+        <div style="font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--color-accent-700);margin-bottom:8px">MistryDeals &#183; internal</div>
+        <h1 class="m-fs-md" style="margin:0;font-size:38px;line-height:1;letter-spacing:-.02em">Admin</h1>
+      </div>
+      <sc-if value="{{ isWide }}" hint-placeholder-val="{{ true }}">
+      <div class="m-wrap" style="display:flex;align-items:center;gap:0;margin-left:8px">
+        <span style="font:inherit;font-family:var(--font-heading);font-weight:700;font-size:11px;letter-spacing:.1em;text-transform:uppercase;padding:8px 12px;border:1px solid var(--color-text);background:var(--color-text);color:var(--color-bg)">Catalogue</span>
+        <a href="{{ hQueue }}" style="font:inherit;font-family:var(--font-heading);font-weight:700;font-size:11px;letter-spacing:.1em;text-transform:uppercase;text-decoration:none;padding:8px 12px;border:1px solid var(--color-divider);color:var(--color-text);border-left:0">Deal queue</a>
+        <a href="{{ hCarousel }}" style="font:inherit;font-family:var(--font-heading);font-weight:700;font-size:11px;letter-spacing:.1em;text-transform:uppercase;text-decoration:none;padding:8px 12px;border:1px solid var(--color-divider);color:var(--color-text);border-left:0">Social</a>
+        <a href="{{ hBrands }}" onClick="{{ markBrands }}" style="font:inherit;font-family:var(--font-heading);font-weight:700;font-size:11px;letter-spacing:.1em;text-transform:uppercase;text-decoration:none;padding:8px 12px;border:1px solid var(--color-divider);color:var(--color-text);border-left:0">Brand rules</a>
+        <a href="{{ hScrapes }}" onClick="{{ markScrapes }}" style="font:inherit;font-family:var(--font-heading);font-weight:700;font-size:11px;letter-spacing:.1em;text-transform:uppercase;text-decoration:none;padding:8px 12px;border:1px solid var(--color-divider);color:var(--color-text);border-left:0">Scrape log</a>
+        <a href="{{ hReddit }}" style="font:inherit;font-family:var(--font-heading);font-weight:700;font-size:11px;letter-spacing:.1em;text-transform:uppercase;text-decoration:none;padding:8px 12px;border:1px solid var(--color-divider);color:var(--color-text);border-left:0">Reddit poster</a>
+        <a href="{{ hGuides }}" style="font:inherit;font-family:var(--font-heading);font-weight:700;font-size:11px;letter-spacing:.1em;text-transform:uppercase;text-decoration:none;padding:8px 12px;border:1px solid var(--color-divider);color:var(--color-text);border-left:0">Buying guides</a>
+        <a href="{{ hWatches }}" style="font:inherit;font-family:var(--font-heading);font-weight:700;font-size:11px;letter-spacing:.1em;text-transform:uppercase;text-decoration:none;padding:8px 12px;border:1px solid var(--color-divider);color:var(--color-text);border-left:0">Price watches</a>
+        <a href="{{ hStories }}" style="font:inherit;font-family:var(--font-heading);font-weight:700;font-size:11px;letter-spacing:.1em;text-transform:uppercase;text-decoration:none;padding:8px 12px;border:1px solid var(--color-divider);color:var(--color-text);border-left:0">Story links</a>
+      </div>
+      </sc-if>
+      <sc-if value="{{ isWide }}" hint-placeholder-val="{{ true }}">
+      <div class="m-wrap" style="margin-left:auto;display:flex;align-items:center;gap:10px">
+        <span style="font-size:12px;color:var(--color-neutral-700)">{{ savedNote }}</span>
+        <span style="font-size:12px;color:var(--color-neutral-700)">{{ userEmail }}</span>
+        <a href="{{ hSite }}" style="font:inherit;font-family:var(--font-heading);font-weight:700;font-size:11px;letter-spacing:.1em;text-transform:uppercase;text-decoration:none;padding:8px 12px;border:1px solid var(--color-divider);color:var(--color-text)">View site</a>
+        <button onClick="{{ refresh }}" class="btn btn-secondary" style="font-size:12px;padding:8px 12px">Refresh</button>
+        <button onClick="{{ signOut }}" class="btn btn-ghost" style="font-size:12px;padding:8px 12px">Sign out</button>
+        <button onClick="{{ toggleDark }}" title="{{ darkTitle }}" style="{{ tDark }}">{{ darkGlyph }}</button>
+      </div>
+      </sc-if>
+      <sc-if value="{{ isNarrow }}" hint-placeholder-val="{{ false }}">
+      <div style="margin-left:auto;display:flex;align-items:center;gap:10px;flex:none">
+        <span style="font-size:12px;color:var(--color-neutral-700);text-align:right">{{ savedNote }}</span>
+        <button onClick="{{ openMenu }}" title="Menu" style="font:inherit;flex:none;width:42px;height:42px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;background:transparent;border:1px solid var(--color-divider);cursor:pointer;padding:0">
+          <span style="display:block;width:18px;height:2px;background:var(--color-text)"></span>
+          <span style="display:block;width:18px;height:2px;background:var(--color-text)"></span>
+          <span style="display:block;width:18px;height:2px;background:var(--color-text)"></span>
+        </button>
+      </div>
+      </sc-if>
+    </div>
+  </div>
+
+  <sc-if value="{{ menuOpen }}" hint-placeholder-val="{{ false }}">
+    <div onClick="{{ closeMenu }}" style="position:fixed;inset:0;background:color-mix(in srgb, var(--color-neutral-900) 55%, transparent);z-index:90;display:flex;justify-content:flex-end">
+      <div onClick="{{ stop }}" style="background:var(--color-bg);width:min(310px,86vw);height:100%;display:flex;flex-direction:column;border-left:2px solid var(--color-text)">
+        <div style="padding:16px;border-bottom:2px solid var(--color-divider);display:flex;align-items:flex-start;gap:12px">
+          <div style="min-width:0">
+            <div style="font-family:var(--font-heading);font-weight:700;font-size:9.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--color-neutral-700)">Signed in</div>
+            <div style="font-size:13px;line-height:1.35;margin-top:4px;overflow-wrap:anywhere">{{ userEmail }}</div>
+          </div>
+          <button onClick="{{ closeMenu }}" class="btn btn-ghost" style="margin-left:auto;font-size:12px;min-height:44px;padding:0 14px;flex:none">Close</button>
+        </div>
+
+        <div style="display:flex;flex-direction:column;padding:8px 0;border-bottom:1px solid var(--color-divider)">
+          <sc-for list="{{ menuNav }}" as="m" hint-placeholder-count="5">
+            <a href="{{ m.href }}" onClick="{{ m.pick }}" style="{{ m.style }}">{{ m.label }}</a>
+          </sc-for>
+        </div>
+
+        <div style="display:flex;align-items:center;gap:10px;padding:14px 16px;border-bottom:1px solid var(--color-divider)">
+          <button onClick="{{ toggleDark }}" title="{{ darkTitle }}" style="{{ tDark }}">{{ darkGlyph }}</button>
+        </div>
+
+        <button onClick="{{ refresh }}" class="btn btn-secondary" style="margin:14px 16px 0;font-size:12px;padding:9px 12px;justify-content:flex-start">Refresh data</button>
+
+        <button onClick="{{ signOut }}" class="btn btn-ghost" style="margin:auto 16px 20px;font-size:12px;padding:10px 12px;justify-content:flex-start">Sign out</button>
+      </div>
+    </div>
+  </sc-if>
+
+  <div style="max-width:1720px;margin:0 auto;padding:0 16px">
+    <div class="m-2col" style="display:grid;grid-template-columns:repeat(6,minmax(0,1fr));border-bottom:2px solid var(--color-divider);margin-left:-20px">
+      <sc-for list="{{ cStats }}" as="s" hint-placeholder-count="6">
+        <div style="{{ s.cellStyle }}">
+          <sc-if value="{{ s.inline }}" hint-placeholder-val="{{ false }}">
+            <div style="display:flex;align-items:baseline;gap:6px;flex-wrap:wrap">
+              <span style="{{ s.labelStyle }}">{{ s.label }}</span>
+              <span style="{{ s.numStyle }}">{{ s.value }}</span>
+            </div>
+          </sc-if>
+          <sc-if value="{{ s.stacked }}" hint-placeholder-val="{{ true }}">
+            <div style="{{ s.labelStyle }}">{{ s.label }}</div>
+            <div style="{{ s.numStyle }}">{{ s.value }}</div>
+            <div style="font-size:12px;color:var(--color-neutral-700);margin-top:6px">{{ s.sub }}</div>
+          </sc-if>
+        </div>
+      </sc-for>
+    </div>
+
+    <div style="padding:16px 0 12px;border-bottom:2px solid var(--color-divider)">
+      <div class="m-wrap" style="display:flex;align-items:baseline;gap:16px;margin-bottom:12px">
+        <span style="font-family:var(--font-heading);font-weight:700;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--color-neutral-700)">Today&#8217;s posting</span>
+        <span style="font-size:12px;color:var(--color-neutral-700)">{{ dayNote }}</span>
+        <span class="m-wrap" style="margin-left:auto;display:flex;align-items:center;gap:14px;font-size:11px;color:var(--color-neutral-700)">
+          <sc-for list="{{ dayLegend }}" as="l" hint-placeholder-count="3">
+            <span style="display:inline-flex;align-items:center;gap:5px"><span style="{{ l.style }}"></span>{{ l.label }}</span>
+          </sc-for>
+          <span style="color:var(--color-neutral-600)">one lane per platform</span>
+        </span>
+      </div>
+      <div style="display:grid;grid-template-columns:34px minmax(0,1fr);align-items:stretch">
+      <div style="position:relative;height:78px">
+        <sc-for list="{{ dayLanes }}" as="l" hint-placeholder-count="3">
+          <span style="{{ l.labelStyle }}" title="{{ l.name }}">{{ l.label }}</span>
+        </sc-for>
+      </div>
+      <div style="position:relative;height:78px;border-bottom:2px solid var(--color-divider);border-left:1px solid var(--color-divider)">
+        <sc-for list="{{ dayLanes }}" as="l" hint-placeholder-count="3">
+          <span style="{{ l.ruleStyle }}"></span>
+        </sc-for>
+        <sc-for list="{{ dayTicks }}" as="k" hint-placeholder-count="12">
+          <span style="{{ k.style }}"></span>
+        </sc-for>
+        <sc-for list="{{ dayMarks }}" as="m" hint-placeholder-count="8">
+          <span title="{{ m.title }}" style="{{ m.style }}"></span>
+        </sc-for>
+        <sc-for list="{{ dayMarks }}" as="m" hint-placeholder-count="8">
+          <span onMouseEnter="{{ m.enter }}" onMouseLeave="{{ m.leave }}" style="{{ m.hitStyle }}"></span>
+        </sc-for>
+        <sc-for list="{{ dayMarks }}" as="m" hint-placeholder-count="8">
+          <sc-if value="{{ m.showCount }}" hint-placeholder-val="{{ false }}">
+            <span style="{{ m.countStyle }}">{{ m.count }}</span>
+          </sc-if>
+        </sc-for>
+        <span style="{{ nowStyle }}"></span>
+        <span style="{{ nowLabelStyle }}">now</span>
+        <sc-if value="{{ hoverOpen }}" hint-placeholder-val="{{ false }}">
+          <div style="{{ hoverBoxStyle }}">
+            <div style="font-family:var(--font-heading);font-weight:800;font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--color-neutral-700);margin-bottom:8px">{{ hoverLabel }}</div>
+            <div style="display:flex;flex-direction:column;gap:7px">
+              <sc-for list="{{ hoverItems }}" as="h" hint-placeholder-count="2">
+                <div class="m-wrap" style="display:flex;gap:8px;align-items:stretch">
+                  <span style="{{ h.markStyle }}"></span>
+                  <div style="min-width:0">
+                    <div style="{{ h.metaStyle }}">{{ h.time }} {{ h.plat }} {{ h.status }}</div>
+                    <div style="font-size:12.5px;line-height:1.35;overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical">{{ h.name }}</div>
+                  </div>
+                </div>
+              </sc-for>
+            </div>
+          </div>
+        </sc-if>
+      </div>
+      <span></span>
+      <div style="position:relative;height:16px">
+        <sc-for list="{{ dayTicks }}" as="k" hint-placeholder-count="12">
+          <span style="{{ k.labelStyle }}">{{ k.label }}</span>
+        </sc-for>
+      </div>
+      </div>
+    </div>
+
+    <div style="{{ shellStyle }}">
+    <div style="{{ mainStyle }}">
+      <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;padding:16px 0;border-bottom:1px solid var(--color-divider)">
+        <sc-if value="{{ isNarrow }}" hint-placeholder-val="{{ false }}">
+        <div style="display:flex;flex-direction:column;gap:10px;width:100%">
+          <div style="display:flex;align-items:center;gap:8px">
+            <input class="input" placeholder="Title or ASIN" style="flex:1 1 auto;min-width:0;padding:0 10px;min-height:44px;font-size:13px" value="{{ pQuery }}" onChange="{{ onPQuery }}" />
+            <button onClick="{{ openPFilter }}" title="Choose which products to show" style="font:inherit;font-family:var(--font-heading);font-weight:700;font-size:11px;letter-spacing:.08em;text-transform:uppercase;flex:none;min-height:44px;padding:0 13px;cursor:pointer;border:1px solid var(--color-text);background:transparent;color:var(--color-text)">{{ pFilterLabel }}</button>
+          </div>
+          <div style="display:flex;align-items:center;gap:8px">
+            <select class="input" style="flex:1 1 0;min-width:0;padding:0 10px;min-height:44px;font-size:13px" value="{{ pCat }}" onChange="{{ onPCat }}">
+              <sc-for list="{{ pCatOptions }}" as="o" hint-placeholder-count="6">
+                <option value="{{ o }}">{{ o }}</option>
+              </sc-for>
+            </select>
+            <select class="input" style="flex:1 1 0;min-width:0;padding:0 10px;min-height:44px;font-size:13px" value="{{ pSort }}" onChange="{{ onPSort }}">
+              <sc-for list="{{ pSortOptions }}" as="o" hint-placeholder-count="4">
+                <option value="{{ o.value }}">{{ o.label }}</option>
+              </sc-for>
+            </select>
+          </div>
+          <div style="font-size:12px;color:var(--color-neutral-700)">{{ pShowing }}</div>
+          <sc-if value="{{ reviewNote }}" hint-placeholder-val="{{ false }}">
+            <button onClick="{{ showReview }}" style="font:inherit;font-size:12px;background:none;border:0;padding:0;text-align:left;cursor:pointer;color:var(--color-accent-700);text-decoration:underline;text-underline-offset:2px">{{ reviewNote }}</button>
+          </sc-if>
+        </div>
+        </sc-if>
+
+        <sc-if value="{{ isWide }}" hint-placeholder-val="{{ true }}">
+        <input class="input" placeholder="Search title or ASIN" style="flex:1 1 220px;min-width:200px;max-width:300px;padding:7px 10px;font-size:13px" value="{{ pQuery }}" onChange="{{ onPQuery }}" />
+        <sc-for list="{{ pFilters }}" as="f" hint-placeholder-count="5">
+          <button onClick="{{ f.pick }}" style="{{ f.style }}">{{ f.label }}</button>
+        </sc-for>
+        <select class="input" style="max-width:190px;padding:7px 10px;font-size:13px" value="{{ pCat }}" onChange="{{ onPCat }}">
+          <sc-for list="{{ pCatOptions }}" as="o" hint-placeholder-count="6">
+            <option value="{{ o }}">{{ o }}</option>
+          </sc-for>
+        </select>
+        <select class="input" style="max-width:180px;padding:7px 10px;font-size:13px" value="{{ pSort }}" onChange="{{ onPSort }}">
+          <sc-for list="{{ pSortOptions }}" as="o" hint-placeholder-count="4">
+            <option value="{{ o.value }}">{{ o.label }}</option>
+          </sc-for>
+        </select>
+        <div class="m-wrap" style="margin-left:auto;display:flex;align-items:center;gap:10px">
+          <sc-if value="{{ reviewNote }}" hint-placeholder-val="{{ false }}">
+            <button onClick="{{ showReview }}" title="Products whose product_pipeline row is still pending review" style="font:inherit;font-size:12px;background:none;border:0;padding:0;cursor:pointer;color:var(--color-accent-700);text-decoration:underline;text-underline-offset:2px">{{ reviewNote }}</button>
+          </sc-if>
+          <span style="font-size:12px;color:var(--color-neutral-700)">{{ pShowing }}</span>
+          <div style="display:flex;gap:2px">
+            <button onClick="{{ setRoomy }}" style="{{ dRoomy }}">Roomy</button>
+            <button onClick="{{ setDense }}" style="{{ dDense }}">Dense</button>
+          </div>
+        </div>
+        </sc-if>
+      </div>
+
+      <sc-if value="{{ pFilterOpen }}" hint-placeholder-val="{{ false }}">
+        <div onClick="{{ closePFilter }}" style="position:fixed;inset:0;background:color-mix(in srgb, var(--color-neutral-900) 55%, transparent);display:grid;place-items:end center;z-index:95">
+          <div onClick="{{ stop }}" style="background:var(--color-bg);border-top:2px solid var(--color-text);width:100%;max-height:80vh;overflow:auto;padding:18px 16px 26px">
+            <div style="display:flex;align-items:flex-start;gap:12px;border-bottom:2px solid var(--color-divider);padding-bottom:12px">
+              <div>
+                <div style="font-family:var(--font-heading);font-weight:700;font-size:9.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--color-neutral-700)">Catalogue</div>
+                <h2 style="margin:5px 0 0;font-size:21px;line-height:1.15;letter-spacing:-.01em">Show</h2>
+              </div>
+              <button onClick="{{ closePFilter }}" class="btn btn-ghost" style="margin-left:auto;font-size:12px;min-height:44px;padding:0 14px;flex:none">Close</button>
+            </div>
+            <div style="display:flex;flex-direction:column">
+              <sc-for list="{{ pFilterOptions }}" as="o" hint-placeholder-count="6">
+                <button onClick="{{ o.pick }}" style="{{ o.style }}">
+                  <span>{{ o.label }}</span>
+                  <span style="{{ o.markStyle }}">{{ o.mark }}</span>
+                </button>
+              </sc-for>
+            </div>
+          </div>
+        </div>
+      </sc-if>
+
+      <div style="overflow-x:auto;padding-bottom:48px">
+        <div class="m-scroll" style="min-width:1000px">
+          <div class="m-hide" style="{{ headStyle }}">
+            <sc-for list="{{ headCols }}" as="h" hint-placeholder-count="10">
+              <div style="{{ h.cellStyle }}" title="{{ h.title }}" onClick="{{ h.onSort }}">
+                <span style="{{ h.labelStyle }}">{{ h.label }}</span>
+                <span>{{ h.arrow }}</span>
+                <span onMouseDown="{{ h.startResize }}" onDoubleClick="{{ h.resetCol }}" title="Drag to resize, double-click to reset" style="{{ h.gripStyle }}"></span>
+              </div>
+            </sc-for>
+          </div>
+          <sc-if value="{{ pLoading }}" hint-placeholder-val="{{ true }}">
+            <div style="padding:40px;text-align:center;color:var(--color-neutral-700);font-size:13px">Loading products&#8230;</div>
+          </sc-if>
+          <sc-if value="{{ pError }}" hint-placeholder-val="{{ false }}">
+            <div style="border-left:3px solid var(--color-accent);padding:14px 16px;margin:20px 0;font-size:13px;line-height:1.5;color:var(--color-accent-700)">{{ pError }}</div>
+          </sc-if>
+          <sc-if value="{{ pEmpty }}" hint-placeholder-val="{{ false }}">
+            <div style="padding:40px;text-align:center;color:var(--color-neutral-700);font-size:13px">No products match these filters.</div>
+          </sc-if>
+          <sc-for list="{{ pRows }}" as="r" hint-placeholder-count="12">
+            <div class="m-row" style="{{ r.rowStyle }}">
+              <span style="{{ r.statusBar }}"></span>
+              <div style="{{ thumbColStyle }}">
+                <div style="{{ thumbStyle }}">
+                  <dc-import name="ProductImage" src="{{ r.img }}" alt="" pad="3px" hint-size="100%,100%"></dc-import>
+                </div>
+                <sc-if value="{{ r.isNarrow }}" hint-placeholder-val="{{ false }}">
+                  <button onClick="{{ r.toggleLive }}" style="{{ r.liveStyleSm }}">{{ r.liveLabel }}</button>
+                </sc-if>
+              </div>
+              <div style="min-width:0">
+                <div style="font-weight:600;font-size:13px;line-height:1.35;overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical">{{ r.title }}</div>
+                <div style="font-size:11px;color:var(--color-neutral-600);letter-spacing:.04em;margin-top:3px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ r.asin }} &#183; {{ r.ratingLine }}</div>
+                <div style="font-size:11px;color:var(--color-neutral-600);margin-top:2px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ r.catLine }}</div>
+                <div class="m-wrap" style="display:flex;align-items:baseline;gap:5px;margin-top:3px;font-family:var(--font-heading);font-weight:700;font-size:9.5px;letter-spacing:.09em;text-transform:uppercase;overflow:hidden;white-space:nowrap">
+                  <span style="color:var(--color-neutral-600)">Via</span>
+                  <sc-if value="{{ r.originLinked }}" hint-placeholder-val="{{ false }}">
+                    <a href="{{ r.originUrl }}" target="_blank" rel="noopener" title="The queue row this product came from">{{ r.origin }}</a>
+                  </sc-if>
+                  <sc-if value="{{ r.originPlain }}" hint-placeholder-val="{{ true }}">
+                    <span style="color:var(--color-neutral-700)">{{ r.origin }}</span>
+                  </sc-if>
+                </div>
+              </div>
+              <div>
+                <sc-if value="{{ r.isNarrow }}" hint-placeholder-val="{{ false }}">
+                  <div style="display:grid;grid-template-columns:minmax(0,.9fr) minmax(0,1fr) minmax(0,.7fr) minmax(0,1fr) minmax(0,1.4fr);gap:8px;align-items:start">
+                    <div style="min-width:0">
+                      <div style="{{ r.labelStyle }}">Was</div>
+                      <div style="font-size:11.5px;color:var(--color-neutral-600);text-decoration:line-through">{{ r.wasFlat }}</div>
+                    </div>
+                    <div style="min-width:0">
+                      <div style="{{ r.labelStyle }}">Price</div>
+                      <div style="{{ r.priceStyle }}">{{ r.price }}</div>
+                    </div>
+                    <div style="min-width:0">
+                      <div style="{{ r.labelStyle }}">Off</div>
+                      <div style="{{ r.offFlatStyle }}">{{ r.off }}</div>
+                    </div>
+                    <div style="min-width:0">
+                      <div style="{{ r.labelStyle }}">Coupon</div>
+                      <div style="font-family:var(--font-heading);font-weight:700;font-size:13px;color:var(--color-accent-700)">{{ r.couponFlat }}</div>
+                    </div>
+                    <div style="min-width:0">
+                      <div style="{{ r.labelStyle }}">Code</div>
+                      <div style="font-family:var(--font-heading);font-weight:700;font-size:10px;letter-spacing:.04em;text-transform:uppercase;overflow-wrap:anywhere;color:var(--color-neutral-700)">{{ r.codeFlat }}</div>
+                    </div>
+                  </div>
+                </sc-if>
+                <sc-if value="{{ r.isWide }}" hint-placeholder-val="{{ true }}">
+                <sc-if value="{{ r.hasCouponPrice }}" hint-placeholder-val="{{ false }}">
+                  <div style="font-family:var(--font-heading);font-weight:800;font-size:14px;color:var(--color-accent-700)">{{ r.coupon }}</div>
+                </sc-if>
+                <sc-if value="{{ r.hasCode }}" hint-placeholder-val="{{ false }}">
+                  <div style="{{ r.couponCodeStyle }}">{{ r.couponCode }}</div>
+                </sc-if>
+                <div style="{{ r.priceStyle }}">{{ r.price }}</div>
+                <div style="font-size:11px;color:var(--color-neutral-600);text-decoration:line-through">{{ r.was }}</div>
+                <sc-if value="{{ r.couponUnknown }}" hint-placeholder-val="{{ false }}">
+                  <div style="font-size:10px;line-height:1.3;margin-top:2px;color:var(--color-neutral-600)">{{ r.couponUnknown }}</div>
+                </sc-if>
+                </sc-if>
+              </div>
+              <div style="{{ r.offCellStyle }}">{{ r.offCell }}</div>
+              <div>
+                <sc-if value="{{ r.isNarrow }}" hint-placeholder-val="{{ false }}">
+                  <div style="display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr) minmax(0,1.2fr);gap:8px;align-items:start">
+                    <div style="min-width:0">
+                      <div style="{{ r.labelStyle }}">Cashback</div>
+                      <div style="{{ r.cashStyle }}">{{ r.cash }}</div>
+                      <sc-if value="{{ r.cashPct }}" hint-placeholder-val="{{ false }}">
+                        <div style="font-size:10.5px;color:var(--color-neutral-600);line-height:1.3;margin-top:1px">{{ r.cashPct }}</div>
+                      </sc-if>
+                    </div>
+                    <div style="min-width:0">
+                      <div style="{{ r.labelStyle }}">Synced</div>
+                      <div style="font-size:12px;color:var(--color-neutral-700);line-height:1.35">{{ r.synced }}</div>
+                    </div>
+                    <div style="min-width:0">
+                      <div style="{{ r.labelStyle }}">Flags</div>
+                      <div style="display:flex;gap:4px;flex-wrap:wrap">
+                        <sc-for list="{{ r.flags }}" as="f" hint-placeholder-count="3">
+                          <button onClick="{{ f.toggle }}" title="{{ f.title }}" style="{{ f.style }}">{{ f.label }}</button>
+                        </sc-for>
+                      </div>
+                    </div>
+                  </div>
+                </sc-if>
+                <sc-if value="{{ r.isWide }}" hint-placeholder-val="{{ true }}">
+                  <div style="{{ r.cashStyle }}">{{ r.cash }}</div>
+                  <sc-if value="{{ r.cashPct }}" hint-placeholder-val="{{ false }}">
+                    <div style="font-size:10.5px;color:var(--color-neutral-600);line-height:1.3;margin-top:1px">{{ r.cashPct }}</div>
+                  </sc-if>
+                </sc-if>
+              </div>
+              <div style="{{ r.wideOnlyStyle }}">
+                <sc-if value="{{ r.isWide }}" hint-placeholder-val="{{ true }}">
+                  <div style="font-size:12px;color:var(--color-neutral-700);line-height:1.35">{{ r.synced }}</div>
+                  <div style="font-size:11px;color:var(--color-neutral-600);line-height:1.35">{{ r.syncedAt }}</div>
+                </sc-if>
+              </div>
+              <div style="{{ r.flagsCellStyle }}">
+                <sc-if value="{{ r.isWide }}" hint-placeholder-val="{{ true }}">
+                  <sc-for list="{{ r.flags }}" as="f" hint-placeholder-count="4">
+                    <button onClick="{{ f.toggle }}" title="{{ f.title }}" style="{{ f.style }}">{{ f.label }}</button>
+                  </sc-for>
+                </sc-if>
+              </div>
+              <div style="{{ r.liveCellStyle }}">
+                <sc-if value="{{ r.isWide }}" hint-placeholder-val="{{ true }}">
+                  <button onClick="{{ r.toggleLive }}" style="{{ r.liveStyle }}">{{ r.liveLabel }}</button>
+                </sc-if>
+                <sc-if value="{{ r.queueLabel }}" hint-placeholder-val="{{ false }}">
+                  <div style="{{ r.queueStyle }}">{{ r.queueLabel }}</div>
+                </sc-if>
+              </div>
+              <div style="min-width:0">
+                <div class="m-wrap" style="display:flex;align-items:center;gap:5px">
+                  <span style="font-family:var(--font-heading);font-weight:700;font-size:9.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--color-neutral-600)">{{ r.postVerb }}</span>
+                  <sc-for list="{{ r.postTargets }}" as="pt" hint-placeholder-count="3">
+                    <button onClick="{{ pt.queue }}" title="{{ pt.title }}" style="{{ pt.style }}">{{ pt.mark }}</button>
+                  </sc-for>
+                </div>
+                <div style="display:flex;flex-wrap:wrap;gap:10px;margin-top:6px;font-family:var(--font-heading);font-weight:700;font-size:10px;letter-spacing:.08em;text-transform:uppercase">
+                  <a href="{{ r.url }}" target="_blank" rel="noopener" title="Plain Amazon link — no affiliate tag, so admin clicks stay out of your metrics">View</a>
+                  <button onClick="{{ r.sync }}" title="Re-check this product's price now" style="font:inherit;font-family:var(--font-heading);font-weight:700;font-size:10px;letter-spacing:.08em;text-transform:uppercase;background:none;border:0;padding:0;cursor:pointer;color:var(--color-accent-700)">{{ r.syncLabel }}</button>
+                  <button onClick="{{ r.history }}" title="Every price the pipeline has recorded for this ASIN" style="font:inherit;font-family:var(--font-heading);font-weight:700;font-size:10px;letter-spacing:.08em;text-transform:uppercase;background:none;border:0;padding:0;cursor:pointer;color:var(--color-accent-700)">History</button>
+                  <button onClick="{{ r.edit }}" title="Edit title, category and prices" style="font:inherit;font-family:var(--font-heading);font-weight:700;font-size:10px;letter-spacing:.08em;text-transform:uppercase;background:none;border:0;padding:0;cursor:pointer;color:var(--color-accent-700)">Edit</button>
+                  <button onClick="{{ r.reel }}" title="Render this deal as a 1080×1920 reel overlay and download the PNG" style="{{ r.reelStyle }}">{{ r.reelLabel }}</button>
+                  <button onClick="{{ r.story }}" title="Copy the affiliate link and save the 1080×1920 story image" style="{{ r.storyStyle }}">{{ r.storyLabel }}</button>
+                  <button onClick="{{ r.remove }}" title="Delete this product permanently" style="font:inherit;font-family:var(--font-heading);font-weight:700;font-size:10px;letter-spacing:.08em;text-transform:uppercase;background:none;border:0;padding:0;cursor:pointer;color:var(--color-neutral-700)">Delete</button>
+                </div>
+              </div>
+            </div>
+            <sc-if value="{{ r.editing }}" hint-placeholder-val="{{ false }}">
+              <div style="border-bottom:1px solid var(--color-divider);border-left:3px solid var(--color-accent);padding:16px 18px;margin-bottom:2px;background:color-mix(in srgb, var(--color-accent) 4%, transparent)">
+                <div class="m-wrap" style="display:flex;align-items:baseline;gap:12px;margin-bottom:14px">
+                  <span style="font-family:var(--font-heading);font-weight:700;font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--color-neutral-700)">Editing</span>
+                  <span style="font-size:12px;color:var(--color-neutral-700)">{{ r.asin }}</span>
+                </div>
+                <div class="m-stack" style="display:grid;grid-template-columns:minmax(220px,2fr) minmax(140px,1fr) minmax(140px,1fr) 110px 110px;gap:12px;align-items:end">
+                  <div class="field" style="margin:0">
+                    <label style="font-size:11px">Display title</label>
+                    <input class="input" style="padding:7px 10px;font-size:13px" value="{{ eTitle }}" onChange="{{ onETitle }}" />
+                  </div>
+                  <div class="field" style="margin:0">
+                    <label style="font-size:11px">Category</label>
+                    <select class="input" style="padding:7px 10px;font-size:13px" value="{{ eCat }}" onChange="{{ onECat }}">
+                      <sc-for list="{{ eCatOptions }}" as="o" hint-placeholder-count="8">
+                        <option value="{{ o.value }}">{{ o.label }}</option>
+                      </sc-for>
+                    </select>
+                  </div>
+                  <div class="field" style="margin:0">
+                    <label style="font-size:11px">Price</label>
+                    <input class="input" inputmode="decimal" style="padding:7px 10px;font-size:13px" value="{{ ePrice }}" onChange="{{ onEPrice }}" />
+                  </div>
+                  <div class="field" style="margin:0">
+                    <label style="font-size:11px">Was</label>
+                    <input class="input" inputmode="decimal" style="padding:7px 10px;font-size:13px" value="{{ eWas }}" onChange="{{ onEWas }}" />
+                  </div>
+                  <div class="field" style="margin:0">
+                    <label style="font-size:11px">Cashback %</label>
+                    <input class="input" inputmode="decimal" placeholder="none" style="padding:7px 10px;font-size:13px" value="{{ eCash }}" onChange="{{ onECash }}" />
+                  </div>
+                </div>
+                <div style="display:flex;align-items:center;gap:12px;margin-top:14px;flex-wrap:wrap">
+                  <button onClick="{{ r.save }}" class="btn btn-primary" style="font-size:12px;padding:8px 14px">{{ eSaveLabel }}</button>
+                  <button onClick="{{ cancelEdit }}" class="btn btn-ghost" style="font-size:12px;padding:8px 12px">Cancel</button>
+                  <span style="font-size:12px;color:var(--color-neutral-700)">{{ eOffNote }}</span>
+                  <sc-if value="{{ eError }}" hint-placeholder-val="{{ false }}">
+                    <span style="font-size:12px;color:var(--color-accent-700)">{{ eError }}</span>
+                  </sc-if>
+                </div>
+              </div>
+            </sc-if>
+          </sc-for>
+          <div style="display:flex;justify-content:space-between;align-items:center;padding:20px 0">
+            <span style="font-size:13px;color:var(--color-neutral-700)">{{ pShowing }}</span>
+            <button onClick="{{ pMore }}" class="btn btn-secondary" style="font-size:12px;padding:8px 12px">Load 50 more</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <aside style="{{ railStyle }}">
+      <div class="m-wrap" style="display:flex;align-items:baseline;justify-content:space-between;gap:12px;padding-bottom:12px;border-bottom:2px solid var(--color-divider)">
+        <span style="font-family:var(--font-heading);font-weight:800;font-size:13px;letter-spacing:.1em;text-transform:uppercase">Posting queue</span>
+        <span style="font-size:11px;color:var(--color-neutral-700)">{{ sShowing }}</span>
+      </div>
+      <div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap;padding:12px 0;border-bottom:1px solid var(--color-divider)">
+        <sc-for list="{{ sFilters }}" as="f" hint-placeholder-count="5">
+          <button onClick="{{ f.pick }}" style="{{ f.style }}">{{ f.label }}</button>
+        </sc-for>
+      </div>
+      <sc-if value="{{ sLoading }}" hint-placeholder-val="{{ true }}">
+        <div style="padding:32px 0;text-align:center;color:var(--color-neutral-700);font-size:13px">Loading posts&#8230;</div>
+      </sc-if>
+      <sc-if value="{{ sError }}" hint-placeholder-val="{{ false }}">
+        <div style="border-left:3px solid var(--color-accent);padding:12px 14px;margin:16px 0;font-size:12.5px;line-height:1.5;color:var(--color-accent-700)">{{ sError }}</div>
+      </sc-if>
+      <sc-if value="{{ sEmpty }}" hint-placeholder-val="{{ false }}">
+        <div style="padding:32px 0;color:var(--color-neutral-700);font-size:13px;line-height:1.5">Nothing queued. Use <span style="font-family:var(--font-heading);font-weight:700;color:var(--color-accent-700)">Post</span> on any product to add it.</div>
+      </sc-if>
+      <sc-for list="{{ sRows }}" as="p" hint-placeholder-count="8">
+        <div style="display:grid;grid-template-columns:3px 32px minmax(0,1fr);gap:10px;align-items:start;padding:12px 0;border-bottom:1px solid var(--color-divider)">
+          <span style="{{ p.bar }}"></span>
+          <div style="width:32px;height:32px;border:1px solid var(--color-divider);background:#ffffff;position:relative;overflow:hidden">
+            <dc-import name="ProductImage" src="{{ p.img }}" alt="" pad="2px" hint-size="100%,100%"></dc-import>
+          </div>
+          <div style="min-width:0">
+            <div style="font-size:12.5px;font-weight:600;line-height:1.35;overflow:hidden;text-overflow:ellipsis;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical">{{ p.title }}</div>
+            <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-top:6px">
+              <span title="{{ p.platformName }}" style="{{ p.platformStyle }}">{{ p.platformMark }}</span>
+              <sc-if value="{{ p.showStatus }}" hint-placeholder-val="{{ false }}">
+                <span style="{{ p.statusStyle }}">{{ p.status }}</span>
+              </sc-if>
+              <span style="font-size:11px;color:var(--color-neutral-600)">{{ p.when }}</span>
+              <sc-if value="{{ p.isCarousel }}" hint-placeholder-val="{{ false }}">
+                <button onClick="{{ p.toggleSlides }}" title="{{ p.slidesTitle }}" style="{{ p.carouselBadge }}">{{ p.carouselLabel }}</button>
+              </sc-if>
+              <sc-if value="{{ p.dupNote }}" hint-placeholder-val="{{ false }}">
+                <span title="Queued and published rows for the same post" style="font-size:10.5px;color:var(--color-neutral-600);border:1px solid var(--color-divider);padding:1px 4px">{{ p.dupNote }}</span>
+              </sc-if>
+            </div>
+            <sc-if value="{{ p.slidesOpen }}" hint-placeholder-val="{{ false }}">
+              <div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:8px;padding:8px;border:1px solid var(--color-divider)">
+                <sc-for list="{{ p.slides }}" as="sl" hint-placeholder-count="5">
+                  <a href="{{ sl.url }}" target="_blank" rel="noopener" title="{{ sl.url }}" style="display:block;position:relative;width:74px;height:52px;border:1px solid var(--color-divider);background:#ffffff;overflow:hidden;flex:none">
+                    <dc-import name="ProductImage" src="{{ sl.url }}" alt="" pad="0px" hint-size="100%,100%"></dc-import>
+                    <span style="position:absolute;left:0;bottom:0;font-family:var(--font-heading);font-weight:800;font-size:9px;line-height:1;padding:2px 3px;background:var(--color-text);color:var(--color-bg)">{{ sl.n }}</span>
+                  </a>
+                </sc-for>
+              </div>
+            </sc-if>
+            <sc-if value="{{ p.error }}" hint-placeholder-val="{{ false }}">
+              <div style="font-size:11px;color:var(--color-accent-700);margin-top:5px;line-height:1.4">{{ p.error }}</div>
+            </sc-if>
+            <div style="display:flex;gap:12px;margin-top:6px">
+              <sc-if value="{{ p.canNow }}" hint-placeholder-val="{{ false }}">
+                <button onClick="{{ p.postNow }}" title="Send on the publisher's next run instead of the scheduled slot" style="font:inherit;font-family:var(--font-heading);font-weight:700;font-size:10px;letter-spacing:.08em;text-transform:uppercase;background:none;border:0;padding:0;cursor:pointer;color:var(--color-accent-700)" style-hover="color:var(--color-accent)">Post now &#8594;</button>
+              </sc-if>
+              <sc-if value="{{ p.canRetry }}" hint-placeholder-val="{{ false }}">
+                <button onClick="{{ p.retry }}" style="font:inherit;font-family:var(--font-heading);font-weight:700;font-size:10px;letter-spacing:.08em;text-transform:uppercase;background:none;border:0;padding:0;cursor:pointer;color:var(--color-accent-700)">Retry &#8594;</button>
+              </sc-if>
+              <sc-if value="{{ p.canRemove }}" hint-placeholder-val="{{ false }}">
+                <button onClick="{{ p.remove }}" style="font:inherit;font-family:var(--font-heading);font-weight:700;font-size:10px;letter-spacing:.08em;text-transform:uppercase;background:none;border:0;padding:0;cursor:pointer;color:var(--color-neutral-700)">Remove</button>
+              </sc-if>
+              <sc-if value="{{ p.canUnpublish }}" hint-placeholder-val="{{ false }}">
+                <button onClick="{{ p.unpublish }}" title="Delete the live post on the platform" style="font:inherit;font-family:var(--font-heading);font-weight:700;font-size:10px;letter-spacing:.08em;text-transform:uppercase;background:none;border:0;padding:0;cursor:pointer;color:var(--color-neutral-700)" style-hover="color:var(--color-accent)">Delete live post</button>
+              </sc-if>
+            </div>
+          </div>
+        </div>
+      </sc-for>
+      <div style="padding:16px 0">
+        <button onClick="{{ sMore }}" class="btn btn-secondary btn-block" style="font-size:12px;padding:8px 12px">Load 50 more</button>
+      </div>
+    </aside>
+    </div>
+  </div>
+  <sc-if value="{{ confirmOpen }}" hint-placeholder-val="{{ false }}">
+    <div style="position:fixed;inset:0;background:color-mix(in srgb, var(--color-neutral-900) 55%, transparent);display:grid;place-items:center;padding:24px;z-index:80">
+      <div style="background:var(--color-bg);border:2px solid var(--color-text);max-width:460px;width:100%;padding:24px">
+        <h2 style="margin:0 0 10px;font-size:22px;line-height:1.15;letter-spacing:-.01em">{{ confirmTitle }}</h2>
+        <sc-if value="{{ confirmBody }}" hint-placeholder-val="{{ false }}">
+          <div style="font-size:14px;font-weight:600;line-height:1.4;margin-bottom:8px">{{ confirmBody }}</div>
+        </sc-if>
+        <p style="margin:0 0 20px;font-size:13px;line-height:1.5;color:var(--color-neutral-700);text-wrap:pretty">{{ confirmDetail }}</p>
+        <div style="display:flex;gap:10px">
+          <button onClick="{{ confirmYes }}" style="{{ confirmStyle }}">{{ confirmLabel }}</button>
+          <button onClick="{{ confirmNo }}" class="btn btn-ghost" style="font-size:13px;padding:9px 14px">Cancel</button>
+        </div>
+      </div>
+    </div>
+  </sc-if>
+  <sc-if value="{{ histOpen }}" hint-placeholder-val="{{ false }}">
+    <div onClick="{{ histClose }}" style="position:fixed;inset:0;background:color-mix(in srgb, var(--color-neutral-900) 55%, transparent);display:grid;place-items:center;padding:24px;z-index:90">
+      <div onClick="{{ histStop }}" style="background:var(--color-bg);border:2px solid var(--color-text);max-width:720px;width:100%;max-height:86vh;overflow:auto;padding:24px">
+        <div class="m-wrap" style="display:flex;align-items:flex-start;gap:16px;border-bottom:2px solid var(--color-divider);padding-bottom:14px">
+          <div style="min-width:0">
+            <div style="font-family:var(--font-heading);font-weight:700;font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--color-neutral-700)">Price history</div>
+            <h2 style="margin:6px 0 0;font-size:20px;line-height:1.2;letter-spacing:-.01em">{{ histTitle }}</h2>
+            <div style="font-size:11px;letter-spacing:.04em;color:var(--color-neutral-600);margin-top:4px">{{ histAsin }}</div>
+          </div>
+          <button onClick="{{ histClose }}" aria-label="Close" style="font:inherit;font-size:18px;line-height:1;flex:none;margin-left:auto;width:36px;height:36px;display:flex;align-items:center;justify-content:center;cursor:pointer;background:transparent;border:1px solid var(--color-divider);color:var(--color-text)">&#215;</button>
+        </div>
+
+        <sc-if value="{{ histErr }}" hint-placeholder-val="{{ false }}">
+          <div style="border-left:3px solid var(--color-accent);padding:12px 14px;margin-top:18px;font-size:13px;line-height:1.45;color:var(--color-accent-700)">{{ histErr }}</div>
+        </sc-if>
+        <sc-if value="{{ histLoading }}" hint-placeholder-val="{{ true }}">
+          <div style="padding:44px;text-align:center;font-size:13px;color:var(--color-neutral-700)">Reading the pipeline&#8230;</div>
+        </sc-if>
+
+        <sc-if value="{{ histReady }}" hint-placeholder-val="{{ false }}">
+          <div style="padding:18px 0 4px">
+            <div style="{{ histVerdictStyle }}">{{ histVerdict }}</div>
+          </div>
+
+          <sc-if value="{{ histHasChart }}" hint-placeholder-val="{{ false }}">
+            <div style="padding:20px 0 0">
+              <div style="position:relative">
+                <svg viewBox="{{ chart.viewBox }}" preserveAspectRatio="none" width="100%" height="240" role="img" style="display:block">
+                  <sc-for list="{{ chart.yTicks }}" as="t" hint-placeholder-count="4">
+                    <line x1="{{ chart.axisX }}" y1="{{ t.y }}" x2="{{ chart.axisW }}" y2="{{ t.y }}" vector-effect="non-scaling-stroke" style="stroke:var(--color-divider);stroke-width:1;opacity:.55"></line>
+                  </sc-for>
+                  <line x1="{{ chart.axisX }}" y1="{{ chart.axisTop }}" x2="{{ chart.axisX }}" y2="{{ chart.axisY }}" vector-effect="non-scaling-stroke" style="stroke:var(--color-divider);stroke-width:1"></line>
+                  <line x1="{{ chart.axisX }}" y1="{{ chart.axisY }}" x2="{{ chart.axisW }}" y2="{{ chart.axisY }}" vector-effect="non-scaling-stroke" style="stroke:var(--color-text);stroke-width:1"></line>
+                  <sc-if value="{{ chart.hasLow }}" hint-placeholder-val="{{ false }}">
+                    <line x1="{{ chart.axisX }}" y1="{{ chart.lowY }}" x2="{{ chart.axisW }}" y2="{{ chart.lowY }}" vector-effect="non-scaling-stroke" style="{{ chart.lowLineStyle }}"></line>
+                  </sc-if>
+                  <sc-if value="{{ chart.hasReg }}" hint-placeholder-val="{{ false }}">
+                    <path d="{{ chart.regPath }}" vector-effect="non-scaling-stroke" style="{{ chart.regStyle }}"></path>
+                  </sc-if>
+                  <sc-if value="{{ chart.hasCoupon }}" hint-placeholder-val="{{ false }}">
+                    <path d="{{ chart.couponPath }}" vector-effect="non-scaling-stroke" style="{{ chart.couponStyle }}"></path>
+                  </sc-if>
+                  <sc-if value="{{ chart.hasPrice }}" hint-placeholder-val="{{ true }}">
+                    <path d="{{ chart.pricePath }}" vector-effect="non-scaling-stroke" style="{{ chart.priceStyle }}"></path>
+                  </sc-if>
+                  <sc-for list="{{ chart.regDots }}" as="d" hint-placeholder-count="6">
+                    <circle cx="{{ d.cx }}" cy="{{ d.cy }}" r="3" fill="var(--color-bg)" stroke="var(--color-neutral-500)" stroke-width="1.5" vector-effect="non-scaling-stroke"></circle>
+                  </sc-for>
+                  <sc-for list="{{ chart.priceDots }}" as="d" hint-placeholder-count="8">
+                    <circle cx="{{ d.cx }}" cy="{{ d.cy }}" r="{{ d.r }}" fill="{{ d.fill }}"><title>{{ d.tip }}</title></circle>
+                  </sc-for>
+                  <sc-for list="{{ chart.couponDots }}" as="d" hint-placeholder-count="3">
+                    <circle cx="{{ d.cx }}" cy="{{ d.cy }}" r="3.5" fill="var(--color-bg)" stroke="var(--color-text)" stroke-width="1.5" vector-effect="non-scaling-stroke"><title>{{ d.tip }}</title></circle>
+                  </sc-for>
+                  <sc-if value="{{ chart.hasLow }}" hint-placeholder-val="{{ false }}">
+                    <circle cx="{{ chart.lowX }}" cy="{{ chart.lowY }}" r="5" fill="var(--color-accent-700)"></circle>
+                  </sc-if>
+                  <sc-for list="{{ chart.hoverDots }}" as="d" hint-placeholder-count="8">
+                    <circle cx="{{ d.cx }}" cy="{{ d.cy }}" r="9" fill="transparent" onMouseEnter="{{ d.enter }}" onMouseLeave="{{ d.leave }}" style="cursor:crosshair"><title>{{ d.tip }}</title></circle>
+                  </sc-for>
+                </svg>
+                <sc-for list="{{ chart.yTicks }}" as="t" hint-placeholder-count="4">
+                  <div style="position:absolute;left:0;top:{{ t.top }};transform:translateY(-50%);font-size:11px;line-height:1;color:var(--color-neutral-600);pointer-events:none;white-space:nowrap">{{ t.label }}</div>
+                </sc-for>
+                <sc-if value="{{ chart.hasLow }}" hint-placeholder-val="{{ false }}">
+                  <div style="position:absolute;right:0;top:{{ chart.lowLabelTop }};max-width:38%;overflow:hidden;text-overflow:ellipsis;font-family:var(--font-heading);font-weight:800;font-size:12px;line-height:1.2;color:var(--color-accent-700);pointer-events:none;white-space:nowrap">{{ chart.lowLabel }}</div>
+                </sc-if>
+                <sc-if value="{{ histTipOn }}" hint-placeholder-val="{{ false }}">
+                  <div style="position:absolute;left:{{ histTipLeft }};top:{{ histTipTop }};transform:translate(-50%,-160%);background:var(--color-text);color:var(--color-bg);font-family:var(--font-heading);font-weight:700;font-size:11px;padding:5px 8px;white-space:nowrap;pointer-events:none;z-index:2">{{ histTipText }}</div>
+                </sc-if>
+              </div>
+              <div style="position:relative;height:16px;margin-top:2px">
+                <sc-for list="{{ chart.xTicks }}" as="t" hint-placeholder-count="4">
+                  <div style="position:absolute;left:{{ t.left }};transform:{{ t.align }};font-size:11px;line-height:1;color:var(--color-neutral-600);white-space:nowrap">{{ t.label }}</div>
+                </sc-for>
+              </div>
+              <div style="{{ keyGridStyle }}">
+                <sc-for list="{{ chart.keyRows }}" as="l" hint-placeholder-count="4">
+                  <div style="{{ keyCellStyle }}">
+                    <span style="{{ l.swatch }}"></span>
+                    <div style="min-width:0">
+                      <div style="{{ keyLabelStyle }}">{{ l.label }}</div>
+                      <div style="{{ keyFigStyle }}">
+                        <span style="{{ keyValueStyle }}">{{ l.value }}</span>
+                        <span style="{{ keyNoteStyle }}">{{ l.note }}</span>
+                      </div>
+                    </div>
+                  </div>
+                </sc-for>
+              </div>
+              <sc-if value="{{ chart.statLine }}" hint-placeholder-val="{{ false }}">
+                <div style="font-size:11.5px;color:var(--color-neutral-600);padding:10px 0 0">{{ chart.statLine }}</div>
+              </sc-if>
+
+            </div>
+          </sc-if>
+
+          <sc-if value="{{ isWide }}" hint-placeholder-val="{{ true }}">
+          <div style="margin-top:20px">
+            <div style="display:grid;grid-template-columns:110px 1fr 96px 1fr;gap:10px;padding:8px 0;border-bottom:2px solid var(--color-divider);font-family:var(--font-heading);font-weight:700;font-size:9.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--color-neutral-700)">
+              <span>Seen</span><span>Price</span><span>Status</span><span>Source</span>
+            </div>
+            <sc-for list="{{ histRows }}" as="h" hint-placeholder-count="6">
+              <div style="display:grid;grid-template-columns:110px 1fr 96px 1fr;gap:10px;padding:9px 0;border-bottom:1px solid var(--color-divider);align-items:baseline">
+                <div style="font-size:12.5px;line-height:1.3" title="{{ h.exact }}">{{ h.when }}</div>
+                <div style="font-size:13px;line-height:1.3">
+                  <span style="font-family:var(--font-heading);font-weight:800">{{ h.price }}</span>
+                  <span style="font-size:11.5px;color:var(--color-neutral-600);margin-left:6px">{{ h.was }}</span>
+                </div>
+                <div style="{{ h.statusStyle }}">{{ h.status }}</div>
+                <div style="font-size:11.5px;color:var(--color-neutral-700);line-height:1.3;overflow-wrap:break-word">{{ h.source }}</div>
+              </div>
+            </sc-for>
+            <sc-if value="{{ histNoRows }}" hint-placeholder-val="{{ false }}">
+              <div style="padding:26px 0;text-align:center;font-size:13px;color:var(--color-neutral-700)">Nothing in <code style="font-size:12px">product_pipeline</code> for this ASIN yet.</div>
+            </sc-if>
+          </div>
+          </sc-if>
+        </sc-if>
+      </div>
+    </div>
+  </sc-if>
+</div>
+</sc-if>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;dark&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:false,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Theme&quot;},&quot;syncFunction&quot;:{&quot;editor&quot;:&quot;text&quot;,&quot;default&quot;:&quot;amazon-data-sync&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Data&quot;}}">
+const BASE = "https://qolksrytidvxarrlygyy.supabase.co";
+const KEY = "sb_publishable_UX38KeF1XAKtzvS01yfx7w_8s5NkOH3";
+
+class Component extends DCLogic {
+  state = {
+    token: null, user: null, refresh: null, email: "", password: "", authError: "", signingIn: false,
+    dens: "roomy", dark: false, darkTouched: false, wide: true, syncing: false, syncingId: null, hoverSlot: null, editId: null, draft: {}, savingEdit: false, editError: "", editLoading: false, confirmBox: null,
+    products: null, pQuery: "", pFlag: "all", pCat: "All categories", pLimit: 50, pTotal: null, pSort: "synced", pError: "", sError: "", pendingIds: null,
+    colw: null, sortCol: null, sortDir: "desc", menuOpen: false, pFilterOpen: false,
+    histBox: null, hist: null, histRuns: null, histErr: "", histTip: null,
+    posts: null, sFilter: "all", sLimit: 50, sTotal: null, postState: null, today: null, slidesOpen: {},
+    saved: "", verifying: true, reelBusy: ""
+  };
+
+  componentWillUnmount() { window.removeEventListener("resize", this.onResize); }
+
+  componentDidMount() {
+    try {
+      const w = JSON.parse(localStorage.getItem("md-admin-colw") || "null");
+      if (w && typeof w === "object") this.state.colw = w;
+    } catch (e) {}
+    this.paint();
+    this.state.narrow = window.innerWidth <= 820;
+    window.addEventListener("resize", this.onResize);
+    this.onResize();
+    let stored = null;
+    try { stored = JSON.parse(localStorage.getItem("md-admin-session") || "null"); } catch (e) {}
+    // a stored value is not proof of a session: the anon key is not a login,
+    // and tokens expire — ask the auth server before trusting it
+    if (!stored || !stored.token || stored.token === KEY) { this.signOutNow(); return; }
+    this.validateSession(stored);
+  }
+
+  async validateSession(stored) {
+    try {
+      const res = await fetch(BASE + "/auth/v1/user", {
+        headers: { apikey: KEY, Authorization: "Bearer " + stored.token }
+      });
+      if (!res.ok) {
+        // the access token expired while the tab was closed; the stored refresh
+        // token can still stand it back up without a re-login
+        const fresh = await this.refreshSession(stored.refresh);
+        if (!fresh) { this.sessionExpired(); return; }
+        this.setState({ token: fresh, refresh: this.state.refresh || stored.refresh, user: stored.user, verifying: false }, () => this.loadAll());
+        return;
+      }
+      const user = await res.json();
+      this.setState({ token: stored.token, refresh: stored.refresh || null, user: (user && user.email) || stored.user, verifying: false }, () => this.loadAll());
+    } catch (e) { this.signOutNow(); }
+  }
+  componentDidUpdate() { this.paint(); }
+
+  // the rail only earns its own column when the table still fits beside it
+  onResize = () => {
+    const wide = window.innerWidth >= 1500;
+    const narrow = window.innerWidth <= 820;
+    const next = {};
+    if (wide !== this.state.wide) next.wide = wide;
+    if (narrow !== this.state.narrow) { next.narrow = narrow; next.menuOpen = false; }
+    if (Object.keys(next).length) this.setState(next);
+  };
+
+  isDark() {
+    // the header button, the Tweaks prop and the last saved choice are all valid
+    // switches; whichever moved last wins, and the saved one survives reloads
+    if (this._storedDark === undefined) {
+      try { this._storedDark = JSON.parse(localStorage.getItem("md-admin-dark") || "null"); }
+      catch (e) { this._storedDark = null; }
+    }
+    if (this.state.darkTouched) return this.state.dark;
+    // a saved choice outranks the prop default, otherwise every page load and
+    // every navigation snaps back to light
+    if (this._storedDark != null) return this._storedDark;
+    if (this.props.dark != null) return this.props.dark;
+    return this.state.dark;
+  }
+  paint() {
+    const r = document.documentElement.style;
+    const dark = this.isDark();
+    // 10a "consumer desk": navy ink on warm paper, amber reserved for the drop
+    const NEUT = ["#faf8f4", "#f2efe9", "#e3dfd5", "#c9c4b7", "#9aa2b0", "#7b8698", "#5c6474", "#2f3c55", "#16233a"];
+    r.setProperty("--color-bg", dark ? "#11151d" : "#f2efe9");
+    r.setProperty("--color-surface", dark ? "#1a202c" : "#faf8f4");
+    r.setProperty("--color-text", dark ? "#eef0f4" : "#16233a");
+    r.setProperty("--color-divider", dark ? "color-mix(in srgb, #eef0f4 26%, transparent)" : "#cfc9bb");
+    NEUT.forEach((hex, i) => r.setProperty("--color-neutral-" + ((i + 1) * 100), dark ? NEUT[8 - i] : hex));
+    r.setProperty("--color-verify", dark ? "#45a179" : "#1c6b4a");
+    r.setProperty("--color-verify-ink", dark ? "#7fc9a4" : "#155a3e");
+    const base = "#d98014";
+    const mix = (w, p) => "color-mix(in oklch, " + base + ", " + w + " " + p + "%)";
+    const toward = dark ? "#11151d" : "white";
+    const away = dark ? "#eef0f4" : "black";
+    r.setProperty("--color-accent", base);
+    r.setProperty("--color-accent-100", mix(toward, 88));
+    r.setProperty("--color-accent-200", mix(toward, 74));
+    r.setProperty("--color-accent-300", mix(toward, 56));
+    r.setProperty("--color-accent-400", mix(toward, 28));
+    r.setProperty("--color-accent-500", base);
+    r.setProperty("--color-accent-600", mix(away, 16));
+    r.setProperty("--color-accent-700", mix(away, 30));
+    document.body.style.background = "var(--color-bg)";
+    document.body.style.color = "var(--color-text)";
+  }
+
+  // a token that expired mid-session should renew silently, not strand the
+  // admin in a fully-chromed page that can never load data
+  // tokenOverride matters on first load: state.refresh is not populated yet,
+  // so the stored refresh token has to be passed in explicitly
+  async refreshSession(tokenOverride) {
+    const rt = tokenOverride || this.state.refresh;
+    if (!rt) return null;
+    if (!this._refreshing) {
+      this._refreshing = (async () => {
+        try {
+          const res = await fetch(BASE + "/auth/v1/token?grant_type=refresh_token", {
+            method: "POST",
+            headers: { apikey: KEY, "Content-Type": "application/json" },
+            body: JSON.stringify({ refresh_token: rt })
+          });
+          if (!res.ok) return null;
+          const data = await res.json();
+          if (!data.access_token) return null;
+          const session = { token: data.access_token, refresh: data.refresh_token || rt, user: this.state.user };
+          try { localStorage.setItem("md-admin-session", JSON.stringify(session)); } catch (e) {}
+          this.setState({ token: session.token, refresh: session.refresh });
+          return session.token;
+        } catch (e) { return null; }
+        finally { setTimeout(() => { this._refreshing = null; }, 0); }
+      })();
+    }
+    return this._refreshing;
+  }
+
+  sessionExpired() {
+    this.signOutNow();
+    this.setState({ authError: "Session expired \u2014 sign in again.", pError: "", sError: "" });
+  }
+
+  async req(url, init) {
+    const opts = init || {};
+    let res = await fetch(url, opts);
+    if (res.status === 401 || res.status === 403) {
+      const fresh = await this.refreshSession();
+      if (fresh) {
+        const retry = Object.assign({}, opts);
+        retry.headers = Object.assign({}, opts.headers || {}, { apikey: KEY, Authorization: "Bearer " + fresh });
+        res = await fetch(url, retry);
+      }
+      if (res.status === 401 || res.status === 403) this.sessionExpired();
+    }
+    return res;
+  }
+
+  headers(extra) {
+    const h = { apikey: KEY, Authorization: "Bearer " + (this.state.token || KEY), "Content-Type": "application/json" };
+    return Object.assign(h, extra || {});
+  }
+
+  async signIn(e) {
+    if (e && e.preventDefault) e.preventDefault();
+    this.setState({ signingIn: true, authError: "" });
+    try {
+      const res = await fetch(BASE + "/auth/v1/token?grant_type=password", {
+        method: "POST",
+        headers: { apikey: KEY, "Content-Type": "application/json" },
+        body: JSON.stringify({ email: this.state.email, password: this.state.password })
+      });
+      const data = await res.json();
+      if (!res.ok || !data.access_token) {
+        this.setState({ signingIn: false, authError: data.error_description || data.msg || "Sign in failed." });
+        return;
+      }
+      const session = { token: data.access_token, refresh: data.refresh_token || null, user: (data.user && data.user.email) || this.state.email };
+      try { localStorage.setItem("md-admin-session", JSON.stringify(session)); } catch (err) {}
+      this.setState({ token: session.token, refresh: session.refresh, user: session.user, password: "", signingIn: false }, () => this.loadAll());
+    } catch (err) {
+      this.setState({ signingIn: false, authError: "Network error. Try again." });
+    }
+  }
+
+  signOutNow() {
+    try { localStorage.removeItem("md-admin-session"); } catch (e) {}
+    this.setState({ token: null, user: null, refresh: null, products: null, posts: null, today: null, postState: null, password: "", verifying: false });
+  }
+
+  loadAll() { this.loadPendingIds(); this.loadProducts(); this.loadPosts(); this.loadToday(); this.loadCounts(); this.loadCategories(); }
+
+  async loadPendingIds() {
+    try {
+      // product_pipeline.product_id is NULL throughout this database, so the pending
+      // set is resolved through ASIN instead of the unused foreign key
+      const res = await this.req(BASE + "/rest/v1/product_pipeline?select=asin&status=eq.pending&asin=not.is.null&limit=400", { headers: this.headers() });
+      if (!res.ok) return;
+      const rows = await res.json();
+      const asins = [];
+      rows.forEach(r => { if (r.asin && asins.indexOf(r.asin) === -1) asins.push(r.asin); });
+      let ids = [];
+      if (asins.length) {
+        const q = "in.(" + asins.map(a => '"' + String(a).replace(/"/g, "") + '"').join(",") + ")";
+        const pr = await this.req(BASE + "/rest/v1/products?select=id&asin=" + encodeURIComponent(q), { headers: this.headers() });
+        if (pr.ok) ids = (await pr.json()).map(p => p.id).filter(Boolean);
+      }
+      this.setState({ pendingIds: ids }, () => {
+        // the default view must not show them, so it reloads once the list lands
+        if ((this.state.pFlag || "all") !== "pending") this.loadProducts();
+        this.loadCounts();
+      });
+    } catch (e) {}
+  }
+
+  // categories_v2 is the canonical list (it carries sort_order and the Amazon
+  // node ids); the old `categories` table is stale and no longer read
+  async loadCategories() {
+    try {
+      const res = await this.req(BASE + "/rest/v1/categories_v2?select=id,name,sort_order&is_active=eq.true&order=sort_order.asc,name.asc", { headers: this.headers() });
+      if (!res.ok) return;
+      const rows = await res.json();
+      const list = rows.filter(r => r.name);
+      this.setState({
+        catList: list,
+        catNames: list.map(r => r.name),
+        catIdByName: list.reduce((m, r) => (m[r.name] = r.id, m), {}),
+        catNameById: list.reduce((m, r) => (m[r.id] = r.name, m), {})
+      }, () => this.loadStoredCategories());
+    } catch (e) {}
+  }
+
+  // category_id_v2 is the real link to categories_v2; the free-text `category`
+  // column is legacy and only kept in step so older readers keep working.
+  // A row with no category_id_v2 is off-list however its text column reads.
+  async loadStoredCategories() {
+    try {
+      const res = await this.req(BASE + "/rest/v1/products?select=category&category_id_v2=is.null&category=not.is.null&limit=5000", { headers: this.headers() });
+      if (!res.ok) return;
+      const rows = await res.json();
+      const seen = {};
+      rows.forEach(r => { const c = this.decode(r.category || "").trim(); if (c) seen[c] = 1; });
+      this.setState({ offListCats: Object.keys(seen).sort() });
+    } catch (e) {}
+  }
+
+  // exact, whole-table counts — a page of 50 rows cannot answer "how many failed"
+  async count(table, qs) {
+    try {
+      const res = await this.req(BASE + "/rest/v1/" + table + "?select=id" + (qs ? "&" + qs : ""), {
+        headers: this.headers({ Prefer: "count=exact", Range: "0-0" })
+      });
+      const range = res.headers.get("content-range");
+      return range && range.indexOf("/") > -1 ? parseInt(range.split("/")[1], 10) : null;
+    } catch (e) { return null; }
+  }
+
+  excludeQueue() {
+    const ids = this.state.pendingIds || [];
+    return ids.length ? "id=not.in.(" + ids.join(",") + ")" : "";
+  }
+
+  async loadCounts() {
+    const ex = this.excludeQueue();
+    const and = qs => [ex, qs].filter(Boolean).join("&");
+    const [products, hidden, noImage, noCat, topDeals, posts, failed, pending, published] = await Promise.all([
+      this.count("products", ex),
+      this.count("products", and("is_active=eq.false")),
+      this.count("products", and("image_url=is.null")),
+      this.count("products", and("category_id_v2=is.null&category=is.null")),
+      this.count("products", and("is_top_deal=eq.true")),
+      this.count("scheduled_posts"),
+      this.count("scheduled_posts", "status=eq.failed"),
+      this.count("scheduled_posts", "status=eq.pending"),
+      this.count("scheduled_posts", "status=eq.published")
+    ]);
+    this.setState({ counts: { products, hidden, noImage, noCat, topDeals, posts, failed, pending, published } });
+  }
+
+  productQuery() {
+    const parts = [];
+    const flag = this.state.pFlag || "all";
+    const q = (this.state.pQuery || "").trim();
+    // "pending review" means product_pipeline.status = pending for this product,
+    // joined on the real foreign key. Those products stay out of every other
+    // view, filtered by the id list loadPendingIds() keeps.
+    if (flag === "pending") {
+      const ids = this.state.pendingIds || [];
+      parts.push(ids.length ? "id=in.(" + ids.join(",") + ")" : "id=eq.00000000-0000-0000-0000-000000000000");
+    } else {
+      const ids = this.state.pendingIds || [];
+      if (ids.length) parts.push("id=not.in.(" + ids.join(",") + ")");
+    }
+    if (q) {
+      // every word has to appear somewhere in the row, in any order — one
+      // substring meant the words had to be typed consecutively, so "airpods 3"
+      // missed "AirPods Pro 3"
+      const toks = q.replace(/[(),*]/g, " ").split(/\s+/).filter(Boolean);
+      if (toks.length) {
+        const cols = ["title","display_title","asin"];
+        parts.push("and=(" + toks.map(t =>
+          "or(" + cols.map(c => c + ".ilike." + encodeURIComponent("*" + t + "*")).join(",") + ")"
+        ).join(",") + ")");
+      }
+    }
+    if (flag === "live") parts.push("is_active=eq.true");
+    if (flag === "hidden") parts.push("is_active=eq.false");
+    if (flag === "top") parts.push("is_top_deal=eq.true");
+    if (flag === "noimage") parts.push("image_url=is.null");
+    if (flag === "nocat") parts.push("category_id_v2=is.null", "category=is.null");
+    if (flag === "offcat") parts.push("category_id_v2=is.null", "category=not.is.null");
+    if (flag === "coupon") parts.push("coupon_code=not.is.null", "coupon_code=neq.");
+    const cat = this.state.pCat || "All categories";
+    if (cat !== "All categories") {
+      const id = (this.state.catIdByName || {})[cat];
+      parts.push(id ? "category_id_v2=eq." + id : "category=eq." + encodeURIComponent(cat));
+    }
+    return parts.join("&");
+  }
+
+  // which loaded products already sit in the queue, so a row can say so and a
+  // second Post is a deliberate choice rather than an accident
+  // products carries no origin column, so a catalogue row's provenance is
+  // recovered from the queue row that created it — matched on ASIN, newest first
+  async loadOrigins(products) {
+    const asins = Array.from(new Set((products || [])
+      .map(p => (p.asin || p.asin || "").toString().trim().toUpperCase())
+      .filter(Boolean)));
+    if (!asins.length) { this.setState({ originByAsin: {} }); return; }
+    try {
+      const q = "in.(" + asins.map(a => '"' + a.replace(/"/g, "") + '"') .join(",") + ")";
+      const res = await this.req(BASE + "/rest/v1/product_pipeline?select=asin,source,source_url,created_at&order=created_at.desc&limit=1000&asin=" + encodeURIComponent(q), { headers: this.headers() });
+      if (!res.ok) return;
+      const rows = await res.json();
+      const map = {};
+      rows.forEach(r => {
+        const k = (r.asin || "").toString().trim().toUpperCase();
+        if (!k || map[k]) return;
+        map[k] = { source: r.source || "", url: r.source_url || "" };
+      });
+      this.setState({ originByAsin: map });
+    } catch (e) {}
+  }
+
+  async loadPostState(products) {
+    const ids = (products || []).map(p => p.id).filter(Boolean);
+    if (!ids.length) { this.setState({ postState: {} }); return; }
+    try {
+      const res = await this.req(BASE + "/rest/v1/scheduled_posts?select=product_id,platform,status,scheduled_at&order=scheduled_at.desc&product_id=in.(" + ids.join(",") + ")", {
+        headers: this.headers()
+      });
+      if (!res.ok) return;
+      const rows = await res.json();
+      // one entry per product per platform: the catalogue row shows each
+      // platform's own state, so FB going out does not mask IG failing
+      const map = {};
+      rows.forEach(r => {
+        const plat = this.platformKey(r.platform);
+        if (!map[r.product_id]) map[r.product_id] = {};
+        const cur = map[r.product_id][plat];
+        const t = Date.parse(r.scheduled_at || "") || 0;
+        if (!cur || (r.status === "failed" && cur.status !== "failed") || (cur.status !== "failed" && t >= (cur.t || 0))) {
+          map[r.product_id][plat] = { status: r.status, when: r.scheduled_at, t: t };
+        }
+      });
+      this.setState({ postState: map });
+    } catch (e) {}
+  }
+
+  // Deletes a post that already went out, on the platform. Stories are excluded
+  // upstream (the Graph API cannot delete them; they expire after 24h), and rows
+  // whose remote post id was never stored come back as no_remote_id.
+  async unpublishPost(id, title, plat) {
+    const ok = await this.ask({
+      title: "Delete this from " + (plat || "the platform") + "?",
+      body: title || "",
+      detail: "This deletes the live post itself, not just the record here. It cannot be undone \u2014 reposting creates a new post with a new URL and no likes or comments.",
+      label: "Delete live post",
+      danger: true
+    });
+    if (!ok) return;
+    this.setState({ saved: "Deleting on " + (plat || "platform") + "\u2026" });
+    try {
+      const res = await this.req(BASE + "/functions/v1/unpublish-social", {
+        method: "POST", headers: this.headers({ "Content-Type": "application/json" }),
+        body: JSON.stringify({ rowId: id })
+      });
+      let r = null;
+      try { r = await res.json(); } catch (e) {}
+      if (r) console.log("unpublish-social", res.status, r);
+      const msg = r && r.success ? "Deleted from " + (plat || "platform")
+        : res.status === 404 ? "unpublish-social isn't deployed yet (404)"
+        : res.status === 401 || res.status === 403 ? "Not allowed to call unpublish-social (" + res.status + ")"
+        : res.status >= 500 ? "The delete function errored (" + res.status + ") \u2014 check its logs"
+        : !r ? "Could not reach the delete function"
+        : r.reason === "story_not_deletable" ? "Stories can't be deleted \u2014 it expires on its own within 24h"
+        : r.reason === "no_remote_id" ? "No post id was saved for this one \u2014 delete it in the app"
+        : r.reason === "no_token" ? "Missing the platform token"
+        : "Delete failed \u2014 " + (r.reason || "unknown");
+      this.setState({ saved: msg });
+      if (r && r.success) { this.loadPosts(); this.loadToday(); this.loadCounts(); this.loadPostState(this.state.products); }
+    } catch (e) { this.setState({ saved: "Delete failed" }); }
+    setTimeout(() => this.setState({ saved: "" }), 4200);
+  }
+
+  async removePost(id, title) {
+    const ok = await this.ask({
+      title: "Remove this queued post?",
+      body: title || "",
+      detail: "It has not gone out, so nothing is deleted from Facebook — only the queued row.",
+      label: "Remove from queue",
+      danger: true
+    });
+    if (!ok) return;
+    this.setState({ saved: "Removing\u2026" });
+    try {
+      const res = await this.req(BASE + "/rest/v1/scheduled_posts?id=eq." + id, {
+        method: "DELETE", headers: this.headers({ Prefer: "return=minimal" })
+      });
+      this.setState({ saved: res.ok ? "Removed from queue" : "Remove failed" });
+      if (res.ok) { this.loadPosts(); this.loadToday(); this.loadCounts(); this.loadPostState(this.state.products); }
+    } catch (e) { this.setState({ saved: "Remove failed" }); }
+    setTimeout(() => this.setState({ saved: "" }), 2400);
+  }
+
+  decode(s) {
+    const str = String(s == null ? "" : s);
+    if (str.indexOf("&") === -1) return str;
+    if (!this._dec) this._dec = document.createElement("textarea");
+    this._dec.innerHTML = str;
+    const once = this._dec.value;
+    // ingestion double-escapes in places (&amp;#039;), so decode twice
+    if (once.indexOf("&") === -1) return once;
+    this._dec.innerHTML = once;
+    return this._dec.value;
+  }
+
+  platformKey(v) {
+    const s = String(v || "").toLowerCase();
+    if (s.indexOf("story") > -1) return "instagram_story";
+    if (s.indexOf("insta") > -1) return "instagram";
+    if (s.indexOf("face") > -1) return "facebook";
+    return s || "unknown";
+  }
+
+  platformName(v) {
+    const s = String(v || "").toLowerCase();
+    if (s.indexOf("story") > -1) return "Instagram Story";
+    if (s.indexOf("insta") > -1) return "Instagram";
+    if (s.indexOf("face") > -1) return "Facebook";
+    return String(v || "unknown");
+  }
+
+  syncFn() { return (this.props.syncFunction || "amazon-data-sync").replace(/^\/+|\/+$/g, ""); }
+
+  // hits the price-sync Edge Function; product omitted means "everything"
+  // deliberately one product at a time \u2014 bulk re-checks risk Amazon throttling.
+  // The function may work asynchronously, so success is not the HTTP response:
+  // it is last_price_sync actually moving. Poll for it rather than claiming
+  // "Synced" the moment the request returns.
+  async syncNow(product) {
+    if (!product) return;
+    const fn = this.syncFn();
+    const before = product.last_price_sync || null;
+    this.setState({ syncing: true, syncingId: product.id, saved: "Syncing \u2014 asked " + fn + "\u2026" });
+    let body = "";
+    try {
+      const res = await this.req(BASE + "/functions/v1/" + fn, {
+        method: "POST",
+        headers: this.headers(),
+        // the function reads camelCase (its error names "productId"); snake_case
+        // keys are sent too so either contract is satisfied
+        body: JSON.stringify({
+          productId: product.id,
+          product_id: product.id,
+          asin: product.asin || product.asin || null,
+          asin: product.asin || product.asin || null
+        })
+      });
+      try { body = (await res.text()).slice(0, 140); } catch (e) {}
+      if (res.status === 404) {
+        this.setState({ syncing: false, syncingId: null, saved: "No function named \u201c" + fn + "\u201d \u2014 set the right name in Tweaks" });
+        setTimeout(() => this.setState({ saved: "" }), 6000);
+        return;
+      }
+      if (!res.ok) {
+        this.setState({ syncing: false, syncingId: null, saved: "Sync failed (" + res.status + ") " + body });
+        setTimeout(() => this.setState({ saved: "" }), 8000);
+        return;
+      }
+    } catch (e) {
+      this.setState({ syncing: false, syncingId: null, saved: "Sync failed \u2014 network error" });
+      setTimeout(() => this.setState({ saved: "" }), 5000);
+      return;
+    }
+    this.watchSync(product, before, body);
+  }
+
+  // up to 40s, checking whether the row's sync stamp moved
+  async watchSync(product, before, body) {
+    const deadline = Date.now() + 40000;
+    const tick = async () => {
+      let row = null;
+      try {
+        const res = await this.req(BASE + "/rest/v1/products?select=id,price,original_price,last_price_sync&id=eq." + product.id, { headers: this.headers() });
+        if (res.ok) { const rows = await res.json(); row = rows && rows[0]; }
+      } catch (e) {}
+      const moved = row && String(row.last_price_sync || "") !== String(before || "");
+      if (moved) {
+        const products = (this.state.products || []).map(p => p.id === product.id ? Object.assign({}, p, row) : p);
+        this.setState({ products, syncing: false, syncingId: null, saved: "Synced \u2014 price re-checked just now" });
+        if (this.state.pSort === "synced" || this.state.pSort === "stale") this.loadProducts();
+        setTimeout(() => this.setState({ saved: "" }), 5000);
+        return;
+      }
+      if (Date.now() < deadline) {
+        const left = Math.round((deadline - Date.now()) / 1000);
+        this.setState({ saved: "Waiting for " + this.syncFn() + "\u2026 " + left + "s" });
+        setTimeout(tick, 3000);
+        return;
+      }
+      this.setState({
+        syncing: false, syncingId: null,
+        saved: "Function answered but last_price_sync never moved" + (body ? " \u2014 it said: " + body : "") + ". Check the payload it expects."
+      });
+      setTimeout(() => this.setState({ saved: "" }), 12000);
+    };
+    setTimeout(tick, 2500);
+  }
+
+  async startEdit(p) {
+    // seed from a fresh read: a background sync may have moved price since the
+    // page loaded, and a stale draft would write the old numbers back
+    this.setState({ editId: p.id, draft: {}, editError: "", editLoading: true });
+    let row = p;
+    try {
+      const res = await this.req(BASE + "/rest/v1/products?select=*&id=eq." + p.id, { headers: this.headers() });
+      if (res.ok) {
+        const rows = await res.json();
+        if (rows && rows[0]) {
+          row = rows[0];
+          this.setState({ products: (this.state.products || []).map(x => x.id === p.id ? Object.assign({}, x, row) : x) });
+        }
+      }
+    } catch (e) {}
+    if (this.state.editId !== p.id) return;
+    this.setState({
+      editLoading: false,
+      draft: {
+        display_title: this.decode(row.display_title || row.title || ""),
+        category: (this.state.catNameById || {})[row.category_id_v2] || (row.category == null ? "" : String(row.category)),
+        price: row.price == null ? "" : String(row.price),
+        original_price: row.original_price == null ? "" : String(row.original_price),
+        prime_cashback_percent: row.prime_cashback_percent == null ? "" : String(row.prime_cashback_percent)
+      }
+    });
+  }
+
+  cancelEdit() { this.setState({ editId: null, draft: {}, editError: "" }); }
+
+  setDraft(key, value) {
+    const next = Object.assign({}, this.state.draft || {});
+    next[key] = value;
+    this.setState({ draft: next });
+  }
+
+  async saveEdit(p) {
+    const d = this.state.draft || {};
+    const numOrNull = v => {
+      const s = String(v == null ? "" : v).replace(/[$,\s]/g, "");
+      if (s === "") return null;
+      const n = parseFloat(s);
+      return isNaN(n) ? undefined : n;
+    };
+    const price = numOrNull(d.price);
+    const orig = numOrNull(d.original_price);
+    if (price === undefined || orig === undefined) {
+      this.setState({ editError: "Price and original price must be numbers." });
+      return;
+    }
+    if (price != null && orig != null && orig < price) {
+      this.setState({ editError: "Original price is below the current price \u2014 the discount would be negative." });
+      return;
+    }
+    // a rate, not an amount: blank clears it, and anything outside 0-100 is a
+    // typo rather than a bonus worth writing to a live row
+    const cash = numOrNull(String(d.prime_cashback_percent == null ? "" : d.prime_cashback_percent).replace(/%/g, ""));
+    if (cash === undefined || (cash != null && (cash < 0 || cash > 100))) {
+      this.setState({ editError: "Cashback must be a percentage between 0 and 100 \u2014 leave it blank for none." });
+      return;
+    }
+    const catName = String(d.category || "").trim();
+    const patch = {
+      display_title: String(d.display_title || "").trim() || null,
+      category: catName || null,
+      category_id_v2: (this.state.catIdByName || {})[catName] || null,
+      price: price,
+      original_price: orig,
+      prime_cashback_percent: cash
+    };
+
+    this.setState({ savingEdit: true, editError: "", saved: "Saving\u2026" });
+    try {
+      const res = await this.req(BASE + "/rest/v1/products?id=eq." + p.id, {
+        method: "PATCH", headers: this.headers({ Prefer: "return=representation" }),
+        body: JSON.stringify(patch)
+      });
+      if (!res.ok) {
+        let why = "";
+        try { const j = await res.json(); why = j.message || j.hint || ""; } catch (e) {}
+        // PostgREST names the offending column: "Could not find the 'x' column"
+        const miss = /could not find the '([a-z_]+)' column/i.exec(why);
+        if (miss && patch.hasOwnProperty(miss[1])) {
+          delete patch[miss[1]];
+          const retry = await this.req(BASE + "/rest/v1/products?id=eq." + p.id, {
+            method: "PATCH", headers: this.headers({ Prefer: "return=representation" }),
+            body: JSON.stringify(patch)
+          });
+          if (retry.ok) {
+            let r2 = null;
+            try { const rows = await retry.json(); r2 = rows && rows[0]; } catch (e) {}
+            this.setState({
+              products: (this.state.products || []).map(x => x.id === p.id ? Object.assign({}, x, r2 || patch) : x),
+              editId: null, draft: {}, savingEdit: false, saved: "Saved"
+            });
+            this.loadCounts();
+            setTimeout(() => this.setState({ saved: "" }), 2500);
+            return;
+          }
+        }
+        this.setState({ savingEdit: false, editError: "Save failed (" + res.status + ")" + (why ? " \u2014 " + why : "") });
+        return;
+      }
+      let row = null;
+      try { const rows = await res.json(); row = rows && rows[0]; } catch (e) {}
+      this.setState({
+        products: (this.state.products || []).map(x => x.id === p.id ? Object.assign({}, x, row || patch) : x),
+        editId: null, draft: {}, savingEdit: false, saved: "Saved"
+      });
+      this.loadCounts();
+    } catch (e) {
+      this.setState({ savingEdit: false, editError: "Save failed \u2014 network error" });
+    }
+    setTimeout(() => this.setState({ saved: "" }), 2500);
+  }
+
+  ask(opts) {
+    return new Promise(resolve => {
+      this.setState({ confirmBox: Object.assign({}, opts, { resolve: resolve }) });
+    });
+  }
+
+  answer(ok) {
+    const box = this.state.confirmBox;
+    this.setState({ confirmBox: null });
+    if (box && box.resolve) box.resolve(ok);
+  }
+
+  async deleteProduct(p) {
+    const name = this.decode(p.display_title || p.title) || "this product";
+    const ok = await this.ask({
+      title: "Delete this product?",
+      body: name,
+      detail: "This removes the product row itself, not just its visibility, along with any posts queued for it. Use the Live toggle instead if you only want it off the site.",
+      label: "Delete permanently",
+      danger: true
+    });
+    if (!ok) return;
+    this.setState({ saved: "Deleting\u2026" });
+    try {
+      await this.req(BASE + "/rest/v1/scheduled_posts?product_id=eq." + p.id, {
+        method: "DELETE", headers: this.headers({ Prefer: "return=minimal" })
+      });
+      const res = await this.req(BASE + "/rest/v1/products?id=eq." + p.id, {
+        method: "DELETE", headers: this.headers({ Prefer: "return=minimal" })
+      });
+      if (res.ok) {
+        this.setState({
+          products: (this.state.products || []).filter(x => x.id !== p.id),
+          saved: "Deleted"
+        });
+        this.loadCounts(); this.loadPosts();
+      } else {
+        this.setState({ saved: "Delete failed \u2014 may be referenced elsewhere" });
+      }
+    } catch (e) { this.setState({ saved: "Delete failed" }); }
+    setTimeout(() => this.setState({ saved: "" }), 3000);
+  }
+
+  // Pulls a future-dated pending post to the front of the queue. Moving
+  // scheduled_at to now is all the publisher needs — but it also spends the
+  // platform's slot early, so the next backfill sweep will see the window
+  // covered and skip. That is a deliberate override, hence the confirm.
+  async postNow(id, title, plat) {
+    const ok = await this.ask({
+      title: "Post this now?",
+      body: title || "",
+      detail: "It goes out on the publisher's next run instead of its scheduled slot. This spends " +
+        (plat || "the platform") + "'s slot early, so the automatic spacing shifts to match.",
+      label: "Post now"
+    });
+    if (!ok) return;
+    this.setState({ saved: "Moving to the front\u2026" });
+    try {
+      const res = await this.req(BASE + "/rest/v1/scheduled_posts?id=eq." + id, {
+        method: "PATCH", headers: this.headers({ Prefer: "return=minimal" }),
+        body: JSON.stringify({ status: "pending", error_message: null, scheduled_at: new Date().toISOString() })
+      });
+      this.setState({ saved: res.ok ? "Queued to go out on the next run" : "Could not move it" });
+      if (res.ok) { this.loadPosts(); this.loadToday(); this.loadCounts(); }
+    } catch (e) { this.setState({ saved: "Could not move it" }); }
+    setTimeout(() => this.setState({ saved: "" }), 2800);
+  }
+
+  async retryPost(id) {
+    this.setState({ saved: "Requeueing\u2026" });
+    try {
+      const res = await this.req(BASE + "/rest/v1/scheduled_posts?id=eq." + id, {
+        method: "PATCH", headers: this.headers({ Prefer: "return=minimal" }),
+        body: JSON.stringify({ status: "pending", error_message: null, scheduled_at: new Date().toISOString() })
+      });
+      this.setState({ saved: res.ok ? "Requeued" : "Requeue failed" });
+      if (res.ok) { this.loadPosts(); this.loadToday(); this.loadCounts(); }
+    } catch (e) { this.setState({ saved: "Requeue failed" }); }
+    setTimeout(() => this.setState({ saved: "" }), 2400);
+  }
+
+  // One source of truth for the product table's tracks: the header and every
+  // row read this, so they cannot drift apart. A dragged width becomes a fixed
+  // px track; everything else keeps its designed base.
+  COLS() {
+    const dense = (this.state.dens || "roomy") === "dense";
+    const w = this.state.colw || {};
+    return [
+      { id: "bar", base: "3px" },
+      { id: "img", base: dense ? "36px" : "64px", min: 28 },
+      { id: "product", base: "minmax(180px,1fr)", label: "Product", sort: "display_title", min: 160 },
+      { id: "price", base: "92px", label: "Price", sort: "price" },
+      { id: "off", base: "56px", label: "% off", local: "off" },
+      { id: "cash", base: "78px", label: "Cashback", sort: "prime_cashback_percent" },
+      { id: "synced", base: "96px", label: "Synced", sort: "last_price_sync" },
+      { id: "flags", base: "120px", label: "Flags", sort: "is_top_deal" },
+      { id: "live", base: "96px", label: "Live", sort: "is_active" },
+      { id: "queue", base: "152px", label: "Queue", min: 120, local: "queue" }
+    ].map(c => Object.assign({}, c, { track: w[c.id] ? w[c.id] + "px" : c.base }));
+  }
+
+  gridTemplate() { return this.COLS().map(c => c.track).join(" "); }
+
+  saveColw(colw) {
+    try { localStorage.setItem("md-admin-colw", JSON.stringify(colw || {})); } catch (e) {}
+  }
+
+  startResize(col, e) {
+    e.preventDefault();
+    e.stopPropagation();
+    const cell = e.currentTarget.parentNode;
+    const startX = e.clientX;
+    const startW = cell.getBoundingClientRect().width;
+    const min = col.min || 44;
+    const move = ev => {
+      const next = Math.max(min, Math.round(startW + (ev.clientX - startX)));
+      this.setState({ colw: Object.assign({}, this.state.colw || {}, { [col.id]: next }) });
+    };
+    const up = () => {
+      document.removeEventListener("mousemove", move);
+      document.removeEventListener("mouseup", up);
+      this.saveColw(this.state.colw);
+    };
+    document.addEventListener("mousemove", move);
+    document.addEventListener("mouseup", up);
+  }
+
+  // double-click the grip to give one column its designed width back
+  resetCol(col, e) {
+    e.preventDefault();
+    e.stopPropagation();
+    const colw = Object.assign({}, this.state.colw || {});
+    delete colw[col.id];
+    this.setState({ colw });
+    this.saveColw(colw);
+  }
+
+  // Columns backed by a real product column sort on the server. The derived
+  // ones (% off, Queue) have no column to order by, so they sort the loaded page
+  // in the browser — labelled as such in the header tooltip so the scope is
+  // never mistaken for the whole table.
+  sortBy(col) {
+    if (!col.sort && !col.local) return;
+    const key = col.sort || ("local:" + col.local);
+    const same = this.state.sortCol === key;
+    const dir = same ? (this.state.sortDir === "asc" ? "desc" : "asc")
+      : (key === "display_title" ? "asc" : "desc");
+    if (col.local) { this.setState({ sortCol: key, sortDir: dir }); return; }
+    this.setState({ sortCol: key, sortDir: dir }, () => this.loadProducts());
+  }
+
+  // the value a client-side sort ranks on, per derived column
+  localSortKey(which, p) {
+    if (which === "off") {
+      const price = parseFloat(p.price);
+      const was = parseFloat(p.original_price);
+      const cp = parseFloat(p.scraped_coupon_price);
+      const net = !isNaN(cp) && cp > 0 && (isNaN(price) || cp < price) ? cp : price;
+      if (!(net > 0) || !(was > net)) return null;
+      return (1 - net / was) * 100;
+    }
+    if (which === "queue") {
+      const byPlat = (this.state.postState || {})[p.id] || {};
+      const states = ["facebook", "instagram", "instagram_story"].map(k => byPlat[k]).filter(Boolean);
+      if (!states.length) return null;
+      // failures outrank pending, pending outranks sent, then by how many
+      const rank = states.some(s => s.status === "failed") ? 3000
+        : states.some(s => s.status === "pending") ? 2000 : 1000;
+      return rank + states.length;
+    }
+    return null;
+  }
+
+  sortParam() {
+    // a derived-column sort is applied in the browser, so the server order
+    // stays whatever the dropdown asked for
+    if (this.state.sortCol && String(this.state.sortCol).indexOf("local:") !== 0) {
+      return this.state.sortCol + "." + (this.state.sortDir || "desc") + ".nullslast";
+    }
+    const s = this.state.pSort || "added";
+    if (s === "synced") return "last_price_sync.desc.nullslast";
+    if (s === "stale") return "last_price_sync.asc.nullsfirst";
+    return "created_at.desc";
+  }
+
+  async loadProducts() {
+    const qs = this.productQuery();
+    this.setState({ pError: "" });
+    try {
+      const sel = "*";
+      const res = await this.req(BASE + "/rest/v1/products?select=" + sel + "&order=" + this.sortParam() + "&limit=" + (this.state.pLimit || 50) + (qs ? "&" + qs : ""), {
+        headers: this.headers({ Prefer: "count=exact" })
+      });
+      if (!res.ok) {
+        let why = "";
+        try { const j = await res.json(); why = j.message || j.hint || ""; } catch (e) {}
+        if (res.status !== 401 && res.status !== 403) this.setState({ products: [], pError: "Could not load products (" + res.status + ")" + (why ? " \u2014 " + why : "") });
+        return;
+      }
+      const range = res.headers.get("content-range");
+      const total = range && range.indexOf("/") > -1 ? parseInt(range.split("/")[1], 10) : null;
+      const rows = await res.json();
+      this.setState({ products: rows, pTotal: total });
+      this.loadPostState(rows);
+      this.loadOrigins(rows);
+    } catch (e) {
+      this.setState({ products: [], pError: "Could not load products \u2014 network error" });
+    }
+  }
+
+  postQuery() {
+    const f = this.state.sFilter || "all";
+    if (f === "all") return "";
+    if (f === "failed" || f === "pending") return "status=eq." + f;
+    return "platform=like." + encodeURIComponent(f + "*");
+  }
+
+  // the publisher inserts a second row when a post goes out, so collapse
+  // product+platform pairs before anything counts or draws them
+  todayDeduped() {
+    const rows = this.state.today;
+    if (!rows) return null;
+    const seen = {};
+    const out = [];
+    rows.forEach(r => {
+      const t = Date.parse(r.scheduled_at || "") || 0;
+      if (!t) return;
+      const key = String(r.product_id || r.id) + "|" + String(r.platform || "");
+      const st = String(r.status || "");
+      const prod = r.products || {};
+      if (seen[key] != null) {
+        const prev = out[seen[key]];
+        if (st === "failed" || (prev.status !== "failed" && t >= prev.t)) {
+          prev.status = st; prev.t = t;
+        }
+        return;
+      }
+      seen[key] = out.length;
+      out.push({ status: st, t: t, platform: r.platform, name: this.decode(prod.display_title || prod.title) || "(product removed)" });
+    });
+    return out;
+  }
+
+  async loadToday() {
+    const start = new Date(); start.setHours(0, 0, 0, 0);
+    const end = new Date(start.getTime() + 86400000);
+    try {
+      const res = await this.req(BASE + "/rest/v1/scheduled_posts?select=id,platform,status,scheduled_at,product_id,products(title,display_title)" +
+        "&scheduled_at=gte." + start.toISOString() + "&scheduled_at=lt." + end.toISOString() +
+        "&order=scheduled_at.asc&limit=300", { headers: this.headers() });
+      if (!res.ok) return;
+      this.setState({ today: await res.json() });
+    } catch (e) {}
+  }
+
+  async loadPosts() {
+    const qs = this.postQuery();
+    this.setState({ sError: "" });
+    try {
+      const res = await this.req(BASE + "/rest/v1/scheduled_posts?select=*,products(title,display_title,image_url)&order=scheduled_at.desc&limit=" + (this.state.sLimit || 50) + (qs ? "&" + qs : ""), {
+        headers: this.headers({ Prefer: "count=exact" })
+      });
+      if (!res.ok) {
+        let why = "";
+        try { const j = await res.json(); why = j.message || ""; } catch (e) {}
+        if (res.status !== 401 && res.status !== 403) this.setState({ posts: [], sError: "Could not load the queue (" + res.status + ")" + (why ? " \u2014 " + why : "") });
+        return;
+      }
+      const range = res.headers.get("content-range");
+      const total = range && range.indexOf("/") > -1 ? parseInt(range.split("/")[1], 10) : null;
+      this.setState({ posts: await res.json(), sTotal: total });
+    } catch (e) {
+      this.setState({ posts: [], sError: "Could not load the queue \u2014 network error" });
+    }
+  }
+
+  async patchProduct(id, patch) {
+    const products = (this.state.products || []).map(p => p.id === id ? Object.assign({}, p, patch) : p);
+    this.setState({ products, saved: "Saving\u2026" });
+    try {
+      const res = await this.req(BASE + "/rest/v1/products?id=eq." + id, {
+        method: "PATCH", headers: this.headers({ Prefer: "return=minimal" }), body: JSON.stringify(patch)
+      });
+      this.setState({ saved: res.ok ? "Saved" : "Save failed" });
+      if (res.ok) this.loadCounts(); else this.loadProducts();
+    } catch (e) {
+      this.setState({ saved: "Save failed" });
+      this.loadProducts();
+    }
+    setTimeout(() => this.setState({ saved: "" }), 2200);
+  }
+
+  slotLabel(iso) {
+    if (!iso) return "";
+    const d = new Date(iso);
+    if (isNaN(d.getTime())) return "";
+    const t = d.toLocaleTimeString("en-US", { hour: "numeric", minute: "2-digit", timeZone: "America/New_York" });
+    const sameDay = new Date().toDateString() === d.toDateString();
+    return (sameDay ? "" : d.toLocaleDateString("en-US", { month: "short", day: "numeric", timeZone: "America/New_York" }) + " ") + t + " ET";
+  }
+
+  async schedulePost(product, platform) {
+    const plat = platform || "facebook";
+    this.setState({ saved: "Queueing\u2026" });
+    try {
+      // Goes through auto-schedule-facebook-post, not a direct insert: that
+      // function owns the 8am-10pm ET window and the per-platform cadence
+      // (FB/Story ~2h, IG ~4-5h). If today is full we ask for tomorrow.
+      const call = async (nd) => {
+        const r = await this.req(BASE + "/functions/v1/auto-schedule-facebook-post", {
+          method: "POST", headers: this.headers({ "Content-Type": "application/json" }),
+          body: JSON.stringify({ productId: product.id, platform: plat, nextDay: !!nd, source: "admin" })
+        });
+        if (!r.ok) return null;
+        try { return await r.json(); } catch (e) { return null; }
+      };
+      let out = await call(false);
+      if (out && !out.scheduled && out.reason === "window_full") out = await call(true);
+      const res = { ok: !!(out && out.scheduled) };
+      const slot = out && out.scheduledAt ? " \u00b7 " + this.slotLabel(out.scheduledAt) : "";
+      const why = !out ? "scheduler unreachable"
+        : out.reason === "already_queued" ? "already queued" + slot
+        : out.reason === "window_full" ? "no slot left today or tomorrow"
+        : (out.reason || "declined");
+      if (res.ok) {
+        // promotion to the homepage rail is part of scheduling, not a separate step
+        await this.req(BASE + "/rest/v1/products?id=eq." + product.id, {
+          method: "PATCH", headers: this.headers({ Prefer: "return=minimal" }),
+          body: JSON.stringify({ is_top_deal: true })
+        });
+        this.setState({
+          products: (this.state.products || []).map(x => x.id === product.id ? Object.assign({}, x, { is_top_deal: true }) : x)
+        });
+      }
+      this.setState({ saved: res.ok ? this.platformName(plat) + slot + " \u00b7 promoted" : this.platformName(plat) + " \u2014 " + why });
+      if (res.ok) { this.loadPosts(); this.loadToday(); this.loadCounts(); this.loadPostState(this.state.products); }
+    } catch (e) { this.setState({ saved: "Queue failed" }); }
+    setTimeout(() => this.setState({ saved: "" }), 2600);
+  }
+
+  // product_pipeline is the source of truth for prices — it holds every time a
+  // scraper saw the ASIN. price_history is read too, but only to draw the
+  // chart's older tail; the lowest-ever verdict comes from the pipeline alone.
+  openHistory(p) {
+    if (!p) return;
+    this.setState({
+      histBox: {
+        asin: String(p.asin || "").trim().toUpperCase(),
+        productId: p.id,
+        title: this.decode(p.display_title || p.title || "") || String(p.asin || ""),
+        price: p.price
+      },
+      hist: null, histRuns: null, histErr: ""
+    }, () => this.loadHistory());
+  }
+
+  closeHistory() { this.setState({ histBox: null, hist: null, histRuns: null, histErr: "", histTip: null }); }
+
+  async loadHistory() {
+    const box = this.state.histBox;
+    if (!box) return;
+    try {
+      if (!box.asin) throw new Error("This product has no ASIN, so the pipeline cannot be searched for it.");
+      const runs = await this.req(BASE + "/rest/v1/product_pipeline?select=*&asin=eq." +
+        encodeURIComponent(box.asin) + "&order=created_at.desc&limit=60", { headers: this.headers() });
+      if (!runs.ok) throw new Error("Could not read product_pipeline (HTTP " + runs.status + ")");
+      const histRuns = await runs.json();
+      let hist = [];
+      if (box.productId) {
+        const h = await this.req(BASE + "/rest/v1/price_history?select=price,recorded_at&product_id=eq." +
+          encodeURIComponent(box.productId) + "&order=recorded_at.asc&limit=200", { headers: this.headers() });
+        if (h.ok) hist = await h.json();
+      }
+      this.setState({ hist: hist, histRuns: histRuns });
+    } catch (e) { this.setState({ histErr: String(e.message || e) }); }
+  }
+
+  // every price point for the ASIN, oldest first. kind marks the origin: only
+  // "scrape" (product_pipeline) points count towards the lowest-ever verdict.
+  histPoints() {
+    const out = [];
+    (this.state.hist || []).forEach(h => {
+      const v = Number(h.price);
+      if (v > 0) out.push({ price: v, at: h.recorded_at, kind: "sync" });
+    });
+    (this.state.histRuns || []).forEach(r => {
+      const v = Number(r.price);
+      if (v > 0) out.push({ price: v, at: r.created_at, kind: "scrape", status: r.status });
+    });
+    out.sort((a, b) => Date.parse(a.at) - Date.parse(b.at));
+    // a price check written the same minute as a scrape is one observation
+    return out.filter((p, i) => i === 0 || !(p.price === out[i - 1].price &&
+      Math.abs(Date.parse(p.at) - Date.parse(out[i - 1].at)) < 120000));
+  }
+
+  // rejected scrapes are excluded everywhere the price is judged: that price was
+  // never one the site offered, so it should not set a low or draw a line
+  pipelinePoints() { return this.histPoints().filter(p => p.kind === "scrape" && p.status !== "rejected"); }
+
+  // product_pipeline column names for coupons vary by scraper generation, so the
+  // coupon series is resolved by shape: any numeric "*coupon*price*" field, and
+  // any "*coupon*code*" string that marks a row as couponed.
+  couponOf(r) {
+    let price = null, code = "";
+    Object.keys(r || {}).forEach(k => {
+      if (!/coupon/i.test(k)) return;
+      const v = r[k];
+      if (/price|amount|value/i.test(k) && v != null && !isNaN(Number(v)) && Number(v) > 0) price = Number(v);
+      else if (/code/i.test(k) && v) code = String(v);
+    });
+    return price == null && !code ? null : { price: price, code: code };
+  }
+
+  // The four series the modal draws, projected into one 720x240 viewBox on a
+  // shared time axis so the reader compares them by height alone.
+  chartData() {
+    const runs = this.state.histRuns;
+    if (!runs) return null;
+    const box = this.state.histBox || {};
+    const t = at => Date.parse(at) || 0;
+
+    const paid = this.histPoints().filter(p => t(p.at) && p.status !== "rejected");
+    const kept = runs.filter(r => r.status !== "rejected");
+    const reg = kept.filter(r => t(r.created_at) && Number(r.original_price) > 0)
+      .map(r => ({ at: r.created_at, price: Number(r.original_price) }))
+      .sort((a, b) => t(a.at) - t(b.at));
+    const coup = kept.map(r => {
+      const c = this.couponOf(r);
+      if (!c || c.price == null || !t(r.created_at)) return null;
+      return { at: r.created_at, price: c.price, code: c.code };
+    }).filter(Boolean).sort((a, b) => t(a.at) - t(b.at));
+
+    const all = paid.concat(reg, coup);
+    // every series needs two points to be a line — one scrape and one list price
+    // used to pass this guard and draw an empty 240px canvas
+    if (paid.length < 2 && reg.length < 2 && coup.length < 2) return null;
+
+    const W = 720, H = 240, L = 62, R = 104, T = 18, B = 34;
+    const times = all.map(p => t(p.at));
+    const t0 = Math.min.apply(null, times), t1 = Math.max.apply(null, times);
+    const tSpan = t1 - t0 || 1;
+    const vals = all.map(p => p.price);
+    const rawLo = Math.min.apply(null, vals), rawHi = Math.max.apply(null, vals);
+    // axis ticks land on round money: a step chosen from the 1/2/5 family scaled
+    // to the regular-to-discount delta, with the bounds snapped out to it
+    const niceStep = (range) => {
+      const raw = (range || 1) / 4;
+      const mag = Math.pow(10, Math.floor(Math.log10(raw)));
+      const n = raw / mag;
+      return (n <= 1 ? 1 : n <= 2 ? 2 : n <= 5 ? 5 : 10) * mag;
+    };
+    const step = niceStep((rawHi - rawLo) * 1.25);
+    let vLo = Math.floor(rawLo / step) * step;
+    let vHi = Math.ceil(rawHi / step) * step;
+    if (vHi - vLo < step) vHi = vLo + step;
+    const x = at => L + ((t(at) - t0) / tSpan) * (W - L - R);
+    const y = v => T + (1 - (v - vLo) / ((vHi - vLo) || 1)) * (H - T - B);
+    const path = arr => arr.map((p, i) => (i ? "L" : "M") + x(p.at).toFixed(1) + " " + y(p.price).toFixed(1)).join(" ");
+    const day = at => new Date(t(at)).toLocaleDateString("en-US", { day: "numeric", month: "short" });
+
+    // lowest ever is judged on pipeline scrapes alone (see openHistory)
+    const scrapes = paid.filter(p => p.kind === "scrape");    const lowSet = scrapes.length ? scrapes : paid;
+    let low = null;
+    // ties go to the most recent sighting — "lowest ever" should read as the last
+    // time that price was seen, not the first
+    lowSet.forEach(p => { if (!low || p.price <= low.price) low = p; });
+
+    const cur = Number(box.price) > 0 ? Number(box.price) : null;
+    const line = (color, dash, w) => "fill:none;stroke:var(--color-" + color + ");stroke-width:" + w +
+      (dash ? ";stroke-dasharray:" + dash : "") + ";stroke-linejoin:round;stroke-linecap:round";
+
+    // four price ticks on a whole-cent step, and up to five date ticks across
+    // the observed span — both drawn as HTML over the chart, since a template
+    // hole inside an SVG <text> renders as a <span> and paints nothing
+    const yTicks = [];
+    const tickText = v => step >= 1 ? "$" + Math.round(v) : "$" + v.toFixed(2);
+    for (let v = vLo; v <= vHi + step / 1000; v += step) {
+      yTicks.push({ y: y(v).toFixed(1), top: (y(v) / H * 100).toFixed(2) + "%", label: tickText(v) });
+    }
+    const nx = Math.min(5, Math.max(2, Math.round((W - L - R) / 130)));
+    const xTicks = [];
+    for (let i = 0; i < nx; i++) {
+      const at = t0 + (tSpan * i) / (nx - 1);
+      const px = L + ((at - t0) / tSpan) * (W - L - R);
+      xTicks.push({
+        left: (px / W * 100).toFixed(2) + "%",
+        label: new Date(at).toLocaleDateString("en-US", { day: "numeric", month: "short" }),
+        align: i === 0 ? "translateX(0)" : i === nx - 1 ? "translateX(-100%)" : "translateX(-50%)"
+      });
+    }
+
+    return {
+      // the chart's key doubles as the figure readout: one row per drawn series,
+      // carrying its own colour, name and latest value, so the numbers are not
+      // repeated in a separate block above the chart
+      keyRows: (() => {
+        const last = arr => (arr.length ? arr[arr.length - 1] : null);
+        const nar = !!this.state.narrow;
+        const sw = fill => fill + ";display:block;flex:none;width:" + (nar ? "18px" : "26px");
+        const rows = [];
+        const lp = last(paid);
+        if (paid.length > 1) rows.push({
+          label: "Sale price",
+          value: this.money(cur != null ? cur : (lp ? lp.price : null)),
+          note: cur != null ? "now" : (lp ? day(lp.at) : ""),
+          swatch: sw("background:var(--color-accent);height:3px")
+        });
+        const lr = last(reg);
+        if (reg.length) rows.push({
+          label: "Regular price",
+          value: this.money(lr.price),
+          note: reg.length > 1 || nar ? day(lr.at) : day(lr.at) + ", one reading",
+          swatch: sw("background:repeating-linear-gradient(90deg,var(--color-neutral-500) 0 7px,transparent 7px 12px);height:2px")
+        });
+        const lc = last(coup);
+        if (coup.length) rows.push({
+          label: lc.code ? "With " + lc.code : "With coupon",
+          value: this.money(lc.price),
+          note: day(lc.at),
+          swatch: sw("background:repeating-linear-gradient(90deg,var(--color-text) 0 2px,transparent 2px 6px);height:2px")
+        });
+        if (low) rows.push({
+          label: "Lowest ever",
+          value: this.money(low.price),
+          note: day(low.at),
+          swatch: sw("background:repeating-linear-gradient(90deg,var(--color-accent-700) 0 4px,transparent 4px 8px);height:2px")
+        });
+        return rows;
+      })(),
+      statLine: (() => {
+        const vals = scrapes.map(p => p.price);
+        if (vals.length < 2) return vals.length === 1 ? "1 scrape on record" : "";
+        const avg = vals.reduce((a, b) => a + b, 0) / vals.length;
+        return this.money(Math.max.apply(null, vals)) + " highest \u00b7 " + this.money(avg) +
+          " average \u00b7 " + vals.length + " scrapes on record";
+      })(),
+      viewBox: "0 0 " + W + " " + H,
+      axisY: (H - B).toFixed(1),
+      axisX: L.toFixed(1),
+      axisTop: T.toFixed(1),
+      axisW: W,
+      plotLeft: (L / W * 100).toFixed(2) + "%",
+      yTicks: yTicks,
+      xTicks: xTicks,
+      pricePath: paid.length > 1 ? path(paid) : "",
+      priceStyle: line("accent", "", 2.5),
+      hasPrice: paid.length > 1,
+      regPath: reg.length > 1 ? path(reg) : "",
+      regStyle: line("neutral-500", "7 5", 1.5),
+      hasReg: reg.length > 1,
+      // a marked point per list-price reading, so the line reads as hoverable
+      regDots: reg.map(p => ({ cx: x(p.at).toFixed(1), cy: y(p.price).toFixed(1) })),
+      couponPath: coup.length > 1 ? path(coup) : "",
+      couponStyle: line("text", "2 4", 1.75),
+      hasCoupon: coup.length > 1,
+      couponDots: coup.map(p => ({
+        cx: x(p.at).toFixed(1), cy: y(p.price).toFixed(1),
+        tip: this.money(p.price) + (p.code ? " with " + p.code : " with coupon") + " \u00b7 " + day(p.at)
+      })),
+      priceDots: paid.map(p => ({
+        cx: x(p.at).toFixed(1), cy: y(p.price).toFixed(1),
+        r: p.kind === "scrape" ? "3" : "2",
+        fill: "var(--color-" + (p.kind === "scrape" ? "accent" : "neutral-500") + ")",
+        tip: this.money(p.price) + " \u00b7 " + (p.kind === "scrape" ? "scraped" : "price check") + " \u00b7 " + day(p.at)
+      })),
+      hasLow: !!low,
+      // a generous transparent target over every plotted point, so the price
+      // tooltip is reachable without hitting a 3px dot exactly
+      hoverDots: paid.map(p => ({
+        cx: x(p.at).toFixed(1), cy: y(p.price).toFixed(1),
+        tip: this.money(p.price) + " \u00b7 " + (p.kind === "scrape" ? "scraped" : "price check") + " \u00b7 " + day(p.at)
+      })).concat(
+        reg.map(p => ({ cx: x(p.at).toFixed(1), cy: y(p.price).toFixed(1), tip: this.money(p.price) + " \u00b7 regular price \u00b7 " + day(p.at) })),
+        coup.map(p => ({ cx: x(p.at).toFixed(1), cy: y(p.price).toFixed(1), tip: this.money(p.price) + (p.code ? " with " + p.code : " with coupon") + " \u00b7 " + day(p.at) }))
+      ).map(d => Object.assign(d, {
+        enter: () => this.setState({ histTip: { text: d.tip, left: (Number(d.cx) / W * 100).toFixed(2) + "%", top: (Number(d.cy) / H * 100).toFixed(2) + "%" } }),
+        leave: () => this.setState({ histTip: null })
+      })),
+      lowY: low ? y(low.price).toFixed(1) : "0",
+      lowX: low ? x(low.at).toFixed(1) : "0",
+      // pinned to the wrapper's right edge, not to a percentage of the viewBox:
+      // a nowrap label at 86% of a 360px modal overflowed its own border
+      lowLabelTop: low ? (Math.max(T + 2, y(low.price) - 20) / H * 100).toFixed(2) + "%" : "0",
+      lowLineStyle: "stroke:var(--color-accent-700);stroke-width:1.25;stroke-dasharray:4 4",
+      lowLabel: low ? this.money(low.price) + " \u00b7 " + day(low.at) : "",
+      lowLabelY: low ? Math.max(T + 9, y(low.price) - 7).toFixed(1) : "0",
+      lowCaption: low ? "Lowest ever " + this.money(low.price) + ", recorded " + day(low.at) + " (" + this.since(low.at) + ")" : "",
+      curLabel: cur == null ? "" : this.money(cur),
+      curY: cur == null ? "0" : Math.min(H - B - 4, Math.max(T + 9, y(cur) + 4)).toFixed(1),
+      labelX: (W - R + 10).toFixed(1),
+      startLabel: day(all.slice().sort((a, b) => t(a.at) - t(b.at))[0].at),
+      endLabel: day(all.slice().sort((a, b) => t(b.at) - t(a.at))[0].at)
+    };
+  }
+
+  money(v) { return v == null || v === "" || isNaN(Number(v)) ? "\u2014" : "$" + Number(v).toFixed(2); }
+
+  since(iso) {
+    if (!iso) return "\u2014";
+    const t = Date.parse(iso);
+    if (!t) return "\u2014";
+    const mins = Math.round((Date.now() - t) / 60000);
+    if (mins < 0) return "in " + Math.abs(mins) + "m";
+    if (mins < 60) return mins + "m ago";
+    const hrs = Math.floor(mins / 60);
+    if (hrs < 24) return hrs + "h ago";
+    const days = Math.floor(hrs / 24);
+    if (days === 1) return "yesterday";
+    if (days < 8) return days + "d ago";
+    return new Date(t).toLocaleDateString("en-US", { day: "numeric", month: "short" });
+  }
+
+  // filtering happens on the server now; these are just the loaded rows — with
+  // a derived-column sort applied here, since the server cannot order by them
+  visibleProducts() {
+    const rows = this.state.products;
+    const key = String(this.state.sortCol || "");
+    if (!rows || key.indexOf("local:") !== 0) return rows;
+    const which = key.slice(6);
+    const asc = this.state.sortDir === "asc";
+    return rows.slice().sort((a, b) => {
+      const x = this.localSortKey(which, a), y = this.localSortKey(which, b);
+      if (x == null && y == null) return 0;
+      if (x == null) return 1;   // blanks always last, either direction
+      if (y == null) return -1;
+      return asc ? x - y : y - x;
+    });
+  }
+
+  // the publisher inserts a second row when a post goes out rather than
+  // updating the queued one, so the same post arrives twice. Collapse rows for
+  // the same product+platform within a day of each other, keeping the row that
+  // says the most: published or failed beats pending, newest beats older.
+  visiblePosts() {
+    const rows = this.state.posts;
+    if (!rows) return rows;
+    const DAY = 86400000;
+    const rank = s => s === "failed" ? 3 : s === "published" ? 2 : 1;
+    const out = [];
+    const now = Date.now();
+    rows.forEach(r => {
+      const key = String(r.product_id || r.id) + "|" + String(r.platform || "");
+      const t = Date.parse(r.scheduled_at || "") || 0;
+      // An upcoming pending row is a real future slot, not the publisher's
+      // duplicate-on-send artifact — that duplicate is always in the past. It
+      // must stay its own row or it gets outranked by an earlier published one
+      // and loses its Post now / Remove controls.
+      if (String(r.status || "") === "pending" && t > now) { out.push({ key, row: r, merged: 1, solo: true }); return; }
+      const near = out.find(o => !o.solo && o.key === key && Math.abs((Date.parse(o.row.scheduled_at || "") || 0) - t) < DAY);
+      if (!near) { out.push({ key, row: r, merged: 1 }); return; }
+      near.merged += 1;
+      const a = rank(String(near.row.status || "")), b = rank(String(r.status || ""));
+      if (b > a || (b === a && t > (Date.parse(near.row.scheduled_at || "") || 0))) {
+        near.row = Object.assign({}, r, { error_message: r.error_message || near.row.error_message });
+      }
+    });
+    return out.map(o => Object.assign({}, o.row, { _merged: o.merged }));
+  }
+
+  setProductFilter(patch) {
+    this.loadPendingIds();
+    // counts are refreshed alongside the list: a pill that advertises a stale
+    // number is worse than no number
+    this.setState(Object.assign({ pLimit: 50, products: null }, patch), () => {
+      this.loadProducts();
+      this.loadCounts();
+    });
+  }
+  setPostFilter(f) {
+    this.setState({ sFilter: f, sLimit: 50, posts: null }, () => this.loadPosts());
+  }
+
+  // deployed, the admin sections are real paths (/dealqueue, /brandrules,
+  // /scrapelog); opened as a local file they are the sibling DC + a hash
+  // The host preview can swallow a "#brands" hash on navigation, so the wanted
+  // tab is also left in sessionStorage for the deal-queue page to pick up.
+  markTab(label) {
+    const tab = label === "Brand rules" ? "brands" : label === "Scrape log" ? "scrapes" : "";
+    if (!tab) return null;
+    return () => { try { sessionStorage.setItem("md-admin-tab", tab); } catch (e) {} };
+  }
+
+  // reel-download returns the PNG bytes rather than writing to storage, so an
+  // on-demand reel never clobbers the pipeline's social/{slug}-reel.png
+  async downloadReel(p) {
+    if (this.state.reelBusy) return;
+    this.setState({ reelBusy: p.id, saved: "Rendering the reel\u2026" });
+    try {
+      const res = await this.req(BASE + "/functions/v1/reel-download", {
+        method: "POST",
+        headers: this.headers({ "Content-Type": "application/json" }),
+        body: JSON.stringify({ productId: p.id, slug: p.slug || null, layout: "safe" })
+      });
+      if (!res.ok) {
+        const t = await res.text().catch(() => "");
+        this.setState({ reelBusy: "", saved: "Reel failed \u2014 " + (t ? t.slice(0, 120) : res.status) });
+        return;
+      }
+      const blob = await res.blob();
+      const name = (p.slug || p.asin || "reel") + "-reel.png";
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url; a.download = name;
+      document.body.appendChild(a); a.click(); a.remove();
+      setTimeout(() => URL.revokeObjectURL(url), 4000);
+      this.setState({ reelBusy: "", saved: name + " downloaded" });
+    } catch (e) {
+      this.setState({ reelBusy: "", saved: "Reel failed \u2014 " + (e && e.message ? e.message : "network error") });
+    }
+  }
+
+  // phone flow for manual stories: link goes to the clipboard first (while the tap still
+  // counts as a user gesture), then the 1080x1920 render is shared/saved
+  async storyKit(p) {
+    if (this.state.reelBusy) return;
+    const asin = p.asin;
+    if (!asin) { this.setState({ saved: "No ASIN on this product" }); return; }
+    const link = "https://www.amazon.com/dp/" + asin + "?tag=mistrydealshp-20";
+    let copied = false;
+    try { await navigator.clipboard.writeText(link); copied = true; }
+    catch (e) {
+      const ta = document.createElement("textarea"); ta.value = link; ta.setAttribute("readonly", ""); ta.style.position = "fixed"; ta.style.opacity = "0";
+      document.body.appendChild(ta); ta.select(); try { copied = document.execCommand("copy"); } catch (x) {} ta.remove();
+    }
+    this.setState({ reelBusy: p.id, storyBusy: p.id, saved: (copied ? "Link copied \u2014 " : "") + "rendering story\u2026" });
+    try {
+      const res = await this.req(BASE + "/functions/v1/generate-share-image-v3", {
+        method: "POST", headers: this.headers({ "Content-Type": "application/json" }),
+        body: JSON.stringify({ productId: p.id, slug: p.slug || null, format: "story", variant: "manual" })
+      });
+      if (!res.ok) { const t = await res.text().catch(() => ""); throw new Error(t ? t.slice(0, 120) : String(res.status)); }
+      let blob;
+      const ct = res.headers.get("content-type") || "";
+      if (ct.indexOf("application/json") !== -1) {
+        const j = await res.json();
+        const u = j.url || j.publicUrl || j.imageUrl || j.image_url || (j.data && (j.data.url || j.data.publicUrl));
+        if (!u) throw new Error("no image URL in response");
+        const ir = await fetch(u + (u.indexOf("?") === -1 ? "?" : "&") + "v=" + Date.now());
+        if (!ir.ok) throw new Error("image fetch " + ir.status);
+        blob = await ir.blob();
+      } else blob = await res.blob();
+      const name = (p.slug || asin) + "-story.png";
+      const file = new File([blob], name, { type: "image/png" });
+      let shared = false;
+      if (navigator.canShare && navigator.canShare({ files: [file] })) {
+        try { await navigator.share({ files: [file] }); shared = true; }
+        catch (e) { if (e && e.name === "AbortError") shared = true; }
+      }
+      if (!shared) {
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement("a"); a.href = url; a.download = name;
+        document.body.appendChild(a); a.click(); a.remove();
+        setTimeout(() => URL.revokeObjectURL(url), 4000);
+      }
+      this.setState({ reelBusy: "", storyBusy: "", saved: copied ? "Story image ready \u00b7 link copied" : "Story image ready \u00b7 copy failed: " + link });
+    } catch (e) {
+      this.setState({ reelBusy: "", storyBusy: "", saved: "Story failed \u2014 " + (e && e.message ? e.message : "network error") + (copied ? " (link was copied)" : "") });
+    }
+  }
+
+  adminHref(page) {
+    const deployed = { catalogue: "/catalogue", dealqueue: "/dealqueue", carousel: "/carousel", brands: "/brandrules", scrapes: "/scrapelog", reddit: "/redditposter", guides: "/buyingguides", watches: "/watchadmin", stories: "/stories" };
+    if (/^\/(catalogue|dealqueue|carousel|brandrules|scrapelog|redditposter|buyingguides)/.test(location.pathname) || location.pathname.indexOf("/admin/") !== -1) return deployed[page] || "/catalogue";
+    const local = {
+      catalogue: "MistryDeals Admin v2.dc.html",
+      carousel: "MistryDeals Social.dc.html",
+      dealqueue: "MistryDeals Deal Queue.dc.html",
+      brands: "MistryDeals Deal Queue.dc.html#brands",
+      scrapes: "MistryDeals Deal Queue.dc.html#scrapes",
+      reddit: "MistryDeals Reddit Poster.dc.html",
+      guides: "MistryDeals Buying Guides.dc.html",
+      watches: "MistryDeals Watch Admin.dc.html",
+      stories: "MistryDeals Stories.dc.html"
+    };
+    return local[page] || local.catalogue;
+  }
+
+  renderVals() {
+    const dense = this.state.dens === "dense";
+    const num = c => "font-family:var(--font-heading);font-weight:800;line-height:1;letter-spacing:" +
+      (this.state.narrow ? ".02em;font-size:11px;text-transform:uppercase" : "-.02em;font-size:30px") + ";color:" + c;
+    const pill = (label, active, onPick) => ({
+      label, pick: onPick,
+      style: "font:inherit;font-size:12px;padding:7px 10px;cursor:pointer;white-space:nowrap;border:1px solid " +
+        (active ? "var(--color-accent);background:var(--color-accent);color:#16233a" : "var(--color-divider);background:transparent;color:var(--color-text)")
+    });
+    const chip = (label, on, title, onToggle) => ({
+      label, title, toggle: onToggle,
+      style: "font:inherit;font-family:var(--font-heading);font-weight:700;font-size:10px;line-height:1;padding:4px 5px;cursor:pointer;border:1px solid " +
+        (on ? "var(--color-accent);background:var(--color-accent);color:#16233a" : "var(--color-divider);background:transparent;color:var(--color-neutral-600)")
+    });
+
+    const rowBase = "display:grid;grid-template-columns:" + this.gridTemplate() +
+      ";gap:10px;align-items:start;padding:" +
+      (dense ? "6px 0" : "10px 0") + ";border-bottom:1px solid var(--color-divider)";
+    const vis = this.visibleProducts();
+    const posts = this.visiblePosts();
+    const all = this.state.products || [];
+    const c = this.state.counts || {};
+    const n = v => v == null ? "\u2014" : Number(v).toLocaleString();
+
+    const cats = {};
+    all.forEach(p => { if (p.category) cats[p.category] = 1; });
+
+    return {
+      markBrands: () => { try { sessionStorage.setItem("md-admin-tab", "brands"); } catch (e) {} },
+      markScrapes: () => { try { sessionStorage.setItem("md-admin-tab", "scrapes"); } catch (e) {} },
+      hSite: /^\/(catalogue|dealqueue|carousel|brandrules|scrapelog|redditposter|buyingguides)/.test(location.pathname) || location.pathname.indexOf("/admin/") !== -1 ? "/" : "MistryDeals Site.dc.html",
+      signedIn: !!this.state.token,
+      signedOut: !this.state.token && !this.state.verifying,
+      verifying: !this.state.token && this.state.verifying,
+      email: this.state.email,
+      password: this.state.password,
+      authError: this.state.authError,
+      signInLabel: this.state.signingIn ? "Signing in\u2026" : "Sign in",
+      onEmail: e => this.setState({ email: e.target.value }),
+      onPassword: e => this.setState({ password: e.target.value }),
+      onSignIn: e => this.signIn(e),
+      signOut: () => this.signOutNow(),
+      userEmail: this.state.user || "",
+      savedNote: this.state.saved || "",
+      isWide: !this.state.narrow,
+      isNarrow: !!this.state.narrow,
+      menuOpen: !!this.state.menuOpen,
+      openMenu: () => this.setState({ menuOpen: true }),
+      closeMenu: () => this.setState({ menuOpen: false }),
+      stop: e => e.stopPropagation(),
+      // the catalogue is its own page, so every entry is a real navigation
+      menuNav: [
+        { label: "Catalogue", href: this.adminHref("catalogue"), here: true },
+        { label: "Deal queue", href: this.adminHref("dealqueue") },
+        { label: "Social", href: this.adminHref("carousel") },
+        { label: "Brand rules", href: this.adminHref("dealqueue") + "#brands" },
+        { label: "Scrape log", href: this.adminHref("dealqueue") + "#scrapes" },
+        { label: "Reddit poster", href: this.adminHref("reddit") },
+        { label: "Buying guides", href: this.adminHref("guides") },
+        { label: "Price watches", href: this.adminHref("watches") },
+        { label: "Story links", href: this.adminHref("stories") },
+        { label: "View site", href: /^\/(catalogue|dealqueue|carousel|brandrules|scrapelog|redditposter|buyingguides)/.test(location.pathname) || location.pathname.indexOf("/admin/") !== -1 ? "/" : "MistryDeals Site.dc.html" }
+      ].map(m => ({
+        label: m.label,
+        href: m.href,
+        pick: this.markTab(m.label),
+        style: "font:inherit;font-family:var(--font-heading);font-weight:700;font-size:12.5px;letter-spacing:.06em;text-transform:uppercase;text-decoration:none;display:flex;align-items:center;min-height:48px;padding:0 16px;color:var(--color-" +
+          (m.here ? "accent-700" : "text") + ")"
+      })),
+      hQueue: this.adminHref("dealqueue"),
+      hCarousel: this.adminHref("carousel"),
+      hBrands: this.adminHref("dealqueue") + "#brands",
+      hScrapes: this.adminHref("dealqueue") + "#scrapes",
+      hReddit: this.adminHref("reddit"),
+      hGuides: this.adminHref("guides"),
+      hWatches: this.adminHref("watches"),
+      hStories: this.adminHref("stories"),
+      refresh: () => this.loadAll(),
+      toggleDark: () => {
+        const next = !this.isDark();
+        this._storedDark = next;
+        try { localStorage.setItem("md-admin-dark", JSON.stringify(next)); } catch (e) {}
+        this.setState({ dark: next, darkTouched: true });
+      },
+      darkGlyph: this.isDark() ? "\u2600" : "\u263D",
+      darkTitle: this.isDark() ? "Switch to light" : "Switch to dark",
+      tDark: "font:inherit;font-size:15px;line-height:1;flex:none;width:36px;height:36px;display:flex;align-items:center;justify-content:center;cursor:pointer;background:transparent;color:var(--color-text);border:2px solid var(--color-divider)",
+
+
+      dayMarks: (() => {
+        const rows = this.todayDeduped() || [];
+        const mid = new Date(); mid.setHours(0, 0, 0, 0);
+        const SLOT = 15 * 60000;
+        const slots = {};
+        rows.forEach(m => {
+          const k = Math.floor((m.t - mid.getTime()) / SLOT);
+          if (!slots[k]) slots[k] = { k: k, items: [], failed: 0, pending: 0, sent: 0 };
+          const s = slots[k];
+          s.items.push(m);
+          if (m.status === "failed") s.failed++;
+          else if (m.status === "published") s.sent++;
+          else s.pending++;
+        });
+        // one mark PER PLATFORM per slot, side by side. Colour stays the status
+        // encoding (ink sent / grey pending / red failed) and the platform is
+        // the monogram above the bar — the same language the rows use, rather
+        // than a second colour scale fighting the first.
+        const order = ["facebook", "instagram", "instagram_story"];
+        const LANE_H = 26;
+        const marks = [];
+        Object.keys(slots).map(k => slots[k]).sort((a, b) => a.k - b.k).forEach(s => {
+          const slotLabel = new Date(mid.getTime() + s.k * SLOT).toLocaleTimeString("en-US", { hour: "numeric", minute: "2-digit" });
+          const slotLeft = Math.max(0, Math.min(99.4, (s.k * SLOT / 86400000) * 100));
+          const byPlat = {};
+          s.items.forEach(m => {
+            const key = this.platformKey(m.platform);
+            if (!byPlat[key]) byPlat[key] = [];
+            byPlat[key].push(m);
+          });
+          Object.keys(byPlat).forEach(key => {
+            const lane = Math.max(0, order.indexOf(key));
+            const group = byPlat[key];
+            const n = group.length;
+            const failed = group.some(m => m.status === "failed");
+            const pending = !failed && group.some(m => m.status !== "published");
+            const colour = failed ? "var(--color-accent)" : pending ? "var(--color-neutral-500)" : "var(--color-text)";
+            const height = Math.min(LANE_H - 6, (failed ? 20 : pending ? 12 : 16) + (n - 1) * 4);
+            const laneTop = lane * LANE_H;
+            marks.push({
+              count: n > 1 ? String(n) : "",
+              showCount: n > 1,
+              title: this.platformName(key) + " \u00b7 " + slotLabel + " \u00b7 " + n + (n === 1 ? " post" : " posts"),
+              style: "position:absolute;top:" + (laneTop + (LANE_H - 3 - height)) + "px;width:" + (n > 1 ? 6 : 4) + "px;height:" + height +
+                "px;left:" + slotLeft + "%;background:" + colour + ";cursor:default",
+              countStyle: "position:absolute;top:" + (laneTop + 1) + "px;left:" + slotLeft +
+                "%;margin-left:8px;font-family:var(--font-heading);font-weight:800;font-size:9px;line-height:1;color:" + colour,
+              hitStyle: "position:absolute;top:" + laneTop + "px;height:" + LANE_H + "px;width:13px;left:" + slotLeft + "%;margin-left:-4px;background:transparent;cursor:default",
+              enter: () => this.setState({ hoverSlot: { label: slotLabel, items: s.items.slice(), left: slotLeft } }),
+              leave: () => this.setState({ hoverSlot: null })
+            });
+          });
+        });
+        return marks;
+      })(),
+      dayLanes: [
+        { label: "FB", name: "Facebook" },
+        { label: "IG", name: "Instagram" },
+        { label: "ST", name: "Instagram Story" }
+      ].map((l, i) => Object.assign(l, {
+        labelStyle: "position:absolute;top:" + (i * 26 + 7) + "px;right:8px;font-family:var(--font-heading);font-weight:800;font-size:9.5px;line-height:1;letter-spacing:.06em;color:var(--color-neutral-700)",
+        ruleStyle: "position:absolute;left:0;right:0;top:" + ((i + 1) * 26) + "px;height:1px;background:" +
+          (i < 2 ? "color-mix(in srgb, var(--color-divider) 45%, transparent)" : "transparent")
+      })),
+      dayLegend: [
+        { label: "Sent", style: "display:inline-block;width:10px;height:10px;background:var(--color-text)" },
+        { label: "Pending", style: "display:inline-block;width:10px;height:10px;background:var(--color-neutral-500)" },
+        { label: "Failed", style: "display:inline-block;width:10px;height:10px;background:var(--color-accent)" }
+      ],
+      hoverOpen: !!this.state.hoverSlot,
+      hoverLabel: (() => {
+        const h = this.state.hoverSlot;
+        if (!h) return "";
+        return h.label + (h.items.length > 1 ? "  \u00b7  " + h.items.length + " posts" : "");
+      })(),
+      // a box above the mark, clamped so it cannot run off either edge
+      hoverBoxStyle: (() => {
+        const h = this.state.hoverSlot;
+        if (!h) return "display:none";
+        const left = Math.max(0, Math.min(100, h.left));
+        const anchor = left < 18 ? "left:0;transform:none"
+          : left > 82 ? "right:0;transform:none"
+          : "left:" + left + "%;transform:translateX(-50%)";
+        return "position:absolute;bottom:100%;margin-bottom:8px;" + anchor +
+          ";z-index:30;pointer-events:none;min-width:240px;max-width:420px;background:var(--color-bg);" +
+          "border:2px solid var(--color-text);box-shadow:var(--shadow-md);padding:10px 12px";
+      })(),
+      hoverItems: (() => {
+        const h = this.state.hoverSlot;
+        if (!h) return [];
+        const shown = h.items.slice(0, 8);
+        const rows = shown.map(m => ({
+          time: new Date(m.t).toLocaleTimeString("en-US", { hour: "numeric", minute: "2-digit" }),
+          plat: this.platformName(m.platform),
+          name: m.name,
+          markStyle: "flex:0 0 auto;width:6px;align-self:stretch;background:" +
+            (m.status === "failed" ? "var(--color-accent)" : m.status === "published" ? "var(--color-text)" : "var(--color-neutral-500)"),
+          metaStyle: "font-size:10.5px;letter-spacing:.04em;text-transform:uppercase;font-family:var(--font-heading);font-weight:700;color:" +
+            (m.status === "failed" ? "var(--color-accent-700)" : "var(--color-neutral-700)"),
+          status: m.status
+        }));
+        if (h.items.length > shown.length) {
+          rows.push({ time: "", plat: "", status: "", name: "+" + (h.items.length - shown.length) + " more in this slot",
+            markStyle: "flex:0 0 auto;width:6px;align-self:stretch;background:transparent",
+            metaStyle: "font-size:10.5px;color:var(--color-neutral-600)" });
+        }
+        return rows;
+      })(),
+      dayTicks: [0, 2, 4, 6, 8, 10, 12, 14, 16, 18, 20, 22].map(h => {
+        const major = h % 6 === 0;
+        return {
+          label: h === 0 ? "12a" : h === 12 ? "12p" : h > 12 ? (h - 12) + "p" : h + "a",
+          style: "position:absolute;bottom:0;width:1px;left:" + ((h / 24) * 100) + "%;top:" + (major ? "0" : "42%") +
+            ";background:" + (major ? "var(--color-divider)" : "color-mix(in srgb, var(--color-divider) 55%, transparent)"),
+          labelStyle: "position:absolute;top:0;left:" + ((h / 24) * 100) + "%;padding-left:4px;font-size:10px;letter-spacing:.06em;color:var(--color-neutral-" + (major ? "700" : "600") + ")"
+        };
+      }),
+      nowStyle: (() => {
+        const d = new Date(); const mid = new Date(d); mid.setHours(0, 0, 0, 0);
+        const pct = ((d.getTime() - mid.getTime()) / 86400000) * 100;
+        return "position:absolute;top:0;bottom:0;width:2px;left:" + pct + "%;background:var(--color-accent)";
+      })(),
+      nowLabelStyle: (() => {
+        const d = new Date(); const mid = new Date(d); mid.setHours(0, 0, 0, 0);
+        const pct = ((d.getTime() - mid.getTime()) / 86400000) * 100;
+        // the line was unlabelled and read as an unexplained marker
+        const flip = pct > 88;
+        return "position:absolute;top:2px;" + (flip ? "right:" + (100 - pct) + "%;padding-right:5px" : "left:" + pct + "%;padding-left:5px") +
+          ";font-family:var(--font-heading);font-weight:700;font-size:9.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--color-accent)";
+      })(),
+      dayNote: (() => {
+        const rows = this.todayDeduped();
+        if (!rows) return "loading\u2026";
+        if (!rows.length) return "nothing scheduled today";
+        const sent = rows.filter(r => r.status === "published").length;
+        const failed = rows.filter(r => r.status === "failed").length;
+        const pending = rows.length - sent - failed;
+        return [sent + " sent", pending + " pending", failed ? failed + " failed" : null].filter(Boolean).join(" \u00b7 ");
+      })(),
+      eTitle: (this.state.draft || {}).display_title || "",
+      eCat: (this.state.draft || {}).category || "",
+      ePrice: (this.state.draft || {}).price || "",
+      eWas: (this.state.draft || {}).original_price || "",
+      eCash: (this.state.draft || {}).prime_cashback_percent || "",
+      onECash: e => this.setDraft("prime_cashback_percent", e.target.value),
+      onETitle: e => this.setDraft("display_title", e.target.value),
+      onECat: e => this.setDraft("category", e.target.value),
+      onEPrice: e => this.setDraft("price", e.target.value),
+      onEWas: e => this.setDraft("original_price", e.target.value),
+      eSaveLabel: this.state.editLoading ? "Loading\u2026" : this.state.savingEdit ? "Saving\u2026" : "Save",
+      eError: this.state.editError || "",
+      cancelEdit: () => this.cancelEdit(),
+      // the discount is derived, so show what these two numbers will produce
+      eOffNote: (() => {
+        const d = this.state.draft || {};
+        const num = v => { const s = String(v || "").replace(/[$,\s]/g, ""); const n = parseFloat(s); return isNaN(n) ? null : n; };
+        const p = num(d.price), w = num(d.original_price);
+        const c = num(String(d.prime_cashback_percent == null ? "" : d.prime_cashback_percent).replace(/%/g, ""));
+        const off = (p != null && w != null && w > p) ? "\u2212" + Math.round((1 - p / w) * 100) + "% off" : "";
+        const back = (c != null && c > 0 && p != null && p > 0) ? "$" + (p * c / 100).toFixed(2) + " back" : "";
+        const parts = [off, back].filter(Boolean);
+        return parts.length ? parts.join(" \u00b7 ") + " once saved" : "";
+      })(),
+      // categories_v2 is the only source of category values; an off-list value
+      // on the row shows as an unsaveable prompt so it has to be re-picked
+      eCatOptions: (() => {
+        const cur = (this.state.draft || {}).category || "";
+        const list = (this.state.catNames || []).filter(Boolean).slice()
+          .sort((x, y) => x.localeCompare(y, "en", { sensitivity: "base" }));
+        const opts = [{ value: "", label: "\u2014 none \u2014" }];
+        if (cur && list.indexOf(cur) === -1) opts.push({ value: cur, label: cur + " \u2014 retired, pick a category" });
+        return opts.concat(list.map(c => ({ value: c, label: c })));
+      })(),
+      confirmOpen: !!this.state.confirmBox,
+      histOpen: !!this.state.histBox,
+      histTitle: (this.state.histBox || {}).title || "",
+      histAsin: (this.state.histBox || {}).asin ? "ASIN " + this.state.histBox.asin : "no ASIN",
+      histErr: this.state.histErr,
+      histClose: () => this.closeHistory(),
+      histStop: e => e.stopPropagation(),
+      histLoading: !!this.state.histBox && !this.state.histErr && this.state.histRuns === null,
+      histReady: !!this.state.histBox && !this.state.histErr && this.state.histRuns !== null,
+      histNoRows: !!this.state.histBox && this.state.histRuns !== null && this.state.histRuns.filter(r => r.status !== "rejected").length === 0,
+      histVerdict: (() => {
+        const box = this.state.histBox;
+        if (!box || this.state.histRuns === null) return "";
+        const prior = this.pipelinePoints().map(p => p.price);
+        const cur = Number(box.price) > 0 ? Number(box.price) : null;
+        if (cur == null && !prior.length) return "No scraped price on record for this ASIN yet.";
+        if (!prior.length) return "No scrape on record \u2014 " + this.money(cur) + " is the catalogue price, with nothing in the pipeline to judge it against.";
+        const low = Math.min.apply(null, prior);
+        if (cur == null) return "This product carries no price, so it cannot be judged.";
+        if (cur < low) return "Beats every scraped price on record \u2014 previous best " + this.money(low) + ".";
+        if (cur === low) return "Matches the lowest scraped price on record.";
+        const pct = Math.round(((cur - low) / low) * 100);
+        return pct <= 5 ? "Within " + pct + "% of the lowest on record (" + this.money(low) + ")."
+          : pct + "% above the lowest on record (" + this.money(low) + ").";
+      })(),
+      histVerdictStyle: (() => {
+        const box = this.state.histBox;
+        const quiet = "font-size:13.5px;line-height:1.45;color:var(--color-neutral-700)";
+        if (!box || this.state.histRuns === null) return quiet;
+        const prior = this.pipelinePoints().map(p => p.price);
+        const cur = Number(box.price) > 0 ? Number(box.price) : null;
+        if (cur == null || !prior.length) return quiet;
+        const low = Math.min.apply(null, prior);
+        const good = cur <= low || Math.round(((cur - low) / low) * 100) <= 5;
+        return "font-family:var(--font-heading);font-weight:800;font-size:15px;line-height:1.3;color:var(--color-" + (good ? "accent" : "text") + ")";
+      })(),
+      histHasChart: !!this.state.histBox && this.state.histRuns !== null && !!this.chartData(),
+      histTipOn: !!this.state.histTip,
+      histTipText: (this.state.histTip || {}).text || "",
+      histTipLeft: (this.state.histTip || {}).left || "0",
+      histTipTop: (this.state.histTip || {}).top || "0",
+      // on a phone all four series sit in one row of equal columns at reduced
+      // type, so the key fits a 360px screen without scrolling
+      keyGridStyle: this.state.narrow
+        ? "display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:9px;padding:14px 0 4px;border-top:1px solid var(--color-divider);margin-top:12px"
+        : "display:grid;grid-template-columns:repeat(auto-fit,minmax(128px,1fr));gap:2px 18px;padding:14px 0 0;border-top:1px solid var(--color-divider);margin-top:12px",
+      keyCellStyle: this.state.narrow
+        ? "display:flex;flex-direction:column;align-items:flex-start;gap:5px;min-width:0"
+        : "display:flex;flex-direction:column;align-items:flex-start;gap:7px;padding:6px 0",
+      keyLabelStyle: "font-family:var(--font-heading);font-weight:700;text-transform:uppercase;color:var(--color-neutral-600);font-size:" +
+        (this.state.narrow ? "7.5px;letter-spacing:.05em;line-height:1.25" : "9px;letter-spacing:.12em;white-space:nowrap"),
+      keyFigStyle: this.state.narrow ? "display:block" : "display:flex;align-items:baseline;gap:6px;margin-top:2px",
+      keyValueStyle: "font-family:var(--font-heading);font-weight:800;font-size:" +
+        (this.state.narrow ? "12.5px" : "17px") + ";line-height:1.15;white-space:nowrap",
+      keyNoteStyle: "color:var(--color-neutral-600);font-size:" +
+        (this.state.narrow ? "9px;display:block;line-height:1.3" : "11px;white-space:nowrap"),
+      chart: this.chartData() || {},
+      histRows: (this.state.histRuns || []).filter(r => r.status !== "rejected").map(r => ({
+        when: this.since(r.created_at),
+        exact: r.created_at ? new Date(r.created_at).toLocaleString("en-US", { day: "numeric", month: "short", hour: "numeric", minute: "2-digit" }) : "",
+        price: this.money(r.price),
+        was: r.original_price ? "was " + this.money(r.original_price) : "",
+        status: String(r.status || "\u2014").replace(/_/g, " "),
+        statusStyle: "font-family:var(--font-heading);font-weight:700;font-size:9.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--color-" +
+          (r.status === "rejected" ? "accent-700" : "neutral-700") + ")",
+        source: String(r.source || "\u2014")
+      })),
+
+      confirmTitle: (this.state.confirmBox || {}).title || "",
+      confirmBody: (this.state.confirmBox || {}).body || "",
+      confirmDetail: (this.state.confirmBox || {}).detail || "",
+      confirmLabel: (this.state.confirmBox || {}).label || "Confirm",
+      confirmStyle: "font-size:13px;padding:9px 14px;cursor:pointer;border:1px solid " +
+        ((this.state.confirmBox || {}).danger ? "var(--color-accent);background:var(--color-accent);color:#16233a" : "var(--color-text);background:var(--color-text);color:var(--color-bg)"),
+      confirmYes: () => this.answer(true),
+      confirmNo: () => this.answer(false),
+      shellStyle: this.state.wide
+        ? "display:grid;grid-template-columns:minmax(0,1fr) 400px;gap:0;align-items:start"
+        : "display:block",
+      mainStyle: this.state.wide ? "min-width:0;padding-right:32px" : "min-width:0",
+      railStyle: this.state.wide
+        ? "position:sticky;top:0;align-self:start;max-height:100vh;overflow-y:auto;border-left:2px solid var(--color-divider);padding:16px 0 40px 24px;min-width:0"
+        : "display:block;border-top:2px solid var(--color-divider);margin-top:8px;padding:16px 0 40px;min-width:0",
+      setRoomy: () => this.setState({ dens: "roomy" }),
+      setDense: () => this.setState({ dens: "dense" }),
+      dRoomy: this.densBtn("roomy"),
+      dDense: this.densBtn("dense"),
+      rowStyle: rowBase,
+      thumbColStyle: "display:flex;flex-direction:column;align-items:stretch;gap:5px;width:" + (dense ? "32px" : "60px"),
+      thumbStyle: "width:" + (dense ? "32px" : "60px") + ";height:" + (dense ? "32px" : "60px") + ";border:1px solid var(--color-divider);background:#ffffff;position:relative;overflow:hidden",
+
+      cStats: (() => {
+        const cell = (this.state.narrow ? "padding:10px 12px" : "padding:18px 20px") +
+          ";border-right:1px solid var(--color-divider)";
+        const labelStyle = "font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--color-neutral-700)" +
+          (this.state.narrow ? "" : ";margin-bottom:6px");
+        const cs = o => Object.assign({
+          cellStyle: cell, labelStyle,
+          inline: !!this.state.narrow, stacked: !this.state.narrow
+        }, o);
+        return [
+        cs({ label: "Products", value: n(c.products), sub: "in the catalogue", numStyle: num("var(--color-text)") }),
+        cs({ label: "Hidden", value: n(c.hidden), sub: "not shown on the site", numStyle: num(c.hidden ? "var(--color-accent)" : "var(--color-text)") }),
+        cs({ label: "No image", value: n(c.noImage), sub: "will render blank", numStyle: num(c.noImage ? "var(--color-accent)" : "var(--color-text)") }),
+        cs({ label: "Top deals", value: n(c.topDeals), sub: "flagged for the hero", numStyle: num("var(--color-text)") }),
+        cs({ label: this.state.narrow ? "Pending" : "Pending posts", value: n(c.pending), sub: "waiting to go out", numStyle: num("var(--color-text)") }),
+        cs({ label: this.state.narrow ? "Failed" : "Failed posts", value: n(c.failed), sub: c.failed ? "need attention" : "none failing", numStyle: num(c.failed ? "var(--color-accent)" : "var(--color-text)") })
+        ];
+      })(),
+      pQuery: this.state.pQuery,
+      onPQuery: e => {
+        const v = e.target.value;
+        this.setState({ pQuery: v });
+        clearTimeout(this._qt);
+        this._qt = setTimeout(() => this.setProductFilter({ pQuery: v }), 300);
+      },
+      pCat: this.state.pCat,
+      // the group divider is not a category — picking it is a no-op
+      onPCat: e => { const v = e.target.value; if (v.charAt(0) !== "\u2014") this.setProductFilter({ pCat: v }); },
+      pSort: this.state.pSort,
+      // the dropdown and the header clicks are the same control by another
+      // route: picking here drops any column sort
+      onPSort: e => { this.setState({ sortCol: null }); this.setProductFilter({ pSort: e.target.value }); },
+
+      headStyle: "display:grid;grid-template-columns:" + this.gridTemplate() +
+        ";gap:10px;padding:10px 0;border-bottom:2px solid var(--color-divider);font-family:var(--font-heading);font-weight:700;font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--color-neutral-700)",
+      headCols: this.COLS().map(c => {
+        const key = c.sort || (c.local ? "local:" + c.local : "");
+        const active = !!key && this.state.sortCol === key;
+        return {
+          label: c.label || "",
+          sortable: !!key,
+          arrow: active ? (this.state.sortDir === "asc" ? "\u2191" : "\u2193") : "",
+          title: !key ? "" : (c.local
+            ? (active ? "Sorted within the loaded rows \u2014 click to reverse" : "Click to sort by " + c.label + " (derived: orders the loaded rows only)")
+            : (active ? "Sorted \u2014 click to reverse" : "Click to sort by " + c.label)),
+          onSort: () => this.sortBy(c),
+          startResize: e => this.startResize(c, e),
+          resetCol: e => this.resetCol(c, e),
+          cellStyle: "position:relative;display:flex;align-items:center;gap:4px;min-width:0;user-select:none" +
+            (key ? ";cursor:pointer" : ""),
+          labelStyle: "overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:" +
+            (active ? "var(--color-text)" : "inherit"),
+          gripStyle: "position:absolute;top:-10px;right:-8px;width:13px;height:calc(100% + 20px);cursor:col-resize;background:transparent"
+        };
+      }),
+      pSortOptions: [
+        { value: "added", label: "Newest added" },
+        { value: "synced", label: "Recently synced" },
+        { value: "stale", label: "Stalest sync" }
+      ],
+      // v2 names first, then anything still stored on products that v2 dropped
+      // categories_v2 only — stranded values are reached by the Off-list pill
+      pCatOptions: ["All categories"].concat(this.state.catNames || Object.keys(cats).sort()),
+      pFilters: [
+        pill("All", (this.state.pFlag || "all") === "all", () => this.setProductFilter({ pFlag: "all" })),
+        pill("Live", this.state.pFlag === "live", () => this.setProductFilter({ pFlag: "live" })),
+        pill("Hidden", this.state.pFlag === "hidden", () => this.setProductFilter({ pFlag: "hidden" })),
+        pill("Top deal", this.state.pFlag === "top", () => this.setProductFilter({ pFlag: "top" })),
+        pill("No image", this.state.pFlag === "noimage", () => this.setProductFilter({ pFlag: "noimage" })),
+        pill("No category", this.state.pFlag === "nocat", () => this.setProductFilter({ pFlag: "nocat" })),
+        pill("Off-list category" + ((this.state.offListCats || []).length ? " (" + (this.state.offListCats || []).length + ")" : ""), this.state.pFlag === "offcat", () => this.setProductFilter({ pFlag: "offcat" })),
+        pill("Coupon", this.state.pFlag === "coupon", () => this.setProductFilter({ pFlag: "coupon" })),
+        pill("Pending review" + ((this.state.pendingIds || []).length ? " (" + n(this.state.pendingIds.length) + ")" : ""), this.state.pFlag === "pending", () => this.setProductFilter({ pFlag: "pending" }))
+      ],
+      reviewNote: (this.state.pFlag !== "pending" && (this.state.pendingIds || []).length)
+        ? n(this.state.pendingIds.length) + " in the deal queue, hidden \u2014 show"
+        : "",
+      showReview: () => this.setProductFilter({ pFlag: "pending" }),
+
+      // on a phone the pill row becomes one button over a bottom sheet, the way
+      // the deal queue does it
+      pFilterOpen: !!this.state.pFilterOpen,
+      openPFilter: () => this.setState({ pFilterOpen: true }),
+      closePFilter: () => this.setState({ pFilterOpen: false }),
+      pFilterLabel: (() => {
+        const map = { all: "All", live: "Live", hidden: "Hidden", top: "Top deal", noimage: "No image", nocat: "No category", offcat: "Off-list", coupon: "Coupon", pending: "Pending review" };
+        return (map[this.state.pFlag || "all"] || "All") + " \u25be";
+      })(),
+      pFilterOptions: (() => {
+        const offN = (this.state.offListCats || []).length;
+        const penN = (this.state.pendingIds || []).length;
+        const defs = [
+          ["All", "all"], ["Live", "live"], ["Hidden", "hidden"], ["Top deal", "top"],
+          ["No image", "noimage"], ["No category", "nocat"],
+          ["Off-list category" + (offN ? " (" + offN + ")" : ""), "offcat"],
+          ["Coupon", "coupon"],
+          ["Pending review" + (penN ? " (" + n(penN) + ")" : ""), "pending"]
+        ];
+        return defs.map(d => {
+          const active = (this.state.pFlag || "all") === d[1];
+          return {
+            label: d[0],
+            mark: active ? "\u2713" : "",
+            markStyle: "font-family:var(--font-heading);font-weight:800;font-size:14px;color:var(--color-accent)",
+            pick: () => { this.setState({ pFilterOpen: false }); this.setProductFilter({ pFlag: d[1] }); },
+            style: "font:inherit;display:flex;align-items:center;justify-content:space-between;gap:12px;width:100%;text-align:left;min-height:52px;padding:0 2px;background:none;border:0;border-bottom:1px solid var(--color-divider);cursor:pointer;font-size:15px;font-weight:" +
+              (active ? "600" : "400") + ";color:var(--color-text)"
+          };
+        });
+      })(),
+      pLoading: this.state.token && this.state.products === null && !this.state.pError,
+      pError: this.state.pError || "",
+      sError: this.state.sError || "",
+      pEmpty: !!(vis && vis.length === 0 && !this.state.pError),
+      pShowing: vis ? vis.length + " shown of " + (this.state.pTotal != null ? Number(this.state.pTotal).toLocaleString() : vis.length) : "",
+      pMore: () => this.setState({ pLimit: (this.state.pLimit || 50) + 50 }, () => this.loadProducts()),
+      pRows: (vis || []).map(p => {
+        const price = parseFloat(p.price);
+        const was = parseFloat(p.original_price);
+        // codes arrive with trailing newlines from the extraction
+        const code = p.coupon_code == null ? "" : String(p.coupon_code).replace(/\s+/g, " ").trim();
+        const cpRaw = parseFloat(p.scraped_coupon_price);
+        const coupon = !isNaN(cpRaw) && cpRaw > 0 && (isNaN(price) || cpRaw < price) ? cpRaw : null;
+        const net = coupon != null ? coupon : price;
+        const off = (net && was && was > net) ? "\u2212" + Math.round((1 - net / was) * 100) + "%" : "";
+        const count = p.review_count != null ? p.review_count : p.reviews;
+        const cashPct = parseFloat(p.prime_cashback_percent) || 0;
+        const asin = p.asin || p.asin;
+        const byPlat = (this.state.postState || {})[p.id] || {};
+        const anyState = ["facebook", "instagram", "instagram_story"].map(k => byPlat[k]).filter(Boolean);
+        return {
+          title: this.decode(p.display_title || p.title) || "(untitled \u2014 awaiting review)",
+          asin: asin ? "ASIN " + asin : "no ASIN",
+          coupon: coupon != null ? "$" + coupon.toFixed(2) : "",
+          hasCouponPrice: coupon != null,
+          hasCode: !!code,
+          couponCode: code ? "code " + code : "",
+          couponCodeStyle: "font-size:10px;letter-spacing:.04em;margin-bottom:2px;color:var(--color-" +
+            (coupon != null ? "accent-700" : "neutral-700") + ")",
+          // "not captured" means the scraper got a code but no coupon price at
+          // all. A coupon price EQUAL to price is captured — the sync copies the
+          // coupon price into price, so equality is the normal synced state and
+          // the old `coupon == null` test flagged every one of those rows.
+          couponUnknown: code && !(cpRaw > 0) ? "coupon price not captured" : "",
+          price: !isNaN(price) && price > 0 ? "$" + price.toFixed(2) : "no price",
+          // demoted to a strike-through when a coupon beats it
+          priceStyle: (!(price > 0)
+            ? "font-family:var(--font-heading);font-weight:700;font-size:12px;color:var(--color-accent-700)"
+            : "font-family:var(--font-heading);font-weight:" + (coupon != null ? "600" : "700") +
+              ";font-size:" + (coupon != null ? "12px" : "14px") + ";color:var(--color-neutral-" +
+              (coupon != null ? "600" : "900") + ")" + (coupon != null ? ";text-decoration:line-through" : "")),
+          was: !isNaN(was) && was > 0 ? "$" + was.toFixed(2) : "",
+          off: off || "\u2014",
+          offStyle: "font-family:var(--font-heading);font-weight:800;font-size:14px;color:" + (off ? "var(--color-accent)" : "var(--color-neutral-600)"),
+          isNarrow: !!this.state.narrow,
+          isWide: !this.state.narrow,
+          labelStyle: "font-family:var(--font-heading);font-weight:700;font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:var(--color-neutral-600);margin-bottom:3px",
+          offFlatStyle: "font-family:var(--font-heading);font-weight:800;font-size:13px;color:" + (off ? "var(--color-accent)" : "var(--color-neutral-600)"),
+          offCell: this.state.narrow ? "" : (off || "\u2014"),
+          offCellStyle: this.state.narrow ? "display:none"
+            : "font-family:var(--font-heading);font-weight:800;font-size:14px;color:" + (off ? "var(--color-accent)" : "var(--color-neutral-600)"),
+          wasFlat: !isNaN(was) && was > 0 ? "$" + was.toFixed(2) : "\u2014",
+          wideOnlyStyle: this.state.narrow ? "display:none" : "",
+          flagsCellStyle: this.state.narrow ? "display:none" : "display:flex;gap:4px;flex-wrap:wrap",
+          couponFlat: coupon != null ? "$" + coupon.toFixed(2) : "\u2014",
+          codeFlat: code ? String(code) : "\u2014",
+          // cashback is earned on what the shopper actually pays, so it follows
+          // the post-coupon price, not the list price
+          cash: cashPct > 0 && net > 0 ? "$" + (net * cashPct / 100).toFixed(2) : "\u2014",
+          cashPct: cashPct > 0 ? cashPct + "% back" : "",
+          cashStyle: "font-family:var(--font-heading);font-weight:" + (cashPct > 0 ? "800" : "700") +
+            ";font-size:" + (cashPct > 0 ? "14px" : "13px") + ";color:var(--color-neutral-" + (cashPct > 0 ? "900" : "600") + ")",
+          origin: (() => {
+            const o = (this.state.originByAsin || {})[(asin || "").toString().trim().toUpperCase()];
+            return o && o.source ? this.decode(o.source) : "added direct";
+          })(),
+          originUrl: (() => {
+            const o = (this.state.originByAsin || {})[(asin || "").toString().trim().toUpperCase()];
+            return o && o.url ? o.url : "";
+          })(),
+          originLinked: (() => {
+            const o = (this.state.originByAsin || {})[(asin || "").toString().trim().toUpperCase()];
+            return !!(o && o.url && o.source);
+          })(),
+          originPlain: (() => {
+            const o = (this.state.originByAsin || {})[(asin || "").toString().trim().toUpperCase()];
+            return !(o && o.url && o.source);
+          })(),
+          ratingLine: p.rating ? p.rating + (count ? " (" + Number(count).toLocaleString() + ")" : "") : "no rating",
+          catLine: (this.state.catNameById || {})[p.category_id_v2] || this.decode(p.category || "Uncategorized"),
+          synced: this.since(p.last_price_sync),
+          history: () => this.openHistory(p),
+          syncedAt: p.last_price_sync
+            ? new Date(p.last_price_sync).toLocaleString("en-US", { day: "numeric", month: "short", hour: "numeric", minute: "2-digit" })
+            : "never synced",
+          img: p.image_url || "",
+          // deliberately NOT affiliate_link: clicks from admin should not land
+          // in the affiliate metrics
+          url: asin
+            ? "https://www.amazon.com/dp/" + asin
+            : (p.affiliate_link ? String(p.affiliate_link).split("?")[0] : "#"),
+          statusBar: "display:block;align-self:stretch;background:" + (p.is_active ? "var(--color-neutral-500)" : "var(--color-accent)"),
+          liveLabel: p.is_active ? "Live" : "Hidden",
+          liveStyle: "font:inherit;font-family:var(--font-heading);font-weight:700;font-size:10px;letter-spacing:.08em;text-transform:uppercase;padding:5px 8px;cursor:pointer;border:1px solid " +
+            (p.is_active ? "var(--color-neutral-900);background:var(--color-neutral-900);color:var(--color-bg)" : "var(--color-accent);background:transparent;color:var(--color-accent-700)"),
+          liveStyleSm: "font:inherit;font-family:var(--font-heading);font-weight:700;font-size:8.5px;letter-spacing:.06em;text-transform:uppercase;text-align:center;padding:3px 2px;width:100%;cursor:pointer;border:1px solid " +
+            (p.is_active ? "var(--color-neutral-900);background:var(--color-neutral-900);color:var(--color-bg)" : "var(--color-accent);background:transparent;color:var(--color-accent-700)"),
+          liveCellStyle: "display:flex;flex-direction:column;align-items:flex-start;gap:6px",
+          toggleLive: () => this.patchProduct(p.id, { is_active: !p.is_active }),
+          schedule: () => this.schedulePost(p),
+          // shaded = went out somewhere in the last 24h, so the un-shaded rows
+          // are the ones worth posting next
+          rowStyle: rowBase + (anyState.some(s => s.status === "published" && s.t && (Date.now() - s.t) < 86400000)
+            ? ";background:color-mix(in srgb, var(--color-accent) 7%, transparent);padding-left:6px;margin-left:-6px"
+            : ""),
+          queued: anyState.length > 0,
+          queueLabel: (() => {
+            const failed = anyState.filter(s => s.status === "failed").length;
+            const pending = anyState.filter(s => s.status === "pending").length;
+            if (failed) return failed + " failed";
+            if (pending) return pending + " queued";
+            return "";
+          })(),
+          queueWhen: "",
+          queueStyle: "display:inline-block;white-space:nowrap;font-family:var(--font-heading);font-weight:700;font-size:9.5px;letter-spacing:.08em;text-transform:uppercase;padding:3px 6px;" +
+            (anyState.some(s => s.status === "failed")
+              ? "background:var(--color-accent);color:#16233a"
+              : "border:1px solid var(--color-divider);color:var(--color-neutral-700)"),
+          postVerb: "Post to",
+          // same control shows state and queues: solid = went out in the last
+          // 24h, muted outline = posted before that, red = failed
+          postTargets: [["facebook", "FB"], ["instagram", "IG"], ["instagram_story", "ST"]].map(pair => {
+            const st = byPlat[pair[0]];
+            const status = st ? String(st.status || "") : "";
+            const fresh = status === "published" && st.t && (Date.now() - st.t) < 86400000;
+            const base = "font:inherit;font-family:var(--font-heading);font-weight:800;font-size:9.5px;line-height:1;letter-spacing:.06em;padding:4px 5px;cursor:pointer;border:1px solid ";
+            const style = fresh
+              ? base + "var(--color-text);background:var(--color-text);color:var(--color-bg)"
+              : status === "published"
+              ? base + "var(--color-neutral-500);background:transparent;color:var(--color-neutral-700)"
+              : status === "failed"
+              ? base + "var(--color-accent);background:transparent;color:var(--color-accent-700)"
+              : status === "pending"
+              ? base + "var(--color-neutral-700);background:transparent;color:var(--color-text)"
+              : base + "var(--color-divider);background:transparent;color:var(--color-accent-700)";
+            const note = fresh ? "posted in the last 24h"
+              : status === "published" ? "posted " + this.since(st.when)
+              : status === "failed" ? "failed " + this.since(st.when)
+              : status === "pending" ? "queued " + this.since(st.when)
+              : "not posted yet";
+            return {
+              mark: pair[1],
+              title: this.platformName(pair[0]) + " \u2014 " + note + ". Click to queue" + (status ? " again" : "") + ".",
+              queue: () => this.schedulePost(p, pair[0]),
+              style: style
+            };
+          }),
+          remove: () => this.deleteProduct(p),
+          sync: () => this.syncNow(p),
+          edit: () => this.startEdit(p),
+          reel: () => this.downloadReel(p),
+          story: () => this.storyKit(p),
+          storyLabel: this.state.storyBusy === p.id ? "Rendering\u2026" : "Story + link",
+          storyStyle: "font:inherit;font-family:var(--font-heading);font-weight:700;font-size:10px;letter-spacing:.08em;text-transform:uppercase;cursor:pointer;padding:6px 8px;min-height:32px;border:0;background:" +
+            (this.state.storyBusy === p.id ? "var(--color-neutral-300);color:var(--color-neutral-700)" : "var(--color-accent);color:#16233a"),
+          reelLabel: this.state.reelBusy === p.id ? "Rendering\u2026" : "Reel",
+          reelStyle: "font:inherit;font-family:var(--font-heading);font-weight:700;font-size:10px;letter-spacing:.08em;text-transform:uppercase;background:none;border:0;padding:0;cursor:pointer;color:" +
+            (this.state.reelBusy === p.id ? "var(--color-neutral-600)" : "var(--color-accent-700)"),
+          editing: this.state.editId === p.id,
+          save: () => this.saveEdit(p),
+          syncLabel: this.state.syncingId === p.id ? "Syncing\u2026" : "Sync",
+          flags: [
+            chip("T", !!p.is_top_deal, "Top deal \u2014 pinned to the homepage rail", () => this.patchProduct(p.id, { is_top_deal: !p.is_top_deal })),
+            chip("P", !!p.is_prime_bonus, "Prime bonus", () => this.patchProduct(p.id, { is_prime_bonus: !p.is_prime_bonus })),
+            chip("V", !!p.is_viral, "Viral", () => this.patchProduct(p.id, { is_viral: !p.is_viral }))
+          ]
+        };
+      }),
+
+      sFilters: [
+        pill("All queued", (this.state.sFilter || "all") === "all", () => this.setPostFilter("all")),
+        pill("Facebook", this.state.sFilter === "facebook", () => this.setPostFilter("facebook")),
+        pill("Instagram", this.state.sFilter === "instagram", () => this.setPostFilter("instagram")),
+        pill("Failed", this.state.sFilter === "failed", () => this.setPostFilter("failed")),
+        pill("Pending", this.state.sFilter === "pending", () => this.setPostFilter("pending"))
+      ],
+      sLoading: this.state.token && this.state.posts === null && !this.state.sError,
+      sEmpty: !!(posts && posts.length === 0 && !this.state.sError),
+      sShowing: posts ? posts.length + " shown of " + (this.state.sTotal != null ? Number(this.state.sTotal).toLocaleString() : posts.length) + (this.state.posts && this.state.posts.length > posts.length ? " \u00b7 " + (this.state.posts.length - posts.length) + " duplicate" + (this.state.posts.length - posts.length === 1 ? "" : "s") + " collapsed" : "") : "",
+      sMore: () => this.setState({ sLimit: (this.state.sLimit || 50) + 50 }, () => this.loadPosts()),
+      sRows: (posts || []).map(p => {
+        const prod = p.products || {};
+        const st = String(p.status || "");
+        const car = Array.isArray(p.carousel_image_urls) ? p.carousel_image_urls.filter(Boolean) : [];
+        const open = (this.state.slidesOpen || {})[p.id];
+        return {
+          isCarousel: car.length > 1,
+          carouselLabel: "Carousel \u00b7 " + car.length + (open ? " \u25b4" : " \u25be"),
+          carouselBadge: "font:inherit;font-family:var(--font-heading);font-weight:700;font-size:9.5px;letter-spacing:.08em;text-transform:uppercase;padding:3px 6px;cursor:pointer;border:1px solid var(--color-text);background:transparent;color:var(--color-text)",
+          slidesTitle: "Show the " + car.length + " slides this post will publish",
+          slidesOpen: !!open,
+          toggleSlides: () => {
+            const next = Object.assign({}, this.state.slidesOpen || {});
+            if (next[p.id]) delete next[p.id]; else next[p.id] = true;
+            this.setState({ slidesOpen: next });
+          },
+          slides: car.map((u, i) => ({ url: u, n: i + 1 })),
+          title: this.decode(prod.display_title || prod.title) || "(product removed)",
+          img: prod.image_url || "",
+          platform: String(p.platform || "").replace("_", " "),
+          platformName: (() => {
+            const sentAt = Date.parse(p.scheduled_at || "") || 0;
+            const fresh = String(p.status || "") === "published" && sentAt && (Date.now() - sentAt) < 86400000;
+            const suffix = fresh ? " \u2014 posted in the last 24h" : "";
+            const v = String(p.platform || "").toLowerCase();
+            if (v.indexOf("story") > -1) return "Instagram Story" + suffix;
+            if (v.indexOf("insta") > -1) return "Instagram" + suffix;
+            if (v.indexOf("face") > -1) return "Facebook" + suffix;
+            return String(p.platform || "unknown") + suffix;
+          })(),
+          platformMark: (() => {
+            const v = String(p.platform || "").toLowerCase();
+            if (v.indexOf("story") > -1) return "ST";
+            if (v.indexOf("insta") > -1) return "IG";
+            if (v.indexOf("face") > -1) return "FB";
+            return "\u2014";
+          })(),
+          showStatus: st !== "published",
+          // a solid mark means "went out on this platform in the last 24h"
+          platformStyle: (() => {
+            const sentAt = Date.parse(p.scheduled_at || "") || 0;
+            const fresh = st === "published" && sentAt && (Date.now() - sentAt) < 86400000;
+            const base = "display:inline-block;font-family:var(--font-heading);font-weight:800;font-size:9.5px;line-height:1;letter-spacing:.06em;padding:4px 5px;border:1px solid ";
+            if (fresh) return base + "var(--color-text);background:var(--color-text);color:var(--color-bg)";
+            if (st === "published") return base + "var(--color-neutral-500);color:var(--color-neutral-700)";
+            return base + "var(--color-divider);color:var(--color-neutral-700)";
+          })(),
+          when: p.scheduled_at ? new Date(p.scheduled_at).toLocaleString("en-US", { day: "numeric", month: "short", hour: "numeric", minute: "2-digit" }) : "\u2014",
+          source: p.post_source || "\u2014",
+          status: st || "unknown",
+          error: p.error_message || "",
+          dupNote: p._merged > 1 ? p._merged + " records" : "",
+          canRetry: st === "failed",
+          retry: () => this.retryPost(p.id),
+          canNow: st === "pending" && (Date.parse(p.scheduled_at || "") || 0) > Date.now() + 60000,
+          postNow: () => this.postNow(p.id, this.decode(prod.display_title || prod.title) || "",
+            (() => { const v = String(p.platform || "").toLowerCase();
+              return v.indexOf("story") > -1 ? "Instagram Story" : v.indexOf("insta") > -1 ? "Instagram" : v.indexOf("face") > -1 ? "Facebook" : "this platform"; })()),
+          canUnpublish: st === "published" && String(p.platform || "").toLowerCase().indexOf("story") === -1,
+          unpublish: () => this.unpublishPost(p.id, this.decode(prod.display_title || prod.title) || "",
+            String(p.platform || "").toLowerCase().indexOf("insta") > -1 ? "Instagram" : "Facebook"),
+          canRemove: st === "pending" || st === "failed",
+          remove: () => this.removePost(p.id, prod.display_title || prod.title || ""),
+          bar: "display:block;align-self:stretch;background:" + (st === "failed" ? "var(--color-accent)" : st === "published" ? "var(--color-neutral-500)" : "transparent"),
+          statusStyle: "display:inline-block;font-family:var(--font-heading);font-weight:700;font-size:9.5px;letter-spacing:.08em;text-transform:uppercase;padding:3px 6px;" +
+            (st === "published" ? "background:var(--color-neutral-900);color:var(--color-bg)"
+              : st === "failed" ? "background:var(--color-accent);color:#16233a"
+              : "border:1px solid var(--color-divider);color:var(--color-neutral-700)")
+        };
+      })
+    };
+  }
+
+  densBtn(v) {
+    const base = "font:inherit;font-family:var(--font-heading);font-weight:600;font-size:11px;letter-spacing:.08em;text-transform:uppercase;padding:6px 11px;border:0;cursor:pointer;";
+    return (this.state.dens || "roomy") === v
+      ? base + "background:var(--color-neutral-900);color:var(--color-bg)"
+      : base + "background:transparent;color:var(--color-neutral-700)";
+  }
+}
+</script>
+</body>
+</html>
