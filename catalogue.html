@@ -479,7 +479,7 @@
                   <button onClick="{{ r.history }}" title="Every price the pipeline has recorded for this ASIN" style="font:inherit;font-family:var(--font-heading);font-weight:700;font-size:10px;letter-spacing:.08em;text-transform:uppercase;background:none;border:0;padding:0;cursor:pointer;color:var(--color-accent-700)">History</button>
                   <button onClick="{{ r.edit }}" title="Edit title, category and prices" style="font:inherit;font-family:var(--font-heading);font-weight:700;font-size:10px;letter-spacing:.08em;text-transform:uppercase;background:none;border:0;padding:0;cursor:pointer;color:var(--color-accent-700)">Edit</button>
                   <button onClick="{{ r.reel }}" title="Render this deal as a 1080×1920 reel overlay and download the PNG" style="{{ r.reelStyle }}">{{ r.reelLabel }}</button>
-                  <sc-if value="{{ r.isNarrow }}" hint-placeholder-val="{{ false }}"><button onClick="{{ r.story }}" title="Copy the affiliate link and save the 1080×1920 story image" style="{{ r.storyStyle }}">{{ r.storyLabel }}</button></sc-if>
+                  <button onClick="{{ r.story }}" title="Copy the affiliate link and save the 1080×1920 story image" style="{{ r.storyStyle }}">{{ r.storyLabel }}</button>
                   <button onClick="{{ r.remove }}" title="Delete this product permanently" style="font:inherit;font-family:var(--font-heading);font-weight:700;font-size:10px;letter-spacing:.08em;text-transform:uppercase;background:none;border:0;padding:0;cursor:pointer;color:var(--color-neutral-700)">Delete</button>
                 </div>
               </div>
